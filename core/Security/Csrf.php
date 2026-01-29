@@ -2,66 +2,125 @@
 
 namespace Core\Security;
 
-use Core\Http\Session;
-
 /**
- * CSRF Protection Service
+ * CSRF Protection
  *
- * Generates and validates CSRF tokens to prevent Cross-Site Request Forgery attacks
+ * Provides Cross-Site Request Forgery protection using session-based tokens.
+ * Tokens are generated once per session and verified on state-changing requests.
+ *
+ * Usage:
+ *   $token = Csrf::token();           // Get current token
+ *   Csrf::verify($token);             // Verify token
+ *   Csrf::regenerate();               // Generate new token
  */
 class Csrf
 {
-    protected Session $session;
-    protected string $tokenKey = '_csrf_token';
+    /**
+     * Current CSRF token (cached)
+     */
+    protected static ?string $token = null;
 
-    public function __construct(Session $session)
+    /**
+     * Session key for storing CSRF token
+     */
+    protected const SESSION_KEY = '_csrf_token';
+
+    /**
+     * Get or generate CSRF token
+     *
+     * @return string The CSRF token
+     */
+    public static function token(): string
     {
-        $this->session = $session;
+        if (self::$token === null) {
+            // Try to get token from session
+            self::$token = session()->get(self::SESSION_KEY);
 
-        // Auto-generate token if not exists
-        if (!$this->session->has($this->tokenKey)) {
-            $this->regenerateToken();
+            // Generate new token if none exists
+            if (!self::$token) {
+                self::$token = self::generate();
+                session()->set(self::SESSION_KEY, self::$token);
+            }
         }
+
+        return self::$token;
     }
 
     /**
-     * Generate a new random CSRF token
+     * Verify CSRF token
+     *
+     * Uses timing-safe comparison to prevent timing attacks
+     *
+     * @param string $token Token to verify
+     * @return bool True if token is valid
      */
-    public function generateToken(): string
+    public static function verify(string $token): bool
     {
-        return bin2hex(random_bytes(32));
-    }
+        $expected = self::token();
 
-    /**
-     * Get the current CSRF token from session
-     */
-    public function getToken(): ?string
-    {
-        return $this->session->get($this->tokenKey);
-    }
-
-    /**
-     * Validate a CSRF token against the session token
-     */
-    public function validateToken(string $token): bool
-    {
-        $sessionToken = $this->getToken();
-
-        if (!$sessionToken) {
+        // Both tokens must be non-empty
+        if (empty($token) || empty($expected)) {
             return false;
         }
 
-        // Use hash_equals to prevent timing attacks
-        return hash_equals($sessionToken, $token);
+        // Timing-safe comparison
+        return hash_equals($expected, $token);
     }
 
     /**
-     * Generate a new token and store it in the session
+     * Regenerate CSRF token
+     *
+     * Useful after login or other security-sensitive operations
+     *
+     * @return string The new token
      */
-    public function regenerateToken(): string
+    public static function regenerate(): string
     {
-        $token = $this->generateToken();
-        $this->session->set($this->tokenKey, $token);
-        return $token;
+        self::$token = self::generate();
+        session()->set(self::SESSION_KEY, self::$token);
+
+        return self::$token;
+    }
+
+    /**
+     * Generate a new random token
+     *
+     * @return string 64-character hexadecimal token
+     */
+    protected static function generate(): string
+    {
+        return bin2hex(random_bytes(32)); // 32 bytes = 64 hex characters
+    }
+
+    /**
+     * Check if CSRF protection is enabled
+     *
+     * @return bool
+     */
+    public static function isEnabled(): bool
+    {
+        return config('security.csrf.enabled', true);
+    }
+
+    /**
+     * Check if current request should be excluded from CSRF verification
+     *
+     * @param string $uri Request URI
+     * @return bool True if request should be excluded
+     */
+    public static function isExcluded(string $uri): bool
+    {
+        $except = config('security.csrf.except', []);
+
+        foreach ($except as $pattern) {
+            // Convert wildcard pattern to regex
+            $regex = '#^' . str_replace('\*', '.*', preg_quote($pattern, '#')) . '$#';
+
+            if (preg_match($regex, $uri)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

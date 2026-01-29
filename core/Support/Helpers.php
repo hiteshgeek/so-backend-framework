@@ -117,27 +117,15 @@ if (!function_exists('auth')) {
     }
 }
 
-if (!function_exists('csrf')) {
-    /**
-     * Get CSRF instance
-     *
-     * @return \Core\Security\Csrf
-     */
-    function csrf(): \Core\Security\Csrf
-    {
-        return app('csrf');
-    }
-}
-
 if (!function_exists('csrf_token')) {
     /**
      * Get CSRF token
      *
-     * @return string|null
+     * @return string
      */
-    function csrf_token(): ?string
+    function csrf_token(): string
     {
-        return app('csrf')->getToken();
+        return \Core\Security\Csrf::token();
     }
 }
 
@@ -149,8 +137,19 @@ if (!function_exists('csrf_field')) {
      */
     function csrf_field(): string
     {
-        $token = csrf_token();
-        return '<input type="hidden" name="_csrf_token" value="' . htmlspecialchars($token ?? '', ENT_QUOTES, 'UTF-8') . '">';
+        return '<input type="hidden" name="_token" value="' . csrf_token() . '">';
+    }
+}
+
+if (!function_exists('jwt')) {
+    /**
+     * Get JWT instance from configuration
+     *
+     * @return \Core\Security\JWT
+     */
+    function jwt(): \Core\Security\JWT
+    {
+        return \Core\Security\JWT::fromConfig();
     }
 }
 
@@ -403,6 +402,19 @@ if (!function_exists('e')) {
             return '';
         }
         return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
+    }
+}
+
+if (!function_exists('sanitize')) {
+    /**
+     * Sanitize input data
+     *
+     * @param mixed $data
+     * @return mixed
+     */
+    function sanitize($data)
+    {
+        return \Core\Security\Sanitizer::clean($data);
     }
 }
 
