@@ -35,7 +35,18 @@ class Request
 
     public static function createFromGlobals(): static
     {
-        return new static($_GET, $_POST, $_SERVER, $_FILES, $_COOKIE);
+        $request = $_POST;
+
+        // Parse JSON request body if Content-Type is application/json
+        $contentType = $_SERVER['CONTENT_TYPE'] ?? '';
+        if (str_contains($contentType, 'application/json')) {
+            $jsonData = json_decode(file_get_contents('php://input'), true);
+            if (is_array($jsonData)) {
+                $request = $jsonData;
+            }
+        }
+
+        return new static($_GET, $request, $_SERVER, $_FILES, $_COOKIE);
     }
 
     protected function parseHeaders(): array

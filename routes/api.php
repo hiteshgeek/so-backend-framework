@@ -2,6 +2,18 @@
 
 use Core\Routing\Router;
 use App\Controllers\Api\V1\UserController;
+use App\Controllers\UserApiController;
+use App\Middleware\AuthMiddleware;
+
+// Protected API routes for dashboard (requires authentication)
+Router::group(['prefix' => 'api', 'middleware' => [AuthMiddleware::class]], function () {
+    // User CRUD operations
+    Router::get('/users', [UserApiController::class, 'index']);
+    Router::get('/users/{id}', [UserApiController::class, 'show']);
+    Router::post('/users', [UserApiController::class, 'store']);
+    Router::put('/users/{id}', [UserApiController::class, 'update']);
+    Router::delete('/users/{id}', [UserApiController::class, 'destroy']);
+});
 
 // API v1 routes
 Router::group(['prefix' => 'api/v1'], function () {
