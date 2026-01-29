@@ -337,4 +337,82 @@ abstract class Model
     {
         return json_encode($this->toArray());
     }
+
+    /**
+     * Get the table name for the model
+     */
+    public function getTable(): string
+    {
+        return static::$table;
+    }
+
+    /**
+     * Get the primary key for the model
+     */
+    public function getPrimaryKey(): string
+    {
+        return static::$primaryKey;
+    }
+
+    /**
+     * Get the database connection
+     */
+    public function getConnection()
+    {
+        $dbService = app('db');
+        if (!$dbService) {
+            throw new \RuntimeException("Database service not found");
+        }
+        if (!isset($dbService->connection)) {
+            throw new \RuntimeException("Database connection property not found");
+        }
+        return $dbService->connection;
+    }
+
+    /**
+     * Handle dynamic static method calls (for query scopes)
+     *
+     * @param string $method
+     * @param array $parameters
+     * @return mixed
+     */
+    public static function __callStatic(string $method, array $parameters)
+    {
+        // Check if it's a scope method
+        $scopeMethod = 'scope' . ucfirst($method);
+
+        if (method_exists(static::class, $scopeMethod)) {
+            // Create a new instance to call the scope
+            $instance = new static();
+
+            // Get the query builder
+            $query = static::query();
+
+            // Call the scope method
+            return $instance->$scopeMethod($query, ...$parameters);
+        }
+
+        // If not a scope, try to call on query builder
+        return static::query()->$method(...$parameters);
+    }
+
+    /**
+     * Apply scope to query builder
+     *
+     * @param string $scope
+     * @param mixed ...$parameters
+     * @return QueryBuilder
+     */
+    public static function scope(string $scope, ...$parameters): QueryBuilder
+    {
+        $query = static::query();
+        $scopeMethod = 'scope' . ucfirst($scope);
+
+        if (method_exists(static::class, $scopeMethod)) {
+            $instance = new static();
+            return $instance->$scopeMethod($query, ...$parameters);
+        }
+
+        return $query;
+    }
 }
