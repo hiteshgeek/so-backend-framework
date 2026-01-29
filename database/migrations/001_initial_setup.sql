@@ -1,8 +1,51 @@
 -- ============================================
--- Framework Tables for ERP System
+-- SO Framework - Initial Database Setup
+-- ============================================
+-- This migration creates all required tables for the framework
+-- Run with: mysql -u root -p database_name < 001_initial_setup.sql
 -- ============================================
 
--- 1. Sessions Table (Database-driven sessions)
+-- 1. Users Table
+CREATE TABLE IF NOT EXISTS users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    remember_token VARCHAR(100) NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX idx_email (email),
+    INDEX idx_remember_token (remember_token)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- 2. Posts Table
+CREATE TABLE IF NOT EXISTS posts (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    content TEXT,
+    status ENUM('draft', 'published', 'archived') DEFAULT 'draft',
+    published_at TIMESTAMP NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    INDEX idx_user_id (user_id),
+    INDEX idx_status (status)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- 3. Password Resets Table
+CREATE TABLE IF NOT EXISTS password_resets (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(255) NOT NULL,
+    token VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    expires_at TIMESTAMP NOT NULL,
+    INDEX idx_email (email),
+    INDEX idx_token (token),
+    INDEX idx_expires_at (expires_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- 4. Sessions Table (Database-driven sessions)
 CREATE TABLE IF NOT EXISTS sessions (
     id VARCHAR(255) NOT NULL PRIMARY KEY,
     user_id BIGINT UNSIGNED NULL,
@@ -14,7 +57,7 @@ CREATE TABLE IF NOT EXISTS sessions (
     INDEX sessions_last_activity_index (last_activity)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- 2. Jobs Table (Queue system)
+-- 5. Jobs Table (Queue system)
 CREATE TABLE IF NOT EXISTS jobs (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     queue VARCHAR(255) NOT NULL,
@@ -26,7 +69,7 @@ CREATE TABLE IF NOT EXISTS jobs (
     INDEX jobs_queue_index (queue)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- 3. Failed Jobs Table (Track failed queue jobs)
+-- 6. Failed Jobs Table
 CREATE TABLE IF NOT EXISTS failed_jobs (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     uuid VARCHAR(255) NOT NULL UNIQUE,
@@ -38,7 +81,21 @@ CREATE TABLE IF NOT EXISTS failed_jobs (
     INDEX failed_jobs_uuid_index (uuid)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- 4. Notifications Table (In-app notifications)
+-- 7. Job Batches Table
+CREATE TABLE IF NOT EXISTS job_batches (
+    id VARCHAR(255) NOT NULL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    total_jobs INT NOT NULL,
+    pending_jobs INT NOT NULL,
+    failed_jobs INT NOT NULL,
+    failed_job_ids LONGTEXT NOT NULL,
+    options MEDIUMTEXT NULL,
+    cancelled_at INT NULL,
+    created_at INT NOT NULL,
+    finished_at INT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- 8. Notifications Table
 CREATE TABLE IF NOT EXISTS notifications (
     id CHAR(36) NOT NULL PRIMARY KEY,
     type VARCHAR(255) NOT NULL,
@@ -52,7 +109,7 @@ CREATE TABLE IF NOT EXISTS notifications (
     INDEX notifications_read_at_index (read_at)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- 5. Activity Log Table (Audit trail - CRITICAL for ERP)
+-- 9. Activity Log Table (Audit trail)
 CREATE TABLE IF NOT EXISTS activity_log (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     log_name VARCHAR(255) NULL,
@@ -72,7 +129,7 @@ CREATE TABLE IF NOT EXISTS activity_log (
     INDEX created_at_index (created_at)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- 6. Cache Table (Performance optimization)
+-- 10. Cache Table
 CREATE TABLE IF NOT EXISTS cache (
     `key` VARCHAR(255) NOT NULL PRIMARY KEY,
     value MEDIUMTEXT NOT NULL,
@@ -80,13 +137,14 @@ CREATE TABLE IF NOT EXISTS cache (
     INDEX cache_expiration_index (expiration)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- 11. Cache Locks Table
 CREATE TABLE IF NOT EXISTS cache_locks (
     `key` VARCHAR(255) NOT NULL PRIMARY KEY,
     owner VARCHAR(255) NOT NULL,
     expiration INT NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- 7. Personal Access Tokens (API authentication)
+-- 12. Personal Access Tokens Table (API authentication)
 CREATE TABLE IF NOT EXISTS personal_access_tokens (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     tokenable_type VARCHAR(255) NOT NULL,
@@ -102,21 +160,7 @@ CREATE TABLE IF NOT EXISTS personal_access_tokens (
     INDEX personal_access_tokens_token_index (token)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- 8. Job Batches (Batch job processing)
-CREATE TABLE IF NOT EXISTS job_batches (
-    id VARCHAR(255) NOT NULL PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    total_jobs INT NOT NULL,
-    pending_jobs INT NOT NULL,
-    failed_jobs INT NOT NULL,
-    failed_job_ids LONGTEXT NOT NULL,
-    options MEDIUMTEXT NULL,
-    cancelled_at INT NULL,
-    created_at INT NOT NULL,
-    finished_at INT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- 9. Migrations Table (Track migrations)
+-- 13. Migrations Table (Track migrations)
 CREATE TABLE IF NOT EXISTS migrations (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     migration VARCHAR(255) NOT NULL,

@@ -5,7 +5,7 @@ namespace Core\Console;
 /**
  * Console Command Base Class
  *
- * Base class for all artisan commands
+ * Base class for all sixorbit commands
  */
 abstract class Command
 {

@@ -426,7 +426,7 @@ NOTIFICATION_PRUNE_DAYS=30
 
 ```bash
 # Delete read notifications older than 30 days
-php artisan notification:cleanup --days=30
+php sixorbit notification:cleanup --days=30
 ```
 
 ---
@@ -617,7 +617,7 @@ return [
 
 ```bash
 # Cron job (daily at 4 AM)
-0 4 * * * php artisan notification:cleanup --days=30
+0 4 * * * php sixorbit notification:cleanup --days=30
 ```
 
 ### 6. Batch Notifications
@@ -695,6 +695,6 @@ The Notification System provides:
 - Create notification classes in `app/Notifications/`
 - Set up `notification:cleanup` cron job
 - Build notification center UI
-- Review [FRAMEWORK-FEATURES.md](FRAMEWORK-FEATURES.md) for overview
+- Review [Framework Features](/docs/framework-features) for overview
 
 **Version**: 2.0.0 | **Last Updated**: 2026-01-29

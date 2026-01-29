@@ -785,7 +785,7 @@ if ($context->isExternal()) {
 }
 ```
 
-**See**: [Internal API Layer Documentation](../tests/INTERNAL_API_LAYER_SUMMARY.md)
+**See**: [Internal API Layer Documentation](/docs/internal-api)
 
 ---
 
@@ -950,9 +950,9 @@ All authentication methods follow security best practices and are production-rea
 ---
 
 **Related Documentation:**
-- [Security Layer](SECURITY-LAYER.md) - CSRF, JWT, Rate Limiting
-- [Internal API Layer](../tests/INTERNAL_API_LAYER_SUMMARY.md) - API Authentication
-- [Middleware System](../tests/MIDDLEWARE_IMPLEMENTATION_SUMMARY.md) - Auth Middleware
+- [Security Layer](/docs/security-layer) - CSRF, JWT, Rate Limiting
+- [Internal API Layer](/docs/internal-api) - API Authentication
+- [Middleware System](/docs/middleware) - Auth Middleware
 
 ---
 

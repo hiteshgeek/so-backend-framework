@@ -170,7 +170,7 @@ activity()
 - Compliance reporting (GDPR data access logs)
 - Dispute resolution with complete history
 
-**Read More**: [ACTIVITY-LOGGING.md](ACTIVITY-LOGGING.md)
+**Read More**: [Activity Logging](/docs/activity-logging)
 
 ---
 
@@ -210,7 +210,7 @@ class GenerateMonthlyReport extends Job {
 dispatch(new GenerateMonthlyReport('2026-01'));
 
 // Run worker (continuous processing)
-php artisan queue:work
+php sixorbit queue:work
 ```
 
 **ERP Use Cases**:
@@ -221,7 +221,7 @@ php artisan queue:work
 - Inventory recalculation after bulk updates
 - Batch operations (price updates, status changes)
 
-**Read More**: [QUEUE-SYSTEM.md](QUEUE-SYSTEM.md)
+**Read More**: [Queue System](/docs/queue-system)
 
 ---
 
@@ -278,7 +278,7 @@ $notifications = $user->unreadNotifications;
 - System announcements
 - Critical alerts (system errors, security)
 
-**Read More**: [NOTIFICATION-SYSTEM.md](NOTIFICATION-SYSTEM.md)
+**Read More**: [Notification System](/docs/notification-system)
 
 ---
 
@@ -330,7 +330,7 @@ if ($lock->acquire()) {
 - API responses
 - Complex query results
 
-**Read More**: [CACHE-SYSTEM.md](CACHE-SYSTEM.md)
+**Read More**: [Cache System](/docs/cache-system)
 
 ---
 
@@ -375,7 +375,7 @@ $activeSessions = DB::table('sessions')
 - Force logout users (security breach, account suspension)
 - Session analytics (peak usage times, concurrent users)
 
-**Read More**: [SESSION-SYSTEM.md](SESSION-SYSTEM.md)
+**Read More**: [Session System](/docs/session-system)
 
 ---
 
@@ -448,19 +448,19 @@ Set up these scheduled tasks for maintenance:
 
 ```bash
 # Queue worker (supervisor recommended for continuous running)
-* * * * * cd /var/www/html/so-backend-framework && php artisan queue:work --sleep=3 --tries=3
+* * * * * cd /var/www/html/so-backend-framework && php sixorbit queue:work --sleep=3 --tries=3
 
 # Session cleanup (daily at 2 AM)
-0 2 * * * cd /var/www/html/so-backend-framework && php artisan session:cleanup
+0 2 * * * cd /var/www/html/so-backend-framework && php sixorbit session:cleanup
 
 # Cache garbage collection (hourly)
-0 * * * * cd /var/www/html/so-backend-framework && php artisan cache:gc
+0 * * * * cd /var/www/html/so-backend-framework && php sixorbit cache:gc
 
 # Activity log pruning (daily at 3 AM, keep 365 days)
-0 3 * * * cd /var/www/html/so-backend-framework && php artisan activity:prune --days=365
+0 3 * * * cd /var/www/html/so-backend-framework && php sixorbit activity:prune --days=365
 
 # Notification cleanup (daily at 4 AM, delete read notifications older than 30 days)
-0 4 * * * cd /var/www/html/so-backend-framework && php artisan notification:cleanup --days=30
+0 4 * * * cd /var/www/html/so-backend-framework && php sixorbit notification:cleanup --days=30
 ```
 
 **Supervisor Configuration** (recommended for queue worker):
@@ -468,7 +468,7 @@ Set up these scheduled tasks for maintenance:
 ```ini
 [program:so-framework-worker]
 process_name=%(program_name)s_%(process_num)02d
-command=php /var/www/html/so-backend-framework/artisan queue:work --sleep=3 --tries=3
+command=php /var/www/html/so-backend-framework/sixorbit queue:work --sleep=3 --tries=3
 autostart=true
 autorestart=true
 user=www-data
@@ -507,21 +507,21 @@ All systems include CLI commands for maintenance:
 
 ```bash
 # Cache Management
-php artisan cache:clear          # Clear all cache entries
-php artisan cache:gc             # Run garbage collection (remove expired)
+php sixorbit cache:clear          # Clear all cache entries
+php sixorbit cache:gc             # Run garbage collection (remove expired)
 
 # Activity Log Management
-php artisan activity:prune --days=365    # Delete logs older than 365 days
+php sixorbit activity:prune --days=365    # Delete logs older than 365 days
 
 # Session Management
-php artisan session:cleanup      # Remove expired sessions
+php sixorbit session:cleanup      # Remove expired sessions
 
 # Notification Management
-php artisan notification:cleanup --days=30   # Delete old read notifications
+php sixorbit notification:cleanup --days=30   # Delete old read notifications
 
 # Queue Management
-php artisan queue:work           # Process jobs (run continuously)
-php artisan queue:work --queue=high-priority  # Process specific queue
+php sixorbit queue:work           # Process jobs (run continuously)
+php sixorbit queue:work --queue=high-priority  # Process specific queue
 ```
 
 ---
@@ -530,11 +530,11 @@ php artisan queue:work --queue=high-priority  # Process specific queue
 
 ### 1. Read System-Specific Documentation
 
-- **[Activity Logging Guide](ACTIVITY-LOGGING.md)** - Detailed usage, examples, best practices
-- **[Queue System Guide](QUEUE-SYSTEM.md)** - Creating jobs, worker configuration, troubleshooting
-- **[Notification System Guide](NOTIFICATION-SYSTEM.md)** - Creating notifications, channels, management
-- **[Cache System Guide](CACHE-SYSTEM.md)** - Cache strategies, locks, optimization
-- **[Session System Guide](SESSION-SYSTEM.md)** - Security, scaling, monitoring
+- **[Activity Logging Guide](/docs/activity-logging)** - Detailed usage, examples, best practices
+- **[Queue System Guide](/docs/queue-system)** - Creating jobs, worker configuration, troubleshooting
+- **[Notification System Guide](/docs/notification-system)** - Creating notifications, channels, management
+- **[Cache System Guide](/docs/cache-system)** - Cache strategies, locks, optimization
+- **[Session System Guide](/docs/session-system)** - Security, scaling, monitoring
 
 ### 2. Configure Environment
 

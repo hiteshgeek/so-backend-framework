@@ -316,7 +316,7 @@ public function forceLogoutAllDevices($userId)
 'lifetime' => 120,  // 120 minutes (2 hours)
 
 // Expired sessions removed by garbage collection
-php artisan session:cleanup
+php sixorbit session:cleanup
 ```
 
 ---
@@ -532,7 +532,7 @@ public function changePassword(Request $request)
 
 ```bash
 # Cron job (daily at 2 AM)
-0 2 * * * php artisan session:cleanup
+0 2 * * * php sixorbit session:cleanup
 ```
 
 ### 3. Monitor Table Size
@@ -610,7 +610,7 @@ var_dump(config('session.driver')); // Should be 'database'
 **Problem**: Large sessions table.
 
 **Solutions**:
-1. Regular cleanup: `php artisan session:cleanup`
+1. Regular cleanup: `php sixorbit session:cleanup`
 2. Partition table by last_activity
 3. Archive old sessions
 4. Reduce session lifetime
@@ -643,6 +643,6 @@ The Session System provides:
 - Set up `session:cleanup` cron job
 - Configure secure cookies for production
 - Monitor session table size
-- Review [FRAMEWORK-FEATURES.md](FRAMEWORK-FEATURES.md) for overview
+- Review [Framework Features](/docs/framework-features) for overview
 
 **Version**: 2.0.0 | **Last Updated**: 2026-01-29

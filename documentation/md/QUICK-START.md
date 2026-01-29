@@ -104,7 +104,7 @@ mysql -u root -p -e "SHOW DATABASES LIKE 'your-database-name';"
 
 ## [Docs] More Details
 
-See [CONFIGURATION.md](CONFIGURATION.md) for complete documentation.
+See [Configuration](/docs/configuration) for complete documentation.
 
 ## [!] That's It!
 

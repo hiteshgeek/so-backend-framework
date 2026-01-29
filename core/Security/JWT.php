@@ -103,6 +103,11 @@ class JWT
         $header = json_decode($this->base64UrlDecode($headerEncoded), true);
         $payload = json_decode($this->base64UrlDecode($payloadEncoded), true);
 
+        // Verify JSON decoded correctly
+        if (!is_array($header) || !is_array($payload)) {
+            throw new \Exception('Invalid token: malformed JSON');
+        }
+
         // Verify algorithm
         if (!isset($header['alg']) || $header['alg'] !== $this->algorithm) {
             throw new \Exception('Invalid algorithm');

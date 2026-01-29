@@ -78,9 +78,9 @@ class Kernel
      */
     protected function showHelp(): void
     {
-        echo "SO Backend Framework - Artisan Console\n\n";
+        echo "SO Backend Framework - SixOrbit Console\n\n";
         echo "Usage:\n";
-        echo "  php artisan <command> [options] [arguments]\n\n";
+        echo "  php sixorbit <command> [options] [arguments]\n\n";
         echo "Available commands:\n";
 
         foreach ($this->commands as $name => $command) {

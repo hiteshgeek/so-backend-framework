@@ -10,6 +10,7 @@ use App\Controllers\DashboardController;
 use App\Middleware\AuthMiddleware;
 use App\Middleware\GuestMiddleware;
 use App\Middleware\CsrfMiddleware;
+use App\Middleware\ThrottleMiddleware;
 
 // Home route
 Router::get('/', function (Request $request) {
@@ -27,16 +28,17 @@ Router::group(['middleware' => [CsrfMiddleware::class]], function () {
     // Guest routes (redirect to dashboard if authenticated)
     Router::group(['middleware' => [GuestMiddleware::class]], function () {
         Router::get('/register', [AuthController::class, 'showRegister']);
-        Router::post('/register', [AuthController::class, 'register']);
-
         Router::get('/login', [AuthController::class, 'showLogin']);
-        Router::post('/login', [AuthController::class, 'login']);
-
         Router::get('/password/forgot', [PasswordController::class, 'showForgotForm']);
-        Router::post('/password/forgot', [PasswordController::class, 'sendResetLink']);
-
         Router::get('/password/reset/{token}', [PasswordController::class, 'showResetForm']);
-        Router::post('/password/reset', [PasswordController::class, 'reset']);
+
+        // Rate-limited auth POST routes (5 attempts per minute to prevent brute force)
+        Router::group(['middleware' => [ThrottleMiddleware::class . ':5,1']], function () {
+            Router::post('/register', [AuthController::class, 'register']);
+            Router::post('/login', [AuthController::class, 'login']);
+            Router::post('/password/forgot', [PasswordController::class, 'sendResetLink']);
+            Router::post('/password/reset', [PasswordController::class, 'reset']);
+        });
     });
 
     // Protected routes (require authentication)

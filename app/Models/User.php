@@ -57,7 +57,14 @@ class User extends Model
             ->where('email', '=', $email)
             ->first();
 
-        return $result ? new static($result) : null;
+        if ($result) {
+            $instance = new static($result);
+            $instance->exists = true;
+            $instance->original = $result;
+            return $instance;
+        }
+
+        return null;
     }
 
     public function verifyPassword(string $password): bool

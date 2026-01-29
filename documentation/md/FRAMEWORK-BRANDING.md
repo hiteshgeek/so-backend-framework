@@ -439,4 +439,4 @@ To rename your framework:
 
 **That's it!** Your framework is now completely rebranded! [->]
 
-For questions, see [CONFIGURATION.md](CONFIGURATION.md) for detailed documentation.
+For questions, see [Configuration](/docs/configuration) for detailed documentation.

@@ -90,7 +90,7 @@ cache()->forget('products.featured');
 cache()->flush();
 
 // Or use artisan command
-php artisan cache:clear
+php sixorbit cache:clear
 ```
 
 ---
@@ -675,7 +675,7 @@ SELECT COUNT(*) FROM cache WHERE expiration < UNIX_TIMESTAMP();
 
 ```bash
 # Cron job (hourly)
-0 * * * * php artisan cache:gc
+0 * * * * php sixorbit cache:gc
 ```
 
 ---
@@ -758,6 +758,6 @@ The Cache System provides:
 - Implement remember pattern for expensive queries
 - Set up `cache:gc` cron job
 - Monitor cache hit rates
-- Review [FRAMEWORK-FEATURES.md](FRAMEWORK-FEATURES.md) for overview
+- Review [Framework Features](/docs/framework-features) for overview
 
 **Version**: 2.0.0 | **Last Updated**: 2026-01-29

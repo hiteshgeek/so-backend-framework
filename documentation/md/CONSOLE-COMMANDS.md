@@ -1,6 +1,6 @@
 # Console Commands Reference
 
-**SO Framework** | **Artisan CLI** | **Version 2.0.0**
+**SO Framework** | **SixOrbit CLI** | **Version 2.0.0**
 
 Complete reference for all command-line interface (CLI) commands available in the SO Framework.
 
@@ -24,7 +24,7 @@ Complete reference for all command-line interface (CLI) commands available in th
 
 ## Overview
 
-The SO Framework includes an **Artisan** command-line interface that provides helpful commands for managing your application. All commands are executed through the `artisan` script in the root directory.
+The SO Framework includes an **SixOrbit** command-line interface that provides helpful commands for managing your application. All commands are executed through the `sixorbit` script in the root directory.
 
 ### Features
 
@@ -39,24 +39,24 @@ The SO Framework includes an **Artisan** command-line interface that provides he
 
 ## Getting Started
 
-### Running Artisan
+### Running SixOrbit
 
-Execute artisan from the command line:
+Execute sixorbit from the command line:
 
 ```bash
-php artisan <command> [options] [arguments]
+php sixorbit <command> [options] [arguments]
 ```
 
 ### List All Commands
 
 ```bash
-php artisan
+php sixorbit
 ```
 
 ### Get Help for a Command
 
 ```bash
-php artisan help <command>
+php sixorbit help <command>
 ```
 
 ---
@@ -85,7 +85,7 @@ Process jobs from the queue. Runs as a daemon and continuously processes jobs.
 #### Syntax
 
 ```bash
-php artisan queue:work [options]
+php sixorbit queue:work [options]
 ```
 
 #### Options
@@ -102,22 +102,22 @@ php artisan queue:work [options]
 
 **Basic Usage (Daemon Mode)**
 ```bash
-php artisan queue:work
+php sixorbit queue:work
 ```
 
 **Process Specific Queue**
 ```bash
-php artisan queue:work --queue=emails
+php sixorbit queue:work --queue=emails
 ```
 
 **Process One Job and Exit**
 ```bash
-php artisan queue:work --once
+php sixorbit queue:work --once
 ```
 
 **Custom Configuration**
 ```bash
-php artisan queue:work --queue=high-priority --sleep=1 --tries=5 --timeout=120
+php sixorbit queue:work --queue=high-priority --sleep=1 --tries=5 --timeout=120
 ```
 
 #### Use Cases
@@ -133,7 +133,7 @@ php artisan queue:work --queue=high-priority --sleep=1 --tries=5 --timeout=120
 ```ini
 [program:so-queue-worker]
 process_name=%(program_name)s_%(process_num)02d
-command=php /var/www/html/so-backend-framework/artisan queue:work --sleep=3 --tries=3
+command=php /var/www/html/so-backend-framework/sixorbit queue:work --sleep=3 --tries=3
 autostart=true
 autorestart=true
 user=www-data
@@ -153,7 +153,7 @@ After=network.target
 Type=simple
 User=www-data
 WorkingDirectory=/var/www/html/so-backend-framework
-ExecStart=/usr/bin/php artisan queue:work --sleep=3 --tries=3
+ExecStart=/usr/bin/php sixorbit queue:work --sleep=3 --tries=3
 Restart=always
 
 [Install]
@@ -176,7 +176,7 @@ Clear all cache entries from the specified cache store.
 #### Syntax
 
 ```bash
-php artisan cache:clear [options]
+php sixorbit cache:clear [options]
 ```
 
 #### Options
@@ -189,12 +189,12 @@ php artisan cache:clear [options]
 
 **Clear Database Cache**
 ```bash
-php artisan cache:clear
+php sixorbit cache:clear
 ```
 
 **Clear Specific Store**
 ```bash
-php artisan cache:clear --store=redis
+php sixorbit cache:clear --store=redis
 ```
 
 #### Use Cases
@@ -230,7 +230,7 @@ Run garbage collection on the cache store to remove expired entries.
 #### Syntax
 
 ```bash
-php artisan cache:gc [options]
+php sixorbit cache:gc [options]
 ```
 
 #### Options
@@ -243,12 +243,12 @@ php artisan cache:gc [options]
 
 **Run Garbage Collection**
 ```bash
-php artisan cache:gc
+php sixorbit cache:gc
 ```
 
 **Specific Store**
 ```bash
-php artisan cache:gc --store=database
+php sixorbit cache:gc --store=database
 ```
 
 #### Use Cases
@@ -261,7 +261,7 @@ php artisan cache:gc --store=database
 
 ```bash
 # Run cache garbage collection daily at 2 AM
-0 2 * * * php /var/www/html/so-backend-framework/artisan cache:gc
+0 2 * * * php /var/www/html/so-backend-framework/sixorbit cache:gc
 ```
 
 ---
@@ -275,7 +275,7 @@ Clean up expired sessions from the database.
 #### Syntax
 
 ```bash
-php artisan session:cleanup
+php sixorbit session:cleanup
 ```
 
 #### Options
@@ -286,7 +286,7 @@ None
 
 **Clean Expired Sessions**
 ```bash
-php artisan session:cleanup
+php sixorbit session:cleanup
 ```
 
 #### Use Cases
@@ -304,7 +304,7 @@ php artisan session:cleanup
 
 ```bash
 # Clean sessions every hour
-0 * * * * php /var/www/html/so-backend-framework/artisan session:cleanup
+0 * * * * php /var/www/html/so-backend-framework/sixorbit session:cleanup
 ```
 
 #### Output Example
@@ -332,7 +332,7 @@ Archive or delete old activity log entries to maintain database performance.
 #### Syntax
 
 ```bash
-php artisan activity:prune [options]
+php sixorbit activity:prune [options]
 ```
 
 #### Options
@@ -347,17 +347,17 @@ php artisan activity:prune [options]
 
 **Delete Logs Older Than 90 Days**
 ```bash
-php artisan activity:prune
+php sixorbit activity:prune
 ```
 
 **Archive Logs Instead of Deleting**
 ```bash
-php artisan activity:prune --days=180 --archive
+php sixorbit activity:prune --days=180 --archive
 ```
 
 **Custom Batch Size**
 ```bash
-php artisan activity:prune --days=30 --batch=5000
+php sixorbit activity:prune --days=30 --batch=5000
 ```
 
 #### Use Cases
@@ -378,7 +378,7 @@ When `--archive` is specified:
 
 ```bash
 # Prune activity logs monthly
-0 0 1 * * php /var/www/html/so-backend-framework/artisan activity:prune --days=90
+0 0 1 * * php /var/www/html/so-backend-framework/sixorbit activity:prune --days=90
 ```
 
 #### Output Example
@@ -401,7 +401,7 @@ Delete old read notifications to keep the notifications table clean.
 #### Syntax
 
 ```bash
-php artisan notification:cleanup [options]
+php sixorbit notification:cleanup [options]
 ```
 
 #### Options
@@ -416,17 +416,17 @@ php artisan notification:cleanup [options]
 
 **Delete Read Notifications Older Than 30 Days**
 ```bash
-php artisan notification:cleanup
+php sixorbit notification:cleanup
 ```
 
 **Delete All Notifications (Read and Unread)**
 ```bash
-php artisan notification:cleanup --days=60 --read-only=false
+php sixorbit notification:cleanup --days=60 --read-only=false
 ```
 
 **Custom Batch Processing**
 ```bash
-php artisan notification:cleanup --days=7 --batch=5000
+php sixorbit notification:cleanup --days=7 --batch=5000
 ```
 
 #### Use Cases
@@ -440,7 +440,7 @@ php artisan notification:cleanup --days=7 --batch=5000
 
 ```bash
 # Clean notifications weekly
-0 3 * * 0 php /var/www/html/so-backend-framework/artisan notification:cleanup --days=30
+0 3 * * 0 php /var/www/html/so-backend-framework/sixorbit notification:cleanup --days=30
 ```
 
 #### Output Example
@@ -499,7 +499,7 @@ class SendEmailReportCommand extends Command
 
 ### Step 2: Register Command
 
-Register your command in `artisan`:
+Register your command in `sixorbit`:
 
 ```php
 $kernel->registerCommands([
@@ -513,7 +513,7 @@ $kernel->registerCommands([
 ### Step 3: Use Your Command
 
 ```bash
-php artisan report:email user@example.com --type=monthly --format=excel
+php sixorbit report:email user@example.com --type=monthly --format=excel
 ```
 
 ### Command Signature Syntax
@@ -581,8 +581,8 @@ $confirmed = $this->confirm('Continue?', true); // default: true
 Run commands directly during development:
 
 ```bash
-php artisan cache:clear
-php artisan queue:work --once
+php sixorbit cache:clear
+php sixorbit queue:work --once
 ```
 
 ### Production via Cron
@@ -594,10 +594,10 @@ Schedule commands to run automatically:
 crontab -e
 
 # Add commands
-0 2 * * * php /var/www/html/so-backend-framework/artisan cache:gc
-0 * * * * php /var/www/html/so-backend-framework/artisan session:cleanup
-0 3 * * 0 php /var/www/html/so-backend-framework/artisan notification:cleanup
-0 0 1 * * php /var/www/html/so-backend-framework/artisan activity:prune --days=90
+0 2 * * * php /var/www/html/so-backend-framework/sixorbit cache:gc
+0 * * * * php /var/www/html/so-backend-framework/sixorbit session:cleanup
+0 3 * * 0 php /var/www/html/so-backend-framework/sixorbit notification:cleanup
+0 0 1 * * php /var/www/html/so-backend-framework/sixorbit activity:prune --days=90
 ```
 
 ### Background Execution
@@ -606,17 +606,17 @@ Run commands in the background:
 
 ```bash
 # Background with output to log
-php artisan queue:work > storage/logs/queue.log 2>&1 &
+php sixorbit queue:work > storage/logs/queue.log 2>&1 &
 
 # Background with nohup
-nohup php artisan queue:work &
+nohup php sixorbit queue:work &
 ```
 
 ### Process Management
 
 **Check Running Queue Workers**
 ```bash
-ps aux | grep "artisan queue:work"
+ps aux | grep "sixorbit queue:work"
 ```
 
 **Stop Queue Worker**
@@ -627,7 +627,7 @@ kill -SIGTERM <process-id>
 **Restart Queue Worker**
 ```bash
 kill -SIGTERM <process-id>
-php artisan queue:work &
+php sixorbit queue:work &
 ```
 
 ---
@@ -641,13 +641,13 @@ All commands return exit codes:
 
 **Check Exit Code in Shell**
 ```bash
-php artisan cache:clear
+php sixorbit cache:clear
 echo $?  # Prints 0 for success, 1 for failure
 ```
 
 **Use in Scripts**
 ```bash
-if php artisan cache:clear; then
+if php sixorbit cache:clear; then
     echo "Cache cleared"
 else
     echo "Failed to clear cache"
@@ -742,15 +742,15 @@ $queue = $this->option('queue') ?? config('commands.queue.default_queue');
 
 **Problem**: `Command not found: my:command`
 
-**Solution**: Ensure command is registered in `artisan` file
+**Solution**: Ensure command is registered in `sixorbit` file
 
 ### Permission Denied
 
-**Problem**: `Permission denied` when running artisan
+**Problem**: `Permission denied` when running sixorbit
 
 **Solution**:
 ```bash
-chmod +x artisan
+chmod +x sixorbit
 ```
 
 ### Memory Limit
@@ -759,7 +759,7 @@ chmod +x artisan
 
 **Solution**:
 ```bash
-php -d memory_limit=512M artisan queue:work
+php -d memory_limit=512M sixorbit queue:work
 ```
 
 Or update `php.ini`:
@@ -788,22 +788,22 @@ set_time_limit(300); // 5 minutes
 # Edit with: crontab -e
 
 # Queue worker (should use supervisord instead)
-# * * * * * php /var/www/html/so-backend-framework/artisan queue:work --once
+# * * * * * php /var/www/html/so-backend-framework/sixorbit queue:work --once
 
 # Cache maintenance (daily at 2 AM)
-0 2 * * * php /var/www/html/so-backend-framework/artisan cache:gc
+0 2 * * * php /var/www/html/so-backend-framework/sixorbit cache:gc
 
 # Session cleanup (hourly)
-0 * * * * php /var/www/html/so-backend-framework/artisan session:cleanup
+0 * * * * php /var/www/html/so-backend-framework/sixorbit session:cleanup
 
 # Notification cleanup (weekly, Sunday at 3 AM)
-0 3 * * 0 php /var/www/html/so-backend-framework/artisan notification:cleanup --days=30
+0 3 * * 0 php /var/www/html/so-backend-framework/sixorbit notification:cleanup --days=30
 
 # Activity log pruning (monthly, 1st of month at midnight)
-0 0 1 * * php /var/www/html/so-backend-framework/artisan activity:prune --days=90
+0 0 1 * * php /var/www/html/so-backend-framework/sixorbit activity:prune --days=90
 
 # Clear cache (daily at 3 AM)
-0 3 * * * php /var/www/html/so-backend-framework/artisan cache:clear
+0 3 * * * php /var/www/html/so-backend-framework/sixorbit cache:clear
 ```
 
 ### Deployment Script
@@ -824,10 +824,10 @@ git pull origin main
 composer install --no-dev --optimize-autoloader
 
 # Clear cache
-php artisan cache:clear
+php sixorbit cache:clear
 
 # Run database migrations (when implemented)
-# php artisan migrate --force
+# php sixorbit migrate --force
 
 # Restart queue workers
 sudo supervisorctl start so-queue-worker:*
@@ -853,9 +853,9 @@ All commands follow Laravel conventions and can be scheduled with cron or proces
 ---
 
 **Next Steps:**
-- [Queue System Documentation](QUEUE-SYSTEM.md)
-- [Cache System Documentation](CACHE-SYSTEM.md)
-- [Activity Logging Documentation](ACTIVITY-LOGGING.md)
+- [Queue System Documentation](/docs/queue-system)
+- [Cache System Documentation](/docs/cache-system)
+- [Activity Logging Documentation](/docs/activity-logging)
 
 ---
 

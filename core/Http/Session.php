@@ -62,7 +62,8 @@ class Session
 
     public function getOld(string $key, mixed $default = null): mixed
     {
-        return $this->get('_old_input.' . $key, $default);
+        $oldInput = $this->get('_old_input', []);
+        return $oldInput[$key] ?? $default;
     }
 
     public function regenerate(): void

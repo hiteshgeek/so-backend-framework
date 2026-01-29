@@ -62,8 +62,7 @@ class CsrfMiddleware implements MiddlewareInterface
         }
 
         // For web requests, redirect back
-        return Response::redirect($request->header('Referer') ?? '/')
-            ->withInput()
-            ->withError('CSRF token validation failed. Please refresh and try again.');
+        return redirect($request->header('Referer') ?? '/')
+            ->with('error', 'CSRF token validation failed. Please refresh and try again.');
     }
 }

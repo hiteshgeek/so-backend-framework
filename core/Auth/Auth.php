@@ -3,6 +3,7 @@
 namespace Core\Auth;
 
 use Core\Http\Session;
+use Core\Security\Csrf;
 use App\Models\User;
 
 /**
@@ -16,10 +17,14 @@ class Auth
     protected string $sessionKey = 'auth_user_id';
     protected string $rememberCookieName = 'remember_token';
     protected int $rememberDuration = 2592000; // 30 days in seconds
+    protected bool $secureCookie;
+    protected string $cookieDomain;
 
     public function __construct(Session $session)
     {
         $this->session = $session;
+        $this->secureCookie = (bool) ($_ENV['COOKIE_SECURE'] ?? (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on'));
+        $this->cookieDomain = $_ENV['COOKIE_DOMAIN'] ?? '';
     }
 
     /**
@@ -46,6 +51,12 @@ class Auth
      */
     public function login(User $user, bool $remember = false): void
     {
+        // Regenerate session ID to prevent session fixation
+        $this->session->regenerate();
+
+        // Regenerate CSRF token on login for security
+        Csrf::regenerate();
+
         $this->session->set($this->sessionKey, $user->id);
 
         if ($remember) {
@@ -116,18 +127,18 @@ class Auth
     {
         $token = bin2hex(random_bytes(32));
 
-        // Save token to database
-        $user->remember_token = $token;
+        // Save hashed token to database for security
+        $user->remember_token = hash('sha256', $token);
         $user->save();
 
-        // Set cookie
+        // Set cookie with raw token (user presents this to authenticate)
         setcookie(
             $this->rememberCookieName,
             $token,
             time() + $this->rememberDuration,
             '/',
-            '',
-            false, // Set to true in production with HTTPS
+            $this->cookieDomain,
+            $this->secureCookie,
             true   // HTTP only
         );
     }
@@ -142,8 +153,8 @@ class Auth
             '',
             time() - 3600,
             '/',
-            '',
-            false,
+            $this->cookieDomain,
+            $this->secureCookie,
             true
         );
     }
@@ -158,11 +169,15 @@ class Auth
         }
 
         $token = $_COOKIE[$this->rememberCookieName];
+        $hashedToken = hash('sha256', $token);
 
-        // Find user by remember token
-        $user = User::where('remember_token', '=', $token)->first();
+        // Find user by hashed remember token
+        $result = User::where('remember_token', '=', $hashedToken)->first();
 
-        if ($user) {
+        if ($result) {
+            $user = new User($result);
+            $user->exists = true;
+            $user->original = $result;
             $this->login($user, true); // Refresh the remember token
             return true;
         }

@@ -116,7 +116,7 @@ class PasswordController
         ]);
 
         if ($validator->fails()) {
-            return redirect()->back()
+            return back()
                 ->withErrors($validator->errors());
         }
 

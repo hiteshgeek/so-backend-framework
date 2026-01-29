@@ -216,6 +216,30 @@ class Request
     }
 
     /**
+     * Magic getter for dynamic properties
+     */
+    public function __get(string $key): mixed
+    {
+        return $this->attributes[$key] ?? null;
+    }
+
+    /**
+     * Magic setter for dynamic properties
+     */
+    public function __set(string $key, mixed $value): void
+    {
+        $this->attributes[$key] = $value;
+    }
+
+    /**
+     * Magic isset for dynamic properties
+     */
+    public function __isset(string $key): bool
+    {
+        return isset($this->attributes[$key]);
+    }
+
+    /**
      * Check if the request expects a JSON response
      *
      * @return bool

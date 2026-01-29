@@ -109,7 +109,7 @@ public function register(Request $request)
 Start the queue worker to process jobs:
 
 ```bash
-php artisan queue:work
+php sixorbit queue:work
 
 # Output:
 # Processing: App\Jobs\SendWelcomeEmail
@@ -147,7 +147,7 @@ That's it! Jobs are now processed in the background.
 - Updates job status
 
 **5. Console Command** (`core/Console/Commands/QueueWorkCommand.php`)
-- CLI interface: `php artisan queue:work`
+- CLI interface: `php sixorbit queue:work`
 - Worker process control
 - Options for queue selection, sleep time, etc.
 
@@ -393,19 +393,19 @@ class ImportAndNotify extends Job
 
 ```bash
 # Basic worker
-php artisan queue:work
+php sixorbit queue:work
 
 # Specify queue
-php artisan queue:work --queue=high-priority
+php sixorbit queue:work --queue=high-priority
 
 # Multiple queues (priority order)
-php artisan queue:work --queue=high-priority,default,low-priority
+php sixorbit queue:work --queue=high-priority,default,low-priority
 
 # Set sleep time (seconds between job checks)
-php artisan queue:work --sleep=3
+php sixorbit queue:work --sleep=3
 
 # Set max tries
-php artisan queue:work --tries=5
+php sixorbit queue:work --tries=5
 ```
 
 ### Worker Options
@@ -427,7 +427,7 @@ For production, use Supervisor to keep worker running:
 ```ini
 [program:so-framework-worker]
 process_name=%(program_name)s_%(process_num)02d
-command=php /var/www/html/so-backend-framework/artisan queue:work --sleep=3 --tries=3
+command=php /var/www/html/so-backend-framework/sixorbit queue:work --sleep=3 --tries=3
 autostart=true
 autorestart=true
 user=www-data
@@ -579,7 +579,7 @@ Organize jobs by priority:
 
 Worker prioritization:
 ```bash
-php artisan queue:work --queue=critical,high,default,low
+php sixorbit queue:work --queue=critical,high,default,low
 ```
 
 ---
@@ -846,10 +846,10 @@ tail -f storage/logs/worker.log
 
 ```bash
 # Restart worker after X jobs
-php artisan queue:work --max-jobs=1000
+php sixorbit queue:work --max-jobs=1000
 
 # Restart worker after X seconds
-php artisan queue:work --max-time=3600
+php sixorbit queue:work --max-time=3600
 ```
 
 ### Slow Job Processing
@@ -886,6 +886,6 @@ The Queue System enables:
 - Create your first job class in `app/Jobs/`
 - Set up Supervisor for production workers
 - Configure queue monitoring and alerts
-- Review [FRAMEWORK-FEATURES.md](FRAMEWORK-FEATURES.md) for system overview
+- Review [Framework Features](/docs/framework-features) for system overview
 
 **Version**: 2.0.0 | **Last Updated**: 2026-01-29

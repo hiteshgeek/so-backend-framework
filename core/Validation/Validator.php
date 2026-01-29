@@ -90,6 +90,19 @@ class Validator
     }
 
     /**
+     * Create a new validator instance (static factory method)
+     *
+     * @param array $data Data to validate
+     * @param array $rules Validation rules
+     * @param array $customMessages Custom error messages
+     * @return static
+     */
+    public static function make(array $data, array $rules, array $customMessages = []): static
+    {
+        return new static($data, $rules, $customMessages);
+    }
+
+    /**
      * Validate the data
      *
      * @return array Validated data

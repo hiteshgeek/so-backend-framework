@@ -575,11 +575,11 @@ It also includes:
 
 ## [Docs] Related Documentation
 
-- **[FRAMEWORK-BRANDING.md](FRAMEWORK-BRANDING.md)** - Complete file reference
+- **[Framework Branding](/docs/branding)** - Complete file reference
 - **[rename-framework.sh](rename-framework.sh)** - Automated script
-- **[CONFIGURATION.md](CONFIGURATION.md)** - Configuration system guide
-- **[QUICK-START.md](QUICK-START.md)** - Quick reference
+- **[Configuration](/docs/configuration)** - Configuration system guide
+- **[Quick Start](/docs/quick-start)** - Quick reference
 
 ---
 
-**Questions?** See [FRAMEWORK-BRANDING.md](FRAMEWORK-BRANDING.md) for detailed information about each file.
+**Questions?** See [Framework Branding](/docs/branding) for detailed information about each file.

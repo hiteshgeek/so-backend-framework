@@ -85,9 +85,10 @@ class ThrottleMiddleware implements MiddlewareInterface
      */
     protected function resolveRequestSignature(Request $request): string
     {
-        // Check if user is authenticated
-        if (isset($request->user_id)) {
-            return 'user:' . $request->user_id;
+        // Check if user is authenticated via auth service
+        $userId = auth()->id();
+        if ($userId !== null) {
+            return 'user:' . $userId;
         }
 
         // Use IP address for guests

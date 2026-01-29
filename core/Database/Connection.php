@@ -27,23 +27,62 @@ class Connection
         try {
             $driver = $this->config['driver'] ?? 'mysql';
             $host = $this->config['host'] ?? 'localhost';
-            $port = $this->config['port'] ?? 3306;
             $database = $this->config['database'];
             $username = $this->config['username'];
             $password = $this->config['password'] ?? '';
 
-            $dsn = "{$driver}:host={$host};port={$port};dbname={$database};charset=utf8mb4";
+            $dsn = $this->buildDsn($driver, $host, $database);
 
-            $this->pdo = new PDO($dsn, $username, $password, [
+            $options = [
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
                 PDO::ATTR_EMULATE_PREPARES => false,
-            ]);
+            ];
+
+            $this->pdo = new PDO($dsn, $username, $password, $options);
+
+            // Set charset for PostgreSQL after connection
+            if ($driver === 'pgsql') {
+                $this->pdo->exec("SET NAMES 'UTF8'");
+            }
 
             return $this->pdo;
         } catch (PDOException $e) {
             throw new \RuntimeException('Database connection failed: ' . $e->getMessage());
         }
+    }
+
+    /**
+     * Build DSN string based on database driver
+     */
+    protected function buildDsn(string $driver, string $host, string $database): string
+    {
+        $port = $this->config['port'] ?? $this->getDefaultPort($driver);
+
+        switch ($driver) {
+            case 'pgsql':
+                return "pgsql:host={$host};port={$port};dbname={$database}";
+
+            case 'sqlite':
+                return "sqlite:{$database}";
+
+            case 'mysql':
+            default:
+                $charset = $this->config['charset'] ?? 'utf8mb4';
+                return "mysql:host={$host};port={$port};dbname={$database};charset={$charset}";
+        }
+    }
+
+    /**
+     * Get default port for database driver
+     */
+    protected function getDefaultPort(string $driver): int
+    {
+        return match ($driver) {
+            'pgsql' => 5432,
+            'mysql' => 3306,
+            default => 3306,
+        };
     }
 
     public function getPdo(): PDO

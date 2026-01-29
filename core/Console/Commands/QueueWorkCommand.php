@@ -9,7 +9,7 @@ use Core\Queue\Worker;
  * Queue Work Command
  *
  * Processes jobs from the queue
- * Usage: php artisan queue:work --queue=default --sleep=3
+ * Usage: php sixorbit queue:work --queue=default --sleep=3
  */
 class QueueWorkCommand extends Command
 {

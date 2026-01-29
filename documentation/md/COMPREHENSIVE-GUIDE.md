@@ -266,7 +266,7 @@ session()->regenerate();
 - [x] Middleware parameters (e.g., throttle:60,1)
 - [x] Core middleware implementations (Auth, CORS, CSRF, JWT, Throttle, Logging)
 
-**Documentation**: See [MIDDLEWARE_IMPLEMENTATION_SUMMARY.md](../tests/MIDDLEWARE_IMPLEMENTATION_SUMMARY.md)
+**Documentation**: See [Middleware Guide](/docs/middleware)
 
 #### 9. **Security Layer** (100%) * NEW
 - [x] CSRF Protection (token-based form validation)
@@ -276,7 +276,7 @@ session()->regenerate();
 - [x] Secure password hashing
 - [x] Timing-attack safe comparisons
 
-**Documentation**: See [SECURITY-LAYER.md](SECURITY-LAYER.md)
+**Documentation**: See [Security Layer](/docs/security-layer)
 **Test Results**: 96/101 tests passed (95%)
 
 **Example**:
@@ -308,7 +308,7 @@ Route::middleware(['throttle:60,1'])->group(function() {
 - [x] Array/nested validation
 - [x] ValidationException with 422 status
 
-**Documentation**: See [VALIDATION-SYSTEM.md](VALIDATION-SYSTEM.md)
+**Documentation**: See [Validation System](/docs/validation-system)
 **Test Results**: 39/42 tests passed (93%)
 
 **Example**:
@@ -329,7 +329,7 @@ User::create($validated);
 - [x] Context-based rate limiting
 - [x] Unified API client
 
-**Documentation**: See [INTERNAL_API_LAYER_SUMMARY.md](../tests/INTERNAL_API_LAYER_SUMMARY.md)
+**Documentation**: See [Internal API Layer](/docs/internal-api)
 **Test Results**: 13/15 tests passed (86.7%)
 
 **Example**:
@@ -352,7 +352,7 @@ if ($permissions->can($context, 'users.delete')) {
 - [x] Scope chaining
 - [x] Scope parameters
 
-**Documentation**: See [MODEL_ENHANCEMENTS_SUMMARY.md](../tests/MODEL_ENHANCEMENTS_SUMMARY.md)
+**Documentation**: See [Model Enhancements](/docs/model-enhancements)
 **Test Results**: 10/10 tests passed (100%)
 
 **Example**:
@@ -392,12 +392,12 @@ Complete implementation of Laravel's framework database tables for ERP applicati
 - [x] **Sessions** - Database-driven sessions for horizontal scaling
 
 **Documentation**:
-- [ACTIVITY-LOGGING.md](ACTIVITY-LOGGING.md)
-- [QUEUE-SYSTEM.md](QUEUE-SYSTEM.md)
-- [NOTIFICATION-SYSTEM.md](NOTIFICATION-SYSTEM.md)
-- [CACHE-SYSTEM.md](CACHE-SYSTEM.md)
-- [SESSION-SYSTEM.md](SESSION-SYSTEM.md)
-- [FRAMEWORK-FEATURES.md](FRAMEWORK-FEATURES.md) - Complete overview
+- [Activity Logging](/docs/activity-logging)
+- [Queue System](/docs/queue-system)
+- [Notification System](/docs/notification-system)
+- [Cache System](/docs/cache-system)
+- [Session System](/docs/session-system)
+- [Framework Features](/docs/framework-features) - Complete overview
 
 **Example**:
 ```php
@@ -409,7 +409,7 @@ activity()->log('User created invoice #1234')
 
 // Queue Jobs
 dispatch(new SendInvoiceEmail($invoice));
-php artisan queue:work
+php sixorbit queue:work
 
 // Notifications
 $user->notify(new InvoiceGenerated($invoice));
@@ -1438,10 +1438,10 @@ curl http://localhost/so-backend-framework/api/v1/users
 ## Getting Help
 
 ### Documentation
-- [INDEX.md](INDEX.md) - Documentation navigation
-- [SETUP.md](SETUP.md) - Installation guide
-- [CONFIGURATION.md](CONFIGURATION.md) - Configuration guide
-- [QUICK-START.md](QUICK-START.md) - Quick reference
+- [Documentation Index](/docs/index) - Documentation navigation
+- [Setup Guide](/docs/setup) - Installation guide
+- [Configuration](/docs/configuration) - Configuration guide
+- [Quick Start](/docs/quick-start) - Quick reference
 
 ### Support
 - Check the documentation first

@@ -88,7 +88,7 @@ The SO Framework documentation is **comprehensive and production-ready** with **
 
 ### Request Lifecycle: [x] DOCUMENTED
 
-The [COMPREHENSIVE-GUIDE.md](COMPREHENSIVE-GUIDE.md) includes a complete request lifecycle diagram:
+The [Comprehensive Guide](/docs/comprehensive) includes a complete request lifecycle diagram:
 
 ```
 1. HTTP Request arrives
@@ -578,7 +578,7 @@ $users = DB::table('users')
 
 **Documented Features**:
 - Command registration
-- Artisan console
+- SixOrbit console
 - Built-in commands (cache:clear, queue:work, etc.)
 
 **Documentation Location**: Brief mentions in COMPREHENSIVE-GUIDE.md

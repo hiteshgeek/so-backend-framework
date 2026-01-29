@@ -771,7 +771,7 @@ storage/
 
 ```bash
 # Clear all cache including views
-php artisan cache:clear
+php sixorbit cache:clear
 
 # Manual deletion
 rm -rf storage/cache/views/*
@@ -928,9 +928,9 @@ Twig makes building secure, performant views straightforward while keeping your 
 ---
 
 **Related Documentation:**
-- [Comprehensive Guide](COMPREHENSIVE-GUIDE.md) - Complete framework reference
-- [Security Layer](SECURITY-LAYER.md) - XSS prevention details
-- [Authentication](AUTH-SYSTEM.md) - Auth in templates
+- [Comprehensive Guide](/docs/comprehensive) - Complete framework reference
+- [Security Layer](/docs/security-layer) - XSS prevention details
+- [Authentication](/docs/auth-system) - Auth in templates
 
 ---
 

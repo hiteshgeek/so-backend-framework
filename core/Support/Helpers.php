@@ -330,6 +330,18 @@ if (!function_exists('response')) {
     }
 }
 
+if (!function_exists('request')) {
+    /**
+     * Get the current request instance
+     *
+     * @return \Core\Http\Request
+     */
+    function request(): \Core\Http\Request
+    {
+        return app('request') ?? new \Core\Http\Request();
+    }
+}
+
 if (!function_exists('json')) {
     /**
      * Create JSON response
@@ -579,5 +591,70 @@ if (!function_exists('validate')) {
     {
         $validator = new \Core\Validation\Validator($data, $rules, $messages);
         return $validator->validate();
+    }
+}
+
+// ==========================================
+// Router Helper Functions
+// ==========================================
+
+if (!function_exists('router')) {
+    /**
+     * Get the router instance
+     *
+     * @return \Core\Routing\Router
+     */
+    function router(): \Core\Routing\Router
+    {
+        return app('router');
+    }
+}
+
+if (!function_exists('current_route')) {
+    /**
+     * Get the current route
+     *
+     * @return \Core\Routing\Route|null
+     */
+    function current_route(): ?\Core\Routing\Route
+    {
+        return \Core\Routing\Router::current();
+    }
+}
+
+if (!function_exists('route_is')) {
+    /**
+     * Check if current route matches the given name(s)
+     *
+     * @param string ...$names Route names (supports wildcard *)
+     * @return bool
+     */
+    function route_is(string ...$names): bool
+    {
+        return \Core\Routing\Router::is(...$names);
+    }
+}
+
+if (!function_exists('current_route_name')) {
+    /**
+     * Get the current route name
+     *
+     * @return string|null
+     */
+    function current_route_name(): ?string
+    {
+        return \Core\Routing\Router::currentRouteName();
+    }
+}
+
+if (!function_exists('current_route_action')) {
+    /**
+     * Get the current route action
+     *
+     * @return string|null
+     */
+    function current_route_action(): ?string
+    {
+        return \Core\Routing\Router::currentRouteAction();
     }
 }

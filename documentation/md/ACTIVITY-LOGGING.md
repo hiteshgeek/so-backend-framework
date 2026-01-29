@@ -645,7 +645,7 @@ Set up automatic pruning to prevent table growth:
 
 ```bash
 # Cron job (daily at 3 AM)
-0 3 * * * php artisan activity:prune --days=365
+0 3 * * * php sixorbit activity:prune --days=365
 ```
 
 ### 5. Index Critical Columns
@@ -724,7 +724,7 @@ The Activity Logging system provides:
 **Next Steps**:
 - Add `LogsActivity` trait to your important models
 - Set up `activity:prune` cron job
-- Review [FRAMEWORK-FEATURES.md](FRAMEWORK-FEATURES.md) for complete system overview
-- Explore other systems: [Queue](QUEUE-SYSTEM.md), [Cache](CACHE-SYSTEM.md), [Notifications](NOTIFICATION-SYSTEM.md)
+- Review [Framework Features](/docs/framework-features) for complete system overview
+- Explore other systems: [Queue](/docs/queue-system), [Cache](/docs/cache-system), [Notifications](/docs/notification-system)
 
 **Version**: 2.0.0 | **Last Updated**: 2026-01-29

@@ -2,7 +2,7 @@
 
 A production-ready PHP framework with Laravel-style routing, comprehensive security features, and an API-first architecture.
 
-> **[Docs] Full Documentation:** See [INDEX.md](INDEX.md) for complete navigation.
+> **[Docs] Full Documentation:** See [Documentation Index](/docs/index) for complete navigation.
 
 ## Features
 
@@ -43,7 +43,7 @@ php -S localhost:8000 -t public
 curl http://localhost:8000/api/test
 ```
 
-**[Book] Detailed Instructions:** See [SETUP.md](SETUP.md)
+**[Book] Detailed Instructions:** See [Setup Guide](/docs/setup)
 
 ## Architecture
 
@@ -74,8 +74,8 @@ php database/migrations/generate-setup.php
 ```
 
 **[Book] Learn More:**
-- [CONFIGURATION.md](CONFIGURATION.md) - Complete config guide
-- [QUICK-START.md](QUICK-START.md) - Fast reference
+- [Configuration](/docs/configuration) - Complete config guide
+- [Quick Start](/docs/quick-start) - Fast reference
 
 ## Directory Structure
 
@@ -171,8 +171,8 @@ The framework includes comprehensive security features:
 ```
 
 **[Book] Detailed Guides:**
-- [RENAME-PROCESS.md](RENAME-PROCESS.md) - Step-by-step manual process
-- [FRAMEWORK-BRANDING.md](FRAMEWORK-BRANDING.md) - Complete file reference
+- [Rename Process](/docs/rename) - Step-by-step manual process
+- [Framework Branding](/docs/branding) - Complete file reference
 
 ## Testing
 
@@ -200,14 +200,14 @@ curl -X POST http://localhost:8000/api/v1/users \
 
 | Document | Description |
 |----------|-------------|
-| **[INDEX.md](INDEX.md)** | [Docs] Complete documentation navigation |
-| **[SETUP.md](SETUP.md)** | [->] Installation and setup guide |
-| **[CONFIGURATION.md](CONFIGURATION.md)** | [Config] Configuration system guide |
-| **[QUICK-START.md](QUICK-START.md)** | ⚡ Fast reference guide |
-| **[RENAME-PROCESS.md](RENAME-PROCESS.md)** | [Note] Step-by-step rename guide |
-| **[FRAMEWORK-BRANDING.md](FRAMEWORK-BRANDING.md)** | 🎨 Complete branding reference |
+| **[Documentation Index](/docs/index)** | [Docs] Complete documentation navigation |
+| **[Setup Guide](/docs/setup)** | [->] Installation and setup guide |
+| **[Configuration](/docs/configuration)** | [Config] Configuration system guide |
+| **[Quick Start](/docs/quick-start)** | ⚡ Fast reference guide |
+| **[Rename Process](/docs/rename)** | [Note] Step-by-step rename guide |
+| **[Framework Branding](/docs/branding)** | 🎨 Complete branding reference |
 
-**Start here:** [INDEX.md](INDEX.md)
+**Start here:** [Documentation Index](/docs/index)
 
 ## Implementation Status
 
@@ -238,8 +238,8 @@ MIT License
 ## Support
 
 - **Documentation:** This folder
-- **Setup Issues:** [SETUP.md](SETUP.md)
-- **Configuration:** [CONFIGURATION.md](CONFIGURATION.md)
+- **Setup Issues:** [Setup Guide](/docs/setup)
+- **Configuration:** [Configuration](/docs/configuration)
 - **Implementation Plan:** `~/.claude/plans/hashed-launching-umbrella.md`
 
 ---

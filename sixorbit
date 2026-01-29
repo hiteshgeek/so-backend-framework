@@ -2,7 +2,7 @@
 <?php
 
 /**
- * Artisan Console
+ * SixOrbit Console
  *
  * Command-line interface for the SO Backend Framework
  */

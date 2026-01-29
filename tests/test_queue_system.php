@@ -55,9 +55,9 @@ try {
 
     echo "=== Next Steps ===\n";
     echo "To process the queued jobs, run the worker:\n";
-    echo "  php artisan queue:work --queue=default --once\n";
+    echo "  php sixorbit queue:work --queue=default --once\n";
     echo "\nOr run in daemon mode:\n";
-    echo "  php artisan queue:work --queue=default\n\n";
+    echo "  php sixorbit queue:work --queue=default\n\n";
 
     echo "=== Summary ===\n";
     echo "✓ Jobs can be dispatched to the queue\n";
