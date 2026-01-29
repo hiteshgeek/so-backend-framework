@@ -561,11 +561,11 @@ class PaymentDueReminder extends Notification
 ### 1. Meaningful Titles and Messages
 
 ```php
-// ❌ Bad
+// [X] Bad
 'title' => 'Update'
 'message' => 'Something changed'
 
-// ✅ Good
+// [x] Good
 'title' => 'Order Shipped'
 'message' => "Your order #12345 has been shipped and will arrive on Jan 30"
 ```
@@ -580,7 +580,7 @@ public function toDatabase($notifiable): array
     return [
         'title' => 'New Comment',
         'message' => "{$this->commenter} commented on your post",
-        'url' => "/posts/{$this->postId}#comment-{$this->commentId}"  // ✅ Direct link
+        'url' => "/posts/{$this->postId}#comment-{$this->commentId}"  // [x] Direct link
     ];
 }
 ```
@@ -625,12 +625,12 @@ return [
 Use queue system for bulk notifications:
 
 ```php
-// ❌ Bad: Blocks request
+// [X] Bad: Blocks request
 foreach ($users as $user) {
     $user->notify(new Announcement($text));
 }
 
-// ✅ Good: Queue it
+// [x] Good: Queue it
 dispatch(new SendBulkNotifications($users, new Announcement($text)));
 ```
 
@@ -674,11 +674,11 @@ public function __construct()
 
 The Notification System provides:
 
-✅ **In-app notifications** - Keep users informed
-✅ **Workflow alerts** - Approvals, assignments, status changes
-✅ **Read/unread tracking** - User sees what's new
-✅ **Flexible data** - Store any JSON data
-✅ **Multiple channels** - Database (future: email, SMS, Slack)
+[x] **In-app notifications** - Keep users informed
+[x] **Workflow alerts** - Approvals, assignments, status changes
+[x] **Read/unread tracking** - User sees what's new
+[x] **Flexible data** - Store any JSON data
+[x] **Multiple channels** - Database (future: email, SMS, Slack)
 
 **Essential for ERP:**
 - Approval workflow notifications

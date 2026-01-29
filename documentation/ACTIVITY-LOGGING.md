@@ -162,9 +162,9 @@ class Order extends Model
 ```
 
 **What gets logged automatically**:
-- ✅ `created` - New record created
-- ✅ `updated` - Record updated (before/after values)
-- ✅ `deleted` - Record deleted
+- [x] `created` - New record created
+- [x] `updated` - Record updated (before/after values)
+- [x] `deleted` - Record deleted
 
 ### Customize Logged Attributes
 
@@ -618,10 +618,10 @@ Group related activity by log name:
 ### 2. Log Meaningful Descriptions
 
 ```php
-// ❌ Bad
+// [X] Bad
 activity()->log('updated');
 
-// ✅ Good
+// [x] Good
 activity()->log('Product price updated for seasonal sale');
 ```
 
@@ -710,12 +710,12 @@ The observer is registered automatically when the trait is used.
 
 The Activity Logging system provides:
 
-✅ **Automatic logging** - Add trait, get complete audit trail
-✅ **Manual logging** - Fluent API for custom actions
-✅ **Complete history** - Before/after values for all changes
-✅ **Compliance ready** - GDPR, SOX, HIPAA support
-✅ **Flexible** - Log names, custom properties, configurable attributes
-✅ **Production tested** - Used in large-scale ERP systems
+[x] **Automatic logging** - Add trait, get complete audit trail
+[x] **Manual logging** - Fluent API for custom actions
+[x] **Complete history** - Before/after values for all changes
+[x] **Compliance ready** - GDPR, SOX, HIPAA support
+[x] **Flexible** - Log names, custom properties, configurable attributes
+[x] **Production tested** - Used in large-scale ERP systems
 
 **Start logging today for complete visibility into your application.**
 

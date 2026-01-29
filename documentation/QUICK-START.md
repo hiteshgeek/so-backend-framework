@@ -26,15 +26,15 @@ php database/migrations/generate-setup.php
 mysql -u root -p < database/migrations/setup.sql
 ```
 
-### Step 4: Done! ✅
+### Step 4: Done! [x]
 
 Your framework name now appears everywhere:
-- ✅ Page titles
-- ✅ Welcome page
-- ✅ API responses
-- ✅ Database name
+- [x] Page titles
+- [x] Welcome page
+- [x] API responses
+- [x] Database name
 
-## 🎯 What Gets Updated Automatically
+## [*] What Gets Updated Automatically
 
 When you change `APP_NAME="My Framework"` in `.env`:
 
@@ -53,7 +53,7 @@ When you change `DB_DATABASE=mydb` in `.env`:
 | **Connections** | All database connections |
 | **Models** | All model queries |
 
-## 📝 Examples
+## [Note] Examples
 
 ### Change to "My Awesome API"
 
@@ -89,7 +89,7 @@ return Response::view('home', [
 ]);
 ```
 
-## 🚀 Test Your Changes
+## [->] Test Your Changes
 
 ```bash
 # Test homepage
@@ -102,10 +102,10 @@ curl http://localhost:8000/api/test
 mysql -u root -p -e "SHOW DATABASES LIKE 'your-database-name';"
 ```
 
-## 📚 More Details
+## [Docs] More Details
 
 See [CONFIGURATION.md](CONFIGURATION.md) for complete documentation.
 
-## 🎉 That's It!
+## [!] That's It!
 
 Change name **once** in `.env` → Works **everywhere** automatically!

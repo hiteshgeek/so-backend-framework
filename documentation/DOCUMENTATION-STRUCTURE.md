@@ -35,15 +35,15 @@ Access documentation through the web interface:
 
 ```
 documentation/
-├── COMPREHENSIVE-GUIDE.md          # Main comprehensive documentation
-├── README.md                       # Framework overview
-├── INDEX.md                        # Navigation hub
-├── SETUP.md                        # Setup guide
-├── CONFIGURATION.md                # Configuration guide
-├── QUICK-START.md                  # Quick reference
-├── RENAME-PROCESS.md               # Rename guide
-├── FRAMEWORK-BRANDING.md           # Branding reference
-└── DOCUMENTATION-STRUCTURE.md      # This file
++-- COMPREHENSIVE-GUIDE.md          # Main comprehensive documentation
++-- README.md                       # Framework overview
++-- INDEX.md                        # Navigation hub
++-- SETUP.md                        # Setup guide
++-- CONFIGURATION.md                # Configuration guide
++-- QUICK-START.md                  # Quick reference
++-- RENAME-PROCESS.md               # Rename guide
++-- FRAMEWORK-BRANDING.md           # Branding reference
++-- DOCUMENTATION-STRUCTURE.md      # This file
 ```
 
 ## Implementation Details

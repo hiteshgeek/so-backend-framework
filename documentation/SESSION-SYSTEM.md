@@ -32,8 +32,8 @@ Database sessions store session data in the `sessions` table instead of files:
 ### Why Database Sessions for ERP?
 
 **Horizontal Scaling**:
-- ❌ **File sessions**: Tied to single server (session affinity required)
-- ✅ **Database sessions**: Shared across all servers (no affinity needed)
+- [X] **File sessions**: Tied to single server (session affinity required)
+- [x] **Database sessions**: Shared across all servers (no affinity needed)
 
 **Security & Monitoring**:
 - Track active sessions in real-time
@@ -386,23 +386,23 @@ SESSION_SECURE_COOKIE=true  # HTTPS only
 
 **Architecture**:
 ```
-┌─────────────┐
-│ Load        │
-│ Balancer    │
-└──────┬──────┘
-       │
-       ├─────────────┬─────────────┐
-       │             │             │
- ┌─────▼────┐  ┌─────▼────┐  ┌─────▼────┐
- │ Server 1 │  │ Server 2 │  │ Server 3 │
- └─────┬────┘  └─────┬────┘  └─────┬────┘
-       │             │             │
-       └─────────────┴─────────────┘
-                     │
-              ┌──────▼──────┐
-              │   Database  │
-              │  (Sessions) │
-              └─────────────┘
++-------------+
+| Load        |
+| Balancer    |
++------+------+
+       |
+       +-------------+-------------+
+       |             |             |
+ +-----v----+  +-----v----+  +-----v----+
+ | Server 1 |  | Server 2 |  | Server 3 |
+ +-----+----+  +-----+----+  +-----+----+
+       |             |             |
+       +-------------+-------------+
+                     |
+              +------v------+
+              |   Database  |
+              |  (Sessions) |
+              +-------------+
 ```
 
 **Benefits**:
@@ -557,10 +557,10 @@ SESSION_SECURE_COOKIE=true  # Only send over HTTPS
 ### 5. Limit Session Data
 
 ```php
-// ❌ Bad: Store large objects
+// [X] Bad: Store large objects
 session()->put('products', Product::all());  // 10 MB!
 
-// ✅ Good: Store IDs only
+// [x] Good: Store IDs only
 session()->put('product_ids', [1, 2, 3]);
 ```
 
@@ -621,11 +621,11 @@ var_dump(config('session.driver')); // Should be 'database'
 
 The Session System provides:
 
-✅ **Database storage** - Shared across all servers
-✅ **Horizontal scaling** - No session affinity required
-✅ **Security tracking** - Monitor WHO, WHEN, WHERE
-✅ **Force logout** - Invalidate from database
-✅ **High availability** - Server restart doesn't lose sessions
+[x] **Database storage** - Shared across all servers
+[x] **Horizontal scaling** - No session affinity required
+[x] **Security tracking** - Monitor WHO, WHEN, WHERE
+[x] **Force logout** - Invalidate from database
+[x] **High availability** - Server restart doesn't lose sessions
 
 **Essential for ERP deployments**:
 - Multi-server load balancing

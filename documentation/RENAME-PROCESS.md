@@ -8,7 +8,7 @@ You can either:
 
 ---
 
-## 📋 What This Process Does
+## [List] What This Process Does
 
 This rename process changes your framework identity from:
 
@@ -30,7 +30,7 @@ Package:  so/framework  →  vendor/package
 
 ---
 
-## 🎯 Prerequisites
+## [*] Prerequisites
 
 Before starting:
 
@@ -49,7 +49,7 @@ cp database/migrations/setup.sql backups/setup.sql.backup
 
 ---
 
-## 📝 Step-by-Step Manual Process
+## [Note] Step-by-Step Manual Process
 
 ### Step 1: Update .env File
 
@@ -172,7 +172,7 @@ php database/migrations/generate-setup.php
 **Output you should see:**
 
 ```
-✅ Generated setup.sql with database: your-database-name
+[x] Generated setup.sql with database: your-database-name
 📁 File: /path/to/database/migrations/setup.sql
 
 To import:
@@ -316,7 +316,7 @@ Expected output:
 
 ---
 
-## ✅ Verification Steps
+## [x] Verification Steps
 
 After completing all steps, verify everything works:
 
@@ -401,7 +401,7 @@ curl http://localhost:8000/api/v1/users
 
 ---
 
-## 📊 Summary Checklist
+## [Chart] Summary Checklist
 
 After completing the process, you should have:
 
@@ -416,29 +416,29 @@ After completing the process, you should have:
 
 ---
 
-## 🔄 What Happens Automatically vs Manually
+## [~] What Happens Automatically vs Manually
 
 ### Automatic (No Code Changes Needed)
 
 When you update `.env`, these work automatically:
 
-✅ **Views** - Use `config('app.name')`, displays new name automatically
-✅ **Database Connections** - Read from config, connect to new database
-✅ **API Responses** - Any code using `config()` updates automatically
-✅ **Error Pages** - Framework name in error messages
-✅ **Logs** - Application name in log entries
+[x] **Views** - Use `config('app.name')`, displays new name automatically
+[x] **Database Connections** - Read from config, connect to new database
+[x] **API Responses** - Any code using `config()` updates automatically
+[x] **Error Pages** - Framework name in error messages
+[x] **Logs** - Application name in log entries
 
 ### Manual Updates Required
 
 These require file editing or regeneration:
 
-📝 **setup.sql** - Must regenerate with Step 4
-📝 **composer.json** - Must manually edit package name
-📝 **Documentation** - Optional, for consistency
+[Note] **setup.sql** - Must regenerate with Step 4
+[Note] **composer.json** - Must manually edit package name
+[Note] **Documentation** - Optional, for consistency
 
 ---
 
-## 🆘 Troubleshooting
+## [?] Troubleshooting
 
 ### Issue: "config('app.name') returns old name"
 
@@ -500,7 +500,7 @@ curl -s http://localhost:8000 | grep title
 
 ---
 
-## 📋 Quick Reference Command List
+## [List] Quick Reference Command List
 
 **Copy and paste these commands (replace values):**
 
@@ -533,7 +533,7 @@ php -r "require 'vendor/autoload.php'; use Core\Support\Env; Env::load('.env'); 
 
 ---
 
-## 🎉 Complete!
+## [!] Complete!
 
 Your framework has been renamed! The new identity is now:
 
@@ -542,19 +542,19 @@ Your framework has been renamed! The new identity is now:
 - **Package:** vendor/package
 
 **What changed:**
-- ✅ All configuration files
-- ✅ Database setup SQL
-- ✅ Package identity
-- ✅ Documentation (if you did Step 6)
+- [x] All configuration files
+- [x] Database setup SQL
+- [x] Package identity
+- [x] Documentation (if you did Step 6)
 
 **What works automatically:**
-- ✅ Views show new name
-- ✅ Database connections use new name
-- ✅ Config references resolve correctly
+- [x] Views show new name
+- [x] Database connections use new name
+- [x] Config references resolve correctly
 
 ---
 
-## 🚀 Alternative: Use the Automated Script
+## [->] Alternative: Use the Automated Script
 
 Instead of following this manual process, you can use the automated script:
 
@@ -565,15 +565,15 @@ Instead of following this manual process, you can use the automated script:
 The script does **exactly the same steps** as this document, but automatically! ⚡
 
 It also includes:
-- ✅ Automatic backups
-- ✅ Colored output
-- ✅ Confirmation prompts
-- ✅ Error handling
-- ✅ Progress indicators
+- [x] Automatic backups
+- [x] Colored output
+- [x] Confirmation prompts
+- [x] Error handling
+- [x] Progress indicators
 
 ---
 
-## 📚 Related Documentation
+## [Docs] Related Documentation
 
 - **[FRAMEWORK-BRANDING.md](FRAMEWORK-BRANDING.md)** - Complete file reference
 - **[rename-framework.sh](rename-framework.sh)** - Automated script

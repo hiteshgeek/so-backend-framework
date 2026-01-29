@@ -2,21 +2,21 @@
 
 A production-ready PHP framework with Laravel-style routing, comprehensive security features, and an API-first architecture.
 
-> **📚 Full Documentation:** See [INDEX.md](INDEX.md) for complete navigation.
+> **[Docs] Full Documentation:** See [INDEX.md](INDEX.md) for complete navigation.
 
 ## Features
 
-- ✅ **Advanced Routing** - Laravel-style routing with groups, named routes, middleware support
-- ✅ **MVC Architecture** - Clean separation of Models, Views, Controllers
-- ✅ **API-First Design** - Unified internal API layer for web, mobile, cron, and external APIs
-- ✅ **Security** - CSRF protection, XSS prevention, SQL injection prevention, JWT auth, rate limiting
-- ✅ **Database Layer** - Query builder with prepared statements, migrations, relationships
-- ✅ **Middleware System** - Flexible middleware pipeline for request processing
-- ✅ **Session Management** - Multiple drivers (file, database, Redis)
-- ✅ **Validation** - Comprehensive input validation system
-- ✅ **Dependency Injection** - Auto-resolving DI container
-- ✅ **Modern PHP** - Built for PHP 8.3+ with typed properties and modern features
-- ✅ **Configurable** - Change framework name in one place, affects everywhere
+- [x] **Advanced Routing** - Laravel-style routing with groups, named routes, middleware support
+- [x] **MVC Architecture** - Clean separation of Models, Views, Controllers
+- [x] **API-First Design** - Unified internal API layer for web, mobile, cron, and external APIs
+- [x] **Security** - CSRF protection, XSS prevention, SQL injection prevention, JWT auth, rate limiting
+- [x] **Database Layer** - Query builder with prepared statements, migrations, relationships
+- [x] **Middleware System** - Flexible middleware pipeline for request processing
+- [x] **Session Management** - Multiple drivers (file, database, Redis)
+- [x] **Validation** - Comprehensive input validation system
+- [x] **Dependency Injection** - Auto-resolving DI container
+- [x] **Modern PHP** - Built for PHP 8.3+ with typed properties and modern features
+- [x] **Configurable** - Change framework name in one place, affects everywhere
 
 ## Requirements
 
@@ -43,7 +43,7 @@ php -S localhost:8000 -t public
 curl http://localhost:8000/api/test
 ```
 
-**📖 Detailed Instructions:** See [SETUP.md](SETUP.md)
+**[Book] Detailed Instructions:** See [SETUP.md](SETUP.md)
 
 ## Architecture
 
@@ -52,10 +52,10 @@ curl http://localhost:8000/api/test
 All interfaces route through a unified internal API layer:
 
 ```
-Web Interface (Session Auth) ──┐
-Mobile Apps (JWT Auth) ────────├──> Internal API Layer ──> Services ──> Models ──> Database
-Cron Jobs (Signature Auth) ────┤
-External APIs (API Key+JWT) ───┘
+Web Interface (Session Auth) --+
+Mobile Apps (JWT Auth) --------+--> Internal API Layer --> Services --> Models --> Database
+Cron Jobs (Signature Auth) ----+
+External APIs (API Key+JWT) ---+
 ```
 
 Each interface has distinct permissions, rate limits, and guardrails enforced at the internal API layer.
@@ -73,28 +73,28 @@ DB_DATABASE=your-database
 php database/migrations/generate-setup.php
 ```
 
-**📖 Learn More:**
+**[Book] Learn More:**
 - [CONFIGURATION.md](CONFIGURATION.md) - Complete config guide
 - [QUICK-START.md](QUICK-START.md) - Fast reference
 
 ## Directory Structure
 
 ```
-├── app/                 # Application code
-│   ├── Controllers/     # HTTP controllers
-│   ├── Models/          # Database models
-│   ├── Middleware/      # Application middleware
-│   └── Services/        # Business logic
-├── core/                # Framework core
-│   ├── Database/        # Query builder, connections
-│   ├── Http/            # Request, Response, Session
-│   ├── Routing/         # Router implementation
-│   └── Security/        # CSRF, JWT, hashing
-├── config/              # Configuration files
-├── routes/              # Route definitions
-├── public/              # Web root
-├── docs/                # 📚 Complete documentation
-└── storage/             # Logs, cache, sessions
++-- app/                 # Application code
+|   +-- Controllers/     # HTTP controllers
+|   +-- Models/          # Database models
+|   +-- Middleware/      # Application middleware
+|   +-- Services/        # Business logic
++-- core/                # Framework core
+|   +-- Database/        # Query builder, connections
+|   +-- Http/            # Request, Response, Session
+|   +-- Routing/         # Router implementation
+|   +-- Security/        # CSRF, JWT, hashing
++-- config/              # Configuration files
++-- routes/              # Route definitions
++-- public/              # Web root
++-- docs/                # [Docs] Complete documentation
++-- storage/             # Logs, cache, sessions
 ```
 
 ## Usage Examples
@@ -170,7 +170,7 @@ The framework includes comprehensive security features:
 ./rename-framework.sh "My Framework" "my-database" "vendor/package"
 ```
 
-**📖 Detailed Guides:**
+**[Book] Detailed Guides:**
 - [RENAME-PROCESS.md](RENAME-PROCESS.md) - Step-by-step manual process
 - [FRAMEWORK-BRANDING.md](FRAMEWORK-BRANDING.md) - Complete file reference
 
@@ -194,17 +194,17 @@ curl -X POST http://localhost:8000/api/v1/users \
 
 ## Documentation
 
-**📚 Complete Documentation Available in this folder:**
+**[Docs] Complete Documentation Available in this folder:**
 
 ### Quick Links
 
 | Document | Description |
 |----------|-------------|
-| **[INDEX.md](INDEX.md)** | 📚 Complete documentation navigation |
-| **[SETUP.md](SETUP.md)** | 🚀 Installation and setup guide |
-| **[CONFIGURATION.md](CONFIGURATION.md)** | ⚙️ Configuration system guide |
+| **[INDEX.md](INDEX.md)** | [Docs] Complete documentation navigation |
+| **[SETUP.md](SETUP.md)** | [->] Installation and setup guide |
+| **[CONFIGURATION.md](CONFIGURATION.md)** | [Config] Configuration system guide |
 | **[QUICK-START.md](QUICK-START.md)** | ⚡ Fast reference guide |
-| **[RENAME-PROCESS.md](RENAME-PROCESS.md)** | 📝 Step-by-step rename guide |
+| **[RENAME-PROCESS.md](RENAME-PROCESS.md)** | [Note] Step-by-step rename guide |
 | **[FRAMEWORK-BRANDING.md](FRAMEWORK-BRANDING.md)** | 🎨 Complete branding reference |
 
 **Start here:** [INDEX.md](INDEX.md)
@@ -214,18 +214,18 @@ curl -X POST http://localhost:8000/api/v1/users \
 **Current:** ~40% complete - Functional MVC framework with core features
 
 **Implemented:**
-- ✅ Routing, Database, Models, Controllers
-- ✅ Request/Response handling
-- ✅ Basic session management
-- ✅ Configuration system
-- ✅ Subdirectory deployment support
+- [x] Routing, Database, Models, Controllers
+- [x] Request/Response handling
+- [x] Basic session management
+- [x] Configuration system
+- [x] Subdirectory deployment support
 
 **Planned:** (See `~/.claude/plans/` for details)
-- ⏳ Security layer (CSRF, JWT, Rate limiting)
-- ⏳ Internal API architecture
-- ⏳ Validation system
-- ⏳ Middleware implementations
-- ⏳ Caching and CLI tools
+- [ ] Security layer (CSRF, JWT, Rate limiting)
+- [ ] Internal API architecture
+- [ ] Validation system
+- [ ] Middleware implementations
+- [ ] Caching and CLI tools
 
 ## Contributing
 

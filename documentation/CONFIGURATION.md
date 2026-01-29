@@ -15,11 +15,11 @@ APP_NAME="Your Framework Name"
 ```
 
 This will automatically update:
-- ✅ Page titles
-- ✅ Welcome page heading
-- ✅ Error pages
-- ✅ Logs and debugging output
-- ✅ Any place that uses `config('app.name')`
+- [x] Page titles
+- [x] Welcome page heading
+- [x] Error pages
+- [x] Logs and debugging output
+- [x] Any place that uses `config('app.name')`
 
 **Usage in code:**
 ```php
@@ -40,9 +40,9 @@ DB_DATABASE=your-database-name
 ```
 
 This affects:
-- ✅ Database connections
-- ✅ Generated SQL setup files
-- ✅ All database operations
+- [x] Database connections
+- [x] Generated SQL setup files
+- [x] All database operations
 
 **After changing, regenerate setup.sql:**
 ```bash
@@ -58,10 +58,10 @@ APP_URL=https://yourdomain.com
 ```
 
 This affects:
-- ✅ URL generation via `url()` helper
-- ✅ Asset URLs
-- ✅ API base URLs
-- ✅ Redirects
+- [x] URL generation via `url()` helper
+- [x] Asset URLs
+- [x] API base URLs
+- [x] Redirects
 
 ## Environment Variables Reference
 
@@ -247,10 +247,10 @@ php database/migrations/generate-setup.php
 ```
 
 This creates `database/migrations/setup.sql` with:
-- ✅ Your configured database name
-- ✅ Proper character encoding
-- ✅ All table definitions
-- ✅ Sample data
+- [x] Your configured database name
+- [x] Proper character encoding
+- [x] All table definitions
+- [x] Sample data
 
 ### Import Generated SQL
 
@@ -278,10 +278,10 @@ cp .env.example .env
 Always use `config()` instead of `env()` in application code:
 
 ```php
-// ✅ Good - Cached and optimized
+// [x] Good - Cached and optimized
 $name = config('app.name');
 
-// ❌ Bad - Direct env() in code
+// [X] Bad - Direct env() in code
 $name = env('APP_NAME');
 ```
 
@@ -359,14 +359,14 @@ config_path('database.php')
 
 ## Summary
 
-✅ **Single Source of Truth**: Change `APP_NAME` in `.env` → affects everywhere
+[x] **Single Source of Truth**: Change `APP_NAME` in `.env` → affects everywhere
 
-✅ **Dynamic SQL**: Run generator → creates SQL with your database name
+[x] **Dynamic SQL**: Run generator → creates SQL with your database name
 
-✅ **Easy Deployment**: Copy `.env.example` → customize → deploy
+[x] **Easy Deployment**: Copy `.env.example` → customize → deploy
 
-✅ **Type Safe**: Configuration files cast types properly
+[x] **Type Safe**: Configuration files cast types properly
 
-✅ **Fast**: Configuration is cached and optimized
+[x] **Fast**: Configuration is cached and optimized
 
-Change the framework name in **one place** (`.env`), and it propagates everywhere automatically! 🎉
+Change the framework name in **one place** (`.env`), and it propagates everywhere automatically! [!]

@@ -35,17 +35,17 @@ A queue system allows you to defer time-consuming tasks (jobs) to be processed i
 ### Why Essential for ERP?
 
 **Problems Solved**:
-- ❌ **Timeouts**: Large reports taking 5-10 minutes cause PHP timeouts
-- ❌ **Poor UX**: Users wait while imports process 50,000 records
-- ❌ **Resource blocking**: Heavy operations monopolize server resources
-- ❌ **No retry logic**: Transient failures (API down) cause data loss
+- [X] **Timeouts**: Large reports taking 5-10 minutes cause PHP timeouts
+- [X] **Poor UX**: Users wait while imports process 50,000 records
+- [X] **Resource blocking**: Heavy operations monopolize server resources
+- [X] **No retry logic**: Transient failures (API down) cause data loss
 
 **Solutions Provided**:
-- ✅ **Instant response**: User gets confirmation immediately
-- ✅ **Background processing**: Heavy work happens asynchronously
-- ✅ **Automatic retry**: Failed jobs retry 3 times automatically
-- ✅ **Job tracking**: Monitor progress and failures
-- ✅ **Resource management**: Control concurrent job execution
+- [x] **Instant response**: User gets confirmation immediately
+- [x] **Background processing**: Heavy work happens asynchronously
+- [x] **Automatic retry**: Failed jobs retry 3 times automatically
+- [x] **Job tracking**: Monitor progress and failures
+- [x] **Resource management**: Control concurrent job execution
 
 ---
 
@@ -154,32 +154,32 @@ That's it! Jobs are now processed in the background.
 ### Job Lifecycle
 
 ```
-┌─────────────┐
-│ Dispatched  │ → Job created and stored in jobs table
-└──────┬──────┘
-       │
++-------------+
+| Dispatched  | → Job created and stored in jobs table
++------+------+
+       |
        v
-┌─────────────┐
-│   Queued    │ → Waiting in database (status: pending)
-└──────┬──────┘
-       │
++-------------+
+|   Queued    | → Waiting in database (status: pending)
++------+------+
+       |
        v
-┌─────────────┐
-│ Processing  │ → Worker picks up and executes job
-└──────┬──────┘
-       │
-       ├─ Success → Job deleted from table
-       │
-       └─ Failure ┐
-                  │
++-------------+
+| Processing  | → Worker picks up and executes job
++------+------+
+       |
+       +- Success → Job deleted from table
+       |
+       +- Failure +
+                  |
                   v
-          ┌──────────────┐
-          │ Retry Logic  │ → Attempts < max_tries?
-          └──────┬───────┘
-                 │
-                 ├─ Yes → Back to Queued (with delay)
-                 │
-                 └─ No → Moved to failed_jobs table
+          +--------------+
+          | Retry Logic  | → Attempts < max_tries?
+          +------+-------+
+                 |
+                 +- Yes → Back to Queued (with delay)
+                 |
+                 +- No → Moved to failed_jobs table
 ```
 
 ### Database Schema
@@ -734,10 +734,10 @@ class GenerateInvoicePdf extends Job
 ### 1. Keep Jobs Small and Focused
 
 ```php
-// ❌ Bad: One giant job
+// [X] Bad: One giant job
 class ProcessEverything extends Job { }
 
-// ✅ Good: Specific, focused jobs
+// [x] Good: Specific, focused jobs
 class ImportProducts extends Job { }
 class GenerateReport extends Job { }
 class SendEmailBatch extends Job { }
@@ -865,11 +865,11 @@ php artisan queue:work --max-time=3600
 
 The Queue System enables:
 
-✅ **Background processing** - Heavy operations don't block users
-✅ **Automatic retry** - Transient failures handled gracefully
-✅ **Job tracking** - Monitor progress and failures
-✅ **Scalability** - Add more workers as needed
-✅ **Priority queues** - Critical jobs processed first
+[x] **Background processing** - Heavy operations don't block users
+[x] **Automatic retry** - Transient failures handled gracefully
+[x] **Job tracking** - Monitor progress and failures
+[x] **Scalability** - Add more workers as needed
+[x] **Priority queues** - Critical jobs processed first
 
 **Essential for ERP systems with:**
 - Large report generation

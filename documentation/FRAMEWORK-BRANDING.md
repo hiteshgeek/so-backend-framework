@@ -9,7 +9,7 @@ Database Name:      so-framework
 Directory Name:     so-backend-framework (or so-framework if renamed)
 ```
 
-## 🎯 Quick Rename Checklist
+## [*] Quick Rename Checklist
 
 To completely rebrand the framework, change these files in order:
 
@@ -33,7 +33,7 @@ To completely rebrand the framework, change these files in order:
 
 ---
 
-## 📝 Detailed Change Guide
+## [Note] Detailed Change Guide
 
 ### File 1: `.env`
 **Location:** `/var/www/html/so-backend-framework/.env`
@@ -180,19 +180,19 @@ A production-ready PHP framework...
 ### File 9: `resources/views/welcome.php`
 **Location:** `/var/www/html/so-backend-framework/resources/views/welcome.php`
 
-**Current Status:** ✅ Already Dynamic!
+**Current Status:** [x] Already Dynamic!
 
 ```php
 // Already uses config(), no changes needed!
 <title><?= htmlspecialchars(config('app.name')) ?></title>
-<h1>🚀 <?= htmlspecialchars(config('app.name')) ?></h1>
+<h1>[->] <?= htmlspecialchars(config('app.name')) ?></h1>
 ```
 
 **Note:** This file automatically displays whatever you set in `.env`
 
 ---
 
-## 🤖 Automated Rename Script
+## [Bot] Automated Rename Script
 
 Here's a bash script to rename everything at once:
 
@@ -213,7 +213,7 @@ if [ -z "$NEW_NAME" ] || [ -z "$NEW_DB" ]; then
     exit 1
 fi
 
-echo "🔄 Renaming framework..."
+echo "[~] Renaming framework..."
 echo "  Name: $NEW_NAME"
 echo "  Database: $NEW_DB"
 echo "  Package: $NEW_PACKAGE"
@@ -245,7 +245,7 @@ find . -name "*.md" -type f -exec sed -i "s/SO Framework/$NEW_NAME/g" {} +
 find . -name "*.md" -type f -exec sed -i "s/so-framework/$NEW_DB/g" {} +
 
 echo ""
-echo "✅ Framework renamed successfully!"
+echo "[x] Framework renamed successfully!"
 echo ""
 echo "Next steps:"
 echo "  1. Review changes: git diff"
@@ -266,24 +266,24 @@ chmod +x rename-framework.sh
 
 ---
 
-## 📊 File Change Summary Table
+## [Chart] File Change Summary Table
 
 | File | Lines to Change | Auto-Generated? | Required? |
 |------|----------------|-----------------|-----------|
-| `.env` | 2, 12 | No | ✅ Required |
-| `composer.json` | 2-3 | No | ✅ Required |
-| `.env.example` | 2, 12 | No | ⚠️ Recommended |
-| `generate-setup.php` | Run it | N/A | ✅ Required |
-| `setup.sql` | N/A | ✅ Yes | Auto-generated |
-| `README.md` | Throughout | No | ⚠️ Recommended |
-| `SETUP.md` | Throughout | No | ⚠️ Recommended |
-| `CONFIGURATION.md` | Examples | No | ⚠️ Recommended |
-| `QUICK-START.md` | Examples | No | ⚠️ Recommended |
-| `welcome.php` | None | Already dynamic | ✅ Done |
+| `.env` | 2, 12 | No | [x] Required |
+| `composer.json` | 2-3 | No | [x] Required |
+| `.env.example` | 2, 12 | No | [!] Recommended |
+| `generate-setup.php` | Run it | N/A | [x] Required |
+| `setup.sql` | N/A | [x] Yes | Auto-generated |
+| `README.md` | Throughout | No | [!] Recommended |
+| `SETUP.md` | Throughout | No | [!] Recommended |
+| `CONFIGURATION.md` | Examples | No | [!] Recommended |
+| `QUICK-START.md` | Examples | No | [!] Recommended |
+| `welcome.php` | None | Already dynamic | [x] Done |
 
 ---
 
-## 🎯 Quick Rename: 3-Step Process
+## [*] Quick Rename: 3-Step Process
 
 ### Step 1: Update Core Identity (2 minutes)
 
@@ -344,50 +344,50 @@ composer validate
 
 Expected output:
 ```
-✅ Name: Your Framework Name
-✅ DB: your-database
-✅ SQL contains your database name
-✅ Homepage shows your name
-✅ API responds correctly
-✅ Composer valid
+[x] Name: Your Framework Name
+[x] DB: your-database
+[x] SQL contains your database name
+[x] Homepage shows your name
+[x] API responds correctly
+[x] Composer valid
 ```
 
 ---
 
-## 📝 Notes
+## [Note] Notes
 
 ### What Changes Automatically?
 
 When you update `.env`, these change automatically (no file editing needed):
 
-✅ Page titles and headings (use `config('app.name')`)
-✅ Database connections (use `config('database.connections.mysql.database')`)
-✅ API responses that reference config
-✅ Error pages
-✅ Log entries
+[x] Page titles and headings (use `config('app.name')`)
+[x] Database connections (use `config('database.connections.mysql.database')`)
+[x] API responses that reference config
+[x] Error pages
+[x] Log entries
 
 ### What Requires Manual Update?
 
-❌ Documentation files (README, SETUP, etc.)
-❌ Hard-coded references in custom code
-❌ Comments in source files
-❌ Package name in composer.json
+[X] Documentation files (README, SETUP, etc.)
+[X] Hard-coded references in custom code
+[X] Comments in source files
+[X] Package name in composer.json
 
 ### Best Practice
 
 Always use `config()` in your code, never hard-code the framework name:
 
 ```php
-// ✅ Good - Dynamic
+// [x] Good - Dynamic
 $name = config('app.name');
 
-// ❌ Bad - Hard-coded
+// [X] Bad - Hard-coded
 $name = "SO Framework";
 ```
 
 ---
 
-## 🆘 Troubleshooting
+## [?] Troubleshooting
 
 ### Issue: Changes not reflecting
 
@@ -427,7 +427,7 @@ composer install
 
 ---
 
-## 🎉 Summary
+## [!] Summary
 
 To rename your framework:
 
@@ -437,6 +437,6 @@ To rename your framework:
 4. **Update docs** → Find/replace in `.md` files (optional)
 5. **Test** → Verify everything works
 
-**That's it!** Your framework is now completely rebranded! 🚀
+**That's it!** Your framework is now completely rebranded! [->]
 
 For questions, see [CONFIGURATION.md](CONFIGURATION.md) for detailed documentation.

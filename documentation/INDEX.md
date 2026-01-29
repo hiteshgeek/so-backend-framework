@@ -2,7 +2,7 @@
 
 Welcome to the SO Framework documentation! This directory contains all guides and references for using and customizing the framework.
 
-## 📚 Quick Navigation
+## [Docs] Quick Navigation
 
 ### Getting Started
 - **[README.md](README.md)** - Complete framework overview and features
@@ -16,7 +16,7 @@ Welcome to the SO Framework documentation! This directory contains all guides an
 
 ---
 
-## 📖 Documentation by Topic
+## [Book] Documentation by Topic
 
 ### Installation & Setup
 
@@ -34,7 +34,7 @@ Welcome to the SO Framework documentation! This directory contains all guides an
 | [FRAMEWORK-BRANDING.md](FRAMEWORK-BRANDING.md) | Rename framework - complete reference | 10 min |
 | [RENAME-PROCESS.md](RENAME-PROCESS.md) | Rename framework - step by step | 10 min |
 
-### Core Framework Features (Weeks 1-5) ⭐ NEW
+### Core Framework Features (Weeks 1-5) * NEW
 
 Production-ready features for enterprise ERP applications:
 
@@ -42,12 +42,20 @@ Production-ready features for enterprise ERP applications:
 |----------|-------------|--------------|------------|
 | [SECURITY-LAYER.md](SECURITY-LAYER.md) | CSRF, JWT, Rate Limiting, XSS Prevention | 25 min | 95% (96/101) |
 | [VALIDATION-SYSTEM.md](VALIDATION-SYSTEM.md) | 27+ rules, custom validation, database rules | 20 min | 93% (39/42) |
+| [AUTH-SYSTEM.md](AUTH-SYSTEM.md) | Session auth, JWT, remember me, workflows | 30 min | Production |
 | [../tests/MIDDLEWARE_IMPLEMENTATION_SUMMARY.md](../tests/MIDDLEWARE_IMPLEMENTATION_SUMMARY.md) | Auth, CORS, Logging, Global middleware | 15 min | Production |
 | [../tests/INTERNAL_API_LAYER_SUMMARY.md](../tests/INTERNAL_API_LAYER_SUMMARY.md) | Context detection, permissions, API client | 18 min | 86.7% (13/15) |
 | [../tests/MODEL_ENHANCEMENTS_SUMMARY.md](../tests/MODEL_ENHANCEMENTS_SUMMARY.md) | Soft Deletes, Query Scopes | 12 min | 100% (10/10) |
 | [COMPREHENSIVE-GUIDE.md](COMPREHENSIVE-GUIDE.md) | Complete framework reference (90%+ features) | 45 min | - |
 
 All features are **production-tested** and **enterprise-ready**. Includes OWASP-compliant security, comprehensive validation, flexible middleware system, internal API layer with context detection, and advanced model features.
+
+### Developer Tools & CLI
+
+| Document | Description | Time to Read |
+|----------|-------------|--------------|
+| [CONSOLE-COMMANDS.md](CONSOLE-COMMANDS.md) | Complete CLI reference for all artisan commands | 25 min |
+| [VIEW-TEMPLATES.md](VIEW-TEMPLATES.md) | Twig templating engine complete guide | 30 min |
 
 ### Enterprise Framework Features (Laravel Table Systems)
 
@@ -64,7 +72,7 @@ All 5 Laravel framework table systems are **production-ready** and **battle-test
 
 ---
 
-## 🎯 Common Tasks
+## [*] Common Tasks
 
 ### I want to...
 
@@ -100,7 +108,7 @@ See [README.md](README.md) - Directory Structure section
 
 ---
 
-## 📋 Document Summaries
+## [List] Document Summaries
 
 ### README.md
 **Purpose:** Framework overview
@@ -218,7 +226,7 @@ See [README.md](README.md) - Directory Structure section
 
 ---
 
-## 🚀 Quick Links
+## [->] Quick Links
 
 **Essential Commands:**
 ```bash
@@ -243,19 +251,19 @@ curl http://localhost:8000/api/test
 
 ---
 
-## 📝 Documentation Standards
+## [Note] Documentation Standards
 
 All documentation in this folder follows these standards:
 
-✅ **Clear Headers** - H1 for title, H2 for sections
-✅ **Code Examples** - Always include working examples
-✅ **Commands** - Show exact commands to run
-✅ **Verification** - Include test/verify steps
-✅ **Troubleshooting** - Common issues and solutions
+[x] **Clear Headers** - H1 for title, H2 for sections
+[x] **Code Examples** - Always include working examples
+[x] **Commands** - Show exact commands to run
+[x] **Verification** - Include test/verify steps
+[x] **Troubleshooting** - Common issues and solutions
 
 ---
 
-## 🔄 Keeping Documentation Updated
+## [~] Keeping Documentation Updated
 
 When you change the framework:
 
@@ -273,16 +281,16 @@ When you change the framework:
 
 ---
 
-## 💡 Tips for Reading
+## [i] Tips for Reading
 
-- 📖 Read in order for first time: README → SETUP → CONFIGURATION
-- 🎯 Jump to specific doc for specific task
+- [Book] Read in order for first time: README → SETUP → CONFIGURATION
+- [*] Jump to specific doc for specific task
 - ⚡ Use QUICK-START for fast reference
 - 🔍 Use INDEX (this file) to find what you need
 
 ---
 
-## 🆘 Still Need Help?
+## [?] Still Need Help?
 
 If you can't find what you need:
 
@@ -293,35 +301,38 @@ If you can't find what you need:
 
 ---
 
-## 📊 Documentation Coverage
+## [Chart] Documentation Coverage
 
 | Topic | Covered | Document |
 |-------|---------|----------|
-| Installation | ✅ | SETUP.md |
-| Configuration | ✅ | CONFIGURATION.md |
-| Routing | ✅ | README.md, COMPREHENSIVE-GUIDE.md |
-| Database | ✅ | SETUP.md, README.md, COMPREHENSIVE-GUIDE.md |
-| Models | ✅ | README.md, MODEL_ENHANCEMENTS_SUMMARY.md |
-| Controllers | ✅ | README.md |
-| Middleware | ✅ | MIDDLEWARE_IMPLEMENTATION_SUMMARY.md |
-| **Security** | ✅ | **SECURITY-LAYER.md** |
-| **Validation** | ✅ | **VALIDATION-SYSTEM.md** |
-| **Internal API** | ✅ | **INTERNAL_API_LAYER_SUMMARY.md** |
-| API | ✅ | SETUP.md, README.md, INTERNAL_API_LAYER_SUMMARY.md |
-| Customization | ✅ | RENAME-PROCESS.md, FRAMEWORK-BRANDING.md |
-| Deployment | ⚠️ Partial | SETUP.md |
-| **Activity Logging** | ✅ | **ACTIVITY-LOGGING.md** |
-| **Queue System** | ✅ | **QUEUE-SYSTEM.md** |
-| **Notifications** | ✅ | **NOTIFICATION-SYSTEM.md** |
-| **Cache System** | ✅ | **CACHE-SYSTEM.md** |
-| **Session System** | ✅ | **SESSION-SYSTEM.md** |
-| **Model Enhancements** | ✅ | **MODEL_ENHANCEMENTS_SUMMARY.md** |
-| **Framework Features** | ✅ | **FRAMEWORK-FEATURES.md** |
-| **Complete Reference** | ✅ | **COMPREHENSIVE-GUIDE.md** |
+| Installation | [x] | SETUP.md |
+| Configuration | [x] | CONFIGURATION.md |
+| Routing | [x] | README.md, COMPREHENSIVE-GUIDE.md |
+| Database | [x] | SETUP.md, README.md, COMPREHENSIVE-GUIDE.md |
+| Models | [x] | README.md, MODEL_ENHANCEMENTS_SUMMARY.md |
+| Controllers | [x] | README.md |
+| Middleware | [x] | MIDDLEWARE_IMPLEMENTATION_SUMMARY.md |
+| **Security** | [x] | **SECURITY-LAYER.md** |
+| **Validation** | [x] | **VALIDATION-SYSTEM.md** |
+| **Internal API** | [x] | **INTERNAL_API_LAYER_SUMMARY.md** |
+| API | [x] | SETUP.md, README.md, INTERNAL_API_LAYER_SUMMARY.md |
+| Customization | [x] | RENAME-PROCESS.md, FRAMEWORK-BRANDING.md |
+| Deployment | [!] Partial | SETUP.md |
+| **Activity Logging** | [x] | **ACTIVITY-LOGGING.md** |
+| **Queue System** | [x] | **QUEUE-SYSTEM.md** |
+| **Notifications** | [x] | **NOTIFICATION-SYSTEM.md** |
+| **Cache System** | [x] | **CACHE-SYSTEM.md** |
+| **Session System** | [x] | **SESSION-SYSTEM.md** |
+| **Model Enhancements** | [x] | **MODEL_ENHANCEMENTS_SUMMARY.md** |
+| **Framework Features** | [x] | **FRAMEWORK-FEATURES.md** |
+| **Complete Reference** | [x] | **COMPREHENSIVE-GUIDE.md** |
+| **Console Commands** | [x] | **CONSOLE-COMMANDS.md** |
+| **Authentication** | [x] | **AUTH-SYSTEM.md** |
+| **View Templates** | [x] | **VIEW-TEMPLATES.md** |
 
 ---
 
-## 📅 Last Updated
+## [Date] Last Updated
 
 This index was last updated: 2026-01-29
 
@@ -329,4 +340,4 @@ For the latest documentation, check the source files in this directory.
 
 ---
 
-**Happy coding!** 🚀
+**Happy coding!** [->]
