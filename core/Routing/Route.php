@@ -53,14 +53,17 @@ class Route
 
     public function run(Request $request): Response
     {
+        // Merge route parameters with the request object
+        $parameters = array_merge(['request' => $request], $this->parameters);
+
         if (is_array($this->action)) {
             [$controller, $method] = $this->action;
             $controller = app()->make($controller);
-            return app()->call([$controller, $method], $this->parameters);
+            return app()->call([$controller, $method], $parameters);
         }
 
         if (is_callable($this->action)) {
-            return app()->call($this->action, $this->parameters);
+            return app()->call($this->action, $parameters);
         }
 
         throw new \Exception('Invalid route action');

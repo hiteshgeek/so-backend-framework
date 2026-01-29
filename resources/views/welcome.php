@@ -137,8 +137,9 @@
         </div>
 
         <div class="links">
-            <a href="/api/test">Test API</a>
-            <a href="https://github.com">Documentation</a>
+            <a href="<?= htmlspecialchars(config('app.url')) ?>/login">Login</a>
+            <a href="<?= htmlspecialchars(config('app.url')) ?>/api/test">Test API</a>
+            <a href="<?= htmlspecialchars(config('app.url')) ?>/docs">Documentation</a>
         </div>
 
         <div class="version">

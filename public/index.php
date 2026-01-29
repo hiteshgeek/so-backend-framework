@@ -14,6 +14,9 @@ require_once __DIR__ . '/../routes/api.php';
 // Create request from globals
 $request = Request::createFromGlobals();
 
+// Age flash data from previous request
+session()->ageFlashData();
+
 // Handle request
 $response = $app->handleWebRequest($request);
 

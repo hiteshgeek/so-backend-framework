@@ -76,4 +76,21 @@ class Session
         session_destroy();
         $this->started = false;
     }
+
+    /**
+     * Age the flash data for the next request
+     */
+    public function ageFlashData(): void
+    {
+        // Get old flash keys and remove them
+        $old = $this->get('_flash.old', []);
+        foreach ($old as $key) {
+            $this->forget($key);
+        }
+
+        // Move new flash to old
+        $new = $this->get('_flash.new', []);
+        $this->set('_flash.old', $new);
+        $this->set('_flash.new', []);
+    }
 }

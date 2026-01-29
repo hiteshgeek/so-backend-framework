@@ -105,6 +105,30 @@ if (!function_exists('config_path')) {
     }
 }
 
+if (!function_exists('auth')) {
+    /**
+     * Get authentication instance
+     *
+     * @return \Core\Auth\Auth
+     */
+    function auth(): \Core\Auth\Auth
+    {
+        return app('auth');
+    }
+}
+
+if (!function_exists('csrf')) {
+    /**
+     * Get CSRF instance
+     *
+     * @return \Core\Security\Csrf
+     */
+    function csrf(): \Core\Security\Csrf
+    {
+        return app('csrf');
+    }
+}
+
 if (!function_exists('csrf_token')) {
     /**
      * Get CSRF token

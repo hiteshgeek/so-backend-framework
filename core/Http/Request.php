@@ -88,7 +88,17 @@ class Request
 
     public function method(): string
     {
-        return strtoupper($this->server['REQUEST_METHOD'] ?? 'GET');
+        $method = strtoupper($this->server['REQUEST_METHOD'] ?? 'GET');
+
+        // Support HTTP method spoofing via _method field for DELETE/PUT/PATCH
+        if ($method === 'POST') {
+            $spoofed = $this->input('_method');
+            if ($spoofed && in_array(strtoupper($spoofed), ['PUT', 'DELETE', 'PATCH'])) {
+                return strtoupper($spoofed);
+            }
+        }
+
+        return $method;
     }
 
     public function isMethod(string $method): bool

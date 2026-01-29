@@ -12,6 +12,7 @@ class User extends Model
     protected static string $table = 'users';
 
     protected array $fillable = [
+        'id',
         'name',
         'email',
         'password',
@@ -19,11 +20,16 @@ class User extends Model
         'updated_at',
     ];
 
-    protected array $guarded = ['id'];
+    protected array $guarded = [];
 
     protected function setPasswordAttribute(string $value): void
     {
-        $this->attributes['password'] = password_hash($value, PASSWORD_ARGON2ID);
+        // Only hash if not already hashed (check for bcrypt or argon2 prefix)
+        if (str_starts_with($value, '$2y$') || str_starts_with($value, '$argon2')) {
+            $this->attributes['password'] = $value;
+        } else {
+            $this->attributes['password'] = password_hash($value, PASSWORD_ARGON2ID);
+        }
     }
 
     protected function getNameAttribute(?string $value): string

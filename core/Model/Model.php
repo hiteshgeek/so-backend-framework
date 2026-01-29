@@ -132,7 +132,7 @@ abstract class Model
 
         if ($result) {
             $this->exists = true;
-            $lastId = app('db')->connection->lastInsertId();
+            $lastId = app('db')->lastInsertId();
             if ($lastId) {
                 $this->setAttribute(static::$primaryKey, $lastId);
             }

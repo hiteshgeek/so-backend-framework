@@ -20,6 +20,11 @@ class Response
 
     public function send(): void
     {
+        // Save session data before sending response (especially important for redirects)
+        if (session_status() === PHP_SESSION_ACTIVE) {
+            session_write_close();
+        }
+
         http_response_code($this->statusCode);
 
         foreach ($this->headers as $name => $value) {

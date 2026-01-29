@@ -93,4 +93,9 @@ class Connection
     {
         return $this->getPdo()->rollBack();
     }
+
+    public function table(string $table): QueryBuilder
+    {
+        return (new QueryBuilder($this))->table($table);
+    }
 }

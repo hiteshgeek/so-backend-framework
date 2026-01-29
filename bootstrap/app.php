@@ -49,6 +49,14 @@ $app->singleton('router', function ($app) {
     return new Router();
 });
 
+$app->singleton('auth', function ($app) {
+    return new \Core\Auth\Auth($app->make('session'));
+});
+
+$app->singleton('csrf', function ($app) {
+    return new \Core\Security\Csrf($app->make('session'));
+});
+
 // Boot application
 $app->boot();
 
