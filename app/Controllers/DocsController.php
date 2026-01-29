@@ -48,6 +48,13 @@ class DocsController
             'branding' => 'FRAMEWORK-BRANDING.md',
             'index' => 'INDEX.md',
             'readme' => 'README.md',
+            // Framework Features Documentation
+            'activity-logging' => 'ACTIVITY-LOGGING.md',
+            'queue-system' => 'QUEUE-SYSTEM.md',
+            'notification-system' => 'NOTIFICATION-SYSTEM.md',
+            'cache-system' => 'CACHE-SYSTEM.md',
+            'session-system' => 'SESSION-SYSTEM.md',
+            'framework-features' => 'FRAMEWORK-FEATURES.md',
         ];
 
         if (!isset($allowedFiles[$file])) {

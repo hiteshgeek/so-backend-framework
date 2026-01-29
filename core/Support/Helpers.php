@@ -208,6 +208,58 @@ if (!function_exists('cache')) {
     }
 }
 
+if (!function_exists('activity')) {
+    /**
+     * Get activity logger instance
+     *
+     * @param string|null $logName
+     * @return \Core\ActivityLog\ActivityLogger
+     */
+    function activity(?string $logName = null): \Core\ActivityLog\ActivityLogger
+    {
+        $logger = app('activity.logger');
+
+        if ($logName !== null) {
+            return $logger->inLog($logName);
+        }
+
+        return $logger;
+    }
+}
+
+if (!function_exists('queue')) {
+    /**
+     * Get queue manager instance or connection
+     *
+     * @param string|null $connection
+     * @return \Core\Queue\QueueManager|\Core\Queue\DatabaseQueue
+     */
+    function queue(?string $connection = null)
+    {
+        $manager = app('queue');
+
+        if ($connection !== null) {
+            return $manager->connection($connection);
+        }
+
+        return $manager;
+    }
+}
+
+if (!function_exists('dispatch')) {
+    /**
+     * Dispatch a job to the queue
+     *
+     * @param \Core\Queue\Job $job
+     * @param string|null $queue
+     * @return string Job ID
+     */
+    function dispatch(\Core\Queue\Job $job, ?string $queue = null): string
+    {
+        return app('queue')->push($job, $queue);
+    }
+}
+
 if (!function_exists('url')) {
     /**
      * Generate URL for path
@@ -468,7 +520,7 @@ if (!function_exists('str_contains')) {
      */
     function str_contains(string $haystack, string $needle): bool
     {
-        return str_contains($haystack, $needle);
+        return $needle !== '' && strpos($haystack, $needle) !== false;
     }
 }
 
@@ -482,7 +534,7 @@ if (!function_exists('str_starts_with')) {
      */
     function str_starts_with(string $haystack, string $needle): bool
     {
-        return str_starts_with($haystack, $needle);
+        return strncmp($haystack, $needle, strlen($needle)) === 0;
     }
 }
 
@@ -496,6 +548,7 @@ if (!function_exists('str_ends_with')) {
      */
     function str_ends_with(string $haystack, string $needle): bool
     {
-        return str_ends_with($haystack, $needle);
+        $length = strlen($needle);
+        return $length === 0 || substr($haystack, -$length) === $needle;
     }
 }

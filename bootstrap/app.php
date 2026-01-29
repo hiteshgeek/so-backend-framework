@@ -61,6 +61,23 @@ $app->singleton('csrf', function ($app) {
     return new \Core\Security\Csrf($app->make('session'));
 });
 
+// Register service providers from config
+$providers = $app->make('config')->get('app.providers', []);
+$providerInstances = [];
+
+foreach ($providers as $providerClass) {
+    $provider = new $providerClass($app);
+    $provider->register();
+    $providerInstances[] = $provider;
+}
+
+// Boot service providers
+foreach ($providerInstances as $provider) {
+    if (method_exists($provider, 'boot')) {
+        $provider->boot();
+    }
+}
+
 // Boot application
 $app->boot();
 

@@ -109,6 +109,22 @@
             text-decoration: none;
             font-size: 0.85em;
         }
+        .remember-me {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .remember-me input[type="checkbox"] {
+            width: auto;
+            margin-right: 8px;
+            cursor: pointer;
+        }
+        .remember-me label {
+            margin: 0;
+            font-weight: 400;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
     </style>
 </head>
 <body>
@@ -141,6 +157,11 @@
                 <?php if (isset($errors['password'])): ?>
                     <div class="error"><?= e($errors['password'][0]) ?></div>
                 <?php endif; ?>
+            </div>
+
+            <div class="remember-me">
+                <input type="checkbox" id="remember" name="remember" value="1">
+                <label for="remember">Remember me for 30 days</label>
             </div>
 
             <div class="forgot-link">

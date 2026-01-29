@@ -10,6 +10,19 @@ return [
     'locale' => 'en',
 
     'providers' => [
-        // Add service providers here
+        // Activity logging for audit trails (ERP compliance)
+        \App\Providers\ActivityLogServiceProvider::class,
+
+        // Queue system for background job processing
+        \App\Providers\QueueServiceProvider::class,
+
+        // Notification system for workflow communication
+        \App\Providers\NotificationServiceProvider::class,
+
+        // Cache system for performance optimization
+        \App\Providers\CacheServiceProvider::class,
+
+        // Session system for horizontal scaling
+        \App\Providers\SessionServiceProvider::class,
     ],
 ];

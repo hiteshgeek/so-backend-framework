@@ -5,6 +5,31 @@ namespace Core\Model;
 use Core\Database\QueryBuilder;
 
 /**
+ * Get all traits used by a class recursively
+ */
+if (!function_exists('class_uses_recursive')) {
+    function class_uses_recursive($class): array
+    {
+        if (is_object($class)) {
+            $class = get_class($class);
+        }
+
+        $results = [];
+
+        foreach (array_reverse(class_parents($class)) ?: [] as $parent) {
+            $results = array_merge($results, class_uses_recursive($parent));
+        }
+
+        foreach (class_uses($class) ?: [] as $trait) {
+            $results[$trait] = $trait;
+            $results = array_merge($results, class_uses_recursive($trait));
+        }
+
+        return array_unique($results);
+    }
+}
+
+/**
  * Base Model Class
  */
 abstract class Model
@@ -17,9 +42,84 @@ abstract class Model
     protected array $guarded = ['id'];
     protected bool $exists = false;
 
+    /**
+     * Observer pattern support
+     */
+    protected static array $observers = [];
+    protected static array $booted = [];
+
     public function __construct(array $attributes = [])
     {
+        $this->bootIfNotBooted();
         $this->fill($attributes);
+    }
+
+    /**
+     * Boot the model and its traits
+     */
+    protected function bootIfNotBooted(): void
+    {
+        $class = static::class;
+
+        if (!isset(static::$booted[$class])) {
+            static::$booted[$class] = true;
+            static::boot();
+            static::bootTraits();
+        }
+    }
+
+    /**
+     * Boot the model (override in child classes if needed)
+     */
+    protected static function boot(): void
+    {
+        // Can be overridden by child classes
+    }
+
+    /**
+     * Boot all traits used by the model
+     */
+    protected static function bootTraits(): void
+    {
+        $class = static::class;
+
+        foreach (class_uses_recursive($class) as $trait) {
+            $method = 'boot' . class_basename($trait);
+
+            if (method_exists($class, $method)) {
+                forward_static_call([$class, $method]);
+            }
+        }
+    }
+
+    /**
+     * Register an observer with the model
+     */
+    public static function observe($class): void
+    {
+        $instance = new $class();
+
+        if (!isset(static::$observers[static::class])) {
+            static::$observers[static::class] = [];
+        }
+
+        static::$observers[static::class][] = $instance;
+    }
+
+    /**
+     * Fire an event to all registered observers
+     */
+    protected function fireModelEvent(string $event): void
+    {
+        if (!isset(static::$observers[static::class])) {
+            return;
+        }
+
+        foreach (static::$observers[static::class] as $observer) {
+            if (method_exists($observer, $event)) {
+                $observer->$event($this);
+            }
+        }
     }
 
     public function fill(array $attributes): self
@@ -139,6 +239,10 @@ abstract class Model
             if ($lastId) {
                 $this->setAttribute(static::$primaryKey, $lastId);
             }
+            $this->original = $this->attributes;
+
+            // Fire created event
+            $this->fireModelEvent('created');
         }
 
         return $result;
@@ -148,9 +252,17 @@ abstract class Model
     {
         $id = $this->getAttribute(static::$primaryKey);
 
-        return static::query()
+        $result = static::query()
             ->where(static::$primaryKey, '=', $id)
             ->update($this->attributes);
+
+        if ($result) {
+            // Fire updated event
+            $this->fireModelEvent('updated');
+            $this->original = $this->attributes;
+        }
+
+        return $result;
     }
 
     public function delete(): bool
@@ -161,9 +273,59 @@ abstract class Model
 
         $id = $this->getAttribute(static::$primaryKey);
 
-        return static::query()
+        $result = static::query()
             ->where(static::$primaryKey, '=', $id)
             ->delete();
+
+        if ($result) {
+            // Fire deleted event
+            $this->fireModelEvent('deleted');
+            $this->exists = false;
+        }
+
+        return $result;
+    }
+
+    /**
+     * Get the attributes that have been changed
+     */
+    public function getDirty(): array
+    {
+        $dirty = [];
+
+        foreach ($this->attributes as $key => $value) {
+            if (!array_key_exists($key, $this->original)) {
+                $dirty[$key] = $value;
+            } elseif ($value !== $this->original[$key]) {
+                $dirty[$key] = $value;
+            }
+        }
+
+        return $dirty;
+    }
+
+    /**
+     * Get the original attributes
+     */
+    public function getOriginal(): array
+    {
+        return $this->original;
+    }
+
+    /**
+     * Get all attributes
+     */
+    public function getAttributes(): array
+    {
+        return $this->attributes;
+    }
+
+    /**
+     * Get the query builder for this model
+     */
+    public function getQueryBuilder(): QueryBuilder
+    {
+        return static::query();
     }
 
     public function toArray(): array

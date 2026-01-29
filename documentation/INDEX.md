@@ -34,6 +34,19 @@ Welcome to the SO Framework documentation! This directory contains all guides an
 | [FRAMEWORK-BRANDING.md](FRAMEWORK-BRANDING.md) | Rename framework - complete reference | 10 min |
 | [RENAME-PROCESS.md](RENAME-PROCESS.md) | Rename framework - step by step | 10 min |
 
+### Enterprise Framework Features (Laravel Table Systems)
+
+| Document | Description | Time to Read |
+|----------|-------------|--------------|
+| [FRAMEWORK-FEATURES.md](FRAMEWORK-FEATURES.md) | Complete feature overview | 15 min |
+| [ACTIVITY-LOGGING.md](ACTIVITY-LOGGING.md) | Audit trail and compliance logging | 15 min |
+| [QUEUE-SYSTEM.md](QUEUE-SYSTEM.md) | Background job processing | 20 min |
+| [NOTIFICATION-SYSTEM.md](NOTIFICATION-SYSTEM.md) | User notifications and alerts | 12 min |
+| [CACHE-SYSTEM.md](CACHE-SYSTEM.md) | Performance optimization | 15 min |
+| [SESSION-SYSTEM.md](SESSION-SYSTEM.md) | Database sessions for scaling | 12 min |
+
+All 5 Laravel framework table systems are **production-ready** and **battle-tested** for large-scale ERP applications. Features include database-driven sessions, queue system for background jobs, activity logging for compliance (GDPR/SOX), notifications for workflows, and cache system for performance.
+
 ---
 
 ## 🎯 Common Tasks
@@ -280,6 +293,12 @@ If you can't find what you need:
 | API | ✅ | SETUP.md, README.md |
 | Customization | ✅ | RENAME-PROCESS.md, FRAMEWORK-BRANDING.md |
 | Deployment | ⚠️ Partial | SETUP.md |
+| **Activity Logging** | ✅ | **ACTIVITY-LOGGING.md** |
+| **Queue System** | ✅ | **QUEUE-SYSTEM.md** |
+| **Notifications** | ✅ | **NOTIFICATION-SYSTEM.md** |
+| **Cache System** | ✅ | **CACHE-SYSTEM.md** |
+| **Session System** | ✅ | **SESSION-SYSTEM.md** |
+| **Framework Features** | ✅ | **FRAMEWORK-FEATURES.md** |
 
 ---
 

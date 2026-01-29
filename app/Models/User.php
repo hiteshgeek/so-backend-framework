@@ -3,12 +3,17 @@
 namespace App\Models;
 
 use Core\Model\Model;
+use Core\ActivityLog\LogsActivity;
+use Core\Notifications\Notifiable;
 
 /**
  * User Model
  */
 class User extends Model
 {
+    use LogsActivity;
+    use Notifiable;
+
     protected static string $table = 'users';
 
     protected array $fillable = [
@@ -16,11 +21,20 @@ class User extends Model
         'name',
         'email',
         'password',
+        'remember_token',
         'created_at',
         'updated_at',
     ];
 
     protected array $guarded = [];
+
+    /**
+     * Activity logging configuration
+     */
+    protected static bool $logsActivity = true;
+    protected static array $logAttributes = ['name', 'email']; // Don't log password
+    protected static bool $logOnlyDirty = true;
+    protected static string $logName = 'user';
 
     protected function setPasswordAttribute(string $value): void
     {

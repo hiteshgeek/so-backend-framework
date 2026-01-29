@@ -1,0 +1,33 @@
+#!/usr/bin/env php
+<?php
+
+/**
+ * Artisan Console
+ *
+ * Command-line interface for the SO Backend Framework
+ */
+
+require_once __DIR__ . '/vendor/autoload.php';
+
+use Core\Console\Kernel;
+
+// Bootstrap the application
+$app = require_once __DIR__ . '/bootstrap/app.php';
+
+// Create console kernel
+$kernel = new Kernel();
+
+// Register commands
+$kernel->registerCommands([
+    \Core\Console\Commands\QueueWorkCommand::class,
+    \Core\Console\Commands\CacheClearCommand::class,
+    \Core\Console\Commands\CacheGcCommand::class,
+    \Core\Console\Commands\ActivityPruneCommand::class,
+    \Core\Console\Commands\SessionCleanupCommand::class,
+    \Core\Console\Commands\NotificationCleanupCommand::class,
+]);
+
+// Execute command
+$exitCode = $kernel->call($argv);
+
+exit($exitCode);

@@ -15,9 +15,13 @@ class AuthMiddleware implements MiddlewareInterface
 {
     public function handle(Request $request, callable $next): Response
     {
+        // Check if user is authenticated via session
         if (!auth()->check()) {
-            return redirect(url('/login'))
-                ->with('error', 'Please login to access this page.');
+            // Try to authenticate via remember token
+            if (!auth()->loginViaRememberToken()) {
+                return redirect(url('/login'))
+                    ->with('error', 'Please login to access this page.');
+            }
         }
 
         // Attach authenticated user to request for controllers

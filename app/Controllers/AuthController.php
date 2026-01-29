@@ -90,7 +90,9 @@ class AuthController
             'password' => $request->input('password'),
         ];
 
-        if (auth()->attempt($credentials)) {
+        $remember = $request->input('remember') === '1';
+
+        if (auth()->attempt($credentials, $remember)) {
             return redirect(url('/dashboard'))
                 ->with('success', 'Welcome back, ' . auth()->user()->name . '!');
         }
