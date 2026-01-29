@@ -160,7 +160,10 @@
         <?php endif; ?>
 
         <div class="table-container">
-            <h3 style="margin-bottom: 20px; color: #333;">User Management</h3>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h3 style="color: #333; margin: 0;">User Management</h3>
+                <a href="<?= url('/dashboard/users/create') ?>" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none; font-size: 0.9em;">+ Create User</a>
+            </div>
 
             <table>
                 <thead>
@@ -175,15 +178,15 @@
                 <tbody>
                     <?php foreach ($users as $listUser): ?>
                         <tr>
-                            <td><?= e($listUser['id']) ?></td>
-                            <td><?= e($listUser['name']) ?></td>
-                            <td><?= e($listUser['email']) ?></td>
-                            <td><?= e($listUser['created_at']) ?></td>
+                            <td><?= e($listUser->id) ?></td>
+                            <td><?= e($listUser->name) ?></td>
+                            <td><?= e($listUser->email) ?></td>
+                            <td><?= e($listUser->created_at) ?></td>
                             <td>
-                                <a href="<?= url('/dashboard/users/' . $listUser['id'] . '/edit') ?>" class="btn btn-edit">Edit</a>
+                                <a href="<?= url('/dashboard/users/' . $listUser->id . '/edit') ?>" class="btn btn-edit">Edit</a>
 
-                                <?php if ($listUser['id'] !== $user->id): ?>
-                                    <form method="POST" action="<?= url('/dashboard/users/' . $listUser['id']) ?>" style="display:inline;">
+                                <?php if ($listUser->id !== $user->id): ?>
+                                    <form method="POST" action="<?= url('/dashboard/users/' . $listUser->id) ?>" style="display:inline;">
                                         <?= csrf_field() ?>
                                         <input type="hidden" name="_method" value="DELETE">
                                         <button type="submit" class="btn btn-delete" onclick="return confirm('Are you sure you want to delete this user?')">Delete</button>

@@ -42,6 +42,8 @@ Router::group(['middleware' => [CsrfMiddleware::class]], function () {
     // Protected routes (require authentication)
     Router::group(['middleware' => [AuthMiddleware::class]], function () {
         Router::get('/dashboard', [DashboardController::class, 'index']);
+        Router::get('/dashboard/users/create', [DashboardController::class, 'create']);
+        Router::post('/dashboard/users', [DashboardController::class, 'store']);
         Router::get('/dashboard/users/{id}/edit', [DashboardController::class, 'edit']);
         Router::post('/dashboard/users/{id}', [DashboardController::class, 'update']);
         Router::delete('/dashboard/users/{id}', [DashboardController::class, 'destroy']);

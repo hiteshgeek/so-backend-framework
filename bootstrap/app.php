@@ -38,6 +38,10 @@ $app->singleton('db', function ($app) {
             $builder = new QueryBuilder($this->connection);
             return $builder->table($table);
         }
+
+        public function lastInsertId(): string {
+            return $this->connection->lastInsertId();
+        }
     };
 });
 

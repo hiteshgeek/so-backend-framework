@@ -128,7 +128,10 @@ abstract class Model
 
     protected function performInsert(): bool
     {
-        $result = static::query()->insert($this->attributes);
+        // Filter out null values before insert (let database use defaults)
+        $attributes = array_filter($this->attributes, fn($value) => $value !== null);
+
+        $result = static::query()->insert($attributes);
 
         if ($result) {
             $this->exists = true;

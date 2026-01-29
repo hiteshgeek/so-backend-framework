@@ -44,15 +44,7 @@ class Auth
      */
     public function login(User $user): void
     {
-        error_log("=== AUTH LOGIN ===");
-        error_log("Setting session key: {$this->sessionKey} = {$user->id}");
-        error_log("Session ID before: " . session_id());
-
         $this->session->set($this->sessionKey, $user->id);
-
-        error_log("Session ID after: " . session_id());
-        error_log("Session data: " . json_encode($_SESSION));
-        error_log("===================");
     }
 
     /**
@@ -69,14 +61,7 @@ class Auth
      */
     public function check(): bool
     {
-        error_log("=== AUTH CHECK ===");
-        error_log("Session ID: " . session_id());
-        error_log("Session data: " . json_encode($_SESSION));
-        error_log("Looking for key: {$this->sessionKey}");
-        $hasKey = $this->session->has($this->sessionKey);
-        error_log("Has key: " . ($hasKey ? 'YES' : 'NO'));
-        error_log("==================");
-        return $hasKey;
+        return $this->session->has($this->sessionKey);
     }
 
     /**

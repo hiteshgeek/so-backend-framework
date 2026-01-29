@@ -345,9 +345,12 @@ if (!function_exists('e')) {
      * @param string $value
      * @return string
      */
-    function e(string $value): string
+    function e(mixed $value): string
     {
-        return htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
+        if ($value === null) {
+            return '';
+        }
+        return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
     }
 }
 

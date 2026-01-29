@@ -21,6 +21,11 @@ class DashboardController
     {
         $users = User::all();
 
+        error_log("Dashboard: Fetched " . count($users) . " users");
+        foreach ($users as $u) {
+            error_log("User: ID={$u->id}, Name={$u->name}, Email={$u->email}");
+        }
+
         return Response::view('dashboard/index', [
             'title' => 'Dashboard - ' . config('app.name'),
             'user' => auth()->user(),
@@ -28,6 +33,47 @@ class DashboardController
             'success' => session('success'),
             'error' => session('error'),
         ]);
+    }
+
+    /**
+     * Show create user form
+     */
+    public function create(Request $request): Response
+    {
+        return Response::view('dashboard/create', [
+            'title' => 'Create User - ' . config('app.name'),
+            'currentUser' => auth()->user(),
+            'errors' => session('errors', []),
+            'old' => session('_old_input', []),
+        ]);
+    }
+
+    /**
+     * Store a new user
+     */
+    public function store(Request $request): Response
+    {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|min:2|max:255',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|min:8|confirmed',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect(url('/dashboard/users/create'))
+                ->withErrors($validator->errors())
+                ->withInput($request->except(['password', 'password_confirmation']));
+        }
+
+        // Create user
+        User::create([
+            'name' => $request->input('name'),
+            'email' => $request->input('email'),
+            'password' => $request->input('password'),
+        ]);
+
+        return redirect(url('/dashboard'))
+            ->with('success', 'User created successfully!');
     }
 
     /**
@@ -63,20 +109,33 @@ class DashboardController
                 ->with('error', 'User not found.');
         }
 
-        $validator = Validator::make($request->all(), [
+        $rules = [
             'name' => 'required|min:2|max:255',
             'email' => 'required|email',
-        ]);
+        ];
+
+        // Add password validation only if password is provided
+        if ($request->input('password')) {
+            $rules['password'] = 'min:8|confirmed';
+        }
+
+        $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
             return redirect(url('/dashboard/users/' . $id . '/edit'))
                 ->withErrors($validator->errors())
-                ->withInput();
+                ->withInput($request->except(['password', 'password_confirmation']));
         }
 
         // Update user
         $user->name = $request->input('name');
         $user->email = $request->input('email');
+
+        // Update password if provided
+        if ($request->input('password')) {
+            $user->password = $request->input('password');
+        }
+
         $user->save();
 
         return redirect(url('/dashboard'))
