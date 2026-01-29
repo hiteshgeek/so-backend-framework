@@ -214,4 +214,51 @@ class Request
     {
         $this->attributes[$key] = $value;
     }
+
+    /**
+     * Check if the request expects a JSON response
+     *
+     * @return bool
+     */
+    public function expectsJson(): bool
+    {
+        // Check Accept header
+        $accept = $this->header('ACCEPT', '');
+        if (str_contains($accept, 'application/json')) {
+            return true;
+        }
+
+        // Check Content-Type header
+        $contentType = $this->header('CONTENT-TYPE', '');
+        if (str_contains($contentType, 'application/json')) {
+            return true;
+        }
+
+        // Check if URI starts with /api/
+        if (str_starts_with($this->uri(), '/api/')) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Check if the request is an AJAX request
+     *
+     * @return bool
+     */
+    public function ajax(): bool
+    {
+        return $this->header('X-REQUESTED-WITH') === 'XMLHttpRequest';
+    }
+
+    /**
+     * Check if the request wants JSON
+     *
+     * @return bool
+     */
+    public function wantsJson(): bool
+    {
+        return $this->expectsJson();
+    }
 }

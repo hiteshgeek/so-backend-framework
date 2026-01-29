@@ -14,6 +14,7 @@ class Router
     protected static array $routes = [];
     protected static array $namedRoutes = [];
     protected static array $groupStack = [];
+    protected static array $globalMiddleware = [];
 
     public static function get(string $uri, $action): Route
     {
@@ -69,6 +70,18 @@ class Router
         array_pop(self::$groupStack);
     }
 
+    /**
+     * Register global middleware (applied to all routes)
+     *
+     * @param array|string $middleware
+     * @return void
+     */
+    public static function globalMiddleware($middleware): void
+    {
+        $middleware = is_array($middleware) ? $middleware : [$middleware];
+        self::$globalMiddleware = array_merge(self::$globalMiddleware, $middleware);
+    }
+
     public static function resource(string $name, string $controller): void
     {
         self::get("/{$name}", [$controller, 'index']);
@@ -105,7 +118,9 @@ class Router
 
     protected function runRouteWithMiddleware(Route $route, Request $request): Response
     {
-        $middleware = $route->getMiddleware();
+        // Merge global middleware with route middleware
+        // Global middleware runs first, then route middleware
+        $middleware = array_merge(self::$globalMiddleware, $route->getMiddleware());
 
         if (empty($middleware)) {
             return $route->run($request);

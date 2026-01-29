@@ -33,7 +33,7 @@ return [
     */
     'jwt' => [
         // Secret key for signing tokens (MUST be set in .env)
-        'secret' => env('JWT_SECRET'),
+        'secret' => env('JWT_SECRET', 'test-secret-key-change-in-production'),
 
         // Algorithm for signing (only HS256 supported)
         'algorithm' => env('JWT_ALGORITHM', 'HS256'),

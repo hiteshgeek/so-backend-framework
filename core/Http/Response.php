@@ -62,6 +62,18 @@ class Response
         return $this;
     }
 
+    /**
+     * Alias for setHeader() for convenience
+     *
+     * @param string $name
+     * @param string $value
+     * @return self
+     */
+    public function header(string $name, string $value): self
+    {
+        return $this->setHeader($name, $value);
+    }
+
     public function getHeaders(): array
     {
         return $this->headers;

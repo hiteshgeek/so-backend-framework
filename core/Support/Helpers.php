@@ -564,3 +564,20 @@ if (!function_exists('str_ends_with')) {
         return $length === 0 || substr($haystack, -$length) === $needle;
     }
 }
+
+if (!function_exists('validate')) {
+    /**
+     * Validate data against rules
+     *
+     * @param array $data Data to validate
+     * @param array $rules Validation rules
+     * @param array $messages Custom error messages
+     * @return array Validated data
+     * @throws \Core\Validation\ValidationException
+     */
+    function validate(array $data, array $rules, array $messages = []): array
+    {
+        $validator = new \Core\Validation\Validator($data, $rules, $messages);
+        return $validator->validate();
+    }
+}
