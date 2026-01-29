@@ -1,0 +1,50 @@
+# Dependencies
+/vendor/
+/node_modules/
+composer.lock
+package-lock.json
+
+# Environment
+.env
+.env.backup
+.env.production
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Logs
+*.log
+/storage/logs/*.log
+/storage/logs/**/*.log
+
+# Cache
+/storage/cache/*
+!/storage/cache/.gitkeep
+/storage/sessions/*
+!/storage/sessions/.gitkeep
+/storage/framework/cache/*
+!/storage/framework/cache/.gitkeep
+/storage/framework/views/*
+!/storage/framework/views/.gitkeep
+/bootstrap/cache/*
+!/bootstrap/cache/.gitkeep
+
+# Testing
+.phpunit.result.cache
+/coverage/
+
+# Build & Assets
+/public/hot
+/public/storage
+/public/uploads/*
+!/public/uploads/.gitkeep
+/public/mix-manifest.json
+
+# OS
+Thumbs.db
+Desktop.ini
