@@ -441,7 +441,7 @@ $baseUrl = getenv('APP_URL') ?: 'http://sixorbit.local';
             </div>
             <div class="stat-card">
                 <span class="mdi mdi-file-document-multiple stat-icon"></span>
-                <h3>22</h3>
+                <h3>23</h3>
                 <p>Guide Documents</p>
             </div>
             <div class="stat-card">
@@ -453,11 +453,11 @@ $baseUrl = getenv('APP_URL') ?: 'http://sixorbit.local';
 
         <div class="reading-order-note">
             <span class="mdi mdi-information"></span>
-            <strong>Reading Order:</strong> Follow the numbered sequence (1-22) for optimal learning. Start with README (#1) and work through each document in order.
+            <strong>Reading Order:</strong> Follow the numbered sequence (1-23) for optimal learning. Start with README (#1) and work through each document in order.
         </div>
 
         <div class="section">
-            <div class="section-title"><span class="mdi mdi-numeric"></span> Complete Documentation (1-22)</div>
+            <div class="section-title"><span class="mdi mdi-numeric"></span> Complete Documentation (1-23)</div>
             <div class="grid">
                 <!-- 1. README -->
                 <a href="/docs/readme" class="card">
@@ -571,44 +571,51 @@ $baseUrl = getenv('APP_URL') ?: 'http://sixorbit.local';
                     <p>Routes, parameters, constraints, model binding</p>
                     <span class="badge badge-new"><span class="mdi mdi-new-box"></span> New</span>
                 </a>
-                <!-- 17. Middleware -->
-                <a href="/docs/middleware" class="card">
+                <!-- 17. Project Structure -->
+                <a href="/docs/project-structure" class="card">
                     <span class="card-number">17</span>
+                    <h3><span class="mdi mdi-folder-multiple"></span> Project Structure</h3>
+                    <p>Every folder and file explained in detail</p>
+                    <span class="badge badge-new"><span class="mdi mdi-new-box"></span> New</span>
+                </a>
+                <!-- 18. Middleware -->
+                <a href="/docs/middleware" class="card">
+                    <span class="card-number">18</span>
                     <h3><span class="mdi mdi-filter"></span> Middleware</h3>
                     <p>Request pipeline and middleware</p>
                     <span class="badge badge-technical"><span class="mdi mdi-cogs"></span> Technical</span>
                 </a>
-                <!-- 18. Documentation Review -->
+                <!-- 19. Documentation Review -->
                 <a href="/docs/documentation-review" class="card">
-                    <span class="card-number">18</span>
+                    <span class="card-number">19</span>
                     <h3><span class="mdi mdi-clipboard-check"></span> Documentation Review</h3>
                     <p>Coverage analysis of all modules</p>
                     <span class="badge badge-technical"><span class="mdi mdi-information"></span> Meta</span>
                 </a>
-                <!-- 19. Documentation Structure -->
+                <!-- 20. Documentation Structure -->
                 <a href="/docs/documentation-structure" class="card">
-                    <span class="card-number">19</span>
+                    <span class="card-number">20</span>
                     <h3><span class="mdi mdi-sitemap"></span> Documentation Structure</h3>
                     <p>How documentation is organized</p>
                     <span class="badge badge-technical"><span class="mdi mdi-information"></span> Meta</span>
                 </a>
-                <!-- 20. Rename Process -->
+                <!-- 21. Rename Process -->
                 <a href="/docs/rename" class="card">
-                    <span class="card-number">20</span>
+                    <span class="card-number">21</span>
                     <h3><span class="mdi mdi-pencil"></span> Rename Process</h3>
                     <p>Step-by-step rename guide</p>
                     <span class="badge badge-default"><span class="mdi mdi-book-outline"></span> Guide</span>
                 </a>
-                <!-- 21. Framework Branding -->
+                <!-- 22. Framework Branding -->
                 <a href="/docs/branding" class="card">
-                    <span class="card-number">21</span>
+                    <span class="card-number">22</span>
                     <h3><span class="mdi mdi-brush"></span> Framework Branding</h3>
                     <p>File reference for renaming</p>
                     <span class="badge badge-default"><span class="mdi mdi-bookmark"></span> Reference</span>
                 </a>
-                <!-- 22. Comprehensive Guide -->
+                <!-- 23. Comprehensive Guide -->
                 <a href="/docs/comprehensive" class="card featured">
-                    <span class="card-number">22</span>
+                    <span class="card-number">23</span>
                     <h3><span class="mdi mdi-book-open-variant"></span> Comprehensive Guide</h3>
                     <p>Complete framework reference with all features and examples</p>
                     <span class="badge badge-featured"><span class="mdi mdi-check"></span> Complete</span>

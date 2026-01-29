@@ -1,34 +1,59 @@
 <?php
 
+/**
+ * API Routes
+ *
+ * This file loads all API route modules.
+ * Add new route files to routes/api/ directory.
+ */
+
 use Core\Routing\Router;
-use App\Controllers\Api\V1\UserController;
-use App\Controllers\UserApiController;
-use App\Middleware\AuthMiddleware;
+use Core\Http\Request;
 
-// Protected API routes for dashboard (requires authentication)
-Router::group(['prefix' => 'api', 'middleware' => [AuthMiddleware::class]], function () {
-    // User CRUD operations
-    Router::get('/users', [UserApiController::class, 'index']);
-    Router::get('/users/{id}', [UserApiController::class, 'show']);
-    Router::post('/users', [UserApiController::class, 'store']);
-    Router::put('/users/{id}', [UserApiController::class, 'update']);
-    Router::delete('/users/{id}', [UserApiController::class, 'destroy']);
-});
+// ==========================================
+// Load API Route Modules
+// ==========================================
 
-// API v1 routes
-Router::group(['prefix' => 'api/v1'], function () {
+// User API routes
+require __DIR__ . '/api/users.php';
 
-    // User routes
-    Router::get('/users', [UserController::class, 'index']);
-    Router::get('/users/{id}', [UserController::class, 'show']);
-    Router::post('/users', [UserController::class, 'store']);
-    Router::put('/users/{id}', [UserController::class, 'update']);
-    Router::delete('/users/{id}', [UserController::class, 'destroy']);
+// Product API routes (uncomment when ready)
+require __DIR__ . '/api/products.php';
 
-    // Add more API routes here
-});
+// Order API routes (uncomment when ready)
+require __DIR__ . '/api/orders.php';
 
-// API v2 routes (future)
+// ==========================================
+// Add more API modules here:
+// ==========================================
+// require __DIR__ . '/api/categories.php';
+// require __DIR__ . '/api/payments.php';
+// require __DIR__ . '/api/reports.php';
+
+// ==========================================
+// General API Routes
+// ==========================================
+
+// API health check
+Router::get('/api/health', function (Request $request) {
+    return \Core\Http\JsonResponse::success([
+        'status' => 'ok',
+        'version' => '1.0.0',
+        'timestamp' => date('c'),
+    ]);
+})->name('api.health');
+
+// API test route
+Router::get('/api/test', function (Request $request) {
+    return \Core\Http\JsonResponse::success([
+        'message' => 'Framework is working!',
+        'version' => '1.0.0',
+    ]);
+})->name('api.test');
+
+// ==========================================
+// API v2 Routes (Future)
+// ==========================================
 Router::group(['prefix' => 'api/v2'], function () {
-    // Add v2 routes here
+    // Add v2 routes here when ready
 });

@@ -1,66 +1,46 @@
 <?php
 
+/**
+ * Web Routes
+ *
+ * This file loads all web route modules.
+ * Add new route files to routes/web/ directory.
+ */
+
 use Core\Routing\Router;
 use Core\Http\Request;
 use Core\Http\Response;
-use App\Controllers\DocsController;
-use App\Controllers\AuthController;
-use App\Controllers\PasswordController;
-use App\Controllers\DashboardController;
-use App\Middleware\AuthMiddleware;
-use App\Middleware\GuestMiddleware;
-use App\Middleware\CsrfMiddleware;
-use App\Middleware\ThrottleMiddleware;
 
-// Home route
+// ==========================================
+// Home Route
+// ==========================================
 Router::get('/', function (Request $request) {
     return Response::view('welcome');
-});
+})->name('home');
+
+// ==========================================
+// Load Route Modules
+// ==========================================
+
+// Authentication routes (login, register, password reset)
+require __DIR__ . '/web/auth.php';
+
+// Dashboard routes (protected admin area)
+require __DIR__ . '/web/dashboard.php';
 
 // Documentation routes
-Router::get('/docs', [DocsController::class, 'index']);
-Router::get('/docs/comprehensive', [DocsController::class, 'comprehensive']);
-Router::get('/docs/{file}', [DocsController::class, 'show']);
+require __DIR__ . '/web/docs.php';
 
-// Authentication routes - wrapped in CSRF middleware
-Router::group(['middleware' => [CsrfMiddleware::class]], function () {
+// ==========================================
+// Add more route modules here:
+// ==========================================
+// require __DIR__ . '/web/users.php';
+// require __DIR__ . '/web/products.php';
+// require __DIR__ . '/web/settings.php';
 
-    // Guest routes (redirect to dashboard if authenticated)
-    Router::group(['middleware' => [GuestMiddleware::class]], function () {
-        Router::get('/register', [AuthController::class, 'showRegister']);
-        Router::get('/login', [AuthController::class, 'showLogin']);
-        Router::get('/password/forgot', [PasswordController::class, 'showForgotForm']);
-        Router::get('/password/reset/{token}', [PasswordController::class, 'showResetForm']);
-
-        // Rate-limited auth POST routes (5 attempts per minute to prevent brute force)
-        Router::group(['middleware' => [ThrottleMiddleware::class . ':5,1']], function () {
-            Router::post('/register', [AuthController::class, 'register']);
-            Router::post('/login', [AuthController::class, 'login']);
-            Router::post('/password/forgot', [PasswordController::class, 'sendResetLink']);
-            Router::post('/password/reset', [PasswordController::class, 'reset']);
-        });
-    });
-
-    // Protected routes (require authentication)
-    Router::group(['middleware' => [AuthMiddleware::class]], function () {
-        Router::get('/dashboard', [DashboardController::class, 'index']);
-        Router::get('/dashboard/users/create', [DashboardController::class, 'create']);
-        Router::post('/dashboard/users', [DashboardController::class, 'store']);
-        Router::get('/dashboard/users/{id}/edit', [DashboardController::class, 'edit']);
-        Router::post('/dashboard/users/{id}', [DashboardController::class, 'update']);
-        Router::delete('/dashboard/users/{id}', [DashboardController::class, 'destroy']);
-
-        Router::post('/logout', [AuthController::class, 'logout']);
-    });
-});
-
-// Example JSON API route
-Router::get('/api/test', function (Request $request) {
-    return \Core\Http\JsonResponse::success([
-        'message' => 'Framework is working!',
-        'version' => '1.0.0',
-    ]);
-});
+// ==========================================
+// Misc Routes
+// ==========================================
 
 // Example route with parameters
 Router::get('/users/{id}', function (Request $request, $id) {
@@ -68,4 +48,4 @@ Router::get('/users/{id}', function (Request $request, $id) {
         'user_id' => $id,
         'message' => 'User details',
     ]);
-});
+})->whereNumber('id');

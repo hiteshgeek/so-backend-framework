@@ -69,6 +69,7 @@ class DocsController
             'console-commands' => 'CONSOLE-COMMANDS.md',
             'view-templates' => 'VIEW-TEMPLATES.md',
             'routing-system' => 'ROUTING-SYSTEM.md',
+            'project-structure' => 'PROJECT-STRUCTURE.md',
 
             // Meta Documentation
             'documentation-review' => 'DOCUMENTATION-REVIEW.md',
