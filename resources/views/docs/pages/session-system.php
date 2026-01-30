@@ -259,23 +259,51 @@ public function forceLogoutAllDevices($userId)
     <span class="heading-text">Multi-Server Deployment</span>
 </h3>
 
-<?= codeBlock('text', '+-------------+
-| Load        |
-| Balancer    |
-+------+------+
-       |
-       +-------------+-------------+
-       |             |             |
- +-----v----+  +-----v----+  +-----v----+
- | Server 1 |  | Server 2 |  | Server 3 |
- +-----+----+  +-----+----+  +-----+----+
-       |             |             |
-       +-------------+-------------+
-                     |
-              +------v------+
-              |   Database  |
-              |  (Sessions) |
-              +-------------+') ?>
+<div class="load-balancer-diagram">
+    <div class="lb-box lb-balancer">
+        <div class="lb-box-icon"><span class="mdi mdi-shuffle-variant"></span></div>
+        <div class="lb-box-title">Load Balancer</div>
+    </div>
+
+    <div class="lb-arrow-split">
+        <div class="lb-arrow-line"></div>
+        <div class="lb-arrows-group">
+            <div class="lb-arrow-down"><span class="mdi mdi-arrow-down"></span></div>
+            <div class="lb-arrow-down"><span class="mdi mdi-arrow-down"></span></div>
+            <div class="lb-arrow-down"><span class="mdi mdi-arrow-down"></span></div>
+        </div>
+    </div>
+
+    <div class="lb-servers-row">
+        <div class="lb-box lb-server">
+            <div class="lb-box-icon"><span class="mdi mdi-server"></span></div>
+            <div class="lb-box-title">Server 1</div>
+        </div>
+        <div class="lb-box lb-server">
+            <div class="lb-box-icon"><span class="mdi mdi-server"></span></div>
+            <div class="lb-box-title">Server 2</div>
+        </div>
+        <div class="lb-box lb-server">
+            <div class="lb-box-icon"><span class="mdi mdi-server"></span></div>
+            <div class="lb-box-title">Server 3</div>
+        </div>
+    </div>
+
+    <div class="lb-arrow-merge">
+        <div class="lb-arrows-group">
+            <div class="lb-arrow-down"><span class="mdi mdi-arrow-down"></span></div>
+            <div class="lb-arrow-down"><span class="mdi mdi-arrow-down"></span></div>
+            <div class="lb-arrow-down"><span class="mdi mdi-arrow-down"></span></div>
+        </div>
+        <div class="lb-arrow-line"></div>
+    </div>
+
+    <div class="lb-box lb-database">
+        <div class="lb-box-icon"><span class="mdi mdi-database"></span></div>
+        <div class="lb-box-title">Database</div>
+        <div class="lb-box-meta">(Sessions)</div>
+    </div>
+</div>
 
 <h3 class="heading heading-3">
     <span class="heading-text">Active User Monitoring</span>

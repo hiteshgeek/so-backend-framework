@@ -2785,3 +2785,879 @@
     font-size: 10px;
   }
 }
+
+/* ===== MIDDLEWARE FLOW DIAGRAM ===== */
+.middleware-flow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  margin: var(--space-3) auto;
+  padding: var(--space-3);
+  background: linear-gradient(180deg, #f0f9ff 0%, #fef3c7 100%);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  max-width: 500px;
+}
+
+.flow-box {
+  background: var(--surface);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px 16px;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 4px;
+  width: 100%;
+  max-width: 350px;
+}
+
+.flow-box:hover {
+  box-shadow: var(--shadow);
+  transform: translateY(-2px);
+}
+
+.flow-request {
+  border-color: var(--primary-light);
+  background: linear-gradient(135deg, var(--surface) 0%, var(--primary-bg) 100%);
+}
+
+.flow-middleware {
+  border-color: #f59e0b;
+  background: linear-gradient(135deg, var(--surface) 0%, #fef3c7 100%);
+}
+
+.flow-application {
+  border-color: var(--primary);
+  border-width: 3px;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+}
+
+.flow-application .flow-box-icon {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+.flow-application .flow-box-title {
+  color: white;
+  font-weight: 700;
+}
+
+.flow-response {
+  border-color: var(--success);
+  background: linear-gradient(135deg, var(--surface) 0%, var(--success-bg) 100%);
+}
+
+.flow-box-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--primary-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.flow-box-icon .mdi {
+  font-size: 16px;
+  color: var(--primary);
+}
+
+.flow-middleware .flow-box-icon {
+  background: #fef3c7;
+}
+
+.flow-middleware .flow-box-icon .mdi {
+  color: #f59e0b;
+}
+
+.flow-response .flow-box-icon {
+  background: var(--success-bg);
+}
+
+.flow-response .flow-box-icon .mdi {
+  color: var(--success);
+}
+
+.flow-box-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.3;
+}
+
+.flow-box-meta {
+  font-size: 11px;
+  color: var(--text-muted);
+  background: var(--border-light);
+  padding: 2px 6px;
+  border-radius: 6px;
+  font-weight: 500;
+}
+
+.flow-arrow-down {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary);
+  margin: 8px 0;
+  animation: flowPulse 2s ease-in-out infinite;
+}
+
+.flow-arrow-down .mdi {
+  font-size: 24px;
+}
+
+@keyframes flowPulse {
+  0%, 100% {
+    opacity: 0.4;
+    transform: translateY(0);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(4px);
+  }
+}
+
+/* Dark mode */
+[data-theme="dark"] .middleware-flow {
+  background: linear-gradient(180deg, #0c1929 0%, #1e1b13 100%);
+}
+
+[data-theme="dark"] .flow-request {
+  background: linear-gradient(135deg, var(--surface) 0%, #1e3a5f 100%);
+}
+
+[data-theme="dark"] .flow-middleware {
+  background: linear-gradient(135deg, var(--surface) 0%, #3a2f0a 100%);
+}
+
+[data-theme="dark"] .flow-response {
+  background: linear-gradient(135deg, var(--surface) 0%, #052e16 100%);
+}
+
+/* Mobile responsive */
+@media (max-width: 600px) {
+  .middleware-flow {
+    padding: var(--space-2);
+    max-width: 100%;
+  }
+
+  .flow-box {
+    max-width: 100%;
+    padding: 10px 12px;
+  }
+
+  .flow-box-icon {
+    width: 28px;
+    height: 28px;
+  }
+
+  .flow-box-icon .mdi {
+    font-size: 14px;
+  }
+
+  .flow-box-title {
+    font-size: 13px;
+  }
+
+  .flow-box-meta {
+    font-size: 10px;
+  }
+
+  .flow-arrow-down .mdi {
+    font-size: 20px;
+  }
+}
+
+/* ===== LOAD BALANCER DIAGRAM ===== */
+.load-balancer-diagram {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  margin: var(--space-3) auto;
+  padding: var(--space-3);
+  background: linear-gradient(180deg, #ede9fe 0%, #ddd6fe 50%, #e0f2fe 100%);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  max-width: 700px;
+}
+
+.lb-box {
+  background: var(--surface);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px 16px;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 4px;
+}
+
+.lb-box:hover {
+  box-shadow: var(--shadow);
+  transform: translateY(-2px);
+}
+
+.lb-balancer {
+  border-color: #8b5cf6;
+  border-width: 3px;
+  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+  min-width: 180px;
+}
+
+.lb-balancer .lb-box-icon {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+.lb-balancer .lb-box-title {
+  color: white;
+  font-weight: 700;
+}
+
+.lb-server {
+  border-color: var(--primary-light);
+  background: linear-gradient(135deg, var(--surface) 0%, var(--primary-bg) 100%);
+  min-width: 140px;
+}
+
+.lb-database {
+  border-color: var(--success);
+  border-width: 3px;
+  background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
+  min-width: 200px;
+}
+
+.lb-database .lb-box-icon {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+.lb-database .lb-box-title {
+  color: white;
+  font-weight: 700;
+}
+
+.lb-database .lb-box-meta {
+  color: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.lb-box-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--primary-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.lb-box-icon .mdi {
+  font-size: 16px;
+  color: var(--primary);
+}
+
+.lb-server .lb-box-icon {
+  background: var(--primary-bg);
+}
+
+.lb-server .lb-box-icon .mdi {
+  color: var(--primary);
+}
+
+.lb-box-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.3;
+}
+
+.lb-box-meta {
+  font-size: 11px;
+  color: var(--text-muted);
+  background: var(--border-light);
+  padding: 2px 6px;
+  border-radius: 6px;
+  font-weight: 500;
+}
+
+.lb-servers-row {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.lb-arrow-split,
+.lb-arrow-merge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  margin: 8px 0;
+}
+
+.lb-arrow-line {
+  width: 2px;
+  height: 20px;
+  background: var(--primary);
+  opacity: 0.6;
+}
+
+.lb-arrows-group {
+  display: flex;
+  gap: 80px;
+  justify-content: center;
+}
+
+.lb-arrow-down {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary);
+  animation: lbPulse 2s ease-in-out infinite;
+}
+
+.lb-arrow-down .mdi {
+  font-size: 20px;
+}
+
+@keyframes lbPulse {
+  0%, 100% {
+    opacity: 0.4;
+    transform: translateY(0);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(4px);
+  }
+}
+
+/* Dark mode */
+[data-theme="dark"] .load-balancer-diagram {
+  background: linear-gradient(180deg, #2e1065 0%, #1e1b4b 50%, #0c1929 100%);
+}
+
+[data-theme="dark"] .lb-balancer {
+  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+}
+
+[data-theme="dark"] .lb-server {
+  background: linear-gradient(135deg, var(--surface) 0%, #1e3a5f 100%);
+}
+
+[data-theme="dark"] .lb-database {
+  background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
+}
+
+/* Mobile responsive */
+@media (max-width: 700px) {
+  .load-balancer-diagram {
+    padding: var(--space-2);
+    max-width: 100%;
+  }
+
+  .lb-servers-row {
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .lb-box {
+    width: 100%;
+    max-width: 280px;
+    padding: 10px 12px;
+  }
+
+  .lb-balancer,
+  .lb-server,
+  .lb-database {
+    min-width: auto;
+  }
+
+  .lb-arrows-group {
+    gap: 20px;
+  }
+
+  .lb-arrow-down .mdi {
+    font-size: 18px;
+  }
+
+  .lb-box-icon {
+    width: 28px;
+    height: 28px;
+  }
+
+  .lb-box-icon .mdi {
+    font-size: 14px;
+  }
+
+  .lb-box-title {
+    font-size: 13px;
+  }
+
+  .lb-box-meta {
+    font-size: 10px;
+  }
+}
+
+/* ==================== Job Lifecycle Diagram ==================== */
+.job-lifecycle-diagram {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--space-3);
+  background: linear-gradient(180deg, #f0f9ff 0%, #fef3c7 100%);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  margin: var(--space-3) auto;
+  gap: 0;
+  max-width: 600px;
+}
+
+/* Job Lifecycle Box */
+.jlc-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 12px 16px;
+  border-radius: var(--radius);
+  background: var(--surface);
+  border: 2px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  transition: all 0.3s ease;
+  min-width: 180px;
+  text-align: center;
+}
+
+.jlc-box:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+
+.jlc-box-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--primary-bg);
+  flex-shrink: 0;
+}
+
+.jlc-box-icon .mdi {
+  font-size: 16px;
+  color: var(--primary);
+}
+
+.jlc-box-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.jlc-box-meta {
+  font-size: 11px;
+  color: var(--text-secondary);
+  font-style: italic;
+  max-width: 200px;
+}
+
+/* Job Lifecycle Status Colors */
+.jlc-dispatched {
+  border-color: #6366f1;
+  background: linear-gradient(135deg, var(--surface) 0%, #e0e7ff 100%);
+}
+
+.jlc-dispatched .jlc-box-icon {
+  background: #e0e7ff;
+}
+
+.jlc-dispatched .jlc-box-icon .mdi {
+  color: #6366f1;
+}
+
+.jlc-queued {
+  border-color: #3b82f6;
+  background: linear-gradient(135deg, var(--surface) 0%, #dbeafe 100%);
+}
+
+.jlc-queued .jlc-box-icon {
+  background: #dbeafe;
+}
+
+.jlc-queued .jlc-box-icon .mdi {
+  color: #3b82f6;
+}
+
+.jlc-processing {
+  border-color: #f59e0b;
+  background: linear-gradient(135deg, var(--surface) 0%, #fef3c7 100%);
+}
+
+.jlc-processing .jlc-box-icon {
+  background: #fef3c7;
+  animation: jlc-pulse 2s ease-in-out infinite;
+}
+
+.jlc-processing .jlc-box-icon .mdi {
+  color: #f59e0b;
+}
+
+.jlc-success {
+  border-color: var(--success);
+  background: linear-gradient(135deg, var(--surface) 0%, var(--success-bg) 100%);
+}
+
+.jlc-success .jlc-box-icon {
+  background: var(--success-bg);
+}
+
+.jlc-success .jlc-box-icon .mdi {
+  color: var(--success);
+}
+
+.jlc-failure {
+  border-color: var(--danger);
+  background: linear-gradient(135deg, var(--surface) 0%, var(--danger-bg) 100%);
+}
+
+.jlc-failure .jlc-box-icon {
+  background: var(--danger-bg);
+}
+
+.jlc-failure .jlc-box-icon .mdi {
+  color: var(--danger);
+}
+
+.jlc-retry {
+  border-color: #8b5cf6;
+  background: linear-gradient(135deg, var(--surface) 0%, #f3e8ff 100%);
+}
+
+.jlc-retry .jlc-box-icon {
+  background: #f3e8ff;
+}
+
+.jlc-retry .jlc-box-icon .mdi {
+  color: #8b5cf6;
+}
+
+.jlc-failed-jobs {
+  border-color: #64748b;
+  background: linear-gradient(135deg, var(--surface) 0%, #f1f5f9 100%);
+}
+
+.jlc-failed-jobs .jlc-box-icon {
+  background: #f1f5f9;
+}
+
+.jlc-failed-jobs .jlc-box-icon .mdi {
+  color: #64748b;
+}
+
+@keyframes jlc-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+/* Job Lifecycle Arrows */
+.jlc-arrow-down {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  padding: 8px 0;
+}
+
+.jlc-arrow-down .mdi {
+  font-size: 24px;
+  animation: jlc-arrow-bounce 2s ease-in-out infinite;
+}
+
+@keyframes jlc-arrow-bounce {
+  0%, 100% {
+    transform: translateY(0);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translateY(4px);
+    opacity: 1;
+  }
+}
+
+/* Arrow Split (Decision Point) */
+.jlc-arrow-split {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  margin: 12px 0;
+}
+
+.jlc-arrow-split-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  padding: 3px 10px;
+  background: var(--surface);
+  border-radius: var(--radius-sm);
+  border: 1px dashed var(--border);
+}
+
+/* Split Row (Success and Failure Branches) */
+.jlc-split-row {
+  display: flex;
+  gap: var(--space-4);
+  width: 100%;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.jlc-split-branch {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  flex: 1;
+  min-width: 220px;
+}
+
+/* Retry Paths (Yes/No Decision) */
+.jlc-retry-paths {
+  display: flex;
+  gap: var(--space-5);
+  width: 100%;
+  justify-content: center;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+
+.jlc-path {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 200px;
+  max-width: 250px;
+}
+
+.jlc-path-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 6px 14px;
+  background: var(--surface);
+  border-radius: var(--radius);
+  border: 2px solid var(--border);
+  box-shadow: var(--shadow-sm);
+}
+
+.jlc-path-label .mdi {
+  font-size: 16px;
+}
+
+.jlc-path-yes .jlc-path-label {
+  border-color: var(--success);
+  color: var(--success);
+}
+
+.jlc-path-yes .jlc-path-label .mdi {
+  color: var(--success);
+}
+
+.jlc-path-no .jlc-path-label {
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+.jlc-path-no .jlc-path-label .mdi {
+  color: var(--danger);
+}
+
+/* Curved Arrow (Yes path - back to Queued) */
+.jlc-arrow-curve {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--success);
+  padding: 8px 0;
+}
+
+.jlc-arrow-curve .mdi {
+  font-size: 32px;
+  animation: jlc-curve-bounce 2.5s ease-in-out infinite;
+}
+
+.jlc-path-note {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-align: center;
+  padding: 4px 8px;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-sm);
+}
+
+@keyframes jlc-curve-bounce {
+  0%, 100% {
+    transform: translateX(0);
+    opacity: 0.7;
+  }
+  50% {
+    transform: translateX(-6px);
+    opacity: 1;
+  }
+}
+
+/* Dark Mode */
+[data-theme="dark"] .job-lifecycle-diagram {
+  background: linear-gradient(180deg, rgba(30, 41, 59, 0.5) 0%, rgba(51, 65, 85, 0.5) 100%);
+  border-color: var(--border-dark);
+}
+
+[data-theme="dark"] .jlc-box {
+  background: var(--surface-dark);
+  border-color: var(--border-dark);
+}
+
+[data-theme="dark"] .jlc-dispatched {
+  background: linear-gradient(135deg, var(--surface-dark) 0%, rgba(99, 102, 241, 0.1) 100%);
+}
+
+[data-theme="dark"] .jlc-queued {
+  background: linear-gradient(135deg, var(--surface-dark) 0%, rgba(59, 130, 246, 0.1) 100%);
+}
+
+[data-theme="dark"] .jlc-processing {
+  background: linear-gradient(135deg, var(--surface-dark) 0%, rgba(245, 158, 11, 0.1) 100%);
+}
+
+[data-theme="dark"] .jlc-success {
+  background: linear-gradient(135deg, var(--surface-dark) 0%, rgba(16, 185, 129, 0.1) 100%);
+}
+
+[data-theme="dark"] .jlc-failure {
+  background: linear-gradient(135deg, var(--surface-dark) 0%, rgba(239, 68, 68, 0.1) 100%);
+}
+
+[data-theme="dark"] .jlc-retry {
+  background: linear-gradient(135deg, var(--surface-dark) 0%, rgba(139, 92, 246, 0.1) 100%);
+}
+
+[data-theme="dark"] .jlc-failed-jobs {
+  background: linear-gradient(135deg, var(--surface-dark) 0%, rgba(100, 116, 139, 0.1) 100%);
+}
+
+[data-theme="dark"] .jlc-arrow-split-label {
+  background: var(--surface-dark);
+  border-color: var(--border-dark);
+}
+
+[data-theme="dark"] .jlc-path-label {
+  background: var(--surface-dark);
+  border-color: var(--border-dark);
+}
+
+[data-theme="dark"] .jlc-path-note {
+  background: rgba(30, 41, 59, 0.8);
+}
+
+/* Responsive Design */
+@media (max-width: 900px) {
+  .job-lifecycle-diagram {
+    max-width: 100%;
+  }
+
+  .jlc-split-row {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .jlc-split-branch {
+    width: 100%;
+    max-width: 350px;
+  }
+
+  .jlc-retry-paths {
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-4);
+  }
+
+  .jlc-path {
+    width: 100%;
+    max-width: 300px;
+  }
+}
+
+@media (max-width: 600px) {
+  .job-lifecycle-diagram {
+    padding: var(--space-2);
+  }
+
+  .jlc-box {
+    padding: 10px 12px;
+    min-width: 150px;
+  }
+
+  .jlc-box-icon {
+    width: 28px;
+    height: 28px;
+  }
+
+  .jlc-box-icon .mdi {
+    font-size: 14px;
+  }
+
+  .jlc-box-title {
+    font-size: 13px;
+  }
+
+  .jlc-box-meta {
+    font-size: 10px;
+  }
+
+  .jlc-arrow-down .mdi {
+    font-size: 20px;
+  }
+
+  .jlc-arrow-curve .mdi {
+    font-size: 28px;
+  }
+
+  .jlc-path-label {
+    font-size: 11px;
+    padding: 5px 12px;
+  }
+
+  .jlc-path-label .mdi {
+    font-size: 14px;
+  }
+
+  .jlc-path-note {
+    font-size: 9px;
+  }
+}

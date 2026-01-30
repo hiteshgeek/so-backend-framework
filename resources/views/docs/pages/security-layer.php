@@ -58,17 +58,51 @@ include __DIR__ . '/../_layout.php';
     <span class="heading-text">Security Architecture</span>
 </h3>
 
-<?= codeBlock('text', 'Request
-  ↓
-CsrfMiddleware → Validates CSRF token
-  ↓
-JwtMiddleware → Validates JWT token (API routes)
-  ↓
-ThrottleMiddleware → Checks rate limits
-  ↓
-Your Application
-  ↓
-Response (with sanitized output)') ?>
+<div class="middleware-flow">
+    <div class="flow-box flow-request">
+        <div class="flow-box-icon"><span class="mdi mdi-arrow-down-circle"></span></div>
+        <div class="flow-box-title">Request</div>
+    </div>
+
+    <div class="flow-arrow-down"><span class="mdi mdi-arrow-down"></span></div>
+
+    <div class="flow-box flow-middleware">
+        <div class="flow-box-icon"><span class="mdi mdi-shield-check"></span></div>
+        <div class="flow-box-title">CsrfMiddleware</div>
+        <div class="flow-box-meta">Validates CSRF token</div>
+    </div>
+
+    <div class="flow-arrow-down"><span class="mdi mdi-arrow-down"></span></div>
+
+    <div class="flow-box flow-middleware">
+        <div class="flow-box-icon"><span class="mdi mdi-key"></span></div>
+        <div class="flow-box-title">JwtMiddleware</div>
+        <div class="flow-box-meta">Validates JWT token (API routes)</div>
+    </div>
+
+    <div class="flow-arrow-down"><span class="mdi mdi-arrow-down"></span></div>
+
+    <div class="flow-box flow-middleware">
+        <div class="flow-box-icon"><span class="mdi mdi-speedometer"></span></div>
+        <div class="flow-box-title">ThrottleMiddleware</div>
+        <div class="flow-box-meta">Checks rate limits</div>
+    </div>
+
+    <div class="flow-arrow-down"><span class="mdi mdi-arrow-down"></span></div>
+
+    <div class="flow-box flow-application">
+        <div class="flow-box-icon"><span class="mdi mdi-application"></span></div>
+        <div class="flow-box-title">Your Application</div>
+    </div>
+
+    <div class="flow-arrow-down"><span class="mdi mdi-arrow-down"></span></div>
+
+    <div class="flow-box flow-response">
+        <div class="flow-box-icon"><span class="mdi mdi-arrow-up-circle"></span></div>
+        <div class="flow-box-title">Response</div>
+        <div class="flow-box-meta">with sanitized output</div>
+    </div>
+</div>
 
 <!-- CSRF Protection -->
 <h2 id="csrf-protection" class="heading heading-2">
