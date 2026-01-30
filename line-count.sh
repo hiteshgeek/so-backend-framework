@@ -9,6 +9,6 @@ find . -type f \
   -not -path "*/node_modules/*" \
   -not -path "*/vendor/*" \
   -not -path "*/tests/*" \
-  -not -path "*/documentation/*" \
+  -not -path "*/docs/*" \
   -not -name "composer.lock" \
   -exec wc -l {} + | sort -nr | nl -w2 -s'. '

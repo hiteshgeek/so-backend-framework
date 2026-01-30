@@ -34,7 +34,7 @@ Access documentation through the web interface:
 ## Folder Structure
 
 ```
-documentation/
+docs/
 +-- COMPREHENSIVE-GUIDE.md          # Main comprehensive documentation
 +-- README.md                       # Framework overview
 +-- INDEX.md                        # Navigation hub
@@ -75,17 +75,15 @@ Router::get('/docs/comprehensive', [DocsController::class, 'comprehensive']);
 Router::get('/docs/{file}', [DocsController::class, 'show']);
 ```
 
-## Why "documentation" Instead of "docs"?
+## Folder Naming
 
-The folder was renamed from `docs/` to `documentation/` to prevent routing conflicts. When the folder was named `docs/`, Apache would treat `/docs` as a physical directory and redirect to `/docs/`, causing issues with the routing system.
-
-By renaming it to `documentation/`, the `/docs` URL is now exclusively handled by the routing system, while the physical files remain accessible to the application code.
+The documentation folder is named `docs/` and located at the project root. The `/docs` URL routes are handled by `DocsController` — there is no conflict because Apache serves from the `public/` directory, not the project root.
 
 ## Adding New Documentation
 
 To add new documentation:
 
-1. Create a new `.md` file in the `documentation/` folder
+1. Create a new `.md` file in the `docs/md/` folder
 2. Add the file to the `$allowedFiles` array in `DocsController::show()`
 3. Update the `index.php` view to include a card for the new documentation
 4. Update this file to reflect the new documentation

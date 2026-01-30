@@ -27,7 +27,7 @@ class DocsController
      */
     public function comprehensive(Request $request): Response
     {
-        $markdown = file_get_contents(__DIR__ . '/../../documentation/md/COMPREHENSIVE-GUIDE.md');
+        $markdown = file_get_contents(__DIR__ . '/../../docs/md/COMPREHENSIVE-GUIDE.md');
 
         return Response::view('docs/comprehensive', [
             'title' => 'Comprehensive Guide - ' . config('app.name'),
@@ -99,9 +99,9 @@ class DocsController
         // Fallback to markdown parsing
         $filename = $allowedFiles[$file];
         if (str_starts_with($filename, '../')) {
-            $filePath = __DIR__ . '/../../documentation/md/' . $filename;
+            $filePath = __DIR__ . '/../../docs/md/' . $filename;
         } else {
-            $filePath = __DIR__ . '/../../documentation/md/' . $filename;
+            $filePath = __DIR__ . '/../../docs/md/' . $filename;
         }
         $filePath = realpath($filePath) ?: $filePath;
 

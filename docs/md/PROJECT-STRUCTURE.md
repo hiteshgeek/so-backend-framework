@@ -14,7 +14,7 @@ This document provides a detailed explanation of every folder and file in the SO
 8. [storage/ - File Storage](#storage---file-storage)
 9. [database/ - Database Files](#database---database-files)
 10. [bootstrap/ - Application Bootstrap](#bootstrap---application-bootstrap)
-11. [documentation/ - Documentation](#documentation---documentation)
+11. [docs/ - Documentation](#docs---documentation)
 12. [tests/ - Test Files](#tests---test-files)
 13. [vendor/ - Dependencies](#vendor---dependencies)
 
@@ -525,12 +525,12 @@ return $app;
 
 ---
 
-## documentation/ - Documentation
+## docs/ - Documentation
 
 Framework documentation files.
 
 ```
-documentation/
+docs/
 ├── index.php               # Documentation portal (web UI)
 └── md/                     # Markdown documentation files
     ├── README.md           # Framework overview

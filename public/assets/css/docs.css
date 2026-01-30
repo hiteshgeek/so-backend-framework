@@ -46,7 +46,7 @@
   position: sticky;
   top: 128px;
   height: fit-content;
-  max-height: calc(100vh - 128px);
+  max-height: calc(100vh - 148px);
   overflow-y: auto;
   background: var(--surface);
   border-radius: var(--radius);
@@ -80,7 +80,7 @@
 
 .docs-sidebar ul {
   list-style: none;
-  padding: 4px 0 4px 12px;
+  padding: 12px;
   margin: 0;
 }
 
@@ -119,12 +119,12 @@
   font-size: 13px;
   color: var(--text);
   padding: 8px 4px;
-  margin-top: 10px;
   border-left-width: 3px;
   border-left-color: transparent;
 }
 
-.docs-sidebar .toc-h2:hover {
+.docs-sidebar .toc-h2:hover,
+.docs-sidebar .toc-h2.active {
   border-left-color: transparent;
   background: none;
   color: var(--text);

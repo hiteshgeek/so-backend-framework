@@ -169,7 +169,7 @@ php database/migrations/generate-setup.php') ?>
 ├── config/              # Configuration files
 ├── routes/              # Route definitions
 ├── public/              # Web root
-├── documentation/       # Complete documentation
+├── docs/                # Complete documentation
 └── storage/             # Logs, cache, sessions') ?>
 
 <?= callout('info', 'See <a href="/docs/project-structure" class="link">Project Structure</a> for detailed explanation of each folder and file.') ?>
