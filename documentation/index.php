@@ -126,7 +126,6 @@ $baseUrl = getenv('APP_URL') ?: 'http://sixorbit.local';
 
         .stat-card:hover {
             box-shadow: var(--md-elevation-2);
-            transform: translateY(-2px);
         }
 
         .stat-card .stat-icon {
@@ -171,7 +170,7 @@ $baseUrl = getenv('APP_URL') ?: 'http://sixorbit.local';
 
         /* Section */
         .section {
-            /* margin-bottom: 28px; */
+            margin-bottom: 28px;
         }
 
         .section-title {
@@ -210,11 +209,16 @@ $baseUrl = getenv('APP_URL') ?: 'http://sixorbit.local';
             padding: 16px 18px;
             text-decoration: none;
             color: inherit;
-            display: block;
+            display: flex;
+            flex-direction: column;
             box-shadow: var(--md-elevation-1);
-            transition: box-shadow 0.2s, transform 0.2s;
+            transition: box-shadow 0.2s;
             position: relative;
             overflow: hidden;
+        }
+
+        .card-body {
+            flex: 1;
         }
 
         .card::before {
@@ -256,7 +260,11 @@ $baseUrl = getenv('APP_URL') ?: 'http://sixorbit.local';
             color: var(--md-on-surface-medium);
             font-size: 12px;
             line-height: 1.5;
-            margin-bottom: 10px;
+        }
+
+        .card .badge {
+            margin-top: 10px;
+            align-self: flex-start;
         }
 
         /* Featured Card */
@@ -462,162 +470,208 @@ $baseUrl = getenv('APP_URL') ?: 'http://sixorbit.local';
                 <!-- 1. README -->
                 <a href="/docs/readme" class="card">
                     <span class="card-number">1</span>
-                    <h3><span class="mdi mdi-rocket-launch"></span> README</h3>
-                    <p>Framework overview and quick install guide</p>
+                    <div class="card-body">
+                        <h3><span class="mdi mdi-rocket-launch"></span> README</h3>
+                        <p>Framework overview and quick install guide</p>
+                    </div>
                     <span class="badge badge-essential"><span class="mdi mdi-alert-circle"></span> Essential</span>
                 </a>
                 <!-- 2. Setup Guide -->
                 <a href="/docs/setup" class="card">
                     <span class="card-number">2</span>
-                    <h3><span class="mdi mdi-cog"></span> Setup Guide</h3>
-                    <p>Installation and configuration</p>
+                    <div class="card-body">
+                        <h3><span class="mdi mdi-cog"></span> Setup Guide</h3>
+                        <p>Installation and configuration</p>
+                    </div>
                     <span class="badge badge-essential"><span class="mdi mdi-alert-circle"></span> Essential</span>
                 </a>
                 <!-- 3. Configuration -->
                 <a href="/docs/configuration" class="card">
                     <span class="card-number">3</span>
-                    <h3><span class="mdi mdi-wrench"></span> Configuration</h3>
-                    <p>.env and config file guide</p>
+                    <div class="card-body">
+                        <h3><span class="mdi mdi-wrench"></span> Configuration</h3>
+                        <p>.env and config file guide</p>
+                    </div>
                     <span class="badge badge-default"><span class="mdi mdi-tune"></span> Config</span>
                 </a>
                 <!-- 4. Quick Start -->
                 <a href="/docs/quick-start" class="card">
                     <span class="card-number">4</span>
-                    <h3><span class="mdi mdi-flash"></span> Quick Start</h3>
-                    <p>Fast reference for common tasks</p>
+                    <div class="card-body">
+                        <h3><span class="mdi mdi-flash"></span> Quick Start</h3>
+                        <p>Fast reference for common tasks</p>
+                    </div>
                     <span class="badge badge-default"><span class="mdi mdi-timer"></span> Quick</span>
                 </a>
                 <!-- 5. Security Layer -->
                 <a href="/docs/security-layer" class="card">
                     <span class="card-number">5</span>
-                    <h3><span class="mdi mdi-lock"></span> Security Layer</h3>
-                    <p>CSRF, JWT, Rate Limiting, XSS Prevention</p>
+                    <div class="card-body">
+                        <h3><span class="mdi mdi-lock"></span> Security Layer</h3>
+                        <p>CSRF, JWT, Rate Limiting, XSS Prevention</p>
+                    </div>
                     <span class="badge badge-essential"><span class="mdi mdi-alert-circle"></span> Essential</span>
                 </a>
                 <!-- 6. Validation System -->
                 <a href="/docs/validation-system" class="card">
                     <span class="card-number">6</span>
-                    <h3><span class="mdi mdi-check-decagram"></span> Validation System</h3>
-                    <p>27+ validation rules, custom rules</p>
+                    <div class="card-body">
+                        <h3><span class="mdi mdi-check-decagram"></span> Validation System</h3>
+                        <p>27+ validation rules, custom rules</p>
+                    </div>
                     <span class="badge badge-essential"><span class="mdi mdi-alert-circle"></span> Essential</span>
                 </a>
                 <!-- 7. Framework Features -->
                 <a href="/docs/framework-features" class="card">
                     <span class="card-number">7</span>
-                    <h3><span class="mdi mdi-office-building"></span> Framework Features</h3>
-                    <p>Overview of all table systems</p>
+                    <div class="card-body">
+                        <h3><span class="mdi mdi-office-building"></span> Framework Features</h3>
+                        <p>Overview of all table systems</p>
+                    </div>
                     <span class="badge badge-enterprise"><span class="mdi mdi-view-dashboard"></span> Overview</span>
                 </a>
                 <!-- 8. Activity Logging -->
                 <a href="/docs/activity-logging" class="card">
                     <span class="card-number">8</span>
-                    <h3><span class="mdi mdi-clipboard-text-clock"></span> Activity Logging</h3>
-                    <p>Audit trail and compliance</p>
+                    <div class="card-body">
+                        <h3><span class="mdi mdi-clipboard-text-clock"></span> Activity Logging</h3>
+                        <p>Audit trail and compliance</p>
+                    </div>
                     <span class="badge badge-enterprise"><span class="mdi mdi-star"></span> Enterprise</span>
                 </a>
                 <!-- 9. Queue System -->
                 <a href="/docs/queue-system" class="card">
                     <span class="card-number">9</span>
-                    <h3><span class="mdi mdi-tray-full"></span> Queue System</h3>
-                    <p>Background job processing</p>
+                    <div class="card-body">
+                        <h3><span class="mdi mdi-tray-full"></span> Queue System</h3>
+                        <p>Background job processing</p>
+                    </div>
                     <span class="badge badge-enterprise"><span class="mdi mdi-star"></span> Enterprise</span>
                 </a>
                 <!-- 10. Notification System -->
                 <a href="/docs/notification-system" class="card">
                     <span class="card-number">10</span>
-                    <h3><span class="mdi mdi-bell"></span> Notification System</h3>
-                    <p>Multi-channel notifications</p>
+                    <div class="card-body">
+                        <h3><span class="mdi mdi-bell"></span> Notification System</h3>
+                        <p>Multi-channel notifications</p>
+                    </div>
                     <span class="badge badge-enterprise"><span class="mdi mdi-star"></span> Enterprise</span>
                 </a>
                 <!-- 11. Cache System -->
                 <a href="/docs/cache-system" class="card">
                     <span class="card-number">11</span>
-                    <h3><span class="mdi mdi-database"></span> Cache System</h3>
-                    <p>Database and in-memory caching</p>
+                    <div class="card-body">
+                        <h3><span class="mdi mdi-database"></span> Cache System</h3>
+                        <p>Database and in-memory caching</p>
+                    </div>
                     <span class="badge badge-enterprise"><span class="mdi mdi-speedometer"></span> Performance</span>
                 </a>
                 <!-- 12. Session System -->
                 <a href="/docs/session-system" class="card">
                     <span class="card-number">12</span>
-                    <h3><span class="mdi mdi-key"></span> Session System</h3>
-                    <p>Database-driven sessions</p>
+                    <div class="card-body">
+                        <h3><span class="mdi mdi-key"></span> Session System</h3>
+                        <p>Database-driven sessions</p>
+                    </div>
                     <span class="badge badge-enterprise"><span class="mdi mdi-arrow-expand-all"></span> Scalability</span>
                 </a>
                 <!-- 13. Authentication System -->
                 <a href="/docs/auth-system" class="card">
                     <span class="card-number">13</span>
-                    <h3><span class="mdi mdi-shield-lock"></span> Authentication System</h3>
-                    <p>Session auth, JWT, remember me</p>
+                    <div class="card-body">
+                        <h3><span class="mdi mdi-shield-lock"></span> Authentication System</h3>
+                        <p>Session auth, JWT, remember me</p>
+                    </div>
                     <span class="badge badge-new"><span class="mdi mdi-new-box"></span> New</span>
                 </a>
                 <!-- 14. Console Commands -->
                 <a href="/docs/console-commands" class="card">
                     <span class="card-number">14</span>
-                    <h3><span class="mdi mdi-console"></span> Console Commands</h3>
-                    <p>CLI reference for commands</p>
+                    <div class="card-body">
+                        <h3><span class="mdi mdi-console"></span> Console Commands</h3>
+                        <p>CLI reference for commands</p>
+                    </div>
                     <span class="badge badge-new"><span class="mdi mdi-new-box"></span> New</span>
                 </a>
                 <!-- 15. View Templates -->
                 <a href="/docs/view-templates" class="card">
                     <span class="card-number">15</span>
-                    <h3><span class="mdi mdi-image-multiple"></span> View Templates</h3>
-                    <p>Twig templating engine guide</p>
+                    <div class="card-body">
+                        <h3><span class="mdi mdi-image-multiple"></span> View Templates</h3>
+                        <p>PHP native view templating guide</p>
+                    </div>
                     <span class="badge badge-new"><span class="mdi mdi-new-box"></span> New</span>
                 </a>
                 <!-- 16. Routing System -->
                 <a href="/docs/routing-system" class="card">
                     <span class="card-number">16</span>
-                    <h3><span class="mdi mdi-routes"></span> Routing System</h3>
-                    <p>Routes, parameters, constraints, model binding</p>
+                    <div class="card-body">
+                        <h3><span class="mdi mdi-routes"></span> Routing System</h3>
+                        <p>Routes, parameters, constraints, model binding</p>
+                    </div>
                     <span class="badge badge-new"><span class="mdi mdi-new-box"></span> New</span>
                 </a>
                 <!-- 17. Project Structure -->
                 <a href="/docs/project-structure" class="card">
                     <span class="card-number">17</span>
-                    <h3><span class="mdi mdi-folder-multiple"></span> Project Structure</h3>
-                    <p>Every folder and file explained in detail</p>
+                    <div class="card-body">
+                        <h3><span class="mdi mdi-folder-multiple"></span> Project Structure</h3>
+                        <p>Every folder and file explained in detail</p>
+                    </div>
                     <span class="badge badge-new"><span class="mdi mdi-new-box"></span> New</span>
                 </a>
                 <!-- 18. Middleware -->
                 <a href="/docs/middleware" class="card">
                     <span class="card-number">18</span>
-                    <h3><span class="mdi mdi-filter"></span> Middleware</h3>
-                    <p>Request pipeline and middleware</p>
+                    <div class="card-body">
+                        <h3><span class="mdi mdi-filter"></span> Middleware</h3>
+                        <p>Request pipeline and middleware</p>
+                    </div>
                     <span class="badge badge-technical"><span class="mdi mdi-cogs"></span> Technical</span>
                 </a>
                 <!-- 19. Documentation Review -->
                 <a href="/docs/documentation-review" class="card">
                     <span class="card-number">19</span>
-                    <h3><span class="mdi mdi-clipboard-check"></span> Documentation Review</h3>
-                    <p>Coverage analysis of all modules</p>
+                    <div class="card-body">
+                        <h3><span class="mdi mdi-clipboard-check"></span> Documentation Review</h3>
+                        <p>Coverage analysis of all modules</p>
+                    </div>
                     <span class="badge badge-technical"><span class="mdi mdi-information"></span> Meta</span>
                 </a>
                 <!-- 20. Documentation Structure -->
                 <a href="/docs/documentation-structure" class="card">
                     <span class="card-number">20</span>
-                    <h3><span class="mdi mdi-sitemap"></span> Documentation Structure</h3>
-                    <p>How documentation is organized</p>
+                    <div class="card-body">
+                        <h3><span class="mdi mdi-sitemap"></span> Documentation Structure</h3>
+                        <p>How documentation is organized</p>
+                    </div>
                     <span class="badge badge-technical"><span class="mdi mdi-information"></span> Meta</span>
                 </a>
                 <!-- 21. Rename Process -->
                 <a href="/docs/rename" class="card">
                     <span class="card-number">21</span>
-                    <h3><span class="mdi mdi-pencil"></span> Rename Process</h3>
-                    <p>Step-by-step rename guide</p>
+                    <div class="card-body">
+                        <h3><span class="mdi mdi-pencil"></span> Rename Process</h3>
+                        <p>Step-by-step rename guide</p>
+                    </div>
                     <span class="badge badge-default"><span class="mdi mdi-book-outline"></span> Guide</span>
                 </a>
                 <!-- 22. Framework Branding -->
                 <a href="/docs/branding" class="card">
                     <span class="card-number">22</span>
-                    <h3><span class="mdi mdi-brush"></span> Framework Branding</h3>
-                    <p>File reference for renaming</p>
+                    <div class="card-body">
+                        <h3><span class="mdi mdi-brush"></span> Framework Branding</h3>
+                        <p>File reference for renaming</p>
+                    </div>
                     <span class="badge badge-default"><span class="mdi mdi-bookmark"></span> Reference</span>
                 </a>
                 <!-- 23. Comprehensive Guide -->
                 <a href="/docs/comprehensive" class="card featured">
                     <span class="card-number">23</span>
-                    <h3><span class="mdi mdi-book-open-variant"></span> Comprehensive Guide</h3>
-                    <p>Complete framework reference with all features and examples</p>
+                    <div class="card-body">
+                        <h3><span class="mdi mdi-book-open-variant"></span> Comprehensive Guide</h3>
+                        <p>Complete framework reference with all features and examples</p>
+                    </div>
                     <span class="badge badge-featured"><span class="mdi mdi-check"></span> Complete</span>
                 </a>
             </div>
@@ -628,8 +682,10 @@ $baseUrl = getenv('APP_URL') ?: 'http://sixorbit.local';
             <div class="grid grid-featured">
                 <a href="/docs/index" class="card featured">
                     <span class="card-number">★</span>
-                    <h3><span class="mdi mdi-folder-table"></span> Documentation Index</h3>
-                    <p>Navigation hub with request flow diagrams and reading order tables.</p>
+                    <div class="card-body">
+                        <h3><span class="mdi mdi-folder-table"></span> Documentation Index</h3>
+                        <p>Navigation hub with request flow diagrams and reading order tables.</p>
+                    </div>
                     <span class="badge badge-featured"><span class="mdi mdi-arrow-right"></span> Start Here</span>
                 </a>
             </div>

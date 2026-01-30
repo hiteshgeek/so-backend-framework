@@ -155,9 +155,10 @@ class MarkdownParser {
     }
 
     private function renderHeader($level, $text) {
-        // Remove bracket prefixes like [#], [->], [Docs], [Book], etc.
-        $cleanText = preg_replace('/^\[[^\]]*\]\s*/', '', $text);
-        $id = strtolower(preg_replace('/[^a-z0-9]+/', '-', $cleanText));
+        // Clean the title using same method as TOC extraction
+        $cleanText = $this->cleanTocTitle($text);
+        // Generate ID: lowercase FIRST, then replace non-alphanumeric with hyphens, trim hyphens
+        $id = trim(preg_replace('/[^a-z0-9]+/', '-', strtolower($cleanText)), '-');
         $icons = [1 => 'book-open-variant', 2 => 'text-box-outline', 3 => 'chevron-right', 4 => 'chevron-right', 5 => 'minus', 6 => 'minus'];
         $icon = $icons[$level] ?? 'minus';
         return "<h{$level} id=\"{$id}\" class=\"heading heading-{$level}\"><span class=\"mdi mdi-{$icon} heading-icon\"></span><span class=\"heading-text\">{$this->parseInline($cleanText)}</span></h{$level}>";
@@ -170,7 +171,7 @@ class MarkdownParser {
         }
 
         $escaped = htmlspecialchars(rtrim($code));
-        return "<div class=\"code-container\"><div class=\"code-header\"><span class=\"code-lang\">{$lang}</span><button class=\"code-copy\" onclick=\"navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').textContent)\"><span class=\"mdi mdi-content-copy\"></span></button></div><pre class=\"code-block\"><code>{$escaped}</code></pre></div>";
+        return "<div class=\"code-container\"><div class=\"code-header\"><span class=\"code-lang\">{$lang}</span><button class=\"code-copy\" onclick=\"copyCode(this)\"><span class=\"mdi mdi-content-copy\"></span></button></div><pre class=\"code-block\"><code>{$escaped}</code></pre></div>";
     }
 
     /**
@@ -234,6 +235,12 @@ class MarkdownParser {
             }
 
             $i++;
+        }
+
+        // If no boxes were parsed, fallback to showing original ASCII as code
+        if (empty($boxes)) {
+            $escaped = htmlspecialchars(rtrim($code));
+            return "<div class=\"code-container\"><div class=\"code-header\"><span class=\"code-lang\">diagram</span><button class=\"code-copy\" onclick=\"copyCode(this)\"><span class=\"mdi mdi-content-copy\"></span></button></div><pre class=\"code-block\"><code>{$escaped}</code></pre></div>";
         }
 
         // Render all boxes as flowchart steps
@@ -464,10 +471,13 @@ class MarkdownParser {
         foreach (explode("\n", $markdown) as $line) {
             if (preg_match('/^##\s+(.+)$/', $line, $m)) {
                 $title = $this->cleanTocTitle(trim($m[1]));
-                $toc[] = ['level' => 2, 'title' => $title, 'id' => strtolower(preg_replace('/[^a-z0-9]+/', '-', $title))];
+                // Generate ID: lowercase FIRST, then replace non-alphanumeric with hyphens, trim hyphens
+                $id = trim(preg_replace('/[^a-z0-9]+/', '-', strtolower($title)), '-');
+                $toc[] = ['level' => 2, 'title' => $title, 'id' => $id];
             } else if (preg_match('/^###\s+(.+)$/', $line, $m)) {
                 $title = $this->cleanTocTitle(trim($m[1]));
-                $toc[] = ['level' => 3, 'title' => $title, 'id' => strtolower(preg_replace('/[^a-z0-9]+/', '-', $title))];
+                $id = trim(preg_replace('/[^a-z0-9]+/', '-', strtolower($title)), '-');
+                $toc[] = ['level' => 3, 'title' => $title, 'id' => $id];
             }
         }
         return $toc;

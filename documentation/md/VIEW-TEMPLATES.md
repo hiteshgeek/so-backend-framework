@@ -1,6 +1,6 @@
 # View Templates Guide
 
-**SO Framework** | **Twig Template Engine** | **Version 2.0.0**
+**SO Framework** | **PHP Native Templates** | **Version 2.0.0**
 
 Complete guide to the view and templating system in the SO Framework.
 
@@ -11,41 +11,39 @@ Complete guide to the view and templating system in the SO Framework.
 1. [Overview](#overview)
 2. [Quick Start](#quick-start)
 3. [Creating Views](#creating-views)
-4. [Template Syntax](#template-syntax)
-5. [Passing Data to Views](#passing-data-to-views)
-6. [Template Inheritance](#template-inheritance)
-7. [Including Partials](#including-partials)
-8. [Control Structures](#control-structures)
-9. [Helper Functions](#helper-functions)
-10. [Form Handling](#form-handling)
-11. [Asset Management](#asset-management)
-12. [XSS Protection](#xss-protection)
-13. [Template Caching](#template-caching)
-14. [Best Practices](#best-practices)
+4. [Passing Data to Views](#passing-data-to-views)
+5. [Template Layouts](#template-layouts)
+6. [Including Partials](#including-partials)
+7. [Control Structures](#control-structures)
+8. [Helper Functions](#helper-functions)
+9. [Form Handling](#form-handling)
+10. [Asset Management](#asset-management)
+11. [XSS Protection](#xss-protection)
+12. [Best Practices](#best-practices)
 
 ---
 
 ## Overview
 
-The SO Framework uses **Twig** as its template engine, providing a powerful and secure way to build views.
+The SO Framework uses **PHP native templates** for rendering views, providing a simple and powerful way to build views without additional dependencies.
 
 ### Features
 
-- Clean, readable syntax
-- Template inheritance (layouts)
+- Native PHP syntax - no new template language to learn
 - Template includes (partials)
-- Automatic XSS protection via autoescaping
-- Template caching for performance
+- XSS protection via `e()` helper function
 - Built-in helper functions
-- Debug mode support
-- Strict variables mode (development)
+- Zero dependencies
+- Fast performance - no compilation needed
+- Full IDE support and debugging
 
-### Why Twig?
+### Why PHP Native Templates?
 
-- **Security**: Automatic output escaping prevents XSS
-- **Performance**: Compiled templates cached
-- **Maintainability**: Clear separation of logic and presentation
-- **Familiar**: Similar to Blade (Laravel) and Jinja (Python)
+- **Simplicity**: Use PHP syntax you already know
+- **Performance**: No template compilation step
+- **Debugging**: Full stack traces with line numbers
+- **IDE Support**: Full autocompletion and syntax highlighting
+- **Flexibility**: Access all PHP features when needed
 
 ---
 
@@ -55,17 +53,17 @@ The SO Framework uses **Twig** as its template engine, providing a powerful and 
 
 **1. Create Template File**
 
-```twig
-{# resources/views/welcome.twig #}
+```php
+<?php // resources/views/welcome.php ?>
 
 <!DOCTYPE html>
 <html>
 <head>
-    <title>{{ title }}</title>
+    <title><?= e($title) ?></title>
 </head>
 <body>
-    <h1>Welcome to {{ app_name }}!</h1>
-    <p>Hello, {{ name }}!</p>
+    <h1>Welcome to <?= e($app_name) ?>!</h1>
+    <p>Hello, <?= e($name) ?>!</p>
 </body>
 </html>
 ```
@@ -84,7 +82,7 @@ class HomeController
 {
     public function index(Request $request): Response
     {
-        return view('welcome', [
+        return Response::view('welcome', [
             'title' => 'Home Page',
             'app_name' => config('app.name'),
             'name' => 'Guest',
@@ -103,91 +101,36 @@ class HomeController
 resources/
 +-- views/
     +-- layouts/
-    |   +-- app.twig         # Main layout
+    |   +-- app.php           # Main layout
     +-- partials/
-    |   +-- header.twig      # Reusable header
-    |   +-- footer.twig      # Reusable footer
-    |   +-- nav.twig         # Navigation
+    |   +-- header.php        # Reusable header
+    |   +-- footer.php        # Reusable footer
+    |   +-- nav.php           # Navigation
     +-- auth/
-    |   +-- login.twig       # Login page
-    |   +-- register.twig    # Registration page
+    |   +-- login.php         # Login page
+    |   +-- register.php      # Registration page
     +-- dashboard/
-    |   +-- index.twig       # Dashboard
-    +-- welcome.twig         # Welcome page
+    |   +-- index.php         # Dashboard
+    +-- welcome.php           # Welcome page
 ```
 
 ### Naming Conventions
 
-- Use lowercase with underscores: `user_profile.twig`
-- Group related views in folders: `auth/login.twig`
-- Use `.twig` extension for all templates
+- Use lowercase with hyphens or underscores: `user-profile.php` or `user_profile.php`
+- Group related views in folders: `auth/login.php`
+- Use `.php` extension for all templates
 
 ### View Helper
 
 ```php
-// Render a view
-return view('welcome');
+// Render a view (returns Response)
+return Response::view('welcome');
 
 // With data
-return view('users.profile', ['user' => $user]);
+return Response::view('users/profile', ['user' => $user]);
 
-// Dot notation for nested folders
-return view('auth.login');  // resources/views/auth/login.twig
-```
-
----
-
-## Template Syntax
-
-### Variables
-
-**Output Variables:**
-
-```twig
-{# Escaped output (safe from XSS) #}
-{{ name }}
-{{ user.email }}
-{{ product.price }}
-
-{# Raw output (use with caution!) #}
-{{ html_content|raw }}
-```
-
-**Variable Types:**
-
-```twig
-{# String #}
-{{ "Hello World" }}
-
-{# Number #}
-{{ 42 }}
-{{ 3.14 }}
-
-{# Boolean #}
-{{ true }}
-{{ false }}
-
-{# Array #}
-{{ ['apple', 'banana', 'orange'] }}
-
-{# Object properties #}
-{{ user.name }}
-{{ user.email }}
-
-{# Array access #}
-{{ users[0] }}
-{{ data['key'] }}
-```
-
-### Comments
-
-```twig
-{# This is a single-line comment #}
-
-{#
-   This is a
-   multi-line comment
-#}
+// Using forward slash for nested folders
+return Response::view('auth/login');  // resources/views/auth/login.php
 ```
 
 ---
@@ -202,7 +145,7 @@ public function show(Request $request, int $id): Response
     $user = User::find($id);
     $posts = $user->posts();
 
-    return view('users.show', [
+    return Response::view('users/show', [
         'user' => $user,
         'posts' => $posts,
         'title' => "Profile: {$user->name}",
@@ -210,128 +153,117 @@ public function show(Request $request, int $id): Response
 }
 ```
 
-### View Composers (Global Data)
+### Accessing Data in Views
 
-Add data to all views:
+All data passed to views is automatically extracted into local variables:
 
 ```php
-// In a service provider or bootstrap file
+<?php // resources/views/users/show.php ?>
 
-$view = app('view');
+<h1><?= e($user->name) ?></h1>
+<p>Email: <?= e($user->email) ?></p>
 
-$view->addGlobal('app_name', config('app.name'));
-$view->addGlobal('current_year', date('Y'));
-$view->addGlobal('authenticated', auth()->check());
-
-if (auth()->check()) {
-    $view->addGlobal('current_user', auth()->user());
-}
+<h2>Posts</h2>
+<?php foreach ($posts as $post): ?>
+    <article>
+        <h3><?= e($post->title) ?></h3>
+    </article>
+<?php endforeach; ?>
 ```
 
 ---
 
-## Template Inheritance
+## Template Layouts
 
 ### Creating a Layout
 
-```twig
-{# resources/views/layouts/app.twig #}
+```php
+<?php // resources/views/layouts/app.php ?>
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}{{ config('app.name') }}{% endblock %}</title>
+    <meta name="csrf-token" content="<?= csrf_token() ?>">
+    <title><?= e($title ?? config('app.name')) ?></title>
 
-    {# CSS #}
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
-
-    {% block styles %}{% endblock %}
+    <!-- CSS -->
+    <link rel="stylesheet" href="<?= url('/assets/css/app.css') ?>">
+    <?php if (isset($styles)): ?>
+        <?= $styles ?>
+    <?php endif; ?>
 </head>
 <body>
-    {# Navigation #}
-    {% include 'partials/nav.twig' %}
+    <!-- Navigation -->
+    <?php include base_path('resources/views/partials/nav.php'); ?>
 
-    {# Flash messages #}
-    {% include 'partials/flash.twig' %}
+    <!-- Flash messages -->
+    <?php include base_path('resources/views/partials/flash.php'); ?>
 
-    {# Main content #}
+    <!-- Main content -->
     <main>
-        {% block content %}{% endblock %}
+        <?= $content ?>
     </main>
 
-    {# Footer #}
-    {% include 'partials/footer.twig' %}
+    <!-- Footer -->
+    <?php include base_path('resources/views/partials/footer.php'); ?>
 
-    {# JavaScript #}
-    <script src="{{ asset('js/app.js') }}"></script>
-
-    {% block scripts %}{% endblock %}
+    <!-- JavaScript -->
+    <script src="<?= url('/assets/js/app.js') ?>"></script>
+    <?php if (isset($scripts)): ?>
+        <?= $scripts ?>
+    <?php endif; ?>
 </body>
 </html>
 ```
 
-### Extending a Layout
+### Using Layouts with Output Buffering
 
-```twig
-{# resources/views/dashboard/index.twig #}
+```php
+<?php // resources/views/dashboard/index.php ?>
 
-{% extends 'layouts/app.twig' %}
+<?php
+$title = 'Dashboard - ' . config('app.name');
 
-{% block title %}Dashboard - {{ parent() }}{% endblock %}
+ob_start();
+?>
+<div class="container">
+    <h1>Dashboard</h1>
 
-{% block styles %}
-    <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
-{% endblock %}
-
-{% block content %}
-    <div class="container">
-        <h1>Dashboard</h1>
-
-        <div class="stats">
-            <div class="stat-card">
-                <h3>{{ user_count }}</h3>
-                <p>Total Users</p>
-            </div>
-            <div class="stat-card">
-                <h3>{{ post_count }}</h3>
-                <p>Total Posts</p>
-            </div>
+    <div class="stats">
+        <div class="stat-card">
+            <h3><?= e($user_count) ?></h3>
+            <p>Total Users</p>
+        </div>
+        <div class="stat-card">
+            <h3><?= e($post_count) ?></h3>
+            <p>Total Posts</p>
         </div>
     </div>
-{% endblock %}
+</div>
+<?php
+$content = ob_get_clean();
 
-{% block scripts %}
-    <script src="{{ asset('js/dashboard.js') }}"></script>
-{% endblock %}
+include base_path('resources/views/layouts/app.php');
+?>
 ```
 
-### Block Features
+### Alternative: Simple Includes
 
-```twig
-{# Define a block #}
-{% block content %}
-    Default content
-{% endblock %}
+For simpler pages, use direct includes:
 
-{# Override a block #}
-{% block content %}
-    New content
-{% endblock %}
+```php
+<?php // resources/views/home.php ?>
 
-{# Append to parent block #}
-{% block scripts %}
-    {{ parent() }}
-    <script src="additional.js"></script>
-{% endblock %}
+<?php include base_path('resources/views/partials/header.php'); ?>
 
-{# Check if block is defined #}
-{% if block('sidebar') is defined %}
-    <div class="with-sidebar">
-        {% block sidebar %}{% endblock %}
-    </div>
-{% endif %}
+<main>
+    <h1>Welcome to <?= e(config('app.name')) ?></h1>
+    <p>Your content here</p>
+</main>
+
+<?php include base_path('resources/views/partials/footer.php'); ?>
 ```
 
 ---
@@ -340,63 +272,60 @@ if (auth()->check()) {
 
 ### Basic Include
 
-```twig
-{# resources/views/partials/nav.twig #}
+```php
+<?php // resources/views/partials/nav.php ?>
 
 <nav>
     <ul>
-        <li><a href="{{ url('/') }}">Home</a></li>
-        <li><a href="{{ url('/about') }}">About</a></li>
-        {% if auth().check() %}
-            <li><a href="{{ url('/dashboard') }}">Dashboard</a></li>
-            <li><a href="{{ url('/logout') }}">Logout</a></li>
-        {% else %}
-            <li><a href="{{ url('/login') }}">Login</a></li>
-        {% endif %}
+        <li><a href="<?= url('/') ?>">Home</a></li>
+        <li><a href="<?= url('/about') ?>">About</a></li>
+        <?php if (auth()->check()): ?>
+            <li><a href="<?= url('/dashboard') ?>">Dashboard</a></li>
+            <li><a href="<?= url('/logout') ?>">Logout</a></li>
+        <?php else: ?>
+            <li><a href="<?= url('/login') ?>">Login</a></li>
+        <?php endif; ?>
     </ul>
 </nav>
 ```
 
 ### Using Partials
 
-```twig
-{# Include a partial #}
-{% include 'partials/nav.twig' %}
+```php
+<!-- Include a partial -->
+<?php include base_path('resources/views/partials/nav.php'); ?>
 
-{# Include with variables #}
-{% include 'partials/user_card.twig' with {'user': current_user} %}
+<!-- Include with variables (they're already in scope) -->
+<?php include base_path('resources/views/partials/user-card.php'); ?>
 
-{# Include only specific variables #}
-{% include 'partials/alert.twig' with {'message': error_message} only %}
-
-{# Conditional include #}
-{% if show_sidebar %}
-    {% include 'partials/sidebar.twig' %}
-{% endif %}
+<!-- Conditional include -->
+<?php if ($show_sidebar): ?>
+    <?php include base_path('resources/views/partials/sidebar.php'); ?>
+<?php endif; ?>
 ```
 
 ### Flash Messages Partial
 
-```twig
-{# resources/views/partials/flash.twig #}
+```php
+<?php // resources/views/partials/flash.php ?>
 
-{% if session('success') %}
+<?php if (session('success')): ?>
     <div class="alert alert-success">
-        {{ session('success') }}
+        <?= e(session('success')) ?>
     </div>
-{% endif %}
+<?php endif; ?>
 
-{% if session('error') %}
+<?php if (session('error')): ?>
     <div class="alert alert-danger">
-        {{ session('error') }}
+        <?= e(session('error')) ?>
     </div>
-{% endif %}
+<?php endif; ?>
 
-{% if session('warning') %}
+<?php if (session('warning')): ?>
     <div class="alert alert-warning">
-        {{ session('warning') }}
+        <?= e(session('warning')) ?>
     </div>
-{% endif %}
+<?php endif; ?>
 ```
 
 ---
@@ -405,89 +334,72 @@ if (auth()->check()) {
 
 ### If Statements
 
-```twig
-{% if user %}
-    <p>Welcome, {{ user.name }}!</p>
-{% endif %}
+```php
+<?php if ($user): ?>
+    <p>Welcome, <?= e($user->name) ?>!</p>
+<?php endif; ?>
 
-{% if age >= 18 %}
+<?php if ($age >= 18): ?>
     <p>You are an adult</p>
-{% else %}
+<?php else: ?>
     <p>You are a minor</p>
-{% endif %}
+<?php endif; ?>
 
-{% if role == 'admin' %}
+<?php if ($role === 'admin'): ?>
     <a href="/admin">Admin Panel</a>
-{% elseif role == 'moderator' %}
+<?php elseif ($role === 'moderator'): ?>
     <a href="/moderate">Moderate</a>
-{% else %}
+<?php else: ?>
     <p>Regular user</p>
-{% endif %}
+<?php endif; ?>
 ```
 
 ### Logical Operators
 
-```twig
-{% if user and user.is_active %}
+```php
+<?php if ($user && $user->is_active): ?>
     User is active
-{% endif %}
+<?php endif; ?>
 
-{% if is_admin or is_moderator %}
+<?php if ($is_admin || $is_moderator): ?>
     Show admin features
-{% endif %}
+<?php endif; ?>
 
-{% if not is_banned %}
+<?php if (!$is_banned): ?>
     Welcome!
-{% endif %}
-
-{% if (age >= 18) and (country == 'US') %}
-    Show US adult content
-{% endif %}
+<?php endif; ?>
 ```
 
 ### For Loops
 
-```twig
-{% for user in users %}
+```php
+<?php foreach ($users as $user): ?>
     <div class="user-card">
-        <h3>{{ user.name }}</h3>
-        <p>{{ user.email }}</p>
+        <h3><?= e($user->name) ?></h3>
+        <p><?= e($user->email) ?></p>
     </div>
-{% endfor %}
+<?php endforeach; ?>
 
-{# Loop with else #}
-{% for post in posts %}
-    <article>
-        <h2>{{ post.title }}</h2>
-        <p>{{ post.content }}</p>
-    </article>
-{% else %}
+<!-- Loop with empty check -->
+<?php if (empty($posts)): ?>
     <p>No posts found.</p>
-{% endfor %}
+<?php else: ?>
+    <?php foreach ($posts as $post): ?>
+        <article>
+            <h2><?= e($post->title) ?></h2>
+            <p><?= e($post->content) ?></p>
+        </article>
+    <?php endforeach; ?>
+<?php endif; ?>
 
-{# Loop variables #}
-{% for user in users %}
-    <tr class="{{ loop.index % 2 == 0 ? 'even' : 'odd' }}">
-        <td>{{ loop.index }}</td>
-        <td>{{ user.name }}</td>
-        {% if loop.first %}<td>First!</td>{% endif %}
-        {% if loop.last %}<td>Last!</td>{% endif %}
+<!-- Loop with index -->
+<?php foreach ($users as $index => $user): ?>
+    <tr class="<?= $index % 2 === 0 ? 'even' : 'odd' ?>">
+        <td><?= $index + 1 ?></td>
+        <td><?= e($user->name) ?></td>
     </tr>
-{% endfor %}
+<?php endforeach; ?>
 ```
-
-### Loop Variables
-
-| Variable | Description |
-|----------|-------------|
-| `loop.index` | Current iteration (1-indexed) |
-| `loop.index0` | Current iteration (0-indexed) |
-| `loop.revindex` | Iterations left (1-indexed) |
-| `loop.revindex0` | Iterations left (0-indexed) |
-| `loop.first` | True on first iteration |
-| `loop.last` | True on last iteration |
-| `loop.length` | Total number of items |
-| `loop.parent` | Parent context |
 
 ---
 
@@ -495,40 +407,38 @@ if (auth()->check()) {
 
 ### Built-in Framework Helpers
 
-```twig
-{# URL helper #}
-<a href="{{ url('/dashboard') }}">Dashboard</a>
+```php
+<!-- URL helper -->
+<a href="<?= url('/dashboard') ?>">Dashboard</a>
 
-{# Named route #}
-<a href="{{ route('user.profile', {'id': user.id}) }}">Profile</a>
+<!-- Named route -->
+<a href="<?= route('user.profile', ['id' => $user->id]) ?>">Profile</a>
 
-{# CSRF token #}
+<!-- CSRF field -->
 <form method="POST">
-    {{ csrf_field() }}
+    <?= csrf_field() ?>
     ...
 </form>
 
-{# CSRF token value #}
-<meta name="csrf-token" content="{{ csrf_token() }}">
+<!-- CSRF token value -->
+<meta name="csrf-token" content="<?= csrf_token() ?>">
 
-{# Old input (after validation error) #}
-<input type="email" name="email" value="{{ old('email') }}">
+<!-- Old input (after validation error) -->
+<input type="email" name="email" value="<?= e(old('email')) ?>">
 
-{# Session data #}
-<p>{{ session('success') }}</p>
+<!-- Session data -->
+<p><?= e(session('success')) ?></p>
 
-{# Config value #}
-<title>{{ config('app.name') }}</title>
+<!-- Config value -->
+<title><?= e(config('app.name')) ?></title>
 
-{# Auth check #}
-{% if auth().check() %}
-    <p>Welcome, {{ auth().user().name }}!</p>
-{% endif %}
+<!-- Auth check -->
+<?php if (auth()->check()): ?>
+    <p>Welcome, <?= e(auth()->user()->name) ?>!</p>
+<?php endif; ?>
 
-{# Asset helper #}
-<img src="{{ asset('images/logo.png') }}">
-<link rel="stylesheet" href="{{ asset('css/app.css') }}">
-<script src="{{ asset('js/app.js') }}"></script>
+<!-- Base path -->
+<?php include base_path('resources/views/partials/nav.php'); ?>
 ```
 
 ---
@@ -537,20 +447,18 @@ if (auth()->check()) {
 
 ### Login Form Example
 
-```twig
-{# resources/views/auth/login.twig #}
+```php
+<?php // resources/views/auth/login.php ?>
 
-{% extends 'layouts/app.twig' %}
+<?php $title = 'Login'; ?>
 
-{% block title %}Login{% endblock %}
-
-{% block content %}
+<?php ob_start(); ?>
 <div class="container">
     <div class="login-form">
         <h1>Login</h1>
 
-        <form method="POST" action="{{ url('/login') }}">
-            {{ csrf_field() }}
+        <form method="POST" action="<?= url('/login') ?>">
+            <?= csrf_field() ?>
 
             <div class="form-group">
                 <label for="email">Email</label>
@@ -558,7 +466,7 @@ if (auth()->check()) {
                     type="email"
                     id="email"
                     name="email"
-                    value="{{ old('email') }}"
+                    value="<?= e(old('email')) ?>"
                     required
                 >
             </div>
@@ -583,28 +491,29 @@ if (auth()->check()) {
             <button type="submit">Login</button>
         </form>
 
-        <p>Don't have an account? <a href="{{ url('/register') }}">Register</a></p>
+        <p>Don't have an account? <a href="<?= url('/register') ?>">Register</a></p>
     </div>
 </div>
-{% endblock %}
+<?php
+$content = ob_get_clean();
+include base_path('resources/views/layouts/app.php');
+?>
 ```
 
 ### Registration Form
 
-```twig
-{# resources/views/auth/register.twig #}
+```php
+<?php // resources/views/auth/register.php ?>
 
-{% extends 'layouts/app.twig' %}
+<?php $title = 'Register'; ?>
 
-{% block title %}Register{% endblock %}
-
-{% block content %}
+<?php ob_start(); ?>
 <div class="container">
     <div class="register-form">
         <h1>Create Account</h1>
 
-        <form method="POST" action="{{ url('/register') }}">
-            {{ csrf_field() }}
+        <form method="POST" action="<?= url('/register') ?>">
+            <?= csrf_field() ?>
 
             <div class="form-group">
                 <label for="name">Name</label>
@@ -612,7 +521,7 @@ if (auth()->check()) {
                     type="text"
                     id="name"
                     name="name"
-                    value="{{ old('name') }}"
+                    value="<?= e(old('name')) ?>"
                     required
                 >
             </div>
@@ -623,7 +532,7 @@ if (auth()->check()) {
                     type="email"
                     id="email"
                     name="email"
-                    value="{{ old('email') }}"
+                    value="<?= e(old('email')) ?>"
                     required
                 >
             </div>
@@ -652,10 +561,13 @@ if (auth()->check()) {
             <button type="submit">Register</button>
         </form>
 
-        <p>Already have an account? <a href="{{ url('/login') }}">Login</a></p>
+        <p>Already have an account? <a href="<?= url('/login') ?>">Login</a></p>
     </div>
 </div>
-{% endblock %}
+<?php
+$content = ob_get_clean();
+include base_path('resources/views/layouts/app.php');
+?>
 ```
 
 ---
@@ -664,192 +576,160 @@ if (auth()->check()) {
 
 ### Static Assets
 
-```twig
-{# Images #}
-<img src="{{ asset('images/logo.png') }}" alt="Logo">
-<img src="{{ asset('images/banner.jpg') }}" alt="Banner">
+```php
+<!-- Images -->
+<img src="<?= url('/assets/images/logo.png') ?>" alt="Logo">
+<img src="<?= url('/assets/images/banner.jpg') ?>" alt="Banner">
 
-{# CSS #}
-<link rel="stylesheet" href="{{ asset('css/app.css') }}">
-<link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
+<!-- CSS -->
+<link rel="stylesheet" href="<?= url('/assets/css/app.css') ?>">
+<link rel="stylesheet" href="<?= url('/assets/css/dashboard.css') ?>">
 
-{# JavaScript #}
-<script src="{{ asset('js/app.js') }}"></script>
-<script src="{{ asset('js/charts.js') }}"></script>
+<!-- JavaScript -->
+<script src="<?= url('/assets/js/app.js') ?>"></script>
+<script src="<?= url('/assets/js/charts.js') ?>"></script>
 
-{# Fonts #}
-<link rel="stylesheet" href="{{ asset('fonts/custom-font.css') }}">
+<!-- Fonts -->
+<link rel="stylesheet" href="<?= url('/assets/fonts/custom-font.css') ?>">
 ```
 
 ### Versioned Assets (Cache Busting)
 
-```twig
-{# With version parameter #}
-<link rel="stylesheet" href="{{ asset('css/app.css') }}?v={{ app_version }}">
-<script src="{{ asset('js/app.js') }}?v={{ app_version }}"></script>
+```php
+<!-- With version parameter -->
+<link rel="stylesheet" href="<?= url('/assets/css/app.css') ?>?v=<?= e($app_version) ?>">
+<script src="<?= url('/assets/js/app.js') ?>?v=<?= e($app_version) ?>"></script>
 
-{# With file modification time #}
-<script src="{{ asset('js/app.js') }}?t={{ "now"|date('U') }}"></script>
+<!-- With file modification time -->
+<?php $cssPath = public_path('assets/css/app.css'); ?>
+<link rel="stylesheet" href="<?= url('/assets/css/app.css') ?>?t=<?= filemtime($cssPath) ?>">
 ```
 
 ---
 
 ## XSS Protection
 
-### Automatic Escaping
+### Always Escape Output
 
-By default, all output is automatically escaped:
+The `e()` helper function escapes HTML entities to prevent XSS attacks:
 
-```twig
-{# Automatically escaped (safe) #}
-<p>{{ user.name }}</p>
-<p>{{ comment.text }}</p>
+```php
+<!-- Safe - escaped output -->
+<p><?= e($user->name) ?></p>
+<p><?= e($comment->text) ?></p>
 
-{# This is SAFE - HTML entities are escaped #}
-{% set malicious = '<script>alert("XSS")</script>' %}
-{{ malicious }}
-{# Output: &lt;script&gt;alert(&quot;XSS&quot;)&lt;/script&gt; #}
+<!-- This is SAFE - HTML entities are escaped -->
+<?php $malicious = '<script>alert("XSS")</script>'; ?>
+<?= e($malicious) ?>
+<!-- Output: &lt;script&gt;alert(&quot;XSS&quot;)&lt;/script&gt; -->
 ```
 
 ### Raw Output (Use with Caution)
 
-```twig
-{# Raw output - NO escaping #}
-{{ html_content|raw }}
+```php
+<!-- Raw output - NO escaping -->
+<?= $html_content ?>
 
-{# ONLY use |raw for trusted content #}
-{{ article.body|raw }}  {# OK if article.body is from trusted admin #}
-{{ user.bio|raw }}      {# DANGEROUS if user input! #}
+<!-- ONLY use raw output for trusted content -->
+<?= $article->body ?>  <!-- OK if article.body is from trusted admin -->
+<?= $user->bio ?>      <!-- DANGEROUS if user input! -->
 ```
 
-### Escaping Filters
-
-```twig
-{# Force HTML escaping #}
-{{ user_input|e }}
-{{ user_input|escape }}
-
-{# Escape for JavaScript #}
-<script>
-var userName = "{{ user.name|e('js') }}";
-</script>
-
-{# Escape for URL #}
-<a href="/search?q={{ query|url_encode }}">Search</a>
-```
-
----
-
-## Template Caching
-
-### Configuration
+### The e() Helper
 
 ```php
-// core/View/View.php
-
-$this->twig = new Environment($loader, [
-    'cache' => $debug ? false : $cachePath,  // Cache path or false
-    'debug' => $debug,
-    'auto_reload' => $debug,  // Reload on template change
-]);
-```
-
-### Cache Storage
-
-Compiled templates cached in:
-```
-storage/
-+-- cache/
-    +-- views/
-        +-- 4a/
-        |   +-- 4a8e5c...php
-        +-- 7b/
-            +-- 7b3f2d...php
-```
-
-### Clear Cache
-
-```bash
-# Clear all cache including views
-php sixorbit cache:clear
-
-# Manual deletion
-rm -rf storage/cache/views/*
+// The e() function does this:
+function e(mixed $value): string
+{
+    if ($value === null) {
+        return '';
+    }
+    return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
+}
 ```
 
 ---
 
 ## Best Practices
 
-### 1. Use Layouts for Consistency
+### 1. Always Escape User Data
 
-```twig
-{# Good - consistent structure #}
-{% extends 'layouts/app.twig' %}
+```php
+<!-- Good - escaped -->
+<p><?= e($user->name) ?></p>
 
-{% block content %}
-    ...
-{% endblock %}
+<!-- Bad - XSS vulnerability! -->
+<p><?= $user->name ?></p>
 ```
 
-### 2. Extract Reusable Components
+### 2. Use Alternative Syntax in Templates
 
-```twig
-{# Good - reusable user card #}
-{% include 'partials/user_card.twig' with {'user': user} %}
+```php
+<!-- Good - clear structure -->
+<?php if ($user): ?>
+    <p>Welcome</p>
+<?php endif; ?>
 
-{# Avoid - duplicating markup everywhere #}
+<?php foreach ($items as $item): ?>
+    <li><?= e($item->name) ?></li>
+<?php endforeach; ?>
+
+<!-- Avoid - less readable in templates -->
+<?php if ($user) { ?>
+    <p>Welcome</p>
+<?php } ?>
 ```
 
 ### 3. Keep Logic Minimal
 
-```twig
-{# Good - simple display logic #}
-{% if user.is_admin %}
+```php
+<!-- Good - simple display logic -->
+<?php if ($user->is_admin): ?>
     <a href="/admin">Admin</a>
-{% endif %}
+<?php endif; ?>
 
-{# Bad - complex business logic in template #}
-{% set total = 0 %}
-{% for item in items %}
-    {% set total = total + item.price * item.quantity * (1 - item.discount) %}
-{% endfor %}
-{# Move this to controller! #}
+<!-- Bad - complex business logic in template -->
+<?php
+$total = 0;
+foreach ($items as $item) {
+    $total += $item->price * $item->quantity * (1 - $item->discount);
+}
+// Move this calculation to the controller!
+?>
 ```
 
 ### 4. Use Descriptive Variable Names
 
-```twig
-{# Good #}
-{{ user.name }}
-{{ order.total_price }}
-{{ product.is_available }}
+```php
+<!-- Good -->
+<?= e($user->name) ?>
+<?= e($order->total_price) ?>
+<?= e($product->is_available ? 'Yes' : 'No') ?>
 
-{# Bad #}
-{{ u.n }}
-{{ o.tp }}
-{{ p.avail }}
+<!-- Bad -->
+<?= e($u->n) ?>
+<?= e($o->tp) ?>
+<?= e($p->avail) ?>
 ```
 
-### 5. Never Output Raw User Input
+### 5. Use URL Helpers
 
-```twig
-{# Good - escaped automatically #}
-{{ comment.text }}
+```php
+<!-- Good - portable -->
+<a href="<?= url('/users/' . $user->id) ?>">Profile</a>
+<a href="<?= route('user.profile', ['id' => $user->id]) ?>">Profile</a>
 
-{# Bad - XSS vulnerability! #}
-{{ comment.text|raw }}
-```
-
-### 6. Use URL Helpers
-
-```twig
-{# Good - portable #}
-<a href="{{ url('/users/' ~ user.id) }}">Profile</a>
-<a href="{{ route('user.profile', {'id': user.id}) }}">Profile</a>
-
-{# Bad - hardcoded #}
+<!-- Bad - hardcoded -->
 <a href="/so-backend-framework/users/123">Profile</a>
+```
+
+### 6. Organize with Partials
+
+```php
+<!-- Good - reusable components -->
+<?php include base_path('resources/views/partials/user-card.php'); ?>
+
+<!-- Avoid - duplicating markup everywhere -->
 ```
 
 ---
@@ -858,53 +738,57 @@ rm -rf storage/cache/views/*
 
 ### Full Application Layout
 
-```twig
-{# resources/views/layouts/app.twig #}
+```php
+<?php // resources/views/layouts/app.php ?>
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>{% block title %}{{ config('app.name') }}{% endblock %}</title>
+    <meta name="csrf-token" content="<?= csrf_token() ?>">
+    <title><?= e($title ?? config('app.name')) ?></title>
 
-    {# CSS #}
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
-    {% block styles %}{% endblock %}
+    <!-- CSS -->
+    <link rel="stylesheet" href="<?= url('/assets/css/app.css') ?>">
+    <?php if (isset($styles)): ?>
+        <?= $styles ?>
+    <?php endif; ?>
 </head>
-<body class="{% block body_class %}{% endblock %}">
-    {# Header #}
+<body class="<?= $body_class ?? '' ?>">
+    <!-- Header -->
     <header>
         <div class="container">
             <div class="logo">
-                <a href="{{ url('/') }}">{{ config('app.name') }}</a>
+                <a href="<?= url('/') ?>"><?= e(config('app.name')) ?></a>
             </div>
 
-            {% include 'partials/nav.twig' %}
+            <?php include base_path('resources/views/partials/nav.php'); ?>
         </div>
     </header>
 
-    {# Flash Messages #}
-    {% include 'partials/flash.twig' %}
+    <!-- Flash Messages -->
+    <?php include base_path('resources/views/partials/flash.php'); ?>
 
-    {# Main Content #}
+    <!-- Main Content -->
     <main>
         <div class="container">
-            {% block content %}{% endblock %}
+            <?= $content ?>
         </div>
     </main>
 
-    {# Footer #}
+    <!-- Footer -->
     <footer>
         <div class="container">
-            <p>&copy; {{ "now"|date('Y') }} {{ config('app.name') }}. All rights reserved.</p>
+            <p>&copy; <?= date('Y') ?> <?= e(config('app.name')) ?>. All rights reserved.</p>
         </div>
     </footer>
 
-    {# JavaScript #}
-    <script src="{{ asset('js/app.js') }}"></script>
-    {% block scripts %}{% endblock %}
+    <!-- JavaScript -->
+    <script src="<?= url('/assets/js/app.js') ?>"></script>
+    <?php if (isset($scripts)): ?>
+        <?= $scripts ?>
+    <?php endif; ?>
 </body>
 </html>
 ```
@@ -913,17 +797,17 @@ rm -rf storage/cache/views/*
 
 ## Summary
 
-The SO Framework view system powered by Twig provides:
+The SO Framework view system powered by PHP native templates provides:
 
-- Clean, maintainable template syntax
-- Template inheritance for consistent layouts
-- Automatic XSS protection
-- Template caching for performance
+- Native PHP syntax - no new language to learn
+- Simple template includes for layouts and partials
+- XSS protection via the `e()` helper
 - Built-in framework helpers
 - Easy form handling
 - Asset management
+- Full IDE support and debugging
 
-Twig makes building secure, performant views straightforward while keeping your templates readable and maintainable.
+PHP native templates keep your views simple, fast, and maintainable while leveraging the full power of PHP.
 
 ---
 
@@ -934,9 +818,5 @@ Twig makes building secure, performant views straightforward while keeping your 
 
 ---
 
-**Twig Documentation**: https://twig.symfony.com/doc/3.x/
-
----
-
-**Last Updated**: 2026-01-29
+**Last Updated**: 2026-01-30
 **Framework Version**: 2.0.0

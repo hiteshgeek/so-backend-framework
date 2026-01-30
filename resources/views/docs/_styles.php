@@ -137,7 +137,6 @@
 
     .docs-stat-card:hover {
         box-shadow: var(--shadow);
-        transform: translateY(-2px);
     }
 
     .docs-stat-card .stat-icon {
@@ -204,7 +203,8 @@
         padding: 20px 24px;
         text-decoration: none;
         color: inherit;
-        display: block;
+        display: flex;
+        flex-direction: column;
         box-shadow: var(--shadow-sm);
         border: 1px solid var(--border);
         transition: all 0.2s;
@@ -226,7 +226,6 @@
 
     .doc-card:hover {
         box-shadow: var(--shadow-lg);
-        transform: translateY(-4px);
         border-color: var(--primary-light);
     }
 
@@ -249,11 +248,19 @@
         color: var(--primary);
     }
 
+    .doc-card-body {
+        flex: 1;
+    }
+
     .doc-card p {
         color: var(--text-secondary);
         font-size: 14px;
         line-height: 1.5;
-        /* margin-bottom: 12px; */
+    }
+
+    .doc-card .badge {
+        margin-top: 12px;
+        align-self: flex-start;
     }
 
     /* Featured Cards */

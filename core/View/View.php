@@ -2,121 +2,99 @@
 
 namespace Core\View;
 
-use Twig\Environment;
-use Twig\Loader\FilesystemLoader;
-use Twig\Extension\DebugExtension;
-use Twig\TwigFunction;
-
 /**
- * View Service with Twig
+ * View Service with PHP Templates
  *
- * Provides template rendering with Twig engine
+ * Provides template rendering with native PHP templates
  */
 class View
 {
-    protected Environment $twig;
     protected string $viewsPath;
-    protected string $cachePath;
+    protected array $shared = [];
 
-    public function __construct(string $viewsPath, string $cachePath, bool $debug = false)
+    public function __construct(string $viewsPath)
     {
-        $this->viewsPath = $viewsPath;
-        $this->cachePath = $cachePath;
-
-        // Initialize Twig
-        $loader = new FilesystemLoader($this->viewsPath);
-
-        $this->twig = new Environment($loader, [
-            'cache' => $debug ? false : $this->cachePath,
-            'debug' => $debug,
-            'auto_reload' => $debug,
-            'autoescape' => 'html', // Automatic XSS protection
-            'strict_variables' => $debug,
-        ]);
-
-        if ($debug) {
-            $this->twig->addExtension(new DebugExtension());
-        }
-
-        // Add custom functions
-        $this->registerFunctions();
-    }
-
-    /**
-     * Register custom Twig functions
-     */
-    protected function registerFunctions(): void
-    {
-        // url() function
-        $this->twig->addFunction(new TwigFunction('url', function ($path = '') {
-            return url($path);
-        }));
-
-        // route() function
-        $this->twig->addFunction(new TwigFunction('route', function ($name, $params = []) {
-            return route($name, $params);
-        }));
-
-        // csrf_field() function
-        $this->twig->addFunction(new TwigFunction('csrf_field', function () {
-            return csrf_field();
-        }, ['is_safe' => ['html']]));
-
-        // csrf_token() function
-        $this->twig->addFunction(new TwigFunction('csrf_token', function () {
-            return csrf_token();
-        }));
-
-        // old() function
-        $this->twig->addFunction(new TwigFunction('old', function ($key, $default = null) {
-            return old($key, $default);
-        }));
-
-        // session() function
-        $this->twig->addFunction(new TwigFunction('session', function ($key = null, $default = null) {
-            return session($key, $default);
-        }));
-
-        // auth() function
-        $this->twig->addFunction(new TwigFunction('auth', function () {
-            return auth();
-        }));
-
-        // config() function
-        $this->twig->addFunction(new TwigFunction('config', function ($key, $default = null) {
-            return config($key, $default);
-        }));
-
-        // asset() function for static files
-        $this->twig->addFunction(new TwigFunction('asset', function ($path) {
-            return url('/assets/' . ltrim($path, '/'));
-        }));
+        $this->viewsPath = rtrim($viewsPath, '/\\');
     }
 
     /**
      * Render a template
+     *
+     * @param string $template Template name (dot notation supported)
+     * @param array $data Data to pass to the template
+     * @return string Rendered content
      */
     public function render(string $template, array $data = []): string
     {
         // Convert dot notation to directory separator
-        $template = str_replace('.', '/', $template) . '.twig';
+        $template = str_replace('.', DIRECTORY_SEPARATOR, $template);
+        $viewPath = $this->viewsPath . DIRECTORY_SEPARATOR . $template . '.php';
 
-        return $this->twig->render($template, $data);
+        if (!file_exists($viewPath)) {
+            throw new \RuntimeException("View not found: {$template}");
+        }
+
+        // Merge shared data with view data (view data takes precedence)
+        $data = array_merge($this->shared, $data);
+
+        // Extract data to local scope
+        extract($data);
+
+        // Capture output
+        ob_start();
+        try {
+            require $viewPath;
+            return ob_get_clean();
+        } catch (\Throwable $e) {
+            ob_end_clean();
+            throw $e;
+        }
     }
 
     /**
      * Add a global variable to all templates
+     *
+     * @param string $name Variable name
+     * @param mixed $value Variable value
+     * @return void
      */
-    public function addGlobal(string $name, mixed $value): void
+    public function share(string $name, mixed $value): void
     {
-        $this->twig->addGlobal($name, $value);
+        $this->shared[$name] = $value;
     }
 
     /**
-     * Get Twig environment instance
+     * Add multiple shared variables
+     *
+     * @param array $data Array of key-value pairs
+     * @return void
      */
-    public function getTwig(): Environment
+    public function shareMany(array $data): void
     {
-        return $this->twig;
+        $this->shared = array_merge($this->shared, $data);
+    }
+
+    /**
+     * Check if a view exists
+     *
+     * @param string $template Template name
+     * @return bool
+     */
+    public function exists(string $template): bool
+    {
+        $template = str_replace('.', DIRECTORY_SEPARATOR, $template);
+        $viewPath = $this->viewsPath . DIRECTORY_SEPARATOR . $template . '.php';
+
+        return file_exists($viewPath);
+    }
+
+    /**
+     * Get the views path
+     *
+     * @return string
+     */
+    public function getViewsPath(): string
+    {
+        return $this->viewsPath;
     }
 }

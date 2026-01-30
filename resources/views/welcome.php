@@ -61,7 +61,6 @@
         }
 
         .feature:hover {
-            transform: translateY(-5px);
         }
 
         .feature-icon {
@@ -97,7 +96,6 @@
         }
 
         .links a:hover {
-            transform: translateY(-2px);
             box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
         }
 

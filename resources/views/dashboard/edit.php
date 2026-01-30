@@ -103,7 +103,6 @@
             border: none;
         }
         .btn-primary:hover {
-            transform: translateY(-2px);
             box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
         }
         .btn-secondary {

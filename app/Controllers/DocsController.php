@@ -37,6 +37,8 @@ class DocsController
 
     /**
      * Show specific documentation file
+     *
+     * Checks for PHP view first, falls back to markdown parsing
      */
     public function show(Request $request, string $file): Response
     {
@@ -85,7 +87,15 @@ class DocsController
             return Response::view('errors/404', [], 404);
         }
 
-        // Handle relative paths that start with '../'
+        // Check if a PHP view exists for this documentation
+        $phpViewPath = __DIR__ . '/../../resources/views/docs/pages/' . $file . '.php';
+        if (file_exists($phpViewPath)) {
+            return Response::view('docs/pages/' . $file, [
+                'title' => ucwords(str_replace('-', ' ', $file)) . ' - ' . config('app.name')
+            ]);
+        }
+
+        // Fallback to markdown parsing
         $filename = $allowedFiles[$file];
         if (str_starts_with($filename, '../')) {
             $filePath = __DIR__ . '/../../documentation/md/' . $filename;
@@ -101,7 +111,7 @@ class DocsController
         $markdown = file_get_contents($filePath);
 
         return Response::view('docs/show', [
-            'title' => $file . ' - ' . config('app.name'),
+            'title' => ucwords(str_replace('-', ' ', $file)) . ' - ' . config('app.name'),
             'markdown' => $markdown,
             'filename' => $allowedFiles[$file]
         ]);

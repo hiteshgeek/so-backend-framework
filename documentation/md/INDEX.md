@@ -55,7 +55,7 @@ Read the documentation in this numbered sequence for the best learning experienc
 | No. | Document | Description | Time |
 |-----|----------|-------------|------|
 | 18 | [Console Commands](/docs/console-commands) | CLI reference for artisan commands | 25 min |
-| 19 | [View Templates](/docs/view-templates) | Twig templating engine | 30 min |
+| 19 | [View Templates](/docs/view-templates) | PHP native view templating | 30 min |
 
 ### Phase 7: Customization (Optional)
 
