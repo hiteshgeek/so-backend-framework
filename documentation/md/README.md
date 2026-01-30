@@ -21,7 +21,7 @@ A production-ready PHP framework with Laravel-style routing, comprehensive secur
 ## Requirements
 
 - PHP 8.3 or higher
-- MySQL 5.7+ or PostgreSQL 10+
+- MySQL 8.0+ or PostgreSQL 14+
 - Composer
 - Extensions: PDO, JSON, mbstring, OpenSSL
 

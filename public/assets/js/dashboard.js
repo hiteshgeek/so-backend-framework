@@ -97,29 +97,39 @@ function closeModal() {
 }
 
 function deleteUser(id, name) {
-    if (!confirm(`Are you sure you want to delete user "${name}"?`)) {
-        return;
-    }
+    document.getElementById('deleteUserName').textContent = name;
+    document.getElementById('deleteModal').classList.add('active');
 
-    fetch(`${DashboardConfig.apiBaseUrl}/${id}`, {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            showAlert(data.message, 'success');
-            loadUsers();
-        } else {
-            showAlert(data.message, 'error');
-        }
-    })
-    .catch(error => {
-        console.error('Error deleting user:', error);
-        showAlert('Error deleting user', 'error');
-    });
+    const confirmBtn = document.getElementById('confirmDeleteBtn');
+    const handler = function() {
+        confirmBtn.removeEventListener('click', handler);
+        closeDeleteModal();
+
+        fetch(`${DashboardConfig.apiBaseUrl}/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showAlert(data.message, 'success');
+                loadUsers();
+            } else {
+                showAlert(data.message, 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Error deleting user:', error);
+            showAlert('Error deleting user', 'error');
+        });
+    };
+    confirmBtn.addEventListener('click', handler);
+}
+
+function closeDeleteModal() {
+    document.getElementById('deleteModal').classList.remove('active');
 }
 
 document.getElementById('userForm').addEventListener('submit', function(e) {
@@ -189,9 +199,15 @@ function escapeHtml(text) {
     return div.innerHTML;
 }
 
-// Close modal when clicking outside
+// Close modals when clicking outside
 document.getElementById('userModal').addEventListener('click', function(e) {
     if (e.target === this) {
         closeModal();
+    }
+});
+
+document.getElementById('deleteModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeDeleteModal();
     }
 });

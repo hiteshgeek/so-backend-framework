@@ -66,7 +66,7 @@ include __DIR__ . '/../_layout.php';
 
 <?= dataTable(['Requirement', 'Version'], [
     ['PHP', '8.3 or higher'],
-    ['MySQL', '5.7+ or PostgreSQL 10+'],
+    ['MySQL', '8.0+ or PostgreSQL 14+'],
     ['Composer', 'Latest'],
     ['Extensions', 'PDO, JSON, mbstring, OpenSSL'],
 ]) ?>
@@ -135,13 +135,17 @@ php database/migrations/generate-setup.php') ?>
 
 <div class="flex gap-2 flex-wrap mt-2">
     <a href="/docs/configuration" class="feature-card" style="text-decoration: none; flex: 1; min-width: 200px;">
-        <div class="feature-card-icon"><span class="mdi mdi-wrench"></span></div>
-        <div class="feature-card-title">Configuration Guide</div>
+        <div class="feature-card-header">
+            <div class="feature-card-icon"><span class="mdi mdi-wrench"></span></div>
+            <div class="feature-card-title">Configuration Guide</div>
+        </div>
         <div class="feature-card-description">Complete configuration reference</div>
     </a>
     <a href="/docs/quick-start" class="feature-card" style="text-decoration: none; flex: 1; min-width: 200px;">
-        <div class="feature-card-icon"><span class="mdi mdi-flash"></span></div>
-        <div class="feature-card-title">Quick Start</div>
+        <div class="feature-card-header">
+            <div class="feature-card-icon"><span class="mdi mdi-flash"></span></div>
+            <div class="feature-card-title">Quick Start</div>
+        </div>
         <div class="feature-card-description">Fast reference guide</div>
     </a>
 </div>

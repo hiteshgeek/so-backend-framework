@@ -693,7 +693,7 @@ $baseUrl = getenv('APP_URL') ?: 'http://sixorbit.local';
     </div>
 
     <footer>
-        <p><strong><span class="mdi mdi-cube"></span> SO Framework v2.0.0</strong></p>
+        <p><strong><span class="mdi mdi-cube"></span> <?= htmlspecialchars(config('app.name', 'SO Framework')) ?> v<?= htmlspecialchars(config('app.version', '1.0.0')) ?></strong></p>
         <p><span class="mdi mdi-language-php"></span> Built with PHP 8.3+ | <span class="mdi mdi-application-brackets"></span> Modern Architecture | <span class="mdi mdi-shield-check"></span> Security First</p>
         <p style="margin-top: 12px;">
             <a href="/docs/readme"><span class="mdi mdi-play-circle"></span> Start Here</a> |

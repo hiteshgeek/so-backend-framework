@@ -214,7 +214,7 @@
     </div>
 
     <footer class="docs-footer">
-        <p><strong><span class="mdi mdi-cube"></span> SO Framework v2.0.0</strong></p>
+        <p><strong><span class="mdi mdi-cube"></span> <?= htmlspecialchars(config('app.name', 'SO Framework')) ?> v<?= htmlspecialchars(config('app.version', '1.0.0')) ?></strong></p>
         <p><span class="mdi mdi-language-php"></span> Built with PHP 8.3+ | <span class="mdi mdi-application-brackets"></span> Modern Architecture | <span class="mdi mdi-shield-check"></span> Security First</p>
         <p style="margin-top: 8px;">
             <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/readme"><span class="mdi mdi-play-circle"></span> Start Here</a> |

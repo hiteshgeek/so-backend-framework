@@ -1,172 +1,195 @@
-/* ==========================================================================
-   Auth Pages - Consolidated Styles
-   Covers: login, register, forgot password, reset password
-   ========================================================================== */
-
-/* Reset */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+/**
+ * Auth Pages — login, register, forgot password, reset password
+ *
+ * Requires docs-base.css to be loaded first.
+ * Shares design tokens with the rest of the application.
+ */
 
 /* Layout */
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
+  background: var(--background);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
 }
 
 .container {
-    background: white;
-    padding: 40px;
-    border-radius: 10px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-    width: 100%;
-    max-width: 450px;
+  background: var(--surface);
+  padding: 36px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border);
+  width: 100%;
+  max-width: 420px;
 }
 
 /* Typography */
 h1 {
-    font-size: 1.8em;
-    margin-bottom: 10px;
-    color: #333;
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  color: var(--text);
 }
 
-p {
-    color: #666;
-    margin-bottom: 30px;
-    font-size: 0.9em;
+.container > p {
+  color: var(--text-secondary);
+  margin-bottom: 24px;
+  font-size: 13px;
 }
 
 /* Form Elements */
 .form-group {
-    margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
 label {
-    display: block;
-    margin-bottom: 5px;
-    color: #333;
-    font-weight: 500;
-    font-size: 0.9em;
+  display: block;
+  margin-bottom: 4px;
+  color: var(--text);
+  font-weight: 500;
+  font-size: 13px;
 }
 
 input[type="text"],
 input[type="email"],
 input[type="password"] {
-    width: 100%;
-    padding: 12px 15px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 0.95em;
-    transition: border-color 0.3s;
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 13px;
+  font-family: inherit;
+  color: var(--text);
+  background: var(--surface);
+  transition: border-color 0.15s, box-shadow 0.15s;
 }
 
 input:focus {
-    outline: none;
-    border-color: #667eea;
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-bg);
 }
 
 input[readonly] {
-    background: #f5f5f5;
-    color: #666;
+  background: var(--background);
+  color: var(--text-secondary);
 }
 
 /* Validation Errors */
 .error {
-    color: #e74c3c;
-    font-size: 0.85em;
-    margin-top: 5px;
+  color: #dc2626;
+  font-size: 12px;
+  margin-top: 4px;
 }
 
 /* Alert Messages */
 .alert {
-    padding: 12px 15px;
-    border-radius: 5px;
-    margin-bottom: 20px;
-    font-size: 0.9em;
+  padding: 10px 14px;
+  border-radius: var(--radius);
+  margin-bottom: 16px;
+  font-size: 13px;
+  font-weight: 500;
 }
 
 .alert-success {
-    background: #d4edda;
-    color: #155724;
-    border: 1px solid #c3e6cb;
+  background: var(--success-bg);
+  color: var(--success);
+  border: 1px solid var(--success);
 }
 
 .alert-error {
-    background: #fee;
-    color: #c33;
-    border: 1px solid #fcc;
+  background: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
 }
 
 /* Submit Button */
 .btn {
-    width: 100%;
-    padding: 12px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    border: none;
-    border-radius: 5px;
-    font-size: 1em;
-    font-weight: 600;
-    cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
+  width: 100%;
+  padding: 10px 16px;
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius);
+  font-size: 13px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.15s, box-shadow 0.15s;
 }
 
 .btn:hover {
-    box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+  background: var(--primary-dark);
+  box-shadow: var(--shadow-sm);
 }
 
 /* Navigation Links */
 .links {
-    text-align: center;
-    margin-top: 20px;
-    font-size: 0.9em;
+  text-align: center;
+  margin-top: 20px;
+  font-size: 13px;
+  color: var(--text-secondary);
 }
 
 .links a {
-    color: #667eea;
-    text-decoration: none;
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 500;
 }
 
 .links a:hover {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 
 /* Login: Forgot Password Link */
 .forgot-link {
-    text-align: right;
-    margin-top: 10px;
-    margin-bottom: 20px;
+  text-align: right;
+  margin-top: 8px;
+  margin-bottom: 16px;
 }
 
 .forgot-link a {
-    color: #667eea;
-    text-decoration: none;
-    font-size: 0.85em;
+  color: var(--primary);
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 500;
 }
 
-/* Login: Remember Me Checkbox */
+.forgot-link a:hover {
+  text-decoration: underline;
+}
+
+/* Login: Remember Me */
 .remember-me {
-    display: flex;
-    align-items: center;
-    margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
 }
 
 .remember-me input[type="checkbox"] {
-    width: auto;
-    margin-right: 8px;
-    cursor: pointer;
+  width: auto;
+  margin-right: 8px;
+  cursor: pointer;
+  accent-color: var(--primary);
 }
 
 .remember-me label {
-    margin: 0;
-    font-weight: 400;
-    cursor: pointer;
-    font-size: 0.9em;
+  margin: 0;
+  font-weight: 400;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  body {
+    padding: 16px;
+  }
+
+  .container {
+    padding: 28px 24px;
+  }
 }

@@ -42,7 +42,29 @@ function showCopySuccess(icon) {
 // Initialize Highlight.js for syntax highlighting
 document.addEventListener('DOMContentLoaded', function() {
     if (typeof hljs !== 'undefined') {
+        // Map non-standard language aliases to supported ones
+        var langMap = {
+            'apache': 'xml',
+            'env': 'ini',
+            'html5': 'html',
+            'css3': 'css'
+        };
+
         document.querySelectorAll('pre code[class*="language-"]').forEach(function(block) {
+            var match = block.className.match(/language-(\S+)/);
+            if (match) {
+                var lang = match[1];
+                // Remap unsupported language to a supported one
+                if (langMap[lang]) {
+                    block.classList.remove('language-' + lang);
+                    block.classList.add('language-' + langMap[lang]);
+                }
+                // If language isn't registered, fall back to plaintext
+                if (!langMap[lang] && !hljs.getLanguage(lang)) {
+                    block.classList.remove('language-' + lang);
+                    block.classList.add('language-plaintext');
+                }
+            }
             hljs.highlightElement(block);
         });
     }

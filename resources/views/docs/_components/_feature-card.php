@@ -27,10 +27,10 @@ function featureCard(string $icon, string $title, string $description, ?string $
     $descHtml = htmlspecialchars($description);
 
     $content = <<<HTML
-<div class="feature-card-icon">
-    <span class="mdi mdi-{$icon}"></span>
+<div class="feature-card-header">
+    <div class="feature-card-icon"><span class="mdi mdi-{$icon}"></span></div>
+    <div class="feature-card-title">{$titleHtml}</div>
 </div>
-<div class="feature-card-title">{$titleHtml}</div>
 <div class="feature-card-description">{$descHtml}</div>
 HTML;
 

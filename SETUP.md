@@ -4,7 +4,7 @@
 
 - Apache 2.4+
 - PHP 8.0+
-- MySQL 5.7+ or MariaDB 10.3+
+- MySQL 8.0+ or MariaDB 10.6+
 - Composer
 
 ## Installation Steps

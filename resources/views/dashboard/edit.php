@@ -4,7 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= htmlspecialchars($title ?? 'Edit User') ?></title>
-    <?php assets()->css('css/dashboard-form.css', 'head', 10); ?>
+    <?php
+    assets()->cdn('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap', 'css', 'head', 5);
+    assets()->css('css/docs-base.css', 'head', 8);
+    assets()->css('css/dashboard-form.css', 'head', 10);
+    ?>
     <?= render_assets('head') ?>
 </head>
 <body>
@@ -39,7 +43,7 @@
 
                 <div class="section-divider">
                     <div class="section-title">Change Password (Optional)</div>
-                    <div class="info-text" style="margin-bottom: 15px;">Leave blank to keep current password</div>
+                    <div class="info-text info-text--spaced">Leave blank to keep current password</div>
 
                     <div class="form-group">
                         <label for="password">New Password</label>

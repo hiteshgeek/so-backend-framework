@@ -34,7 +34,7 @@ class MarkdownParser {
                 if (!$this->inCodeBlock) {
                     $this->closeOpenElements();
                     $this->inCodeBlock = true;
-                    $this->codeBlockLang = $m[1] ?: 'code';
+                    $this->codeBlockLang = $m[1] ?: 'plaintext';
                     $this->codeBlockContent = '';
                 } else {
                     $this->html .= $this->renderCodeBlock($this->codeBlockLang, $this->codeBlockContent);

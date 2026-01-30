@@ -662,8 +662,8 @@ $comments = $post->comments();
 Manages database connections using PDO.
 
 **Supported Databases**:
-- MySQL 5.7+
-- PostgreSQL 10+
+- MySQL 8.0+
+- PostgreSQL 14+
 
 **Configuration**:
 ```php
@@ -1258,7 +1258,7 @@ curl -X DELETE http://localhost/so-backend-framework/api/v1/users/1
 ### Requirements
 
 - PHP 8.3 or higher
-- MySQL 5.7+ or PostgreSQL 10+
+- MySQL 8.0+ or PostgreSQL 14+
 - Apache with mod_rewrite enabled
 - Composer
 

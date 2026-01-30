@@ -4,8 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= htmlspecialchars($title ?? 'Dashboard') ?></title>
-    <?php assets()->css('css/dashboard.css', 'head', 10); ?>
-    <?php assets()->js('js/dashboard.js', 'body_end', 10); ?>
+    <?php
+    assets()->cdn('https://cdn.jsdelivr.net/npm/@mdi/font@7.4.47/css/materialdesignicons.min.css', 'css', 'head', 5);
+    assets()->cdn('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap', 'css', 'head', 5);
+    assets()->css('css/docs-base.css', 'head', 8);
+    assets()->css('css/dashboard.css', 'head', 10);
+    assets()->js('js/dashboard.js', 'body_end', 10);
+    ?>
     <?= render_assets('head') ?>
 </head>
 <body>
@@ -41,8 +46,8 @@
 
             <!-- Traditional Mode Tab -->
             <div class="tab-content active" id="traditional">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                    <h3 style="color: #333; margin: 0;">User Management (Page-Based)</h3>
+                <div class="tab-header">
+                    <h3>User Management (Page-Based)</h3>
                     <a href="<?= url('/dashboard/users/create') ?>" class="btn btn-primary">+ Create User</a>
                 </div>
 
@@ -67,7 +72,7 @@
                                     <a href="<?= url('/dashboard/users/' . $listUser->id . '/edit') ?>" class="btn btn-edit">Edit</a>
 
                                     <?php if ($listUser->id !== $user->id): ?>
-                                        <form method="POST" action="<?= url('/dashboard/users/' . $listUser->id) ?>" style="display:inline;">
+                                        <form method="POST" action="<?= url('/dashboard/users/' . $listUser->id) ?>" class="inline-form">
                                             <?= csrf_field() ?>
                                             <input type="hidden" name="_method" value="DELETE">
                                             <button type="submit" class="btn btn-delete" onclick="return confirm('Are you sure you want to delete this user?')">Delete</button>
@@ -82,12 +87,12 @@
 
             <!-- AJAX Mode Tab -->
             <div class="tab-content" id="ajax">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                    <h3 style="color: #333; margin: 0;">User Management (AJAX-Based)</h3>
+                <div class="tab-header">
+                    <h3>User Management (AJAX-Based)</h3>
                     <button class="btn btn-primary" onclick="openCreateModal()">+ Create User</button>
                 </div>
 
-                <div id="ajax-alert" style="display: none;" class="alert"></div>
+                <div id="ajax-alert" class="alert alert-hidden"></div>
 
                 <table>
                     <thead>
@@ -101,7 +106,7 @@
                     </thead>
                     <tbody id="ajax-users-table">
                         <tr>
-                            <td colspan="5" style="text-align: center;">Loading users...</td>
+                            <td colspan="5" class="text-center">Loading users...</td>
                         </tr>
                     </tbody>
                 </table>
@@ -132,7 +137,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="userPassword">Password <span id="passwordOptional" style="display:none; color: #999;">(leave blank to keep current)</span></label>
+                    <label for="userPassword">Password <span id="passwordOptional" class="label-hint">(leave blank to keep current)</span></label>
                     <input type="password" id="userPassword" name="password">
                     <div class="form-error" id="error-password"></div>
                 </div>
@@ -148,6 +153,21 @@
                     <button type="submit" class="btn btn-primary">Save User</button>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal" id="deleteModal">
+        <div class="modal-content modal-content--sm">
+            <div class="modal-header">
+                <h3>Delete User</h3>
+                <button class="modal-close" onclick="closeDeleteModal()">&times;</button>
+            </div>
+            <p class="delete-message">Are you sure you want to delete <strong id="deleteUserName"></strong>? This action cannot be undone.</p>
+            <div class="form-buttons">
+                <button type="button" class="btn-cancel" onclick="closeDeleteModal()">Cancel</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Delete</button>
+            </div>
         </div>
     </div>
 

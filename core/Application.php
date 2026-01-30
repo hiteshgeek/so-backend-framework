@@ -340,6 +340,6 @@ HTML;
      */
     public function version(): string
     {
-        return '1.0.0';
+        return $this->make('config')->get('app.version', '1.0.0');
     }
 }
