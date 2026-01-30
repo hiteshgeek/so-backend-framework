@@ -12,6 +12,7 @@
 
 require_once __DIR__ . '/../../../vendor/autoload.php';
 require_once __DIR__ . '/../../../bootstrap/app.php';
+require_once __DIR__ . '/../../TestHelper.php';
 
 use Core\Http\Request;
 use Core\Http\Response;
@@ -23,7 +24,8 @@ if (!config('security.jwt.secret')) {
     $_ENV['JWT_SECRET'] = 'test-secret-key-for-middleware-testing-32chars';
 }
 
-echo "=== Middleware System Test ===\n\n";
+TestHelper::header('Middleware System Test');
+echo "\n";
 
 $passedTests = 0;
 $totalTests = 0;
@@ -327,12 +329,8 @@ try {
 
     $middleware = new \App\Middleware\LogRequestMiddleware();
 
-    // Use reflection to test filtering method
-    $reflection = new ReflectionClass($middleware);
-    $method = $reflection->getMethod('filterSensitiveData');
-    $method->setAccessible(true);
-
-    $filtered = $method->invoke($middleware, [
+    // Test filtering method (now public)
+    $filtered = $middleware->filterSensitiveData([
         'email' => 'user@example.com',
         'password' => 'supersecret123',
         'card_number' => '4111111111111111',
@@ -363,11 +361,8 @@ try {
     Router::globalMiddleware(\App\Middleware\LogRequestMiddleware::class);
     Router::globalMiddleware(\App\Middleware\CorsMiddleware::class);
 
-    // Use reflection to check if global middleware was registered
-    $reflection = new ReflectionClass(Router::class);
-    $property = $reflection->getProperty('globalMiddleware');
-    $property->setAccessible(true);
-    $globalMiddleware = $property->getValue();
+    // Check if global middleware was registered
+    $globalMiddleware = Router::getGlobalMiddlewareForTesting();
 
     if (count($globalMiddleware) === 2) {
         echo "✓ Global middleware registered correctly\n";
@@ -397,10 +392,7 @@ try {
     }
 
     // Reset global middleware
-    $reflection = new ReflectionClass(Router::class);
-    $property = $reflection->getProperty('globalMiddleware');
-    $property->setAccessible(true);
-    $property->setValue([TestGlobalMiddleware::class]);
+    Router::setGlobalMiddlewareForTesting([TestGlobalMiddleware::class]);
 
     // Register a test route
     Router::get('/test-global', function($request) {
@@ -435,11 +427,12 @@ echo "\n";
 
 // ==================== SUMMARY ====================
 
-echo "=== Middleware System Test Complete ===\n\n";
-echo "Results: {$passedTests}/{$totalTests} tests passed (" . round(($passedTests / $totalTests) * 100, 1) . "%)\n\n";
+TestHelper::complete('Middleware System Test');
+
+TestHelper::summary($passedTests, $totalTests - $passedTests, $totalTests);
 
 if ($passedTests === $totalTests) {
-    echo "✅ ALL TESTS PASSED\n\n";
+    echo "\n";
     echo "Middleware System Status:\n";
     echo "- ✓ AuthMiddleware: Session + JWT authentication working\n";
     echo "- ✓ CorsMiddleware: CORS headers + preflight working\n";
@@ -447,7 +440,7 @@ if ($passedTests === $totalTests) {
     echo "- ✓ Global middleware: Registration + execution working\n\n";
     echo "Production Ready: YES\n";
 } else {
-    echo "⚠️  SOME TESTS FAILED\n\n";
+    echo "\n";
     echo "Failed: " . ($totalTests - $passedTests) . " tests\n";
     echo "Please review the output above for details.\n";
 }

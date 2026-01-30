@@ -334,7 +334,7 @@ echo "=== Auth Account Lockout Test Complete ===\n\n";
 echo "Results: {$passedTests}/{$totalTests} tests passed (" . round(($passedTests / $totalTests) * 100, 1) . "%)\n\n";
 
 if ($passedTests === $totalTests) {
-    echo "✅ ALL TESTS PASSED\n\n";
+    echo "✓ ALL TESTS PASSED\n\n";
     echo "Auth Account Lockout Status:\n";
     echo "- ✓ LoginThrottle: Attempt tracking working\n";
     echo "- ✓ Lockout: Account locks after max attempts\n";
@@ -343,7 +343,7 @@ if ($passedTests === $totalTests) {
     echo "- ✓ Auth Integration: LoginThrottle wired into Auth class\n\n";
     echo "Production Ready: YES\n";
 } else {
-    echo "⚠️  SOME TESTS FAILED\n\n";
+    echo "⚠ SOME TESTS FAILED\n\n";
     echo "Failed: " . ($totalTests - $passedTests) . " tests\n";
     echo "Please review the output above for details.\n";
 }

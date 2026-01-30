@@ -8,8 +8,10 @@
 
 require_once __DIR__ . '/../../../vendor/autoload.php';
 require_once __DIR__ . '/../../../bootstrap/app.php';
+require_once __DIR__ . '/../../TestHelper.php';
 
-echo "=== Validation System Test ===\n\n";
+TestHelper::header('Validation System Test');
+echo "\n";
 
 use Core\Validation\Validator;
 use Core\Validation\ValidationException;

@@ -6,13 +6,13 @@ The SO Backend Framework includes **automatic account lockout protection** to pr
 
 ## Features
 
-- ✅ **Brute Force Protection** - Locks accounts after too many failed login attempts
-- ✅ **IP + Email Tracking** - Tracks attempts per unique IP/email combination
-- ✅ **Configurable Thresholds** - Customize max attempts and lockout duration
-- ✅ **Automatic Expiry** - Lockout automatically expires after decay period
-- ✅ **Success Reset** - Successful login clears all failed attempts
-- ✅ **Cache-Based** - Fast lookups with minimal database overhead
-- ✅ **Case Insensitive** - Email addresses normalized (user@example.com = USER@EXAMPLE.COM)
+- **Brute Force Protection** - Locks accounts after too many failed login attempts
+- **IP + Email Tracking** - Tracks attempts per unique IP/email combination
+- **Configurable Thresholds** - Customize max attempts and lockout duration
+- **Automatic Expiry** - Lockout automatically expires after decay period
+- **Success Reset** - Successful login clears all failed attempts
+- **Cache-Based** - Fast lookups with minimal database overhead
+- **Case Insensitive** - Email addresses normalized (user@example.com = USER@EXAMPLE.COM)
 
 ## How It Works
 
@@ -87,14 +87,14 @@ php sixorbit test auth-lockout
 
 Expected output:
 ```
-✅ ALL TESTS PASSED
+ALL TESTS PASSED
 
 Auth Account Lockout Status:
-- ✓ LoginThrottle: Attempt tracking working
-- ✓ Lockout: Account locks after max attempts
-- ✓ Clear: Successful login clears attempts
-- ✓ Separation: Different IP/email combinations tracked separately
-- ✓ Auth Integration: LoginThrottle wired into Auth class
+- LoginThrottle: Attempt tracking working
+- Lockout: Account locks after max attempts
+- Clear: Successful login clears attempts
+- Separation: Different IP/email combinations tracked separately
+- Auth Integration: LoginThrottle wired into Auth class
 
 Production Ready: YES
 ```
@@ -220,10 +220,10 @@ AUTH_THROTTLE_DECAY_MINUTES=5
 
 ### Protection Against
 
-✅ **Brute Force Attacks** - Limits password guessing attempts
-✅ **Credential Stuffing** - Slows down automated attacks
-✅ **Distributed Attacks** - Each IP tracked separately
-✅ **Account Enumeration** - Same error message for valid/invalid emails
+**Brute Force Attacks** - Limits password guessing attempts
+**Credential Stuffing** - Slows down automated attacks
+**Distributed Attacks** - Each IP tracked separately
+**Account Enumeration** - Same error message for valid/invalid emails
 
 ### Tracking Method
 
@@ -246,8 +246,8 @@ This means:
 ### Bypass Scenarios
 
 The lockout can be bypassed in these cases:
-- ❌ **Distributed attack from multiple IPs** - Each IP has separate counter
-- ✅ **Mitigation:** Use rate limiting middleware for IP-based protection
+- **Distributed attack from multiple IPs** - Each IP has separate counter
+- **Mitigation:** Use rate limiting middleware for IP-based protection
 
 ### Performance Impact
 
@@ -479,4 +479,4 @@ php sixorbit test
 
 **Framework Version:** 2.0
 **Last Updated:** 2026-01-31
-**Status:** Production Ready ✅
+**Status:** Production Ready

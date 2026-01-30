@@ -6,12 +6,12 @@ The SO Backend Framework supports **optional session payload encryption** with A
 
 ## Features
 
-- ✅ **AES-256-CBC Encryption** - Industry-standard encryption algorithm
-- ✅ **HMAC-SHA256 Authentication** - Detects tampering attempts
-- ✅ **Encrypt-then-MAC** - Secure composition pattern
-- ✅ **Automatic Tamper Detection** - Sessions are destroyed if HMAC verification fails
-- ✅ **Configurable** - Enable/disable via environment variables
-- ✅ **Zero Code Changes** - Works transparently with existing session usage
+- **AES-256-CBC Encryption** - Industry-standard encryption algorithm
+- **HMAC-SHA256 Authentication** - Detects tampering attempts
+- **Encrypt-then-MAC** - Secure composition pattern
+- **Automatic Tamper Detection** - Sessions are destroyed if HMAC verification fails
+- **Configurable** - Enable/disable via environment variables
+- **Zero Code Changes** - Works transparently with existing session usage
 
 ## How It Works
 
@@ -27,7 +27,7 @@ The SO Backend Framework supports **optional session payload encryption** with A
 
 1. Encrypted payload is retrieved from database
 2. Base64-decoded to extract `{iv, value, mac}`
-3. HMAC is verified (if mismatch → session destroyed)
+3. HMAC is verified (if mismatch, session destroyed)
 4. Ciphertext is decrypted with AES-256-CBC
 5. Decrypted data is returned to PHP
 
@@ -91,14 +91,14 @@ php sixorbit test session-encryption
 
 Expected output:
 ```
-✅ ALL TESTS PASSED
+ALL TESTS PASSED
 
 Session Encryption Status:
-- ✓ Encrypter: AES-256-CBC working
-- ✓ HMAC: SHA256 tamper detection working
-- ✓ Session Handler: Encryption/decryption working
-- ✓ Key Validation: Minimum length enforced
-- ✓ Tamper Detection: HMAC verification working
+- Encrypter: AES-256-CBC working
+- HMAC: SHA256 tamper detection working
+- Session Handler: Encryption/decryption working
+- Key Validation: Minimum length enforced
+- Tamper Detection: HMAC verification working
 ```
 
 ### Check Database
@@ -146,13 +146,13 @@ $token = $session->get('api_token');
 
 ### When to Enable
 
-✅ **Enable session encryption if:**
+**Enable session encryption if:**
 - You store sensitive user data in sessions (PII, financial data)
 - Compliance requirements mandate encryption at rest (GDPR, HIPAA)
 - You have admin/elevated privilege sessions
 - Sessions contain API keys or access tokens
 
-❌ **You can skip encryption if:**
+**You can skip encryption if:**
 - Sessions only contain non-sensitive data (user ID, preferences)
 - Performance is critical and sessions are already protected by DB access controls
 - You're in a trusted environment with encrypted database volumes
@@ -166,7 +166,7 @@ Session encryption adds minimal overhead:
 
 ### Key Management
 
-🔒 **Important Security Practices:**
+**Important Security Practices:**
 
 1. **Never commit APP_KEY to version control**
    - Add `.env` to `.gitignore`
@@ -292,4 +292,4 @@ The entire envelope is then base64-encoded for storage.
 
 **Framework Version:** 2.0
 **Last Updated:** 2026-01-31
-**Status:** Production Ready ✅
+**Status:** Production Ready

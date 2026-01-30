@@ -33,7 +33,7 @@
             </div>
             <div class="docs-stat-card">
                 <span class="mdi mdi-file-document-multiple stat-icon"></span>
-                <h3>37</h3>
+                <h3>41</h3>
                 <p>Guide Documents</p>
             </div>
             <div class="docs-stat-card">
@@ -133,12 +133,26 @@
                         </div>
                         <span class="badge badge-essential">Essential</span>
                     </a>
+                    <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/auth-lockout" class="doc-card">
+                        <div class="doc-card-body">
+                            <h3><span class="mdi mdi-shield-alert"></span> Auth Account Lockout</h3>
+                            <p>Brute force protection and account lockout.</p>
+                        </div>
+                        <span class="badge badge-new">New</span>
+                    </a>
                     <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/validation-system" class="doc-card">
                         <div class="doc-card-body">
                             <h3><span class="mdi mdi-check-decagram"></span> Validation System</h3>
                             <p>27+ validation rules, custom rules.</p>
                         </div>
                         <span class="badge badge-essential">Essential</span>
+                    </a>
+                    <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/api-versioning" class="doc-card">
+                        <div class="doc-card-body">
+                            <h3><span class="mdi mdi-code-tags"></span> API Versioning</h3>
+                            <p>URL/header-based API version management.</p>
+                        </div>
+                        <span class="badge badge-new">New</span>
                     </a>
                 </div>
             </div>
@@ -153,12 +167,26 @@
                         </div>
                         <span class="badge badge-enterprise">Enterprise</span>
                     </a>
+                    <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/session-encryption" class="doc-card">
+                        <div class="doc-card-body">
+                            <h3><span class="mdi mdi-lock-outline"></span> Session Encryption</h3>
+                            <p>AES-256-CBC encryption with HMAC tamper detection.</p>
+                        </div>
+                        <span class="badge badge-new">New</span>
+                    </a>
                     <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/cache-system" class="doc-card">
                         <div class="doc-card-body">
                             <h3><span class="mdi mdi-database"></span> Cache System</h3>
                             <p>Database and in-memory caching.</p>
                         </div>
                         <span class="badge badge-enterprise">Enterprise</span>
+                    </a>
+                    <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/file-cache" class="doc-card">
+                        <div class="doc-card-body">
+                            <h3><span class="mdi mdi-file-multiple"></span> File Cache Driver</h3>
+                            <p>Filesystem-based cache with subdirectory sharding.</p>
+                        </div>
+                        <span class="badge badge-new">New</span>
                     </a>
                     <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/queue-system" class="doc-card">
                         <div class="doc-card-body">

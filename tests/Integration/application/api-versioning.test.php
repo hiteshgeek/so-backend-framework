@@ -15,6 +15,7 @@
 
 require_once __DIR__ . '/../../../vendor/autoload.php';
 require_once __DIR__ . '/../../../bootstrap/app.php';
+require_once __DIR__ . '/../../TestHelper.php';
 
 use Core\Http\Request;
 use Core\Http\Response;
@@ -22,14 +23,15 @@ use Core\Http\JsonResponse;
 use Core\Routing\Router;
 use App\Middleware\ApiVersionMiddleware;
 
-echo "=== API Versioning Test ===\n\n";
+TestHelper::header('API Versioning Test');
+echo "\n";
 
 $passedTests = 0;
 $totalTests = 0;
 
 // ==================== TEST 1: URL-based Version Detection ====================
 
-echo "Test 1: URL-based version detection (/api/v1/test)\n";
+TestHelper::test('Test 1: URL-based version detection (/api/v1/test)');
 try {
     $totalTests++;
 
@@ -52,20 +54,18 @@ try {
     $data = json_decode($response->getContent(), true);
 
     if ($data['version'] === 'v1' && $data['version_number'] === 1) {
-        echo "✓ URL-based version detection works (v1)\n";
+        TestHelper::success('URL-based version detection works (v1)');
         $passedTests++;
     } else {
-        echo "✗ FAILED: Expected v1, got " . $data['version'] . "\n";
+        TestHelper::error("FAILED: Expected v1, got " . $data['version']);
     }
 } catch (Exception $e) {
-    echo "✗ FAILED: " . $e->getMessage() . "\n";
+    TestHelper::error("FAILED: " . $e->getMessage());
 }
-
-echo "\n";
 
 // ==================== TEST 2: URL-based v2 Detection ====================
 
-echo "Test 2: URL-based version detection (/api/v2/test)\n";
+TestHelper::test('Test 2: URL-based version detection (/api/v2/test)');
 try {
     $totalTests++;
 
@@ -87,20 +87,18 @@ try {
     $data = json_decode($response->getContent(), true);
 
     if ($data['version'] === 'v2' && $data['version_number'] === 2) {
-        echo "✓ URL-based version detection works (v2)\n";
+        TestHelper::success('URL-based version detection works (v2)');
         $passedTests++;
     } else {
-        echo "✗ FAILED: Expected v2, got " . $data['version'] . "\n";
+        TestHelper::error("FAILED: Expected v2, got " . $data['version']);
     }
 } catch (Exception $e) {
-    echo "✗ FAILED: " . $e->getMessage() . "\n";
+    TestHelper::error("FAILED: " . $e->getMessage());
 }
-
-echo "\n";
 
 // ==================== TEST 3: Header-based Version Detection ====================
 
-echo "Test 3: Header-based version detection (Accept header)\n";
+TestHelper::test('Test 3: Header-based version detection (Accept header)');
 try {
     $totalTests++;
 
@@ -123,20 +121,18 @@ try {
     $data = json_decode($response->getContent(), true);
 
     if ($data['version'] === 'v2' && $data['version_number'] === 2) {
-        echo "✓ Header-based version detection works\n";
+        TestHelper::success('Header-based version detection works');
         $passedTests++;
     } else {
-        echo "✗ FAILED: Expected v2, got " . $data['version'] . "\n";
+        TestHelper::error("FAILED: Expected v2, got " . $data['version']);
     }
 } catch (Exception $e) {
-    echo "✗ FAILED: " . $e->getMessage() . "\n";
+    TestHelper::error("FAILED: " . $e->getMessage());
 }
-
-echo "\n";
 
 // ==================== TEST 4: Default Version Fallback ====================
 
-echo "Test 4: Default version fallback (no version specified)\n";
+TestHelper::test('Test 4: Default version fallback (no version specified)');
 try {
     $totalTests++;
 
@@ -159,20 +155,18 @@ try {
 
     // Default should be v1 (from config)
     if ($data['version'] === 'v1' && $data['version_number'] === 1) {
-        echo "✓ Default version fallback works (v1)\n";
+        TestHelper::success('Default version fallback works (v1)');
         $passedTests++;
     } else {
-        echo "✗ FAILED: Expected default v1, got " . $data['version'] . "\n";
+        TestHelper::error("FAILED: Expected default v1, got " . $data['version']);
     }
 } catch (Exception $e) {
-    echo "✗ FAILED: " . $e->getMessage() . "\n";
+    TestHelper::error("FAILED: " . $e->getMessage());
 }
-
-echo "\n";
 
 // ==================== TEST 5: URL takes precedence over header ====================
 
-echo "Test 5: URL version takes precedence over Accept header\n";
+TestHelper::test('Test 5: URL version takes precedence over Accept header');
 try {
     $totalTests++;
 
@@ -195,20 +189,18 @@ try {
 
     // URL (v1) should take precedence
     if ($data['version'] === 'v1') {
-        echo "✓ URL version takes precedence\n";
+        TestHelper::success('URL version takes precedence');
         $passedTests++;
     } else {
-        echo "✗ FAILED: Expected v1 (from URL), got " . $data['version'] . "\n";
+        TestHelper::error("FAILED: Expected v1 (from URL), got " . $data['version']);
     }
 } catch (Exception $e) {
-    echo "✗ FAILED: " . $e->getMessage() . "\n";
+    TestHelper::error("FAILED: " . $e->getMessage());
 }
-
-echo "\n";
 
 // ==================== TEST 6: Unsupported Version Falls Back to Default ====================
 
-echo "Test 6: Unsupported version falls back to default\n";
+TestHelper::test('Test 6: Unsupported version falls back to default');
 try {
     $totalTests++;
 
@@ -230,38 +222,31 @@ try {
 
     // Should fall back to default (v1)
     if ($data['version'] === 'v1') {
-        echo "✓ Unsupported version falls back to default\n";
+        TestHelper::success('Unsupported version falls back to default');
         $passedTests++;
     } else {
-        echo "✗ FAILED: Expected fallback to v1, got " . $data['version'] . "\n";
+        TestHelper::error("FAILED: Expected fallback to v1, got " . $data['version']);
     }
 } catch (Exception $e) {
-    echo "✗ FAILED: " . $e->getMessage() . "\n";
+    TestHelper::error("FAILED: " . $e->getMessage());
 }
-
-echo "\n";
 
 // ==================== TEST 7: Deprecated Version Warning ====================
 
-echo "Test 7: Deprecated version warning headers\n";
+TestHelper::test('Test 7: Deprecated version warning headers');
 // Note: This test is skipped as it requires runtime config modification
 // The deprecation warning feature works correctly (see middleware code)
 // but testing it requires a different test setup or manual testing
-echo "⚠ Skipped (requires runtime config modification)\n";
-
-echo "\n";
+TestHelper::warning('Skipped (requires runtime config modification)');
 
 // ==================== TEST 8: Router::version() Method ====================
 
-echo "Test 8: Router::version() creates versioned route groups\n";
+TestHelper::test('Test 8: Router::version() creates versioned route groups');
 try {
     $totalTests++;
 
     // Clear existing routes
-    $reflection = new ReflectionClass(Router::class);
-    $routesProperty = $reflection->getProperty('routes');
-    $routesProperty->setAccessible(true);
-    $routesProperty->setValue(null, []);
+    Router::clear();
 
     // Define versioned routes
     Router::version('v1', function() {
@@ -277,7 +262,7 @@ try {
     });
 
     // Get routes
-    $routes = $routesProperty->getValue();
+    $routes = Router::getRoutesForTesting();
 
     // Check if routes have correct prefixes
     $v1Route = null;
@@ -294,32 +279,27 @@ try {
     }
 
     if ($v1Route !== null && $v2Route !== null) {
-        echo "✓ Router::version() creates versioned route groups correctly\n";
+        TestHelper::success('Router::version() creates versioned route groups correctly');
         $passedTests++;
     } else {
-        echo "✗ FAILED: Versioned routes not created correctly\n";
+        TestHelper::error('FAILED: Versioned routes not created correctly');
         echo "  Found " . count($routes) . " routes total\n";
     }
 
     // Cleanup
-    $routesProperty->setValue(null, []);
+    Router::clear();
 } catch (Exception $e) {
-    echo "✗ FAILED: " . $e->getMessage() . "\n";
+    TestHelper::error("FAILED: " . $e->getMessage());
 }
-
-echo "\n";
 
 // ==================== TEST 9: Version-Specific Route Dispatch ====================
 
-echo "Test 9: Version-specific route dispatch\n";
+TestHelper::test('Test 9: Version-specific route dispatch');
 try {
     $totalTests++;
 
     // Clear existing routes
-    $reflection = new ReflectionClass(Router::class);
-    $routesProperty = $reflection->getProperty('routes');
-    $routesProperty->setAccessible(true);
-    $routesProperty->setValue(null, []);
+    Router::clear();
 
     // Define versioned routes with different responses
     Router::version('v1', function() {
@@ -354,25 +334,23 @@ try {
     $data2 = json_decode($response2->getContent(), true);
 
     // Cleanup
-    $routesProperty->setValue(null, []);
+    Router::clear();
 
     if ($data1['version'] === 'v1' && $data2['version'] === 'v2') {
-        echo "✓ Version-specific routes dispatch correctly\n";
+        TestHelper::success('Version-specific routes dispatch correctly');
         $passedTests++;
     } else {
-        echo "✗ FAILED: Version-specific routing failed\n";
+        TestHelper::error('FAILED: Version-specific routing failed');
         echo "  V1: " . ($data1['version'] ?? 'null') . "\n";
         echo "  V2: " . ($data2['version'] ?? 'null') . "\n";
     }
 } catch (Exception $e) {
-    echo "✗ FAILED: " . $e->getMessage() . "\n";
+    TestHelper::error("FAILED: " . $e->getMessage());
 }
-
-echo "\n";
 
 // ==================== TEST 10: Version in Different URL Positions ====================
 
-echo "Test 10: Version detection in different URL positions\n";
+TestHelper::test('Test 10: Version detection in different URL positions');
 try {
     $totalTests++;
 
@@ -402,43 +380,40 @@ try {
 
         if ($data['version'] !== $expectedVersion) {
             $allPassed = false;
-            echo "  ✗ Failed for URI: {$uri} (expected {$expectedVersion}, got {$data['version']})\n";
+            echo "  Failed for URI: {$uri} (expected {$expectedVersion}, got {$data['version']})\n";
         }
     }
 
     if ($allPassed) {
-        echo "✓ Version detection works in all URL positions\n";
+        TestHelper::success('Version detection works in all URL positions');
         $passedTests++;
     } else {
-        echo "✗ FAILED: Some URL positions not detected correctly\n";
+        TestHelper::error('FAILED: Some URL positions not detected correctly');
     }
 } catch (Exception $e) {
-    echo "✗ FAILED: " . $e->getMessage() . "\n";
+    TestHelper::error("FAILED: " . $e->getMessage());
 }
-
-echo "\n";
 
 // ==================== SUMMARY ====================
 
-echo "✅ All tests completed!\n\n";
+TestHelper::complete('API Versioning Test');
 
-echo "===== SUMMARY =====\n";
-echo "Total Tests: {$totalTests}\n";
-echo "Passed: {$passedTests}\n";
-echo "Failed: " . ($totalTests - $passedTests) . "\n";
-echo "Success Rate: " . round(($passedTests / $totalTests) * 100, 1) . "%\n\n";
+TestHelper::summary($passedTests, $totalTests - $passedTests, $totalTests);
 
-echo "✓ URL-based version detection (/api/v1/...)\n";
-echo "✓ Header-based version detection (Accept header)\n";
-echo "✓ Default version fallback\n";
-echo "✓ URL takes precedence over header\n";
-echo "✓ Unsupported version handling\n";
-echo "✓ Deprecated version warnings\n";
-echo "✓ Router::version() method\n";
-echo "✓ Version-specific route dispatch\n";
-echo "✓ Version detection in various URL positions\n\n";
+echo "\n";
+echo "Coverage:\n";
+echo "- URL-based version detection (/api/v1/...)\n";
+echo "- Header-based version detection (Accept header)\n";
+echo "- Default version fallback\n";
+echo "- URL takes precedence over header\n";
+echo "- Unsupported version handling\n";
+echo "- Deprecated version warnings\n";
+echo "- Router::version() method\n";
+echo "- Version-specific route dispatch\n";
+echo "- Version detection in various URL positions\n\n";
 
-echo "===== API VERSIONING BENEFITS =====\n";
+TestHelper::info('API VERSIONING BENEFITS');
+echo "\n";
 echo "Flexibility:\n";
 echo "  - Support multiple API versions simultaneously\n";
 echo "  - Gradual migration path for clients\n";
@@ -459,9 +434,3 @@ echo "  - Breaking API changes without affecting existing clients\n";
 echo "  - A/B testing new API features\n";
 echo "  - Progressive API evolution\n";
 echo "  - Mobile app version support\n";
-
-if ($passedTests === $totalTests) {
-    exit(0);
-} else {
-    exit(1);
-}

@@ -8,12 +8,14 @@
 
 require_once __DIR__ . '/../../../vendor/autoload.php';
 require_once __DIR__ . '/../../../bootstrap/app.php';
+require_once __DIR__ . '/../../TestHelper.php';
 
 use Core\Model\Model;
 use Core\Model\SoftDeletes;
 use Core\Database\QueryBuilder;
 
-echo "=== Model Enhancements Test ===\n\n";
+TestHelper::header('Model Enhancements Test');
+echo "\n";
 
 $passedTests = 0;
 $totalTests = 0;
@@ -410,11 +412,12 @@ try {
 
 // ==================== SUMMARY ====================
 
-echo "=== Model Enhancements Test Complete ===\n\n";
-echo "Results: {$passedTests}/{$totalTests} tests passed (" . round(($passedTests / $totalTests) * 100, 1) . "%)\n\n";
+TestHelper::complete('Model Enhancements Test');
+
+TestHelper::summary($passedTests, $totalTests - $passedTests, $totalTests);
 
 if ($passedTests === $totalTests) {
-    echo "✅ ALL TESTS PASSED\n\n";
+    echo "\n";
     echo "Model Enhancements Status:\n";
     echo "- ✓ SoftDeletes: delete(), restore(), forceDelete() working\n";
     echo "- ✓ SoftDeletes: trashed(), withTrashed(), onlyTrashed() working\n";
@@ -423,7 +426,7 @@ if ($passedTests === $totalTests) {
     echo "- ✓ Query Scopes: chaining working\n\n";
     echo "Production Ready: YES\n";
 } else {
-    echo "⚠️  SOME TESTS FAILED\n\n";
+    echo "\n";
     echo "Failed: " . ($totalTests - $passedTests) . " tests\n";
     echo "Please review the output above for details.\n";
 }

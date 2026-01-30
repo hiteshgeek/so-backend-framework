@@ -51,9 +51,19 @@ return [
         'url' => '/docs/security-layer',
     ],
     [
+        'key' => 'auth-lockout',
+        'title' => 'Auth Account Lockout',
+        'url' => '/docs/auth-lockout',
+    ],
+    [
         'key' => 'validation-system',
         'title' => 'Validation System',
         'url' => '/docs/validation-system',
+    ],
+    [
+        'key' => 'api-versioning',
+        'title' => 'API Versioning',
+        'url' => '/docs/api-versioning',
     ],
 
     // Enterprise Features
@@ -63,9 +73,19 @@ return [
         'url' => '/docs/cache-system',
     ],
     [
+        'key' => 'file-cache',
+        'title' => 'File Cache Driver',
+        'url' => '/docs/file-cache',
+    ],
+    [
         'key' => 'session-system',
         'title' => 'Session System',
         'url' => '/docs/session-system',
+    ],
+    [
+        'key' => 'session-encryption',
+        'title' => 'Session Encryption',
+        'url' => '/docs/session-encryption',
     ],
     [
         'key' => 'queue-system',

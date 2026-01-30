@@ -39,6 +39,7 @@ Read the documentation in this numbered sequence for the best learning experienc
 |-----|----------|-------------|------|
 | 9 | [Middleware Guide](/docs/middleware) | Request pipeline and middleware | 15 min |
 | 10 | [Internal API Layer](/docs/internal-api) | Context detection and permissions | 18 min |
+| 10a | [API Versioning](/docs/api-versioning) | URL/header-based API version management | 12 min |
 | 11 | [Model Enhancements](/docs/model-enhancements) | Soft deletes, query scopes | 12 min |
 
 ### Phase 5: Enterprise Features (1.5 hours)
@@ -50,6 +51,7 @@ Read the documentation in this numbered sequence for the best learning experienc
 | 14 | [Queue System](/docs/queue-system) | Background job processing | 20 min |
 | 15 | [Notification System](/docs/notification-system) | User alerts and notifications | 12 min |
 | 16 | [Cache System](/docs/cache-system) | Performance optimization | 15 min |
+| 16a | [File Cache Driver](/docs/file-cache) | Filesystem-based caching with sharding | 12 min |
 | 17 | [Session System](/docs/session-system) | Database sessions for scaling | 12 min |
 
 ### Phase 6: Developer Tools & Testing (1 hour 25 minutes)
@@ -288,6 +290,7 @@ Production-ready features for enterprise ERP applications:
 | [Auth System](/docs/auth-system) | Session auth, JWT, remember me, workflows | 30 min | Production |
 | [Middleware Guide](/docs/middleware) | Auth, CORS, Logging, Global middleware | 15 min | Production |
 | [Internal API Layer](/docs/internal-api) | Context detection, permissions, API client | 18 min | 86.7% (13/15) |
+| [API Versioning](/docs/api-versioning) | URL/header-based version management, Router::version() | 12 min | 100% (9/9) |
 | [Model Enhancements](/docs/model-enhancements) | Soft Deletes, Query Scopes | 12 min | 100% (10/10) |
 | [Comprehensive Guide](/docs/comprehensive) | Complete framework reference (90%+ features) | 45 min | - |
 
@@ -316,6 +319,7 @@ All features are **production-tested** and **enterprise-ready**. Includes OWASP-
 | [Queue System](/docs/queue-system) | Background job processing | 20 min |
 | [Notification System](/docs/notification-system) | User notifications and alerts | 12 min |
 | [Cache System](/docs/cache-system) | Performance optimization | 15 min |
+| [File Cache Driver](/docs/file-cache) | Filesystem caching with subdirectory sharding | 12 min |
 | [Session System](/docs/session-system) | Database sessions for scaling | 12 min |
 
 All 5 Laravel framework table systems are **production-ready** and **battle-tested** for large-scale ERP applications. Features include database-driven sessions, queue system for background jobs, activity logging for compliance (GDPR/SOX), notifications for workflows, and cache system for performance.
@@ -572,7 +576,9 @@ If you can't find what you need:
 | **Queue System** | [x] | **QUEUE-SYSTEM.md** |
 | **Notifications** | [x] | **NOTIFICATION-SYSTEM.md** |
 | **Cache System** | [x] | **CACHE-SYSTEM.md** |
+| **File Cache Driver** | [x] | **FILE-CACHE.md** |
 | **Session System** | [x] | **SESSION-SYSTEM.md** |
+| **API Versioning** | [x] | **API-VERSIONING.md** |
 | **Model Enhancements** | [x] | **MODEL_ENHANCEMENTS_SUMMARY.md** |
 | **Framework Features** | [x] | **FRAMEWORK-FEATURES.md** |
 | **Complete Reference** | [x] | **COMPREHENSIVE-GUIDE.md** |

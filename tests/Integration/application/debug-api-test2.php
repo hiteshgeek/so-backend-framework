@@ -26,11 +26,8 @@ echo "Request URI: " . $request->uri() . "\n";
 echo "X-Signature header: " . $request->header('X-SIGNATURE') . "\n";
 echo "X-Timestamp header: " . $request->header('X-TIMESTAMP') . "\n";
 
-// Set body
-$reflection = new ReflectionClass($request);
-$property = $reflection->getProperty('content');
-$property->setAccessible(true);
-$property->setValue($request, $body);
+// Set body for testing
+$request->setContentForTesting($body);
 
 echo "Request body: " . $request->getContent() . "\n";
 

@@ -120,7 +120,7 @@ class LogRequestMiddleware implements MiddlewareInterface
      * @param array $data
      * @return array
      */
-    protected function filterSensitiveData(array $data): array
+    public function filterSensitiveData(array $data): array
     {
         $filtered = [];
 

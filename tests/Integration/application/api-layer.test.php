@@ -12,6 +12,7 @@
 
 require_once __DIR__ . '/../../../vendor/autoload.php';
 require_once __DIR__ . '/../../../bootstrap/app.php';
+require_once __DIR__ . '/../../TestHelper.php';
 
 use Core\Api\InternalApiGuard;
 use Core\Api\RequestContext;
@@ -19,7 +20,8 @@ use Core\Api\ContextPermissions;
 use Core\Api\ApiClient;
 use Core\Http\Request;
 
-echo "=== Internal API Layer Test ===\n\n";
+TestHelper::header('Internal API Layer Test');
+echo "\n";
 
 $passedTests = 0;
 $totalTests = 0;
@@ -69,11 +71,8 @@ try {
         'HTTP_X_TIMESTAMP' => (string) $timestamp,
     ], [], []);
 
-    // Manually set content
-    $reflection = new ReflectionClass($request);
-    $property = $reflection->getProperty('content');
-    $property->setAccessible(true);
-    $property->setValue($request, $body);
+    // Set request content for testing
+    $request->setContentForTesting($body);
 
     // Verify signature
     if ($guard->verify($request)) {
@@ -424,11 +423,12 @@ echo "\n";
 
 // ==================== SUMMARY ====================
 
-echo "=== Internal API Layer Test Complete ===\n\n";
-echo "Results: {$passedTests}/{$totalTests} tests passed (" . round(($passedTests / $totalTests) * 100, 1) . "%)\n\n";
+TestHelper::complete('Internal API Layer Test');
+
+TestHelper::summary($passedTests, $totalTests - $passedTests, $totalTests);
 
 if ($passedTests === $totalTests) {
-    echo "✅ ALL TESTS PASSED\n\n";
+    echo "\n";
     echo "Internal API Layer Status:\n";
     echo "- ✓ InternalApiGuard: Signature authentication working\n";
     echo "- ✓ RequestContext: Context detection working (web, mobile, cron, external)\n";
@@ -436,7 +436,7 @@ if ($passedTests === $totalTests) {
     echo "- ✓ ApiClient: HTTP client working with signature auth\n\n";
     echo "Production Ready: YES\n";
 } else {
-    echo "⚠️  SOME TESTS FAILED\n\n";
+    echo "\n";
     echo "Failed: " . ($totalTests - $passedTests) . " tests\n";
     echo "Please review the output above for details.\n";
 }

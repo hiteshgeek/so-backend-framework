@@ -499,4 +499,35 @@ class Router
         self::$fallbackRoute = null;
         self::$currentRoute = null;
     }
+
+    /**
+     * Get all registered routes (for testing)
+     *
+     * @return array
+     */
+    public static function getRoutesForTesting(): array
+    {
+        return self::$routes;
+    }
+
+    /**
+     * Get global middleware (for testing)
+     *
+     * @return array
+     */
+    public static function getGlobalMiddlewareForTesting(): array
+    {
+        return self::$globalMiddleware;
+    }
+
+    /**
+     * Set global middleware (for testing)
+     *
+     * @param array $middleware
+     * @return void
+     */
+    public static function setGlobalMiddlewareForTesting(array $middleware): void
+    {
+        self::$globalMiddleware = $middleware;
+    }
 }

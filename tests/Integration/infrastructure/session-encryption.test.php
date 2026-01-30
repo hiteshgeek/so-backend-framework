@@ -11,12 +11,14 @@
 
 require_once __DIR__ . '/../../../vendor/autoload.php';
 require_once __DIR__ . '/../../../bootstrap/app.php';
+require_once __DIR__ . '/../../TestHelper.php';
 
 use Core\Session\DatabaseSessionHandler;
 use Core\Security\Encrypter;
 use Core\Database\Connection;
 
-echo "=== Session Encryption Test ===\n\n";
+TestHelper::header('Session Encryption Test');
+echo "\n";
 
 $passedTests = 0;
 $totalTests = 0;
@@ -210,11 +212,12 @@ echo "\n";
 
 // ==================== SUMMARY ====================
 
-echo "=== Session Encryption Test Complete ===\n\n";
-echo "Results: {$passedTests}/{$totalTests} tests passed (" . round(($passedTests / $totalTests) * 100, 1) . "%)\n\n";
+TestHelper::complete('Session Encryption Test');
+
+TestHelper::summary($passedTests, $totalTests - $passedTests, $totalTests);
 
 if ($passedTests === $totalTests) {
-    echo "✅ ALL TESTS PASSED\n\n";
+    echo "\n";
     echo "Session Encryption Status:\n";
     echo "- ✓ Encrypter: AES-256-CBC working\n";
     echo "- ✓ HMAC: SHA256 tamper detection working\n";
@@ -223,7 +226,7 @@ if ($passedTests === $totalTests) {
     echo "- ✓ Tamper Detection: HMAC verification working\n\n";
     echo "Production Ready: YES\n";
 } else {
-    echo "⚠️  SOME TESTS FAILED\n\n";
+    echo "\n";
     echo "Failed: " . ($totalTests - $passedTests) . " tests\n";
     echo "Please review the output above for details.\n";
 }

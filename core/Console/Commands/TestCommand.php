@@ -18,7 +18,7 @@ use Core\Console\Command;
  */
 class TestCommand extends Command
 {
-    protected string $signature = 'test {target?} {--list} {--l} {--all}';
+    protected string $signature = 'test {target?} {--list} {--l} {--all} {--summary} {--s}';
     protected string $description = 'Run framework tests';
 
     /**
@@ -29,7 +29,7 @@ class TestCommand extends Command
         'success' => "\033[1;32m",     // Bright green
         'error' => "\033[1;31m",       // Bright red
         'warning' => "\033[1;33m",     // Bright yellow
-        'info' => "\033[0;37m",        // White
+        'info' => "\033[1;34m",        // Bright blue
         'reset' => "\033[0m",          // Reset
     ];
 
@@ -138,8 +138,10 @@ class TestCommand extends Command
 
         $this->line('Usage Examples:');
         $this->line('  php sixorbit test                    # Show this help');
-        $this->line('  php sixorbit test --all              # Run all tests');
+        $this->line('  php sixorbit test --all              # Run all tests (detailed)');
+        $this->line('  php sixorbit test --all --summary    # Run all tests (summary only)');
         $this->line('  php sixorbit test security           # Run security category');
+        $this->line('  php sixorbit test security --summary # Run category (summary only)');
         $this->line('  php sixorbit test csrf               # Run specific test');
         $this->line('  php sixorbit test --list             # Show this help');
         $this->line('');
@@ -153,6 +155,7 @@ class TestCommand extends Command
     protected function runAllTests(): int
     {
         $startTime = microtime(true);
+        $summaryOnly = $this->option('summary') || $this->option('s');
 
         $this->line('');
         $this->line($this->colorize('╔═══════════════════════════════════════════════════════════════╗', 'header'));
@@ -161,25 +164,38 @@ class TestCommand extends Command
         $this->line($this->colorize('╚═══════════════════════════════════════════════════════════════╝', 'header'));
         $this->line('');
 
+        if ($summaryOnly) {
+            $this->line($this->colorize('Running in SUMMARY mode - detailed output suppressed', 'info'));
+            $this->line('');
+        }
+
         $categoryStats = [];
         $totalPassed = 0;
         $totalFailed = 0;
 
         foreach ($this->testSuites as $category => $tests) {
-            $this->line($this->colorize('╔═══════════════════════════════════════════════════════════════╗', 'header'));
-            $categoryName = ucwords(str_replace('-', ' ', $category));
-            $this->line($this->colorize('║  ' . str_pad($categoryName, 61) . '║', 'header'));
-            $this->line($this->colorize('╚═══════════════════════════════════════════════════════════════╝', 'header'));
-            $this->line('');
+            if (!$summaryOnly) {
+                $this->line($this->colorize('╔═══════════════════════════════════════════════════════════════╗', 'header'));
+                $categoryName = ucwords(str_replace('-', ' ', $category));
+                $this->line($this->colorize('║  ' . str_pad($categoryName, 61) . '║', 'header'));
+                $this->line($this->colorize('╚═══════════════════════════════════════════════════════════════╝', 'header'));
+                $this->line('');
+            }
 
             $catPassed = 0;
             $catFailed = 0;
 
             foreach ($tests as $key => $test) {
-                $this->line($this->colorize("Running: {$test['name']}", 'info'));
-                $this->line(str_repeat('─', 63));
+                if ($summaryOnly) {
+                    // Summary mode: show running indicator
+                    $this->line($this->colorize("Running: {$test['name']}...", 'info'));
+                } else {
+                    // Detailed mode: show full header
+                    $this->line($this->colorize("Running: {$test['name']}", 'info'));
+                    $this->line(str_repeat('─', 63));
+                }
 
-                $result = $this->runTest($test['file']);
+                $result = $this->runTest($test['file'], !$summaryOnly);
 
                 $catPassed += $result['passed'];
                 $catFailed += $result['failed'];
@@ -188,25 +204,36 @@ class TestCommand extends Command
 
                 $total = $result['passed'] + $result['failed'];
                 if ($total > 0) {
-                    $passRate = round(($result['passed'] / $total) * 100, 1);
-                    $this->line($this->colorize("Total Tests: {$total}", 'info'));
-                    $this->line(str_repeat('─', 45));
-                    $this->line($this->colorize(sprintf("  %-12s │ %10s │ %10s", "Status", "Count", "Percentage"), 'header'));
-                    $this->line(str_repeat('─', 45));
-                    $this->line($this->colorize(sprintf("  %-12s │ %10d │ %9.1f%%", "Passed", $result['passed'], $passRate), 'success'));
+                    if ($summaryOnly) {
+                        // Summary mode: compact output
+                        $status = $result['failed'] === 0 ? '✓' : '✗';
+                        $color = $result['failed'] === 0 ? 'success' : 'error';
+                        $this->line($this->colorize("  {$status} {$result['passed']}/{$total} passed", $color));
+                    } else {
+                        // Detailed mode: table output
+                        $passRate = round(($result['passed'] / $total) * 100, 1);
+                        $this->line($this->colorize("Total Tests: {$total}", 'info'));
+                        $this->line(str_repeat('─', 45));
+                        $this->line($this->colorize(sprintf("  %-12s │ %10s │ %10s", "Status", "Count", "Percentage"), 'header'));
+                        $this->line(str_repeat('─', 45));
+                        $this->line($this->colorize(sprintf("  %-12s │ %10d │ %9.1f%%", "Passed", $result['passed'], $passRate), 'success'));
 
-                    if ($result['failed'] > 0) {
-                        $failRate = round(($result['failed'] / $total) * 100, 1);
-                        $this->line($this->colorize(sprintf("  %-12s │ %10d │ %9.1f%%", "Failed", $result['failed'], $failRate), 'error'));
-                    }
+                        if ($result['failed'] > 0) {
+                            $failRate = round(($result['failed'] / $total) * 100, 1);
+                            $this->line($this->colorize(sprintf("  %-12s │ %10d │ %9.1f%%", "Failed", $result['failed'], $failRate), 'error'));
+                        }
 
-                    if ($result['warnings'] > 0) {
-                        $warnRate = round(($result['warnings'] / $total) * 100, 1);
-                        $this->line($this->colorize(sprintf("  %-12s │ %10d │ %9.1f%%", "Warnings", $result['warnings'], $warnRate), 'warning'));
+                        if ($result['warnings'] > 0) {
+                            $warnRate = round(($result['warnings'] / $total) * 100, 1);
+                            $this->line($this->colorize(sprintf("  %-12s │ %10d │ %9.1f%%", "Warnings", $result['warnings'], $warnRate), 'warning'));
+                        }
+                        $this->line(str_repeat('─', 45));
                     }
-                    $this->line(str_repeat('─', 45));
                 }
-                $this->line('');
+
+                if (!$summaryOnly) {
+                    $this->line('');
+                }
             }
 
             $categoryStats[$category] = [
@@ -217,7 +244,8 @@ class TestCommand extends Command
             $catTotal = $catPassed + $catFailed;
             if ($catTotal > 0) {
                 $catPassRate = round(($catPassed / $catTotal) * 100, 1);
-                $summaryText = "Category Summary: {$catPassed}/{$catTotal} passed ({$catPassRate}%)";
+                $categoryName = ucwords(str_replace('-', ' ', $category));
+                $summaryText = "{$categoryName}: {$catPassed}/{$catTotal} passed ({$catPassRate}%)";
                 if ($catFailed === 0) {
                     $this->line($this->colorize($summaryText . ' ✓', 'success'));
                 } else {
@@ -244,6 +272,7 @@ class TestCommand extends Command
         }
 
         $startTime = microtime(true);
+        $summaryOnly = $this->option('summary') || $this->option('s');
         $categoryName = ucwords(str_replace('-', ' ', $category));
 
         $this->line('');
@@ -252,44 +281,63 @@ class TestCommand extends Command
         $this->line($this->colorize('╚═══════════════════════════════════════════════════════════════╝', 'header'));
         $this->line('');
 
+        if ($summaryOnly) {
+            $this->line($this->colorize('Running in SUMMARY mode - detailed output suppressed', 'info'));
+            $this->line('');
+        }
+
         $totalPassed = 0;
         $totalFailed = 0;
 
         foreach ($this->testSuites[$category] as $key => $test) {
-            $this->line($this->colorize("Running: {$test['name']}", 'info'));
-            $this->line(str_repeat('─', 63));
+            if ($summaryOnly) {
+                $this->line($this->colorize("Running: {$test['name']}...", 'info'));
+            } else {
+                $this->line($this->colorize("Running: {$test['name']}", 'info'));
+                $this->line(str_repeat('─', 63));
+            }
 
-            $result = $this->runTest($test['file']);
+            $result = $this->runTest($test['file'], !$summaryOnly);
 
             $totalPassed += $result['passed'];
             $totalFailed += $result['failed'];
 
             $total = $result['passed'] + $result['failed'];
             if ($total > 0) {
-                $passRate = round(($result['passed'] / $total) * 100, 1);
-                $this->line($this->colorize("Total Tests: {$total}", 'info'));
-                $this->line(str_repeat('─', 45));
-                $this->line($this->colorize(sprintf("  %-12s │ %10s │ %10s", "Status", "Count", "Percentage"), 'header'));
-                $this->line(str_repeat('─', 45));
-                $this->line($this->colorize(sprintf("  %-12s │ %10d │ %9.1f%%", "Passed", $result['passed'], $passRate), 'success'));
+                if ($summaryOnly) {
+                    $status = $result['failed'] === 0 ? '✓' : '✗';
+                    $color = $result['failed'] === 0 ? 'success' : 'error';
+                    $this->line($this->colorize("  {$status} {$result['passed']}/{$total} passed", $color));
+                } else {
+                    $passRate = round(($result['passed'] / $total) * 100, 1);
+                    $this->line($this->colorize("Total Tests: {$total}", 'info'));
+                    $this->line(str_repeat('─', 45));
+                    $this->line($this->colorize(sprintf("  %-12s │ %10s │ %10s", "Status", "Count", "Percentage"), 'header'));
+                    $this->line(str_repeat('─', 45));
+                    $this->line($this->colorize(sprintf("  %-12s │ %10d │ %9.1f%%", "Passed", $result['passed'], $passRate), 'success'));
 
-                if ($result['failed'] > 0) {
-                    $failRate = round(($result['failed'] / $total) * 100, 1);
-                    $this->line($this->colorize(sprintf("  %-12s │ %10d │ %9.1f%%", "Failed", $result['failed'], $failRate), 'error'));
-                }
+                    if ($result['failed'] > 0) {
+                        $failRate = round(($result['failed'] / $total) * 100, 1);
+                        $this->line($this->colorize(sprintf("  %-12s │ %10d │ %9.1f%%", "Failed", $result['failed'], $failRate), 'error'));
+                    }
 
-                if ($result['warnings'] > 0) {
-                    $warnRate = round(($result['warnings'] / $total) * 100, 1);
-                    $this->line($this->colorize(sprintf("  %-12s │ %10d │ %9.1f%%", "Warnings", $result['warnings'], $warnRate), 'warning'));
+                    if ($result['warnings'] > 0) {
+                        $warnRate = round(($result['warnings'] / $total) * 100, 1);
+                        $this->line($this->colorize(sprintf("  %-12s │ %10d │ %9.1f%%", "Warnings", $result['warnings'], $warnRate), 'warning'));
+                    }
+                    $this->line(str_repeat('─', 45));
                 }
-                $this->line(str_repeat('─', 45));
             }
-            $this->line('');
+
+            if (!$summaryOnly) {
+                $this->line('');
+            }
         }
 
         $total = $totalPassed + $totalFailed;
         $duration = round(microtime(true) - $startTime, 2);
 
+        $this->line('');
         $this->line($this->colorize('╔═══════════════════════════════════════════════════════════════╗', 'header'));
         $this->line($this->colorize('║                        SUMMARY                                ║', 'header'));
         $this->line($this->colorize('╚═══════════════════════════════════════════════════════════════╝', 'header'));
@@ -376,7 +424,7 @@ class TestCommand extends Command
             $output = ob_get_clean();
 
             if ($showOutput) {
-                echo $output;
+                echo $this->colorizeTestOutput($output);
             }
 
             $passed = substr_count($output, '✓');
@@ -389,6 +437,64 @@ class TestCommand extends Command
             $this->error("Exception: " . $e->getMessage());
             return ['passed' => 0, 'failed' => 1, 'warnings' => 0];
         }
+    }
+
+    /**
+     * Colorize test output automatically
+     */
+    protected function colorizeTestOutput(string $output): string
+    {
+        $lines = explode("\n", $output);
+        $colorized = [];
+
+        foreach ($lines as $line) {
+            // Skip ANSI escape codes (already colored)
+            if (strpos($line, "\033[") !== false) {
+                $colorized[] = $line;
+                continue;
+            }
+
+            // Headers with === or ╔═══
+            if (preg_match('/^(===.*===|╔═+╗|║.*║|╚═+╝)$/', $line)) {
+                $colorized[] = $this->colorize($line, 'header');
+            }
+            // Success indicators
+            elseif (preg_match('/^(\s*✓|.*\bPASSED\b|.*\bSuccess\b)/i', $line) && !preg_match('/\bFAILED\b/i', $line)) {
+                $colorized[] = $this->colorize($line, 'success');
+            }
+            // Failure indicators
+            elseif (preg_match('/^(\s*✗|.*\bFAILED\b|.*\bERROR\b)/i', $line)) {
+                $colorized[] = $this->colorize($line, 'error');
+            }
+            // Warning indicators
+            elseif (preg_match('/^(\s*⚠|.*\bSkipped\b|.*\bWarning\b)/i', $line)) {
+                $colorized[] = $this->colorize($line, 'warning');
+            }
+            // Test numbers and names
+            elseif (preg_match('/^(Test \d+:|Running:|Setup:|Cleanup:)/', $line)) {
+                $colorized[] = $this->colorize($line, 'info');
+            }
+            // Summary sections
+            elseif (preg_match('/^(Total Tests?:|Passed:|Failed:|Success Rate:|Duration:)/i', $line)) {
+                if (preg_match('/Passed:/i', $line)) {
+                    $colorized[] = $this->colorize($line, 'success');
+                } elseif (preg_match('/Failed:/i', $line) && !preg_match('/Failed:\s*0/', $line)) {
+                    $colorized[] = $this->colorize($line, 'error');
+                } else {
+                    $colorized[] = $line;
+                }
+            }
+            // Section dividers
+            elseif (preg_match('/^[-─=]+$/', $line)) {
+                $colorized[] = $this->colorize($line, 'header');
+            }
+            // Default: no coloring
+            else {
+                $colorized[] = $line;
+            }
+        }
+
+        return implode("\n", $colorized);
     }
 
     /**

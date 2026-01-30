@@ -82,15 +82,27 @@ class TestHelper
     /**
      * Print summary
      */
-    public static function summary(int $passed, int $failed): void
+    public static function summary(int $passed, int $failed, ?int $total = null): void
     {
+        // Calculate total if not provided
+        if ($total === null) {
+            $total = $passed + $failed;
+        }
+
         echo "\n" . self::colorize("=== Test Summary ===", 'header') . "\n";
+        echo "Total Tests: {$total}\n";
         echo self::colorize("Passed: {$passed}", 'success') . "\n";
         if ($failed > 0) {
             echo self::colorize("Failed: {$failed}", 'error') . "\n";
         } else {
             echo "Failed: {$failed}\n";
         }
+
+        if ($total > 0) {
+            $successRate = round(($passed / $total) * 100, 1);
+            echo "Success Rate: {$successRate}%\n";
+        }
+
         echo "\n";
 
         if ($failed === 0) {

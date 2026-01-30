@@ -91,13 +91,16 @@ class DocsController
             // Security & Validation
             'security-layer' => 'SECURITY-LAYER.md',
             'validation-system' => 'VALIDATION-SYSTEM.md',
+            'auth-lockout' => 'AUTH-LOCKOUT.md',
 
             // Enterprise Features
             'activity-logging' => 'ACTIVITY-LOGGING.md',
             'queue-system' => 'QUEUE-SYSTEM.md',
             'notification-system' => 'NOTIFICATION-SYSTEM.md',
             'cache-system' => 'CACHE-SYSTEM.md',
+            'file-cache' => 'FILE-CACHE.md',
             'session-system' => 'SESSION-SYSTEM.md',
+            'session-encryption' => 'SESSION-ENCRYPTION.md',
             'framework-features' => 'FRAMEWORK-FEATURES.md',
 
             // Technical Documentation
@@ -133,6 +136,9 @@ class DocsController
             'dev-custom-middleware' => 'DEV-CUSTOM-MIDDLEWARE.md',
             'dev-models' => 'DEV-MODELS.md',
             'dev-model-advanced' => 'DEV-MODEL-ADVANCED.md',
+
+            // API & Architecture
+            'api-versioning' => 'API-VERSIONING.md',
 
             // Test Documentation (from tests/ folder)
             'middleware' => '../../tests/MIDDLEWARE_IMPLEMENTATION_SUMMARY.md',

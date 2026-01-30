@@ -286,4 +286,15 @@ class Request
     {
         return $this->expectsJson();
     }
+
+    /**
+     * Set request content (for testing)
+     *
+     * @param string $content
+     * @return void
+     */
+    public function setContentForTesting(string $content): void
+    {
+        $this->content = $content;
+    }
 }
