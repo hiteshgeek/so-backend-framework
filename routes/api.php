@@ -23,6 +23,9 @@ require __DIR__ . '/api/products.php';
 // Order API routes (uncomment when ready)
 require __DIR__ . '/api/orders.php';
 
+// Demo routes (routing feature showcase)
+require __DIR__ . '/api/demo.php';
+
 // ==========================================
 // Add more API modules here:
 // ==========================================
@@ -43,12 +46,9 @@ Router::get('/api/health', function (Request $request) {
     ]);
 })->name('api.health');
 
-// API test route
+// API route tester - interactive HTML page (matches docs design)
 Router::get('/api/test', function (Request $request) {
-    return \Core\Http\JsonResponse::success([
-        'message' => 'Framework is working!',
-        'version' => '1.0.0',
-    ]);
+    return \Core\Http\Response::view('api/test');
 })->name('api.test');
 
 // ==========================================
