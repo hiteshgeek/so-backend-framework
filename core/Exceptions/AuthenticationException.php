@@ -25,4 +25,23 @@ class AuthenticationException extends HttpException
     {
         return $this->redirectTo;
     }
+
+    /**
+     * Create exception for account locked due to too many failed login attempts
+     *
+     * @param int $minutes Minutes until account is unlocked
+     * @return static
+     */
+    public static function accountLocked(int $minutes): static
+    {
+        $message = sprintf(
+            'Too many login attempts. Please try again in %d minute%s.',
+            $minutes,
+            $minutes === 1 ? '' : 's'
+        );
+
+        $exception = new static($message);
+        $exception->code = 429; // 429 Too Many Requests
+        return $exception;
+    }
 }

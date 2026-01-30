@@ -61,7 +61,20 @@ $app->singleton('router', function ($app) {
 });
 
 $app->singleton('auth', function ($app) {
-    return new \Core\Auth\Auth($app->make('session'));
+    // Create login throttle instance with config
+    $throttleConfig = $app->make('config')->get('auth.login_throttle', []);
+    $throttle = null;
+
+    if (!empty($throttleConfig['enabled'])) {
+        try {
+            $cache = $app->make('cache');
+            $throttle = new \Core\Auth\LoginThrottle($cache, $throttleConfig);
+        } catch (\Exception $e) {
+            // Cache not available - throttle will be null
+        }
+    }
+
+    return new \Core\Auth\Auth($app->make('session'), $throttle);
 });
 
 $app->singleton('csrf', function ($app) {

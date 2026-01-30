@@ -17,7 +17,7 @@ use Core\Console\Command;
  */
 class TestCommand extends Command
 {
-    protected string $signature = 'test {target?} {--list} {--l}';
+    protected string $signature = 'test {target?} {--list} {--l} {--all}';
     protected string $description = 'Run framework tests';
 
     /**
@@ -42,6 +42,7 @@ class TestCommand extends Command
             'rate-limit' => ['name' => 'Rate Limiting', 'file' => 'Integration/security/rate-limit.test.php'],
             'xss' => ['name' => 'XSS Prevention', 'file' => 'Integration/security/xss-prevention.test.php'],
             'sanitizer' => ['name' => 'Sanitizer Bypass Prevention', 'file' => 'Integration/security/sanitizer-bypass.test.php'],
+            'auth-lockout' => ['name' => 'Auth Account Lockout', 'file' => 'Integration/security/auth-lockout.test.php'],
         ],
         'infrastructure' => [
             'cache' => ['name' => 'Cache and Sessions', 'file' => 'Integration/infrastructure/cache-sessions.test.php'],
@@ -68,13 +69,21 @@ class TestCommand extends Command
             return $this->showList();
         }
 
-        // Get test target (default to 'all')
-        $target = $this->argument(0, 'all');
+        // Get test target
+        $target = $this->argument(0);
+
+        // If no target and no --all flag, show help
+        if ($target === null && !$this->option('all')) {
+            return $this->showList();
+        }
+
+        // Run all tests if --all flag is provided
+        if ($this->option('all')) {
+            return $this->runAllTests();
+        }
 
         // Run tests based on target
-        if ($target === 'all') {
-            return $this->runAllTests();
-        } elseif (isset($this->testSuites[$target])) {
+        if (isset($this->testSuites[$target])) {
             return $this->runCategory($target);
         } else {
             // Check if it's a specific test
@@ -125,10 +134,11 @@ class TestCommand extends Command
         }
 
         $this->line('Usage Examples:');
-        $this->line('  php sixorbit test                    # Run all tests');
+        $this->line('  php sixorbit test                    # Show this help');
+        $this->line('  php sixorbit test --all              # Run all tests');
         $this->line('  php sixorbit test security           # Run security category');
         $this->line('  php sixorbit test csrf               # Run specific test');
-        $this->line('  php sixorbit test --list             # Show this list');
+        $this->line('  php sixorbit test --list             # Show this help');
         $this->line('');
 
         return 0;

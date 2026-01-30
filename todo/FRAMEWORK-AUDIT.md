@@ -1,8 +1,8 @@
 # SO Backend Framework — Comprehensive Audit & Recommendations
 
-**Overall Assessment: ~90% Production-Ready** *(Updated 2026-01-31)*
+**Overall Assessment: ~92% Production-Ready** *(Updated 2026-01-31)*
 
-**Status: Phases 1-3 Complete + Phase 4 Item 1 (17/20 items)** + 1 bonus security fix
+**Status: Phases 1-3 Complete + Phase 4 Items 1-2 (18/20 items)** + 1 bonus security fix
 
 The framework has solid fundamentals — clean architecture, DI container, service providers, comprehensive security, and good validation. Critical security vulnerabilities have been fixed, and core infrastructure (logging, mail, events) is now in place.
 
@@ -33,11 +33,11 @@ The framework has solid fundamentals — clean architecture, DI container, servi
 4. ✅ Nested validation → Dot-notation + wildcards
 5. ✅ View layouts → extends/section/yield/include
 
-### Phase 4 - Production Hardening (1/5)
+### Phase 4 - Production Hardening (2/5)
 
 1. ✅ Session encryption → AES-256-CBC + HMAC-SHA256 **DONE**
-2. ⏳ JWT blacklist (optional - for token revocation)
-3. ⏳ Auth lockout (optional - rate limiting exists)
+2. ✅ Auth lockout → LoginThrottle with brute force protection **DONE**
+3. ⏳ JWT blacklist (optional - for token revocation)
 4. ⏳ File cache driver (optional - DB cache works)
 5. ⏳ API versioning (optional - current API functional)
 
@@ -133,12 +133,19 @@ The framework has solid fundamentals — clean architecture, DI container, servi
   - Helper methods: `getValueByDotNotation()`, `expandWildcardRules()`
   - Fully backward compatible with flat validation
 
-### 11. Auth — No Account Lockout ⚠️ **DEFERRED**
+### 11. ~~Auth — No Account Lockout~~ **IMPLEMENTED**
 
-- **File:** `core/Auth/Auth.php`
-- No brute force protection on login attempts
-- **Status:** Optional Phase 4 enhancement. Rate limiting middleware already exists for API endpoints.
-- **Recommendation:** Implement `core/Auth/LoginThrottle.php` if targeted brute force is a concern.
+- **Files:** `core/Auth/LoginThrottle.php`, `core/Auth/Auth.php`, `config/auth.php`
+- **Implemented:**
+  - LoginThrottle class with cache-based attempt tracking
+  - Tracks failed attempts per IP + email combination (case insensitive)
+  - Configurable max attempts (default: 5) and decay period (default: 15 minutes)
+  - Automatic lockout with 429 status code after max attempts
+  - Successful login clears all failed attempts
+  - Integration with Auth::attempt() method
+  - AuthenticationException::accountLocked() factory method
+  - All 10 lockout tests passing
+  - Configuration via `AUTH_THROTTLE_ENABLED`, `AUTH_THROTTLE_MAX_ATTEMPTS`, `AUTH_THROTTLE_DECAY_MINUTES`
 
 ---
 

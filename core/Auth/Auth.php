@@ -4,31 +4,39 @@ namespace Core\Auth;
 
 use Core\Http\Session;
 use Core\Security\Csrf;
+use Core\Exceptions\AuthenticationException;
 use App\Models\User;
 
 /**
  * Authentication Service
  *
- * Manages user authentication state using sessions
+ * Manages user authentication state using sessions with brute force protection
  */
 class Auth
 {
     protected Session $session;
+    protected ?LoginThrottle $throttle = null;
     protected string $sessionKey = 'auth_user_id';
     protected string $rememberCookieName = 'remember_token';
     protected int $rememberDuration = 2592000; // 30 days in seconds
     protected bool $secureCookie;
     protected string $cookieDomain;
 
-    public function __construct(Session $session)
+    public function __construct(Session $session, ?LoginThrottle $throttle = null)
     {
         $this->session = $session;
+        $this->throttle = $throttle;
         $this->secureCookie = (bool) ($_ENV['COOKIE_SECURE'] ?? (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on'));
         $this->cookieDomain = $_ENV['COOKIE_DOMAIN'] ?? '';
     }
 
     /**
      * Attempt to authenticate user with credentials
+     *
+     * @param array $credentials Must contain 'email' and 'password'
+     * @param bool $remember Enable "remember me" functionality
+     * @return bool True if authentication successful
+     * @throws AuthenticationException If account is locked out
      */
     public function attempt(array $credentials, bool $remember = false): bool
     {
@@ -36,11 +44,38 @@ class Auth
             return false;
         }
 
-        $user = User::findByEmail($credentials['email']);
+        $email = $credentials['email'];
+        $ip = $_SERVER['REMOTE_ADDR'] ?? '127.0.0.1';
+
+        // Check if account is locked out due to too many failed attempts
+        if ($this->throttle && $this->throttle->isAvailable()) {
+            $throttleKey = LoginThrottle::key($ip, $email);
+
+            if ($this->throttle->tooManyAttempts($throttleKey)) {
+                $seconds = $this->throttle->lockoutSeconds($throttleKey);
+                $minutes = ceil($seconds / 60);
+
+                throw AuthenticationException::accountLocked($minutes);
+            }
+        }
+
+        $user = User::findByEmail($email);
 
         if ($user && $user->verifyPassword($credentials['password'])) {
+            // Clear login attempts on successful authentication
+            if ($this->throttle && $this->throttle->isAvailable()) {
+                $throttleKey = LoginThrottle::key($ip, $email);
+                $this->throttle->clear($throttleKey);
+            }
+
             $this->login($user, $remember);
             return true;
+        }
+
+        // Increment failed attempts counter
+        if ($this->throttle && $this->throttle->isAvailable()) {
+            $throttleKey = LoginThrottle::key($ip, $email);
+            $this->throttle->attempt($throttleKey);
         }
 
         return false;
