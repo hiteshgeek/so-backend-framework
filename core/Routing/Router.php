@@ -236,8 +236,15 @@ class Router
             array_reverse($middleware),
             function ($next, $middleware) {
                 return function ($request) use ($next, $middleware) {
+                    // Parse middleware parameters (e.g. "App\Middleware\Throttle:5,1")
+                    $parameters = [];
+                    if (is_string($middleware) && str_contains($middleware, ':')) {
+                        [$middleware, $paramString] = explode(':', $middleware, 2);
+                        $parameters = explode(',', $paramString);
+                    }
+
                     $middlewareInstance = app()->make($middleware);
-                    return $middlewareInstance->handle($request, $next);
+                    return $middlewareInstance->handle($request, $next, ...$parameters);
                 };
             },
             function ($request) use ($route) {
