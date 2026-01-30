@@ -75,6 +75,9 @@ class DocsController
             'routing-system' => 'ROUTING-SYSTEM.md',
             'project-structure' => 'PROJECT-STRUCTURE.md',
 
+            // Visual Guides
+            'request-flow' => 'REQUEST-FLOW.md',
+
             // Meta Documentation
             'documentation-review' => 'DOCUMENTATION-REVIEW.md',
             'documentation-structure' => 'DOCUMENTATION-STRUCTURE.md',

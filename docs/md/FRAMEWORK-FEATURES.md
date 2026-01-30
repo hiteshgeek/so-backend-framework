@@ -10,7 +10,7 @@ A comprehensive overview of all framework features, with focus on the 5 Laravel 
 
 1. [Introduction](#introduction)
 2. [Core Framework Features](#core-framework-features)
-3. [Laravel Framework Table Systems](#laravel-framework-table-systems)
+3. [Database-Driven Systems](#database-driven-systems)
 4. [ERP Benefits](#erp-benefits)
 5. [Production Requirements](#production-requirements)
 6. [Database Tables Overview](#database-tables-overview)
@@ -133,7 +133,7 @@ $dbHost = config('database.host', '127.0.0.1');
 
 ---
 
-## Laravel Framework Table Systems
+## Database-Driven Systems
 
 ### System 1: Activity Logging 🔍
 

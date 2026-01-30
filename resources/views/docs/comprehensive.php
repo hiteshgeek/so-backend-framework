@@ -6,6 +6,7 @@
     <title><?= htmlspecialchars($title ?? 'Comprehensive Guide') ?></title>
     <?php include __DIR__ . '/_design.php'; ?>
     <?php include __DIR__ . '/_markdown.php'; ?>
+    <script>(function(){var t=localStorage.getItem("theme");if(!t&&window.matchMedia("(prefers-color-scheme:dark)").matches)t="dark";if(t)document.documentElement.setAttribute("data-theme",t);})()</script>
     <?= render_assets('head') ?>
 </head>
 <body>

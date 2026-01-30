@@ -1,7 +1,7 @@
 /**
  * Docs Content CSS — content/detail documentation pages
  *
- * Requires css/docs/docs-base.css to be loaded first.
+ * Requires css/base.css to be loaded first.
  * Contains: header overrides, layout, sidebar, content area,
  * headings, code blocks, tables, callouts, badges, breadcrumbs, etc.
  */
@@ -566,7 +566,8 @@
 }
 
 /* ===== CODE ===== */
-.inline-code {
+.inline-code,
+.code-inline {
   background: var(--border-light);
   padding: 2px 6px;
   border-radius: var(--radius-sm);
@@ -1488,7 +1489,7 @@
   border-bottom: none;
 }
 
-/* ===== EXTENDED BADGES (base .badge in docs-base.css) ===== */
+/* ===== EXTENDED BADGES (base .badge in base.css) ===== */
 .badge-sm {
   padding: 2px 6px;
   font-size: 10px;
@@ -1575,6 +1576,12 @@
 
 .breadcrumb-bar .breadcrumbs {
   margin-bottom: 0;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
 }
 
 .breadcrumbs {
@@ -1981,8 +1988,8 @@
 }
 
 .scroll-to-top .progress-bg {
-  fill: var(--primary-bg);
-  stroke: var(--primary);
+  fill: var(--surface);
+  stroke: var(--border);
   stroke-width: 2;
   transition:
     fill 0.3s ease,
@@ -2004,7 +2011,7 @@
 }
 
 .scroll-to-top .arrow-icon {
-  fill: var(--text-secondary);
+  fill: var(--primary);
   transition: fill 0.3s ease;
 }
 
@@ -2023,11 +2030,202 @@
 }
 
 .scroll-to-top:hover .progress-ring {
-  stroke: rgba(255, 255, 255, 0.5);
+  stroke: rgba(255, 255, 255, 0.6);
 }
 
 .scroll-to-top:active svg {
   transform: scale(0.95);
+}
+
+/* Dark mode scroll-to-top */
+[data-theme="dark"] .scroll-to-top .progress-bg {
+  fill: var(--surface);
+  stroke: var(--border);
+}
+
+[data-theme="dark"] .scroll-to-top .arrow-icon {
+  fill: var(--primary-light);
+}
+
+[data-theme="dark"] .scroll-to-top:hover .progress-bg {
+  fill: var(--primary-light);
+  stroke: var(--primary-light);
+}
+
+[data-theme="dark"] .scroll-to-top:hover .arrow-icon {
+  fill: #0f172a;
+}
+
+[data-theme="dark"] .scroll-to-top:hover .progress-ring {
+  stroke: rgba(255, 255, 255, 0.4);
+}
+
+[data-theme="dark"] .scroll-to-top svg {
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.4));
+}
+
+[data-theme="dark"] .scroll-to-top:hover svg {
+  filter: drop-shadow(0 4px 16px rgba(59, 130, 246, 0.3));
+}
+
+/* ===== DARK MODE OVERRIDES ===== */
+
+/* Inline code */
+[data-theme="dark"] .inline-code,
+[data-theme="dark"] .code-inline {
+  background: var(--border);
+  color: #fb7185;
+}
+
+/* Code header */
+[data-theme="dark"] .code-header {
+  background: #020617;
+}
+
+/* Flowchart */
+[data-theme="dark"] .flowchart-container {
+  background: linear-gradient(135deg, #0c1929 0%, #0f172a 50%, #0c1f1a 100%);
+}
+
+/* Callout: Warning (Amber) */
+[data-theme="dark"] .callout-warning {
+  background: #422006;
+  border-left-color: #d97706;
+}
+[data-theme="dark"] .callout-warning .callout-icon {
+  color: #f59e0b;
+}
+[data-theme="dark"] .callout-warning .callout-title {
+  color: #fbbf24;
+}
+[data-theme="dark"] .callout-warning .callout-text {
+  color: #fde68a;
+}
+
+/* Callout: Danger (Red) */
+[data-theme="dark"] .callout-danger {
+  background: #450a0a;
+  border-left-color: #ef4444;
+}
+[data-theme="dark"] .callout-danger .callout-icon {
+  color: #f87171;
+}
+[data-theme="dark"] .callout-danger .callout-title {
+  color: #fca5a5;
+}
+[data-theme="dark"] .callout-danger .callout-text {
+  color: #fecaca;
+}
+
+/* Callout: Success (Green) */
+[data-theme="dark"] .callout-success {
+  background: #052e16;
+  border-left-color: #22c55e;
+}
+[data-theme="dark"] .callout-success .callout-icon {
+  color: #4ade80;
+}
+[data-theme="dark"] .callout-success .callout-title {
+  color: #86efac;
+}
+[data-theme="dark"] .callout-success .callout-text {
+  color: #bbf7d0;
+}
+
+/* Callout: Tip (Purple) */
+[data-theme="dark"] .callout-tip {
+  background: #1e1b4b;
+  border-left-color: #8b5cf6;
+}
+[data-theme="dark"] .callout-tip .callout-icon {
+  color: #a78bfa;
+}
+[data-theme="dark"] .callout-tip .callout-title {
+  color: #c4b5fd;
+}
+[data-theme="dark"] .callout-tip .callout-text {
+  color: #ddd6fe;
+}
+
+/* Callout: Note (Gray) */
+[data-theme="dark"] .callout-note {
+  background: var(--surface);
+  border-left-color: var(--text-muted);
+}
+[data-theme="dark"] .callout-note .callout-icon {
+  color: var(--text-muted);
+}
+[data-theme="dark"] .callout-note .callout-title {
+  color: var(--text-secondary);
+}
+[data-theme="dark"] .callout-note .callout-text {
+  color: var(--text-secondary);
+}
+
+/* API Method Badges */
+[data-theme="dark"] .api-method-get {
+  background: #064e3b;
+  color: #6ee7b7;
+}
+[data-theme="dark"] .api-method-post {
+  background: #1e3a5f;
+  color: #93c5fd;
+}
+[data-theme="dark"] .api-method-put {
+  background: #422006;
+  color: #fcd34d;
+}
+[data-theme="dark"] .api-method-delete {
+  background: #450a0a;
+  color: #fca5a5;
+}
+[data-theme="dark"] .api-method-patch {
+  background: #312e81;
+  color: #c7d2fe;
+}
+
+/* Status Badges */
+[data-theme="dark"] .badge-stable {
+  background: #064e3b;
+  color: #6ee7b7;
+}
+[data-theme="dark"] .badge-beta {
+  background: #422006;
+  color: #fcd34d;
+}
+[data-theme="dark"] .badge-deprecated {
+  background: #450a0a;
+  color: #fca5a5;
+}
+[data-theme="dark"] .badge-experimental {
+  background: #312e81;
+  color: #c7d2fe;
+}
+[data-theme="dark"] .badge-new {
+  background: #052e16;
+  color: #86efac;
+}
+
+/* HTTP Method Badges */
+[data-theme="dark"] .badge-get {
+  background: #064e3b;
+  color: #6ee7b7;
+}
+[data-theme="dark"] .badge-post {
+  background: #1e3a5f;
+  color: #93c5fd;
+}
+[data-theme="dark"] .badge-put {
+  background: #422006;
+  color: #fcd34d;
+}
+[data-theme="dark"] .badge-delete {
+  background: #450a0a;
+  color: #fca5a5;
+}
+[data-theme="dark"] .badge-patch {
+  background: #312e81;
+  color: #c7d2fe;
 }
 
 /* ===== RESPONSIVE ===== */

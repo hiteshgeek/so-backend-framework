@@ -1,7 +1,7 @@
 /**
  * Docs Index CSS — documentation index/hub page
  *
- * Requires css/docs/docs-base.css to be loaded first.
+ * Requires css/base.css to be loaded first.
  * Contains: header overrides, container, stat cards, sections,
  * card grid, badges, footer.
  */
@@ -195,7 +195,7 @@
 }
 
 .doc-card.featured::before {
-  background: var(--primary-dark);
+  display: none;
 }
 
 .doc-card.featured h3 {
@@ -206,7 +206,7 @@
   font-size: 18px;
 }
 
-/* Badges (base .badge in docs-base.css) */
+/* Badges (base .badge in base.css) */
 .badge-essential {
   background: #fef2f2;
   color: #dc2626;
@@ -292,3 +292,12 @@
     padding: 24px 16px;
   }
 }
+
+/* ===== DARK MODE OVERRIDES ===== */
+[data-theme="dark"] .doc-card.featured {
+  background: linear-gradient(135deg, var(--primary-bg) 0%, #1e293b 100%);
+}
+[data-theme="dark"] .badge-essential { background: #450a0a; color: #fca5a5; }
+[data-theme="dark"] .badge-new { background: #052e16; color: #86efac; }
+[data-theme="dark"] .badge-enterprise { background: #3b0764; color: #e9d5ff; }
+[data-theme="dark"] .badge-technical { background: var(--surface); color: var(--text-secondary); }

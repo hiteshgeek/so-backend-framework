@@ -43,6 +43,7 @@ $lastUpdated = $lastUpdated ?? date('Y-m-d');
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= htmlspecialchars($pageTitle) ?> - <?= htmlspecialchars(config('app.name', 'SO Framework')) ?> Documentation</title>
     <?php include __DIR__ . '/_design.php'; ?>
+    <script>(function(){var t=localStorage.getItem("theme");if(!t&&window.matchMedia("(prefers-color-scheme:dark)").matches)t="dark";if(t)document.documentElement.setAttribute("data-theme",t);})()</script>
     <?= render_assets('head') ?>
     <?= render_stack('styles') ?>
 </head>

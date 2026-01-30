@@ -7,9 +7,11 @@
     <title><?= htmlspecialchars($title ?? 'Login') ?></title>
     <?php
     assets()->cdn('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap', 'css', 'head', 5);
-    assets()->css('css/docs/docs-base.css', 'head', 8);
+    assets()->css('css/base.css', 'head', 8);
     assets()->css('css/auth/auth.css', 'head', 10);
+    assets()->js('js/theme.js', 'body_end', 10);
     ?>
+    <script>(function(){var t=localStorage.getItem("theme");if(!t&&window.matchMedia("(prefers-color-scheme:dark)").matches)t="dark";if(t)document.documentElement.setAttribute("data-theme",t);})()</script>
     <?= render_assets('head') ?>
 </head>
 <body>

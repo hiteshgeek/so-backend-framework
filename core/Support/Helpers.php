@@ -667,7 +667,7 @@ if (!function_exists('asset')) {
     /**
      * Generate URL to a public asset with cache busting
      *
-     * @param string $path Path relative to public/assets/ (e.g., 'css/docs/docs.css')
+     * @param string $path Path relative to public/assets/ (e.g., 'css/base.css')
      * @return string Full URL with version query string
      */
     function asset(string $path): string

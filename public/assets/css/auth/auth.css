@@ -1,7 +1,7 @@
 /**
  * Auth Pages — login, register, forgot password, reset password
  *
- * Requires css/docs/docs-base.css to be loaded first.
+ * Requires css/base.css to be loaded first.
  * Shares design tokens with the rest of the application.
  */
 
@@ -193,3 +193,7 @@ input[readonly] {
     padding: 28px 24px;
   }
 }
+
+/* ===== DARK MODE OVERRIDES ===== */
+[data-theme="dark"] .error { color: #f87171; }
+[data-theme="dark"] .alert-error { background: #450a0a; color: #fca5a5; border-color: #7f1d1d; }

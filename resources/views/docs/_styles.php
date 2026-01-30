@@ -12,7 +12,10 @@ assets()->cdn('https://cdn.jsdelivr.net/npm/@mdi/font@7.4.47/css/materialdesigni
 assets()->cdn('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap', 'css', 'head', 5);
 
 // Shared base CSS (priority 8 = after CDN, before page-specific)
-assets()->css('css/docs/docs-base.css', 'head', 8);
+assets()->css('css/base.css', 'head', 8);
 
 // Index page CSS (priority 10 = after base)
 assets()->css('css/docs/docs-index.css', 'head', 10);
+
+// Theme toggle (dark/light mode)
+assets()->js('js/theme.js', 'body_end', 10);

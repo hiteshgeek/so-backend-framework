@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= htmlspecialchars($title ?? 'Documentation') ?></title>
     <?php include __DIR__ . '/_styles.php'; ?>
+    <script>(function(){var t=localStorage.getItem("theme");if(!t&&window.matchMedia("(prefers-color-scheme:dark)").matches)t="dark";if(t)document.documentElement.setAttribute("data-theme",t);})()</script>
     <?= render_assets('head') ?>
 </head>
 <body>
@@ -32,7 +33,7 @@
             </div>
             <div class="docs-stat-card">
                 <span class="mdi mdi-file-document-multiple stat-icon"></span>
-                <h3>21</h3>
+                <h3>22</h3>
                 <p>Guide Documents</p>
             </div>
             <div class="docs-stat-card">
@@ -79,6 +80,13 @@
         <div class="docs-section">
             <div class="docs-section-title"><span class="mdi mdi-cube-outline"></span> Core Architecture</div>
             <div class="docs-grid">
+                <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/request-flow" class="doc-card">
+                    <div class="doc-card-body">
+                        <h3><span class="mdi mdi-transit-connection-variant"></span> Request Flow Diagram</h3>
+                        <p>Visual walkthrough of the HTTP request lifecycle.</p>
+                    </div>
+                    <span class="badge badge-new">New</span>
+                </a>
                 <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/framework-features" class="doc-card">
                     <div class="doc-card-body">
                         <h3><span class="mdi mdi-office-building"></span> Framework Features</h3>

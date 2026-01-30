@@ -364,13 +364,13 @@ ASSET_VERSIONING=false', '.env') ?>
 <?= codeBlock('text', 'public/
 └── assets/
     ├── css/                  ← Stylesheets (organized by module)
+    │   ├── base.css              ← Shared base (variables, reset, dark mode)
     │   ├── auth/
     │   │   └── auth.css
     │   ├── dashboard/
     │   │   ├── dashboard.css
     │   │   └── dashboard-form.css
     │   ├── docs/
-    │   │   ├── docs-base.css
     │   │   ├── docs.css
     │   │   └── docs-index.css
     │   ├── pages/
@@ -378,6 +378,7 @@ ASSET_VERSIONING=false', '.env') ?>
     │   └── tools/
     │       └── route-tester.css
     ├── js/                   ← JavaScript (organized by module)
+    │   ├── theme.js              ← Dark/light mode toggle
     │   ├── dashboard/
     │   │   └── dashboard.js
     │   ├── docs/
