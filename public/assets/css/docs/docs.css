@@ -34,7 +34,10 @@
 /* ===== MOBILE SIDEBAR TOGGLE ===== */
 .sidebar-toggle {
   display: none;
-  position: relative;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
   width: 32px;
   height: 32px;
   border: 1px solid var(--border);
@@ -51,47 +54,32 @@
 
 .sidebar-toggle .bar {
   display: block;
-  position: absolute;
-  left: 8px;
   width: 16px;
   height: 2px;
   background: var(--text-secondary);
-  border-radius: 1px;
+  border-radius: 0px;
   opacity: 1;
   transform: rotate(0deg);
   transition: all 0.25s ease-in-out;
 }
 
-.sidebar-toggle .bar:nth-child(1) {
-  top: 10px;
-}
-.sidebar-toggle .bar:nth-child(2),
-.sidebar-toggle .bar:nth-child(3) {
-  top: 15px;
-}
-.sidebar-toggle .bar:nth-child(4) {
-  top: 20px;
-}
-
-/* Variant 3: top/bottom collapse to center, middle two rotate to X */
+/* Open state: top/bottom collapse, middle two rotate to X */
 .sidebar-toggle.open .bar:nth-child(1) {
-  top: 15px;
-  width: 0;
-  left: 50%;
+  opacity: 0;
+  transform: scaleX(0);
 }
 
 .sidebar-toggle.open .bar:nth-child(2) {
-  transform: rotate(45deg);
+  transform: translateY(2.5px) rotate(45deg);
 }
 
 .sidebar-toggle.open .bar:nth-child(3) {
-  transform: rotate(-45deg);
+  transform: translateY(-2.5px) rotate(-45deg);
 }
 
 .sidebar-toggle.open .bar:nth-child(4) {
-  top: 15px;
-  width: 0;
-  left: 50%;
+  opacity: 0;
+  transform: scaleX(0);
 }
 
 .sidebar-toggle:hover {
@@ -133,7 +121,7 @@
 }
 
 .sidebar-header {
-  display: flex;
+  display: none;
   align-items: center;
   justify-content: flex-end;
   padding: 10px 10px 0;
@@ -584,7 +572,7 @@
 }
 
 .code-header {
-  background: #1e293b;
+  background: #e8edf2;
   padding: var(--space-1) var(--space-2);
   display: flex;
   justify-content: space-between;
@@ -613,8 +601,8 @@
 }
 
 .code-copy:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: white;
+  background: rgba(0, 0, 0, 0.08);
+  color: var(--text);
 }
 
 .code-copy .mdi {
@@ -635,10 +623,10 @@
   color: var(--code-text);
 }
 
-/* Highlight.js overrides — keep our dark theme as base */
+/* Highlight.js overrides — transparent bg so our variable controls it */
 .code-block code.hljs {
   background: transparent;
-  padding: 0;
+  padding: 0 0 20px 0;
 }
 
 /* ===== TABLES ===== */
@@ -1793,7 +1781,7 @@
   text-align: right;
   color: var(--text-muted);
   font-size: 12px;
-  border-right: 1px solid #334155;
+  border-right: 1px solid var(--border);
   padding-right: 8px;
   margin-right: 16px;
 }
@@ -2079,7 +2067,14 @@
 
 /* Code header */
 [data-theme="dark"] .code-header {
-  background: #020617;
+  background: #293548;
+  border-bottom: 1px solid #334155;
+}
+
+/* Code copy button */
+[data-theme="dark"] .code-copy:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
 }
 
 /* Flowchart */
@@ -2249,6 +2244,7 @@
     left: 0;
     bottom: 0;
     width: 280px;
+    height: 100vh;
     max-height: 100vh;
     z-index: 200;
     border-radius: 0;
@@ -2290,6 +2286,7 @@
   }
 
   .sidebar-header {
+    display: flex;
     padding: 16px 16px 8px;
     border-bottom: 1px solid var(--border-light);
     margin-bottom: 4px;

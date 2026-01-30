@@ -22,8 +22,7 @@
 assets()->cdn('https://cdn.jsdelivr.net/npm/@mdi/font@7.4.47/css/materialdesignicons.min.css', 'css', 'head', 5);
 assets()->cdn('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap', 'css', 'head', 5);
 
-// Syntax highlighting (Highlight.js - GitHub theme)
-assets()->cdn('https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/github-dark.min.css', 'css', 'head', 6);
+// Syntax highlighting (Highlight.js — theme is injected dynamically by theme.js)
 assets()->cdn('https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js', 'js', 'body_end', 5);
 
 // Shared base CSS (priority 8 = after CDN, before page-specific)

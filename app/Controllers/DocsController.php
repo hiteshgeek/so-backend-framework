@@ -82,6 +82,21 @@ class DocsController
             'documentation-review' => 'DOCUMENTATION-REVIEW.md',
             'documentation-structure' => 'DOCUMENTATION-STRUCTURE.md',
 
+            // Development Guides
+            'dev-first-page' => 'DEV-FIRST-PAGE.md',
+            'dev-crud-module' => 'DEV-CRUD-MODULE.md',
+            'dev-routes' => 'DEV-ROUTES.md',
+            'dev-route-params' => 'DEV-ROUTE-PARAMS.md',
+            'dev-web-controllers' => 'DEV-WEB-CONTROLLERS.md',
+            'dev-api-controllers' => 'DEV-API-CONTROLLERS.md',
+            'dev-forms-validation' => 'DEV-FORMS-VALIDATION.md',
+            'dev-assets' => 'DEV-ASSETS.md',
+            'dev-auth' => 'DEV-AUTH.md',
+            'dev-security' => 'DEV-SECURITY.md',
+            'dev-custom-middleware' => 'DEV-CUSTOM-MIDDLEWARE.md',
+            'dev-models' => 'DEV-MODELS.md',
+            'dev-model-advanced' => 'DEV-MODEL-ADVANCED.md',
+
             // Test Documentation (from tests/ folder)
             'middleware' => '../../tests/MIDDLEWARE_IMPLEMENTATION_SUMMARY.md',
             'internal-api' => '../../tests/INTERNAL_API_LAYER_SUMMARY.md',

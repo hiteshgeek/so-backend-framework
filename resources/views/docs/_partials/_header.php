@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Documentation Page Header Partial
  *
@@ -25,7 +26,6 @@ $badgeType = $badgeType ?? 'new';
             <span class="bar"></span>
             <span class="bar"></span>
             <span class="bar"></span>
-            <span class="bar"></span>
         </button>
         <h1>
             <span class="mdi mdi-<?= htmlspecialchars($icon) ?>"></span>
@@ -43,21 +43,21 @@ $badgeType = $badgeType ?? 'new';
 </header>
 
 <?php if (!empty($breadcrumbs)): ?>
-<div class="breadcrumb-bar">
-    <nav class="breadcrumbs">
-        <a href="<?= htmlspecialchars(config('app.url')) ?>/docs" class="breadcrumb-item">
-            <span class="mdi mdi-home"></span> Docs
-        </a>
-        <?php foreach ($breadcrumbs as $crumb): ?>
-            <span class="mdi mdi-chevron-right breadcrumb-separator"></span>
-            <?php if (isset($crumb['url'])): ?>
-                <a href="<?= htmlspecialchars($crumb['url']) ?>" class="breadcrumb-item">
-                    <?= htmlspecialchars($crumb['label']) ?>
-                </a>
-            <?php else: ?>
-                <span class="breadcrumb-current"><?= htmlspecialchars($crumb['label']) ?></span>
-            <?php endif; ?>
-        <?php endforeach; ?>
-    </nav>
-</div>
+    <div class="breadcrumb-bar">
+        <nav class="breadcrumbs">
+            <a href="<?= htmlspecialchars(config('app.url')) ?>/docs" class="breadcrumb-item">
+                <span class="mdi mdi-home"></span> Docs
+            </a>
+            <?php foreach ($breadcrumbs as $crumb): ?>
+                <span class="mdi mdi-chevron-right breadcrumb-separator"></span>
+                <?php if (isset($crumb['url'])): ?>
+                    <a href="<?= htmlspecialchars($crumb['url']) ?>" class="breadcrumb-item">
+                        <?= htmlspecialchars($crumb['label']) ?>
+                    </a>
+                <?php else: ?>
+                    <span class="breadcrumb-current"><?= htmlspecialchars($crumb['label']) ?></span>
+                <?php endif; ?>
+            <?php endforeach; ?>
+        </nav>
+    </div>
 <?php endif; ?>
