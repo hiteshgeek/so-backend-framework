@@ -48,6 +48,7 @@ class TestCommand extends Command
             'queue' => ['name' => 'Queue System', 'file' => 'Integration/infrastructure/queue.test.php'],
             'notifications' => ['name' => 'Notification System', 'file' => 'Integration/infrastructure/notifications.test.php'],
             'activity' => ['name' => 'Activity Logging', 'file' => 'Integration/infrastructure/activity-logging.test.php'],
+            'session-encryption' => ['name' => 'Session Encryption', 'file' => 'Integration/infrastructure/session-encryption.test.php'],
         ],
         'application' => [
             'validation' => ['name' => 'Validation System', 'file' => 'Integration/application/validation.test.php'],

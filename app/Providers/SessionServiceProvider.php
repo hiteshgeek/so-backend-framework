@@ -32,7 +32,21 @@ class SessionServiceProvider
                 $table = config('session.table', 'sessions');
                 $lifetime = config('session.lifetime', 120);
 
-                return new DatabaseSessionHandler($db->connection, $table, $lifetime);
+                // Check if session encryption is enabled
+                $encrypt = config('session.encrypt', false);
+                $encrypter = null;
+
+                if ($encrypt) {
+                    // Get the encrypter instance (requires APP_KEY to be set)
+                    try {
+                        $encrypter = $app->make('encrypter');
+                    } catch (\Exception $e) {
+                        // Encrypter not available - proceed without encryption
+                        $encrypt = false;
+                    }
+                }
+
+                return new DatabaseSessionHandler($db->connection, $table, $lifetime, $encrypter, $encrypt);
             }
 
             // File-based handler as fallback (though not recommended for ERP)
