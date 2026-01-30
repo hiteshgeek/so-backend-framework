@@ -3,6 +3,11 @@
 namespace Core\Model;
 
 use Core\Database\QueryBuilder;
+use Core\Model\Relations\Relation;
+use Core\Model\Relations\HasOne;
+use Core\Model\Relations\HasMany;
+use Core\Model\Relations\BelongsTo;
+use Core\Model\Relations\BelongsToMany;
 
 /**
  * Get all traits used by a class recursively
@@ -41,6 +46,14 @@ abstract class Model
     protected array $fillable = [];
     protected array $guarded = ['id'];
     protected bool $exists = false;
+
+    /**
+     * Cache for loaded relationships.
+     *
+     * Once a relationship is resolved via lazy-loading (e.g. $user->posts),
+     * the result is stored here to avoid repeated database queries.
+     */
+    protected array $relationsCache = [];
 
     /**
      * Observer pattern support
@@ -172,6 +185,24 @@ abstract class Model
 
     public function __get(string $key): mixed
     {
+        // 1. Check the relations cache first to avoid re-querying
+        if (array_key_exists($key, $this->relationsCache)) {
+            return $this->relationsCache[$key];
+        }
+
+        // 2. Check if a relationship method exists for this key
+        if (method_exists($this, $key)) {
+            $result = $this->$key();
+
+            if ($result instanceof Relation) {
+                // Execute the relation query and cache the result
+                $resolved = $result->get();
+                $this->relationsCache[$key] = $resolved;
+                return $resolved;
+            }
+        }
+
+        // 3. Fall back to standard attribute access
         return $this->getAttribute($key);
     }
 
@@ -319,6 +350,226 @@ abstract class Model
     {
         return $this->attributes;
     }
+
+    // ==========================================
+    // Relationship Methods
+    // ==========================================
+
+    /**
+     * Define a one-to-one relationship.
+     *
+     * The foreign key resides on the related model's table, pointing back
+     * to this model's local key.
+     *
+     * Example:
+     *   // User has one Profile
+     *   public function profile(): HasOne {
+     *       return $this->hasOne(Profile::class);
+     *       // Infers: foreign_key = 'user_id', local_key = 'id'
+     *   }
+     *
+     * @param string      $related    Fully qualified related model class name
+     * @param string|null $foreignKey Column on the related table (auto-inferred if null)
+     * @param string      $localKey   Column on this model's table (default: 'id')
+     * @return HasOne
+     */
+    protected function hasOne(string $related, ?string $foreignKey = null, string $localKey = 'id'): HasOne
+    {
+        $foreignKey = $foreignKey ?? Relation::inferForeignKey(static::class);
+
+        return new HasOne($this, $related, $foreignKey, $localKey);
+    }
+
+    /**
+     * Define a one-to-many relationship.
+     *
+     * The foreign key resides on the related model's table, pointing back
+     * to this model's local key. Multiple related records may exist.
+     *
+     * Example:
+     *   // User has many Posts
+     *   public function posts(): HasMany {
+     *       return $this->hasMany(Post::class);
+     *       // Infers: foreign_key = 'user_id', local_key = 'id'
+     *   }
+     *
+     * @param string      $related    Fully qualified related model class name
+     * @param string|null $foreignKey Column on the related table (auto-inferred if null)
+     * @param string      $localKey   Column on this model's table (default: 'id')
+     * @return HasMany
+     */
+    protected function hasMany(string $related, ?string $foreignKey = null, string $localKey = 'id'): HasMany
+    {
+        $foreignKey = $foreignKey ?? Relation::inferForeignKey(static::class);
+
+        return new HasMany($this, $related, $foreignKey, $localKey);
+    }
+
+    /**
+     * Define an inverse one-to-one or one-to-many relationship.
+     *
+     * The foreign key resides on this (child) model's table, pointing
+     * to the owner (parent) model's primary key.
+     *
+     * Example:
+     *   // Post belongs to User
+     *   public function user(): BelongsTo {
+     *       return $this->belongsTo(User::class);
+     *       // Infers: foreign_key = 'user_id', owner_key = 'id'
+     *   }
+     *
+     * @param string      $related    Fully qualified related (parent) model class name
+     * @param string|null $foreignKey Column on THIS model's table (auto-inferred if null)
+     * @param string      $ownerKey   Column on the related (parent) table (default: 'id')
+     * @return BelongsTo
+     */
+    protected function belongsTo(string $related, ?string $foreignKey = null, string $ownerKey = 'id'): BelongsTo
+    {
+        $foreignKey = $foreignKey ?? Relation::inferForeignKey($related);
+
+        return new BelongsTo($this, $related, $foreignKey, $ownerKey);
+    }
+
+    /**
+     * Define a many-to-many relationship via a pivot table.
+     *
+     * Both models reference each other through foreign keys stored in an
+     * intermediate (pivot) table.
+     *
+     * Example:
+     *   // User belongs to many Roles
+     *   public function roles(): BelongsToMany {
+     *       return $this->belongsToMany(Role::class, 'role_user');
+     *       // Infers: foreign_pivot_key = 'user_id', related_pivot_key = 'role_id'
+     *   }
+     *
+     * Pivot table auto-naming (when $pivotTable is null):
+     *   The two table names (singular) are sorted alphabetically and joined
+     *   with an underscore. E.g. User + Role -> 'role_user'.
+     *
+     * @param string      $related         Fully qualified related model class name
+     * @param string|null $pivotTable      Pivot table name (auto-inferred if null)
+     * @param string|null $foreignPivotKey Column on pivot for this model (auto-inferred if null)
+     * @param string|null $relatedPivotKey Column on pivot for related model (auto-inferred if null)
+     * @return BelongsToMany
+     */
+    protected function belongsToMany(
+        string $related,
+        ?string $pivotTable = null,
+        ?string $foreignPivotKey = null,
+        ?string $relatedPivotKey = null
+    ): BelongsToMany {
+        $foreignPivotKey = $foreignPivotKey ?? Relation::inferForeignKey(static::class);
+        $relatedPivotKey = $relatedPivotKey ?? Relation::inferForeignKey($related);
+
+        if ($pivotTable === null) {
+            $pivotTable = $this->inferPivotTableName($related);
+        }
+
+        return new BelongsToMany(
+            $this,
+            $related,
+            $pivotTable,
+            $foreignPivotKey,
+            $relatedPivotKey,
+            static::$primaryKey
+        );
+    }
+
+    /**
+     * Infer the pivot table name from the two model class names.
+     *
+     * Takes the singular snake_case form of each model name, sorts them
+     * alphabetically, and joins with an underscore.
+     *
+     * Examples:
+     *   User + Role -> 'role_user'
+     *   Post + Tag  -> 'post_tag'
+     *
+     * @param string $related The related model class name
+     * @return string The inferred pivot table name
+     */
+    protected function inferPivotTableName(string $related): string
+    {
+        $parentBase = strtolower(preg_replace(
+            '/([a-z])([A-Z])/',
+            '$1_$2',
+            class_basename(static::class)
+        ));
+
+        $relatedBase = strtolower(preg_replace(
+            '/([a-z])([A-Z])/',
+            '$1_$2',
+            class_basename($related)
+        ));
+
+        // Sort alphabetically for consistent naming
+        $segments = [$parentBase, $relatedBase];
+        sort($segments);
+
+        return implode('_', $segments);
+    }
+
+    /**
+     * Get a cached relation value.
+     *
+     * @param string $key The relation name
+     * @return mixed|null The cached value or null if not loaded
+     */
+    public function getRelation(string $key): mixed
+    {
+        return $this->relationsCache[$key] ?? null;
+    }
+
+    /**
+     * Set a relation value in the cache manually.
+     *
+     * Useful for eager loading or when you want to attach pre-fetched
+     * related models without triggering a database query.
+     *
+     * @param string $key   The relation name
+     * @param mixed  $value The related model(s) to cache
+     * @return self
+     */
+    public function setRelation(string $key, mixed $value): self
+    {
+        $this->relationsCache[$key] = $value;
+        return $this;
+    }
+
+    /**
+     * Check whether a relation has been loaded/cached.
+     *
+     * @param string $key The relation name
+     * @return bool
+     */
+    public function relationLoaded(string $key): bool
+    {
+        return array_key_exists($key, $this->relationsCache);
+    }
+
+    /**
+     * Clear all cached relations (or a specific one).
+     *
+     * This forces the next access to re-query the database.
+     *
+     * @param string|null $key Specific relation to clear, or null to clear all
+     * @return self
+     */
+    public function clearRelations(?string $key = null): self
+    {
+        if ($key !== null) {
+            unset($this->relationsCache[$key]);
+        } else {
+            $this->relationsCache = [];
+        }
+
+        return $this;
+    }
+
+    // ==========================================
+    // Query & Serialization
+    // ==========================================
 
     /**
      * Get the query builder for this model

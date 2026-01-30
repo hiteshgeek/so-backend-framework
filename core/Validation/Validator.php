@@ -43,6 +43,12 @@ class Validator
     protected array $errors = [];
 
     /**
+     * Expanded rules after wildcard resolution.
+     * Populated during validate() so that validated() can use concrete keys.
+     */
+    protected array $expandedRules = [];
+
+    /**
      * Default error messages
      */
     protected array $messages = [
@@ -105,12 +111,21 @@ class Validator
     /**
      * Validate the data
      *
+     * Supports flat keys ('email'), dot-notation keys ('user.email'),
+     * and wildcard keys ('items.*.name').  Wildcard rules are expanded
+     * into concrete indexed rules before validation begins, so error
+     * keys always use concrete dot-notation paths.
+     *
      * @return array Validated data
      * @throws ValidationException
      */
     public function validate(): array
     {
-        foreach ($this->rules as $field => $rules) {
+        // Expand wildcard rules (e.g. 'items.*.name') into concrete rules
+        // (e.g. 'items.0.name', 'items.1.name'). Non-wildcard rules pass through.
+        $this->expandedRules = $this->expandWildcardRules($this->rules, $this->data);
+
+        foreach ($this->expandedRules as $field => $rules) {
             $rulesList = is_string($rules) ? explode('|', $rules) : $rules;
 
             foreach ($rulesList as $rule) {
@@ -158,15 +173,26 @@ class Validator
     /**
      * Get validated data
      *
+     * Returns only the fields that had validation rules applied.
+     * For dot-notation and wildcard rules, the output is a properly
+     * nested array structure.  For flat keys the output is identical
+     * to the previous behaviour (backward compatible).
+     *
      * @return array
      */
     public function validated(): array
     {
         $validated = [];
 
-        foreach ($this->rules as $field => $rules) {
-            if (isset($this->data[$field])) {
-                $validated[$field] = $this->data[$field];
+        // Use expanded rules if available (set during validate()), otherwise
+        // fall back to the raw rules so that validated() works even when
+        // called without a prior validate() call (e.g. after manual fails() check).
+        $rulesToUse = !empty($this->expandedRules) ? $this->expandedRules : $this->rules;
+
+        foreach ($rulesToUse as $field => $rules) {
+            if ($this->hasValueByDotNotation($this->data, $field)) {
+                $value = $this->getValueByDotNotation($this->data, $field);
+                $this->setValueByDotNotation($validated, $field, $value);
             }
         }
 
@@ -176,15 +202,21 @@ class Validator
     /**
      * Validate a single rule
      *
-     * @param string $field Field name
+     * Resolves the field value using dot notation so that nested and
+     * wildcard-expanded fields are properly accessed.
+     *
+     * @param string $field Field name (may use dot notation, e.g. 'user.email')
      * @param string|object $rule Rule to validate
      * @return void
      */
     protected function validateRule(string $field, $rule): void
     {
+        // Resolve value via dot notation (falls back to flat key for backward compat)
+        $value = $this->getValueByDotNotation($this->data, $field);
+
         // Handle custom rule objects
         if (is_object($rule) && $rule instanceof Rule) {
-            if (!$rule->passes($field, $this->data[$field] ?? null)) {
+            if (!$rule->passes($field, $value)) {
                 $this->addError($field, $rule->message());
             }
             return;
@@ -192,7 +224,7 @@ class Validator
 
         // Handle closure rules
         if ($rule instanceof \Closure) {
-            $message = $rule($field, $this->data[$field] ?? null);
+            $message = $rule($field, $value);
             if ($message !== true) {
                 $this->addError($field, is_string($message) ? $message : "The $field field is invalid.");
             }
@@ -210,7 +242,6 @@ class Validator
         }
 
         // Call validation method
-        $value = $this->data[$field] ?? null;
         $passes = $this->$method($field, $value, $parameters);
 
         if (!$passes) {
@@ -297,6 +328,200 @@ class Validator
         return str_replace(array_keys($replacements), array_values($replacements), $message);
     }
 
+    // ==================== DOT NOTATION & WILDCARD HELPERS ====================
+
+    /**
+     * Get a value from a nested array using dot notation.
+     *
+     * Resolves paths like 'user.name' to $data['user']['name'].
+     * Returns the provided default if any segment of the path does not exist.
+     *
+     * @param array $data The data array to traverse
+     * @param string $key Dot-notation key (e.g., 'user.profile.email')
+     * @param mixed $default Value to return if the path does not exist
+     * @return mixed
+     */
+    protected function getValueByDotNotation(array $data, string $key, $default = null)
+    {
+        // Fast path: the key exists as a top-level flat key (backward compat)
+        if (array_key_exists($key, $data)) {
+            return $data[$key];
+        }
+
+        $segments = explode('.', $key);
+        $current = $data;
+
+        foreach ($segments as $segment) {
+            if (!is_array($current) || !array_key_exists($segment, $current)) {
+                return $default;
+            }
+            $current = $current[$segment];
+        }
+
+        return $current;
+    }
+
+    /**
+     * Set a value in a nested array using dot notation.
+     *
+     * Builds the nested structure as needed. For example,
+     * setValueByDotNotation($arr, 'user.profile.name', 'Alice')
+     * produces $arr['user']['profile']['name'] = 'Alice'.
+     *
+     * @param array &$array The target array (modified in-place)
+     * @param string $key Dot-notation key
+     * @param mixed $value The value to set
+     * @return void
+     */
+    protected function setValueByDotNotation(array &$array, string $key, $value): void
+    {
+        $segments = explode('.', $key);
+        $current = &$array;
+
+        foreach ($segments as $i => $segment) {
+            // If this is the last segment, assign the value
+            if ($i === count($segments) - 1) {
+                $current[$segment] = $value;
+            } else {
+                // Create intermediate arrays as needed
+                if (!isset($current[$segment]) || !is_array($current[$segment])) {
+                    $current[$segment] = [];
+                }
+                $current = &$current[$segment];
+            }
+        }
+    }
+
+    /**
+     * Check whether a value exists in the data using dot notation.
+     *
+     * Unlike getValueByDotNotation, this distinguishes between "key exists
+     * with a null value" and "key does not exist at all".
+     *
+     * @param array $data The data array
+     * @param string $key Dot-notation key
+     * @return bool
+     */
+    protected function hasValueByDotNotation(array $data, string $key): bool
+    {
+        if (array_key_exists($key, $data)) {
+            return true;
+        }
+
+        $segments = explode('.', $key);
+        $current = $data;
+
+        foreach ($segments as $segment) {
+            if (!is_array($current) || !array_key_exists($segment, $current)) {
+                return false;
+            }
+            $current = $current[$segment];
+        }
+
+        return true;
+    }
+
+    /**
+     * Expand wildcard rules into concrete, indexed rules.
+     *
+     * Given a rule like 'items.*.name' => 'required|string' and data containing
+     * 'items' with 3 elements, this produces:
+     *   'items.0.name' => 'required|string'
+     *   'items.1.name' => 'required|string'
+     *   'items.2.name' => 'required|string'
+     *
+     * Supports multiple wildcards (e.g., 'a.*.b.*.c') and trailing wildcards
+     * (e.g., 'items.*.tags.*').
+     *
+     * Rules without wildcards are passed through unchanged.
+     *
+     * @param array $rules The rule definitions (may contain '*' segments)
+     * @param array $data The input data used to determine array sizes
+     * @return array Expanded rules with concrete indices replacing wildcards
+     */
+    protected function expandWildcardRules(array $rules, array $data): array
+    {
+        $expanded = [];
+
+        foreach ($rules as $field => $fieldRules) {
+            if (!str_contains($field, '*')) {
+                // No wildcard -- pass through as-is
+                $expanded[$field] = $fieldRules;
+                continue;
+            }
+
+            // Recursively expand wildcards in the field key
+            $expandedKeys = $this->expandWildcardKey($field, $data);
+
+            foreach ($expandedKeys as $concreteKey) {
+                $expanded[$concreteKey] = $fieldRules;
+            }
+        }
+
+        return $expanded;
+    }
+
+    /**
+     * Recursively expand a single wildcard key into all matching concrete keys.
+     *
+     * For example, with key 'items.*.name' and data ['items' => [['name'=>'A'], ['name'=>'B']]],
+     * this returns ['items.0.name', 'items.1.name'].
+     *
+     * @param string $pattern The dot-notation key pattern containing '*'
+     * @param array $data The input data
+     * @return array List of concrete dot-notation keys
+     */
+    protected function expandWildcardKey(string $pattern, array $data): array
+    {
+        $segments = explode('.', $pattern);
+        return $this->expandSegments($segments, 0, $data, '');
+    }
+
+    /**
+     * Recursive segment expander used by expandWildcardKey.
+     *
+     * Walks the segments array. When a '*' segment is encountered, iterates
+     * over the array elements at the current data position and recurses for
+     * each index. Non-wildcard segments simply descend into the data.
+     *
+     * @param array $segments All segments of the dot-notation pattern
+     * @param int $index Current segment index
+     * @param mixed $currentData The data subtree at the current position
+     * @param string $prefix The concrete key built so far
+     * @return array List of fully-expanded concrete keys
+     */
+    protected function expandSegments(array $segments, int $index, $currentData, string $prefix): array
+    {
+        // Base case: all segments consumed -- we have a complete concrete key
+        if ($index >= count($segments)) {
+            return [$prefix];
+        }
+
+        $segment = $segments[$index];
+        $keys = [];
+
+        if ($segment === '*') {
+            // The current data must be an array to expand
+            if (!is_array($currentData)) {
+                return [];
+            }
+
+            foreach (array_keys($currentData) as $arrayIndex) {
+                $newPrefix = $prefix === '' ? (string)$arrayIndex : $prefix . '.' . $arrayIndex;
+                $keys = array_merge(
+                    $keys,
+                    $this->expandSegments($segments, $index + 1, $currentData[$arrayIndex] ?? null, $newPrefix)
+                );
+            }
+        } else {
+            $newPrefix = $prefix === '' ? $segment : $prefix . '.' . $segment;
+            $nextData = is_array($currentData) ? ($currentData[$segment] ?? null) : null;
+            $keys = $this->expandSegments($segments, $index + 1, $nextData, $newPrefix);
+        }
+
+        return $keys;
+    }
+
     // ==================== VALIDATION RULES ====================
 
     /**
@@ -326,7 +551,7 @@ class Validator
     {
         [$otherField, $otherValue] = $parameters;
 
-        if (($this->data[$otherField] ?? null) == $otherValue) {
+        if ($this->getValueByDotNotation($this->data, $otherField) == $otherValue) {
             return $this->validateRequired($field, $value, []);
         }
 
@@ -339,7 +564,8 @@ class Validator
     protected function validateRequiredWith(string $field, $value, array $parameters): bool
     {
         foreach ($parameters as $otherField) {
-            if (isset($this->data[$otherField]) && !empty($this->data[$otherField])) {
+            $otherValue = $this->getValueByDotNotation($this->data, $otherField);
+            if ($otherValue !== null && $otherValue !== '' && $otherValue !== []) {
                 return $this->validateRequired($field, $value, []);
             }
         }
@@ -495,7 +721,7 @@ class Validator
      */
     protected function validateIn(string $field, $value, array $parameters): bool
     {
-        return in_array($value, $parameters);
+        return in_array((string) $value, $parameters, true);
     }
 
     /**
@@ -503,7 +729,7 @@ class Validator
      */
     protected function validateNotIn(string $field, $value, array $parameters): bool
     {
-        return !in_array($value, $parameters);
+        return !in_array((string) $value, $parameters, true);
     }
 
     /**
@@ -512,7 +738,7 @@ class Validator
     protected function validateSame(string $field, $value, array $parameters): bool
     {
         $other = $parameters[0];
-        return $value === ($this->data[$other] ?? null);
+        return $value === $this->getValueByDotNotation($this->data, $other);
     }
 
     /**
@@ -521,7 +747,7 @@ class Validator
     protected function validateDifferent(string $field, $value, array $parameters): bool
     {
         $other = $parameters[0];
-        return $value !== ($this->data[$other] ?? null);
+        return $value !== $this->getValueByDotNotation($this->data, $other);
     }
 
     /**
@@ -530,7 +756,7 @@ class Validator
     protected function validateConfirmed(string $field, $value, array $parameters): bool
     {
         $confirmation = $field . '_confirmation';
-        return $value === ($this->data[$confirmation] ?? null);
+        return $value === $this->getValueByDotNotation($this->data, $confirmation);
     }
 
     /**

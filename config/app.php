@@ -29,5 +29,8 @@ return [
 
         // Session system for horizontal scaling
         \App\Providers\SessionServiceProvider::class,
+
+        // Mail system for sending emails
+        \Core\Mail\MailServiceProvider::class,
     ],
 ];

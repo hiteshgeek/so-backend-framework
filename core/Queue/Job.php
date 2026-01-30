@@ -78,25 +78,34 @@ abstract class Job
     }
 
     /**
-     * Serialize the job for storage
+     * Serialize the job for storage (JSON — safe from RCE)
      */
     public function serialize(): string
     {
-        return serialize([
+        return json_encode([
             'class' => get_class($this),
             'data' => get_object_vars($this),
-        ]);
+        ], JSON_THROW_ON_ERROR);
     }
 
     /**
-     * Unserialize a job from storage
+     * Deserialize a job from storage (JSON — safe from RCE)
      */
     public static function unserialize(string $serialized): self
     {
-        $data = unserialize($serialized);
+        $data = json_decode($serialized, true, 512, JSON_THROW_ON_ERROR);
+
+        if (!isset($data['class']) || !class_exists($data['class'])) {
+            throw new \RuntimeException("Invalid job payload: unknown class.");
+        }
+
+        if (!is_subclass_of($data['class'], self::class)) {
+            throw new \RuntimeException("Invalid job payload: class is not a Job.");
+        }
+
         $job = new $data['class']();
 
-        foreach ($data['data'] as $key => $value) {
+        foreach (($data['data'] ?? []) as $key => $value) {
             if (property_exists($job, $key)) {
                 $job->$key = $value;
             }

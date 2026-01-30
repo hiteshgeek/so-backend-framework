@@ -26,6 +26,8 @@ class Router
     protected static array $namedRoutes = [];
     protected static array $groupStack = [];
     protected static array $globalMiddleware = [];
+    protected static array $middlewareGroups = [];
+    protected static array $middlewareAliases = [];
     protected static ?Route $fallbackRoute = null;
     protected static ?Route $currentRoute = null;
 
@@ -107,6 +109,62 @@ class Router
     {
         $middleware = is_array($middleware) ? $middleware : [$middleware];
         self::$globalMiddleware = array_merge(self::$globalMiddleware, $middleware);
+    }
+
+    /**
+     * Register a named middleware group
+     *
+     * Usage:
+     *   Router::middlewareGroup('web', [CsrfMiddleware::class, SessionMiddleware::class]);
+     *   Router::group(['middleware' => 'web'], function () { ... });
+     */
+    public static function middlewareGroup(string $name, array $middleware): void
+    {
+        self::$middlewareGroups[$name] = $middleware;
+    }
+
+    /**
+     * Register a middleware alias (shorthand name for a class)
+     *
+     * Usage:
+     *   Router::middlewareAlias('auth', AuthMiddleware::class);
+     *   Route::get('/profile', ...)->middleware('auth');
+     */
+    public static function middlewareAlias(string $alias, string $middlewareClass): void
+    {
+        self::$middlewareAliases[$alias] = $middlewareClass;
+    }
+
+    /**
+     * Resolve middleware names — expand groups and aliases to class names
+     */
+    protected static function resolveMiddleware(array $middleware): array
+    {
+        $resolved = [];
+
+        foreach ($middleware as $item) {
+            // Strip parameters for resolution lookup
+            $name = is_string($item) && str_contains($item, ':') ? explode(':', $item, 2)[0] : $item;
+            $params = is_string($item) && str_contains($item, ':') ? ':' . explode(':', $item, 2)[1] : '';
+
+            // Check if it's a group name
+            if (is_string($name) && isset(self::$middlewareGroups[$name])) {
+                // Recursively resolve the group (groups can't have params)
+                $resolved = array_merge($resolved, self::resolveMiddleware(self::$middlewareGroups[$name]));
+                continue;
+            }
+
+            // Check if it's an alias
+            if (is_string($name) && isset(self::$middlewareAliases[$name])) {
+                $resolved[] = self::$middlewareAliases[$name] . $params;
+                continue;
+            }
+
+            // Otherwise it's a class name (pass through)
+            $resolved[] = $item;
+        }
+
+        return array_unique($resolved);
     }
 
     public static function resource(string $name, string $controller): void
@@ -223,9 +281,10 @@ class Router
 
     protected function runRouteWithMiddleware(Route $route, Request $request): Response
     {
-        // Merge global middleware with route middleware
-        // Global middleware runs first, then route middleware
-        $middleware = array_merge(self::$globalMiddleware, $route->getMiddleware());
+        // Merge global middleware with route middleware, then resolve groups/aliases
+        $middleware = self::resolveMiddleware(
+            array_merge(self::$globalMiddleware, $route->getMiddleware())
+        );
 
         if (empty($middleware)) {
             return $route->run($request);

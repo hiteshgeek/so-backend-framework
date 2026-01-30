@@ -33,12 +33,14 @@ class QueryBuilder
 
     public function select(...$columns): self
     {
-        $this->columns = $columns;
+        $this->columns = array_map(fn($col) => $this->sanitizeColumn($col), $columns);
         return $this;
     }
 
     public function where(string $column, string $operator, $value): self
     {
+        $column = $this->sanitizeColumn($column);
+        $this->validateOperator($operator);
         $this->wheres[] = ['type' => 'basic', 'column' => $column, 'operator' => $operator, 'value' => $value, 'boolean' => 'and'];
         $this->bindings[] = $value;
         return $this;
@@ -46,6 +48,8 @@ class QueryBuilder
 
     public function orWhere(string $column, string $operator, $value): self
     {
+        $column = $this->sanitizeColumn($column);
+        $this->validateOperator($operator);
         $this->wheres[] = ['type' => 'basic', 'column' => $column, 'operator' => $operator, 'value' => $value, 'boolean' => 'or'];
         $this->bindings[] = $value;
         return $this;
@@ -53,6 +57,7 @@ class QueryBuilder
 
     public function whereIn(string $column, array $values, string $boolean = 'and'): self
     {
+        $column = $this->sanitizeColumn($column);
         if (empty($values)) {
             // No values means no matches - add impossible condition
             $this->wheres[] = ['type' => 'raw', 'sql' => '1 = 0', 'boolean' => $boolean];
@@ -66,6 +71,7 @@ class QueryBuilder
 
     public function whereNotIn(string $column, array $values, string $boolean = 'and'): self
     {
+        $column = $this->sanitizeColumn($column);
         if (empty($values)) {
             return $this; // No exclusions needed
         }
@@ -77,18 +83,21 @@ class QueryBuilder
 
     public function whereNull(string $column, string $boolean = 'and'): self
     {
+        $column = $this->sanitizeColumn($column);
         $this->wheres[] = ['type' => 'null', 'column' => $column, 'boolean' => $boolean];
         return $this;
     }
 
     public function whereNotNull(string $column, string $boolean = 'and'): self
     {
+        $column = $this->sanitizeColumn($column);
         $this->wheres[] = ['type' => 'not_null', 'column' => $column, 'boolean' => $boolean];
         return $this;
     }
 
     public function whereBetween(string $column, $min, $max, string $boolean = 'and'): self
     {
+        $column = $this->sanitizeColumn($column);
         $this->wheres[] = ['type' => 'between', 'column' => $column, 'boolean' => $boolean];
         $this->bindings[] = $min;
         $this->bindings[] = $max;
@@ -104,6 +113,10 @@ class QueryBuilder
 
     public function join(string $table, string $first, string $operator, string $second, string $type = 'inner'): self
     {
+        $this->sanitizeColumn($table);
+        $first = $this->sanitizeColumn($first);
+        $this->validateOperator($operator);
+        $second = $this->sanitizeColumn($second);
         $this->joins[] = [
             'type' => strtoupper($type),
             'table' => $table,
@@ -126,12 +139,15 @@ class QueryBuilder
 
     public function groupBy(...$columns): self
     {
-        $this->groups = array_merge($this->groups, $columns);
+        $sanitized = array_map(fn($col) => $this->sanitizeColumn($col), $columns);
+        $this->groups = array_merge($this->groups, $sanitized);
         return $this;
     }
 
     public function having(string $column, string $operator, $value): self
     {
+        $column = $this->sanitizeColumn($column);
+        $this->validateOperator($operator);
         $this->havings[] = ['column' => $column, 'operator' => $operator, 'boolean' => 'and'];
         $this->havingBindings[] = $value;
         return $this;
@@ -139,7 +155,12 @@ class QueryBuilder
 
     public function orderBy(string $column, string $direction = 'ASC'): self
     {
-        $this->orders[] = ['column' => $column, 'direction' => strtoupper($direction)];
+        $column = $this->sanitizeColumn($column);
+        $direction = strtoupper($direction);
+        if (!in_array($direction, ['ASC', 'DESC'], true)) {
+            throw new \InvalidArgumentException("Invalid order direction: {$direction}");
+        }
+        $this->orders[] = ['column' => $column, 'direction' => $direction];
         return $this;
     }
 
@@ -313,7 +334,8 @@ class QueryBuilder
 
     public function insert(array $data): bool
     {
-        $columns = implode(', ', array_keys($data));
+        $sanitizedKeys = array_map(fn($col) => $this->sanitizeColumn($col), array_keys($data));
+        $columns = implode(', ', $sanitizedKeys);
         $placeholders = implode(', ', array_fill(0, count($data), '?'));
 
         $sql = "INSERT INTO {$this->table} ({$columns}) VALUES ({$placeholders})";
@@ -327,6 +349,7 @@ class QueryBuilder
         $bindings = [];
 
         foreach ($data as $column => $value) {
+            $column = $this->sanitizeColumn($column);
             $sets[] = "{$column} = ?";
             $bindings[] = $value;
         }
@@ -474,8 +497,13 @@ class QueryBuilder
      */
     protected function sanitizeColumn(string $column): string
     {
-        // Allow * for count(*)
+        // Allow * for count(*) and table.*
         if ($column === '*') {
+            return $column;
+        }
+
+        // Allow table.* format (e.g. users.*)
+        if (preg_match('/^[a-zA-Z_][a-zA-Z0-9_]*\.\*$/', $column)) {
             return $column;
         }
 
@@ -486,5 +514,16 @@ class QueryBuilder
         }
 
         return $column;
+    }
+
+    /**
+     * Validate a comparison operator to prevent SQL injection
+     */
+    protected function validateOperator(string $operator): void
+    {
+        $valid = ['=', '<', '>', '<=', '>=', '<>', '!=', 'LIKE', 'like', 'NOT LIKE', 'not like', 'IN', 'in', 'NOT IN', 'not in'];
+        if (!in_array($operator, $valid, true)) {
+            throw new \InvalidArgumentException("Invalid operator: {$operator}");
+        }
     }
 }

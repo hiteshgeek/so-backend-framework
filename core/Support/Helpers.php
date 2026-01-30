@@ -577,6 +577,41 @@ if (!function_exists('str_ends_with')) {
     }
 }
 
+if (!function_exists('logger')) {
+    /**
+     * Get logger instance or log a debug message
+     *
+     * @param string|null $message If provided, logs at debug level
+     * @param array $context
+     * @return \Core\Logging\Logger|null
+     */
+    function logger(?string $message = null, array $context = []): ?\Core\Logging\Logger
+    {
+        $log = app('logger');
+
+        if ($message !== null) {
+            $log->debug($message, $context);
+            return null;
+        }
+
+        return $log;
+    }
+}
+
+if (!function_exists('event')) {
+    /**
+     * Dispatch an event
+     *
+     * @param \Core\Events\Event|string $event
+     * @param array $payload
+     * @return array Listener responses
+     */
+    function event(\Core\Events\Event|string $event, array $payload = []): array
+    {
+        return app('events')->dispatch($event, $payload);
+    }
+}
+
 if (!function_exists('validate')) {
     /**
      * Validate data against rules

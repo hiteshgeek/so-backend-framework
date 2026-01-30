@@ -60,4 +60,23 @@ return [
         // Store rate limit data in cache
         'cache_prefix' => 'rate_limit:',
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Login Lockout (Brute Force Protection)
+    |--------------------------------------------------------------------------
+    |
+    | Configure account lockout after repeated failed login attempts.
+    | Uses the cache system to track attempts per IP + username combination.
+    */
+    'lockout' => [
+        // Enable/disable login lockout globally
+        'enabled' => env('LOGIN_LOCKOUT_ENABLED', true),
+
+        // Maximum failed login attempts before lockout
+        'max_attempts' => env('LOGIN_MAX_ATTEMPTS', 5),
+
+        // Lockout duration in minutes (attempts reset after this period)
+        'decay_minutes' => env('LOGIN_DECAY_MINUTES', 15),
+    ],
 ];

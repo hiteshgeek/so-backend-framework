@@ -79,6 +79,19 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Session Payload Encryption
+    |--------------------------------------------------------------------------
+    |
+    | When enabled, session payloads are encrypted with AES-256-CBC and
+    | signed with HMAC-SHA256 before being stored in the database.
+    | This protects session data at rest and detects tampering.
+    | Requires APP_KEY to be set in the environment.
+    |
+    */
+    'encrypt' => env('SESSION_ENCRYPT', false),
+
+    /*
+    |--------------------------------------------------------------------------
     | Session Garbage Collection
     |--------------------------------------------------------------------------
     |

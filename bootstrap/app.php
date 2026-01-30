@@ -45,6 +45,13 @@ $app->singleton('db', function ($app) {
     };
 });
 
+$app->singleton('encrypter', function ($app) {
+    $config = $app->make('config');
+    $key = $config->get('app.key', '');
+
+    return new \Core\Security\Encrypter($key);
+});
+
 $app->singleton('session', function ($app) {
     return new Session();
 });
@@ -67,6 +74,15 @@ $app->singleton('assets', function ($app) {
         $config->get('app.asset_url', ''),
         $config->get('app.asset_versioning', true)
     );
+});
+
+$app->singleton('logger', function ($app) {
+    $config = $app->make('config')->get('logging', []);
+    return new \Core\Logging\Logger($config);
+});
+
+$app->singleton('events', function ($app) {
+    return new \Core\Events\EventDispatcher();
 });
 
 // Register service providers from config

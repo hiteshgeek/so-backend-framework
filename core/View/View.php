@@ -11,6 +11,10 @@ class View
 {
     protected string $viewsPath;
     protected array $shared = [];
+    protected array $sections = [];
+    protected array $sectionStack = [];
+    protected ?string $currentLayout = null;
+    protected array $layoutData = [];
 
     public function __construct(string $viewsPath)
     {
@@ -18,7 +22,7 @@ class View
     }
 
     /**
-     * Render a template
+     * Render a template with layout inheritance support
      *
      * @param string $template Template name (dot notation supported)
      * @param array $data Data to pass to the template
@@ -26,9 +30,7 @@ class View
      */
     public function render(string $template, array $data = []): string
     {
-        // Convert dot notation to directory separator
-        $template = str_replace('.', DIRECTORY_SEPARATOR, $template);
-        $viewPath = $this->viewsPath . DIRECTORY_SEPARATOR . $template . '.php';
+        $viewPath = $this->resolveViewPath($template);
 
         if (!file_exists($viewPath)) {
             throw new \RuntimeException("View not found: {$template}");
@@ -37,10 +39,40 @@ class View
         // Merge shared data with view data (view data takes precedence)
         $data = array_merge($this->shared, $data);
 
-        // Extract data to local scope
+        // Reset layout state for this render
+        $this->currentLayout = null;
+        $this->sections = [];
+        $this->sectionStack = [];
+
+        // Render the child view (it may call extends() to set a layout)
+        $content = $this->renderViewFile($viewPath, $data);
+
+        // If child called extends(), render the layout with sections
+        if ($this->currentLayout !== null) {
+            $layoutPath = $this->resolveViewPath($this->currentLayout);
+            if (!file_exists($layoutPath)) {
+                throw new \RuntimeException("Layout not found: {$this->currentLayout}");
+            }
+            // Store child body content as 'content' section if not defined
+            if (!isset($this->sections['content'])) {
+                $this->sections['content'] = $content;
+            }
+            $content = $this->renderViewFile($layoutPath, array_merge($data, $this->layoutData));
+        }
+
+        return $content;
+    }
+
+    /**
+     * Render a PHP view file and capture output
+     */
+    protected function renderViewFile(string $viewPath, array $data): string
+    {
         extract($data);
 
-        // Capture output
+        // Make $view available in templates for calling section/yield/extends
+        $view = $this;
+
         ob_start();
         try {
             require $viewPath;
@@ -49,6 +81,80 @@ class View
             ob_end_clean();
             throw $e;
         }
+    }
+
+    /**
+     * Set the layout this view extends
+     *
+     * Call from a child view: $view->extends('layouts.app')
+     */
+    public function extends(string $layout, array $data = []): void
+    {
+        $this->currentLayout = $layout;
+        $this->layoutData = $data;
+    }
+
+    /**
+     * Start a named section
+     *
+     * Call from a child view: $view->section('title')
+     */
+    public function section(string $name): void
+    {
+        $this->sectionStack[] = $name;
+        ob_start();
+    }
+
+    /**
+     * End the current section
+     */
+    public function endSection(): void
+    {
+        if (empty($this->sectionStack)) {
+            throw new \RuntimeException('Cannot end a section without starting one.');
+        }
+
+        $name = array_pop($this->sectionStack);
+        $this->sections[$name] = ob_get_clean();
+    }
+
+    /**
+     * Yield a section's content in a layout
+     *
+     * Call from layout: <?= $view->yield('title', 'Default Title') ?>
+     */
+    public function yield(string $name, string $default = ''): string
+    {
+        return $this->sections[$name] ?? $default;
+    }
+
+    /**
+     * Include a partial view
+     *
+     * Call from any view: <?php $view->include('partials.nav', ['active' => 'home']) ?>
+     */
+    public function include(string $template, array $data = []): void
+    {
+        $viewPath = $this->resolveViewPath($template);
+
+        if (!file_exists($viewPath)) {
+            throw new \RuntimeException("Partial not found: {$template}");
+        }
+
+        $data = array_merge($this->shared, $data);
+        $data['view'] = $this;
+        extract($data);
+
+        require $viewPath;
+    }
+
+    /**
+     * Resolve a dot-notation template name to a file path
+     */
+    protected function resolveViewPath(string $template): string
+    {
+        $template = str_replace('.', DIRECTORY_SEPARATOR, $template);
+        return $this->viewsPath . DIRECTORY_SEPARATOR . $template . '.php';
     }
 
     /**

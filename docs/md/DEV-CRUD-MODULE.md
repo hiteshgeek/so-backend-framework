@@ -1,4 +1,4 @@
-# Building a CRUD Module -- Step-by-Step Tutorial
+# Building a CRUD Module
 
 This tutorial walks you through building a complete **Articles** module with Create, Read, Update, and Delete functionality using the SO Backend Framework.
 
@@ -29,14 +29,14 @@ By the end of this tutorial you will have a fully working Articles module with:
 
 ### Files You Will Create
 
-| File | Purpose |
-|------|---------|
-| `app/Models/Article.php` | Article model |
-| `routes/web/articles.php` | Route definitions |
+| File                                    | Purpose                      |
+| --------------------------------------- | ---------------------------- |
+| `app/Models/Article.php`                | Article model                |
+| `routes/web/articles.php`               | Route definitions            |
 | `app/Controllers/ArticleController.php` | Controller with CRUD methods |
-| `resources/views/articles/index.php` | List view |
-| `resources/views/articles/create.php` | Create form view |
-| `resources/views/articles/edit.php` | Edit form view |
+| `resources/views/articles/index.php`    | List view                    |
+| `resources/views/articles/create.php`   | Create form view             |
+| `resources/views/articles/edit.php`     | Edit form view               |
 
 ### Database Table
 
@@ -126,15 +126,15 @@ Router::group(['middleware' => [CsrfMiddleware::class]], function () {
 
 This one line generates:
 
-| Method | URI | Controller Method | Purpose |
-|--------|-----|-------------------|---------|
-| GET | `/articles` | `index` | List all articles |
-| GET | `/articles/create` | `create` | Show create form |
-| POST | `/articles` | `store` | Save new article |
-| GET | `/articles/{id}` | `show` | Show single article |
-| GET | `/articles/{id}/edit` | `edit` | Show edit form |
-| PUT | `/articles/{id}` | `update` | Update article |
-| DELETE | `/articles/{id}` | `destroy` | Delete article |
+| Method | URI                   | Controller Method | Purpose             |
+| ------ | --------------------- | ----------------- | ------------------- |
+| GET    | `/articles`           | `index`           | List all articles   |
+| GET    | `/articles/create`    | `create`          | Show create form    |
+| POST   | `/articles`           | `store`           | Save new article    |
+| GET    | `/articles/{id}`      | `show`            | Show single article |
+| GET    | `/articles/{id}/edit` | `edit`            | Show edit form      |
+| PUT    | `/articles/{id}`      | `update`          | Update article      |
+| DELETE | `/articles/{id}`      | `destroy`         | Delete article      |
 
 ### Option B: Manual Routes
 
@@ -335,14 +335,14 @@ class ArticleController
 
 ### Explanation
 
-| Method | HTTP | What It Does |
-|--------|------|-------------|
-| `index` | GET | Fetches all articles with `Article::all()` and passes them to the list view. |
-| `create` | GET | Renders the create form. Passes `errors` and `old` from the session so the form can re-populate after a validation failure. |
-| `store` | POST | Validates the request. On failure, redirects back with errors and old input. On success, creates the article and redirects to the list with a success message. |
-| `edit` | GET | Finds the article by ID. If not found, redirects with an error. Otherwise renders the edit form with the article data. |
-| `update` | PUT | Validates the request (note `unique:articles,slug,' . $id` to exclude the current record). Updates each field and calls `$article->save()`. |
-| `destroy` | DELETE | Finds the article, stores its title for the flash message, calls `$article->delete()`, and redirects. |
+| Method    | HTTP   | What It Does                                                                                                                                                   |
+| --------- | ------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `index`   | GET    | Fetches all articles with `Article::all()` and passes them to the list view.                                                                                   |
+| `create`  | GET    | Renders the create form. Passes `errors` and `old` from the session so the form can re-populate after a validation failure.                                    |
+| `store`   | POST   | Validates the request. On failure, redirects back with errors and old input. On success, creates the article and redirects to the list with a success message. |
+| `edit`    | GET    | Finds the article by ID. If not found, redirects with an error. Otherwise renders the edit form with the article data.                                         |
+| `update`  | PUT    | Validates the request (note `unique:articles,slug,' . $id` to exclude the current record). Updates each field and calls `$article->save()`.                    |
+| `destroy` | DELETE | Finds the article, stores its title for the flash message, calls `$article->delete()`, and redirects.                                                          |
 
 ---
 
@@ -616,15 +616,15 @@ Router::group(['middleware' => [CsrfMiddleware::class]], function () {
 
 ```html
 <form method="POST" action="<?= url('/articles') ?>">
-    <?= csrf_field() ?>
-    <!-- form fields -->
+  <?= csrf_field() ?>
+  <!-- form fields -->
 </form>
 ```
 
 `csrf_field()` outputs a hidden input like:
 
 ```html
-<input type="hidden" name="_token" value="a1b2c3d4e5...">
+<input type="hidden" name="_token" value="a1b2c3d4e5..." />
 ```
 
 The `CsrfMiddleware` automatically verifies this token on every POST, PUT, and DELETE request. If the token is missing or invalid, the request is rejected with a 419 error.
@@ -636,16 +636,16 @@ HTML forms only support GET and POST. To send PUT or DELETE requests, add a hidd
 ```html
 <!-- For UPDATE (PUT) -->
 <form method="POST" action="<?= url('/articles/' . $article->id) ?>">
-    <?= csrf_field() ?>
-    <input type="hidden" name="_method" value="PUT">
-    <!-- form fields -->
+  <?= csrf_field() ?>
+  <input type="hidden" name="_method" value="PUT" />
+  <!-- form fields -->
 </form>
 
 <!-- For DELETE -->
 <form method="POST" action="<?= url('/articles/' . $article->id) ?>">
-    <?= csrf_field() ?>
-    <input type="hidden" name="_method" value="DELETE">
-    <button type="submit">Delete</button>
+  <?= csrf_field() ?>
+  <input type="hidden" name="_method" value="DELETE" />
+  <button type="submit">Delete</button>
 </form>
 ```
 
@@ -809,18 +809,18 @@ resources/
 
 ### Pattern Recap
 
-| Concept | How It Works |
-|---------|-------------|
-| **Model** | Extend `Core\Model\Model`, set `$table` and `$fillable` |
-| **Routes** | Use `Router::resource()` or define each route manually in `routes/web/` |
-| **Controller** | Return `Response::view()` for pages, `redirect()` for actions |
-| **Views** | PHP files in `resources/views/`, use `e()` for output escaping |
-| **Validation** | `Validator::make($request->all(), [...])`, check `$validator->fails()` |
-| **CSRF** | `CsrfMiddleware` on route group, `csrf_field()` in every form |
-| **Method Spoofing** | `<input type="hidden" name="_method" value="PUT">` for PUT/DELETE |
-| **Flash Messages** | `redirect()->with('success', '...')` and `session('success')` in views |
-| **Old Input** | `redirect()->withInput()` and `old('field', $default)` in views |
-| **Unique on Update** | `'unique:table,column,' . $id` to exclude the current record |
+| Concept              | How It Works                                                            |
+| -------------------- | ----------------------------------------------------------------------- |
+| **Model**            | Extend `Core\Model\Model`, set `$table` and `$fillable`                 |
+| **Routes**           | Use `Router::resource()` or define each route manually in `routes/web/` |
+| **Controller**       | Return `Response::view()` for pages, `redirect()` for actions           |
+| **Views**            | PHP files in `resources/views/`, use `e()` for output escaping          |
+| **Validation**       | `Validator::make($request->all(), [...])`, check `$validator->fails()`  |
+| **CSRF**             | `CsrfMiddleware` on route group, `csrf_field()` in every form           |
+| **Method Spoofing**  | `<input type="hidden" name="_method" value="PUT">` for PUT/DELETE       |
+| **Flash Messages**   | `redirect()->with('success', '...')` and `session('success')` in views  |
+| **Old Input**        | `redirect()->withInput()` and `old('field', $default)` in views         |
+| **Unique on Update** | `'unique:table,column,' . $id` to exclude the current record            |
 
 ### Adapting This Pattern
 

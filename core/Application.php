@@ -6,7 +6,11 @@ use Core\Container\Container;
 use Core\Container\ServiceProvider;
 use Core\Http\Request;
 use Core\Http\Response;
+use Core\Http\JsonResponse;
 use Core\Exceptions\HttpException;
+use Core\Exceptions\AuthenticationException;
+use Core\Exceptions\AuthorizationException;
+use Core\Validation\ValidationException;
 
 /**
  * Application Class
@@ -192,6 +196,9 @@ class Application extends Container
     public function handleWebRequest(Request $request): Response
     {
         try {
+            // Store request for isApiRequest check
+            $this->instance('request', $request);
+
             // Get router
             $router = $this->make('router');
 
@@ -204,23 +211,92 @@ class Application extends Container
             }
 
             return $response;
+        } catch (ValidationException $e) {
+            return $this->handleValidationException($e, $request);
+        } catch (AuthenticationException $e) {
+            return $this->handleAuthenticationException($e, $request);
+        } catch (AuthorizationException $e) {
+            return $this->handleAuthorizationException($e, $request);
         } catch (HttpException $e) {
-            return $this->handleHttpException($e);
+            return $this->handleHttpException($e, $request);
         } catch (\Exception $e) {
-            return $this->handleException($e);
+            return $this->handleException($e, $request);
         }
     }
 
     /**
-     * Handle HTTP exception
-     *
-     * @param HttpException $e
-     * @return Response
+     * Handle validation exception
      */
-    protected function handleHttpException(HttpException $e): Response
+    protected function handleValidationException(ValidationException $e, Request $request): Response
+    {
+        $this->logException($e, 'notice');
+
+        if ($this->expectsJson($request)) {
+            return new JsonResponse([
+                'message' => $e->getMessage(),
+                'errors' => $e->getErrors(),
+            ], 422);
+        }
+
+        // For web requests, redirect back with errors
+        $referer = $_SERVER['HTTP_REFERER'] ?? '/';
+        $session = $this->make('session');
+        $session->flash('errors', $e->getErrors());
+        $session->flash('old', $request->all());
+
+        return new Response('', 302, ['Location' => $referer]);
+    }
+
+    /**
+     * Handle authentication exception
+     */
+    protected function handleAuthenticationException(AuthenticationException $e, Request $request): Response
+    {
+        $this->logException($e, 'warning');
+
+        if ($this->expectsJson($request)) {
+            return new JsonResponse([
+                'message' => $e->getMessage(),
+            ], 401);
+        }
+
+        return new Response('', 302, ['Location' => $e->getRedirectTo()]);
+    }
+
+    /**
+     * Handle authorization exception
+     */
+    protected function handleAuthorizationException(AuthorizationException $e, Request $request): Response
+    {
+        $this->logException($e, 'warning');
+
+        if ($this->expectsJson($request)) {
+            return new JsonResponse([
+                'message' => $e->getMessage(),
+            ], 403);
+        }
+
+        return $this->handleHttpException($e, $request);
+    }
+
+    /**
+     * Handle HTTP exception
+     */
+    protected function handleHttpException(HttpException $e, ?Request $request = null): Response
     {
         $code = $e->getCode();
         $message = $e->getMessage();
+
+        // Log HTTP errors (4xx as warning, 5xx as error)
+        $this->logException($e, $code >= 500 ? 'error' : 'warning');
+
+        // JSON response for API requests
+        if ($request && $this->expectsJson($request)) {
+            return new JsonResponse([
+                'message' => $message ?: 'HTTP Error',
+                'status' => $code,
+            ], $code);
+        }
 
         // Check if error view exists
         $viewPath = $this->basePath("resources/views/errors/{$code}.php");
@@ -243,12 +319,24 @@ class Application extends Container
 
     /**
      * Handle general exception
-     *
-     * @param \Exception $e
-     * @return Response
      */
-    protected function handleException(\Exception $e): Response
+    protected function handleException(\Exception $e, ?Request $request = null): Response
     {
+        // Always log unhandled exceptions
+        $this->logException($e, 'error');
+
+        // JSON response for API requests
+        if ($request && $this->expectsJson($request)) {
+            $data = ['message' => 'Internal Server Error', 'status' => 500];
+            if ($this->make('config')->get('app.debug')) {
+                $data['exception'] = get_class($e);
+                $data['message'] = $e->getMessage();
+                $data['file'] = $e->getFile() . ':' . $e->getLine();
+                $data['trace'] = array_slice(explode("\n", $e->getTraceAsString()), 0, 10);
+            }
+            return new JsonResponse($data, 500);
+        }
+
         // In debug mode, show full error
         if ($this->make('config')->get('app.debug')) {
             $content = $this->formatDebugError($e);
@@ -260,6 +348,23 @@ class Application extends Container
             "<html><body><h1>Error 500</h1><p>Internal Server Error</p></body></html>",
             500
         );
+    }
+
+    /**
+     * Check if the request expects a JSON response
+     */
+    protected function expectsJson(Request $request): bool
+    {
+        // Check if Request has the method
+        if (method_exists($request, 'expectsJson')) {
+            return $request->expectsJson();
+        }
+
+        // Fallback: check URI prefix or Accept header
+        $uri = $_SERVER['REQUEST_URI'] ?? '';
+        $accept = $_SERVER['HTTP_ACCEPT'] ?? '';
+
+        return str_starts_with($uri, '/api/') || str_contains($accept, 'application/json');
     }
 
     /**
@@ -301,6 +406,40 @@ class Application extends Container
 </body>
 </html>
 HTML;
+    }
+
+    /**
+     * Log an exception using the logger service
+     *
+     * @param \Exception $e
+     * @param string $level
+     * @return void
+     */
+    protected function logException(\Exception $e, string $level = 'error'): void
+    {
+        try {
+            $logger = $this->make('logger');
+            $logger->log($level, $e->getMessage(), [
+                'exception' => $e,
+                'url' => $_SERVER['REQUEST_URI'] ?? 'cli',
+                'method' => $_SERVER['REQUEST_METHOD'] ?? 'cli',
+            ]);
+        } catch (\Exception $loggingException) {
+            // If logger fails, write directly to file as last resort
+            $msg = sprintf(
+                "[%s] %s: %s in %s:%d\n",
+                date('Y-m-d H:i:s'),
+                strtoupper($level),
+                $e->getMessage(),
+                $e->getFile(),
+                $e->getLine()
+            );
+            @file_put_contents(
+                $this->storagePath('logs/emergency.log'),
+                $msg,
+                FILE_APPEND | LOCK_EX
+            );
+        }
     }
 
     /**
