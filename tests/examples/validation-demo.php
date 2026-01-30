@@ -6,8 +6,8 @@
  * Practical examples demonstrating validation in real-world scenarios.
  */
 
-require_once __DIR__ . '/../vendor/autoload.php';
-require_once __DIR__ . '/../bootstrap/app.php';
+require_once __DIR__ . '/../../vendor/autoload.php';
+require_once __DIR__ . '/../../bootstrap/app.php';
 
 use Core\Validation\Validator;
 use Core\Validation\ValidationException;

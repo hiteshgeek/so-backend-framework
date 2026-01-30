@@ -15,6 +15,16 @@ class Session
             return;
         }
 
+        // Don't start session if headers already sent (e.g., in tests with output)
+        if (headers_sent()) {
+            // In test/CLI environment, ensure $_SESSION is available
+            if (!isset($_SESSION)) {
+                $_SESSION = [];
+            }
+            $this->started = true;
+            return;
+        }
+
         session_start();
         $this->started = true;
     }
@@ -68,13 +78,17 @@ class Session
 
     public function regenerate(): void
     {
-        session_regenerate_id(true);
+        if (session_status() === PHP_SESSION_ACTIVE && !headers_sent()) {
+            session_regenerate_id(true);
+        }
     }
 
     public function invalidate(): void
     {
         $this->flush();
-        session_destroy();
+        if (session_status() === PHP_SESSION_ACTIVE) {
+            session_destroy();
+        }
         $this->started = false;
     }
 

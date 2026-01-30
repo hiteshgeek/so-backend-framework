@@ -6,9 +6,9 @@
  * Tests CSRF token generation, verification, and middleware functionality.
  */
 
-require_once __DIR__ . '/../../vendor/autoload.php';
-require_once __DIR__ . '/../../bootstrap/app.php';
-require_once __DIR__ . '/../TestHelper.php';
+require_once __DIR__ . '/../../../vendor/autoload.php';
+require_once __DIR__ . '/../../../bootstrap/app.php';
+require_once __DIR__ . '/../../TestHelper.php';
 
 TestHelper::header('CSRF Protection Test');
 echo "\n";

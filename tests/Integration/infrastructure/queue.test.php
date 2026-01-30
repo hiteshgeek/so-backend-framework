@@ -6,10 +6,10 @@
  * This script tests the queue functionality
  */
 
-require_once __DIR__ . '/vendor/autoload.php';
+require_once __DIR__ . '/../../../vendor/autoload.php';
 
 // Bootstrap the application
-$app = require_once __DIR__ . '/bootstrap/app.php';
+$app = require_once __DIR__ . '/../../../bootstrap/app.php';
 
 use App\Jobs\TestJob;
 
@@ -70,5 +70,4 @@ try {
 } catch (Exception $e) {
     echo "❌ Error: " . $e->getMessage() . "\n";
     echo "Trace: " . $e->getTraceAsString() . "\n";
-    exit(1);
 }

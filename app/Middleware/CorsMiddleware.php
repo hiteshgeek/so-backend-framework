@@ -45,7 +45,7 @@ class CorsMiddleware implements MiddlewareInterface
      */
     protected function handlePreflightRequest(Request $request): Response
     {
-        $response = new Response('', 200);
+        $response = new Response('', 204); // 204 No Content for preflight
 
         return $this->addCorsHeaders($request, $response);
     }

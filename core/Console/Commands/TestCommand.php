@@ -37,23 +37,23 @@ class TestCommand extends Command
      */
     protected array $testSuites = [
         'security' => [
-            'csrf' => ['name' => 'CSRF Protection', 'file' => 'security/csrf-protection.test.php'],
-            'jwt' => ['name' => 'JWT Authentication', 'file' => 'security/jwt-auth.test.php'],
-            'rate-limit' => ['name' => 'Rate Limiting', 'file' => 'security/rate-limit.test.php'],
-            'xss' => ['name' => 'XSS Prevention', 'file' => 'security/xss-prevention.test.php'],
-            'sanitizer' => ['name' => 'Sanitizer Bypass Prevention', 'file' => 'security/sanitizer-bypass.test.php'],
+            'csrf' => ['name' => 'CSRF Protection', 'file' => 'Integration/security/csrf-protection.test.php'],
+            'jwt' => ['name' => 'JWT Authentication', 'file' => 'Integration/security/jwt-auth.test.php'],
+            'rate-limit' => ['name' => 'Rate Limiting', 'file' => 'Integration/security/rate-limit.test.php'],
+            'xss' => ['name' => 'XSS Prevention', 'file' => 'Integration/security/xss-prevention.test.php'],
+            'sanitizer' => ['name' => 'Sanitizer Bypass Prevention', 'file' => 'Integration/security/sanitizer-bypass.test.php'],
         ],
         'infrastructure' => [
-            'cache' => ['name' => 'Cache and Sessions', 'file' => 'infrastructure/cache-sessions.test.php'],
-            'queue' => ['name' => 'Queue System', 'file' => 'infrastructure/queue.test.php'],
-            'notifications' => ['name' => 'Notification System', 'file' => 'infrastructure/notifications.test.php'],
-            'activity' => ['name' => 'Activity Logging', 'file' => 'infrastructure/activity-logging.test.php'],
+            'cache' => ['name' => 'Cache and Sessions', 'file' => 'Integration/infrastructure/cache-sessions.test.php'],
+            'queue' => ['name' => 'Queue System', 'file' => 'Integration/infrastructure/queue.test.php'],
+            'notifications' => ['name' => 'Notification System', 'file' => 'Integration/infrastructure/notifications.test.php'],
+            'activity' => ['name' => 'Activity Logging', 'file' => 'Integration/infrastructure/activity-logging.test.php'],
         ],
         'application' => [
-            'validation' => ['name' => 'Validation System', 'file' => 'application/validation.test.php'],
-            'middleware' => ['name' => 'Middleware System', 'file' => 'application/middleware.test.php'],
-            'api' => ['name' => 'Internal API Layer', 'file' => 'application/api-layer.test.php'],
-            'models' => ['name' => 'Model Enhancements', 'file' => 'application/model-relations.test.php'],
+            'validation' => ['name' => 'Validation System', 'file' => 'Integration/application/validation.test.php'],
+            'middleware' => ['name' => 'Middleware System', 'file' => 'Integration/application/middleware.test.php'],
+            'api' => ['name' => 'Internal API Layer', 'file' => 'Integration/application/api-layer.test.php'],
+            'models' => ['name' => 'Model Enhancements', 'file' => 'Integration/application/model-relations.test.php'],
         ],
     ];
 

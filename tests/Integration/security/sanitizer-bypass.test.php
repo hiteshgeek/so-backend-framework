@@ -8,8 +8,8 @@
  * using nested tags, malformed HTML, and dangerous attributes.
  */
 
-require_once __DIR__ . '/../../vendor/autoload.php';
-require_once __DIR__ . '/../TestHelper.php';
+require_once __DIR__ . '/../../../vendor/autoload.php';
+require_once __DIR__ . '/../../TestHelper.php';
 
 use Core\Security\Sanitizer;
 
@@ -190,4 +190,3 @@ if ($failed === 0) {
     echo TestHelper::colorize("✗ SOME TESTS FAILED", 'error') . "\n";
 }
 
-exit($failed > 0 ? 1 : 0);

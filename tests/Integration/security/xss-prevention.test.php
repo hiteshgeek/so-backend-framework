@@ -6,8 +6,8 @@
  * Tests Sanitizer class and XSS prevention utilities.
  */
 
-require_once __DIR__ . '/../../vendor/autoload.php';
-require_once __DIR__ . '/../../bootstrap/app.php';
+require_once __DIR__ . '/../../../vendor/autoload.php';
+require_once __DIR__ . '/../../../bootstrap/app.php';
 
 echo "=== XSS Prevention Test ===\n\n";
 

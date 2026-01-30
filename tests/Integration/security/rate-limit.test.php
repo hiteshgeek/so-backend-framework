@@ -6,8 +6,8 @@
  * Tests RateLimiter and ThrottleMiddleware functionality.
  */
 
-require_once __DIR__ . '/../../vendor/autoload.php';
-require_once __DIR__ . '/../../bootstrap/app.php';
+require_once __DIR__ . '/../../../vendor/autoload.php';
+require_once __DIR__ . '/../../../bootstrap/app.php';
 
 echo "=== Rate Limiting Test ===\n\n";
 

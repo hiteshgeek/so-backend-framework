@@ -6,8 +6,8 @@
  * Tests JWT token encoding, decoding, expiration, and middleware functionality.
  */
 
-require_once __DIR__ . '/../../vendor/autoload.php';
-require_once __DIR__ . '/../../bootstrap/app.php';
+require_once __DIR__ . '/../../../vendor/autoload.php';
+require_once __DIR__ . '/../../../bootstrap/app.php';
 
 echo "=== JWT Authentication Test ===\n\n";
 
@@ -17,7 +17,7 @@ putenv('JWT_SECRET=test_secret_key_for_jwt_testing_12345678');
 // Test 1: JWT Instance Creation
 echo "Test 1: JWT Instance Creation\n";
 try {
-    $jwt = new \Core\Security\JWT('test_secret_key', 'HS256');
+    $jwt = new \Core\Security\JWT('test_secret_key_for_jwt_testing_12345678', 'HS256');
     echo "✓ JWT instance created successfully\n";
 
     // Test factory method
@@ -32,7 +32,7 @@ echo "\n";
 // Test 2: Token Encoding
 echo "Test 2: Token Encoding\n";
 try {
-    $jwt = new \Core\Security\JWT('test_secret_key', 'HS256');
+    $jwt = new \Core\Security\JWT('test_secret_key_for_jwt_testing_12345678', 'HS256');
 
     $payload = [
         'user_id' => 123,
@@ -60,7 +60,7 @@ echo "\n";
 // Test 3: Token Decoding
 echo "Test 3: Token Decoding\n";
 try {
-    $jwt = new \Core\Security\JWT('test_secret_key', 'HS256');
+    $jwt = new \Core\Security\JWT('test_secret_key_for_jwt_testing_12345678', 'HS256');
 
     $payload = [
         'user_id' => 456,
@@ -101,7 +101,7 @@ echo "\n";
 // Test 4: Token Expiration
 echo "Test 4: Token Expiration\n";
 try {
-    $jwt = new \Core\Security\JWT('test_secret_key', 'HS256');
+    $jwt = new \Core\Security\JWT('test_secret_key_for_jwt_testing_12345678', 'HS256');
 
     // Create token that expires in -1 second (already expired)
     $payload = ['user_id' => 789];
@@ -128,7 +128,7 @@ echo "\n";
 // Test 5: Invalid Signature
 echo "Test 5: Invalid Signature\n";
 try {
-    $jwt = new \Core\Security\JWT('test_secret_key', 'HS256');
+    $jwt = new \Core\Security\JWT('test_secret_key_for_jwt_testing_12345678', 'HS256');
 
     $payload = ['user_id' => 999];
     $token = $jwt->encode($payload, 3600);
@@ -158,7 +158,7 @@ echo "\n";
 // Test 6: Invalid Token Format
 echo "Test 6: Invalid Token Format\n";
 try {
-    $jwt = new \Core\Security\JWT('test_secret_key', 'HS256');
+    $jwt = new \Core\Security\JWT('test_secret_key_for_jwt_testing_12345678', 'HS256');
 
     $invalidTokens = [
         'not.a.valid.token.too.many.parts',
@@ -204,7 +204,7 @@ echo "\n";
 // Test 8: Token Without Expiration
 echo "Test 8: Token Without Expiration\n";
 try {
-    $jwt = new \Core\Security\JWT('test_secret_key', 'HS256');
+    $jwt = new \Core\Security\JWT('test_secret_key_for_jwt_testing_12345678', 'HS256');
 
     $payload = ['user_id' => 222];
     $token = $jwt->encode($payload, null); // No TTL
@@ -229,7 +229,7 @@ echo "\n";
 // Test 9: Middleware Simulation
 echo "Test 9: Middleware Simulation\n";
 try {
-    $jwt = new \Core\Security\JWT('test_secret_key', 'HS256');
+    $jwt = new \Core\Security\JWT('test_secret_key_for_jwt_testing_12345678', 'HS256');
     $token = $jwt->encode(['user_id' => 333], 3600);
 
     // Mock request with valid token

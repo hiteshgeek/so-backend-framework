@@ -121,16 +121,9 @@ class Validator
      */
     public function validate(): array
     {
-        // Expand wildcard rules (e.g. 'items.*.name') into concrete rules
-        // (e.g. 'items.0.name', 'items.1.name'). Non-wildcard rules pass through.
-        $this->expandedRules = $this->expandWildcardRules($this->rules, $this->data);
-
-        foreach ($this->expandedRules as $field => $rules) {
-            $rulesList = is_string($rules) ? explode('|', $rules) : $rules;
-
-            foreach ($rulesList as $rule) {
-                $this->validateRule($field, $rule);
-            }
+        // Run validation if not yet executed
+        if (empty($this->expandedRules)) {
+            $this->runValidation();
         }
 
         if ($this->fails()) {
@@ -147,6 +140,11 @@ class Validator
      */
     public function fails(): bool
     {
+        // Run validation if not yet executed
+        if (empty($this->expandedRules)) {
+            $this->runValidation();
+        }
+
         return !empty($this->errors);
     }
 
@@ -158,6 +156,25 @@ class Validator
     public function passes(): bool
     {
         return !$this->fails();
+    }
+
+    /**
+     * Run validation without throwing exception
+     *
+     * @return void
+     */
+    protected function runValidation(): void
+    {
+        // Expand wildcard rules
+        $this->expandedRules = $this->expandWildcardRules($this->rules, $this->data);
+
+        foreach ($this->expandedRules as $field => $rules) {
+            $rulesList = is_string($rules) ? explode('|', $rules) : $rules;
+
+            foreach ($rulesList as $rule) {
+                $this->validateRule($field, $rule);
+            }
+        }
     }
 
     /**

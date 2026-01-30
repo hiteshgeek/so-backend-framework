@@ -10,17 +10,17 @@
  * 4. Global middleware support in Router
  */
 
-require_once __DIR__ . '/../../vendor/autoload.php';
-require_once __DIR__ . '/../../bootstrap/app.php';
+require_once __DIR__ . '/../../../vendor/autoload.php';
+require_once __DIR__ . '/../../../bootstrap/app.php';
 
 use Core\Http\Request;
 use Core\Http\Response;
 use Core\Http\JsonResponse;
 use Core\Routing\Router;
 
-// Configure JWT secret for testing
+// Configure JWT secret for testing (must be 32+ characters)
 if (!config('security.jwt.secret')) {
-    $_ENV['JWT_SECRET'] = 'test-secret-key-for-testing-purposes-only';
+    $_ENV['JWT_SECRET'] = 'test-secret-key-for-middleware-testing-32chars';
 }
 
 echo "=== Middleware System Test ===\n\n";
@@ -38,8 +38,8 @@ try {
     if (!isset($_SESSION)) {
         $_SESSION = [];
     }
-    $_SESSION['user_id'] = 1;
-    $_SESSION['user'] = ['id' => 1, 'name' => 'Test User'];
+    $_SESSION['auth_user_id'] = 1; // Auth class uses 'auth_user_id' as session key
+    // Note: Auth::user() queries database, so this test requires user ID 1 to exist
 
     // Create request
     $request = new Request([
@@ -111,18 +111,19 @@ echo "Test 3: AuthMiddleware - JWT Authentication\n";
 try {
     $totalTests++;
 
-    // Create JWT token
-    $jwt = new \Core\Security\JWT(config('security.jwt.secret', 'test-secret-key'));
+    // Create JWT token (ensure secret is 32+ characters)
+    $secret = config('security.jwt.secret', 'test-secret-key-for-middleware-testing-32chars');
+    $jwt = new \Core\Security\JWT($secret);
     $token = $jwt->encode(['user_id' => 123], 3600);
-
-    // Create request with Bearer token
-    $request = new Request([
+    // Set authorization header in server array for Request
+    $server = [
         'REQUEST_METHOD' => 'GET',
         'REQUEST_URI' => '/api/profile',
-    ], [], [], [], []);
+        'HTTP_AUTHORIZATION' => 'Bearer ' . $token,
+    ];
 
-    // Manually set authorization header (simulating HTTP_AUTHORIZATION)
-    $_SERVER['HTTP_AUTHORIZATION'] = 'Bearer ' . $token;
+    // Create request (server is 3rd parameter: query, request, server, files, cookies)
+    $request = new Request([], [], $server, [], []);
 
     $middleware = new \App\Middleware\AuthMiddleware();
 
@@ -136,13 +137,17 @@ try {
 
     $content = json_decode($response->getContent(), true);
 
-    if (isset($content['data']['message']) && $content['data']['message'] === 'Authenticated via JWT') {
+    // Check both $content['data']['message'] and $content['message'] for compatibility
+    $message = $content['data']['message'] ?? $content['message'] ?? null;
+
+    if ($message === 'Authenticated via JWT') {
         echo "✓ JWT authentication passed\n";
         echo "  User ID: " . ($request->user_id ?? 'not set') . "\n";
         $passedTests++;
     } else {
         echo "✗ FAILED: JWT authentication failed\n";
         echo "  Response: " . $response->getContent() . "\n";
+        echo "  Message found: " . ($message ?? 'none') . "\n";
     }
 
     // Cleanup
@@ -177,9 +182,9 @@ try {
 
     $content = json_decode($response->getContent(), true);
 
-    if ($response->getStatusCode() === 401 && isset($content['error'])) {
+    if ($response->getStatusCode() === 401 && isset($content['message']) && $content['success'] === false) {
         echo "✓ API unauthenticated request returned JSON 401\n";
-        echo "  Error: " . $content['error'] . "\n";
+        echo "  Message: " . $content['message'] . "\n";
         $passedTests++;
     } else {
         echo "✗ FAILED: Should return JSON 401, got " . $response->getStatusCode() . "\n";
@@ -231,14 +236,14 @@ echo "\n";
 echo "Test 6: CorsMiddleware - Preflight Request (OPTIONS)\n";
 try {
     $totalTests++;
-
     // Create OPTIONS request (preflight)
-    $request = new Request([
+    $server = [
         'REQUEST_METHOD' => 'OPTIONS',
         'REQUEST_URI' => '/api/data',
         'HTTP_ORIGIN' => 'https://example.com',
         'HTTP_ACCESS_CONTROL_REQUEST_METHOD' => 'POST',
-    ], [], [], [], []);
+    ];
+    $request = new Request([], [], $server, [], []);
 
     $middleware = new \App\Middleware\CorsMiddleware();
 
@@ -404,12 +409,12 @@ try {
         }
         return new Response('Global middleware NOT executed');
     });
-
-    // Create request
-    $request = new Request([
+    // Create request (fix: server is 3rd parameter)
+    $server = [
         'REQUEST_METHOD' => 'GET',
         'REQUEST_URI' => '/test-global',
-    ], [], [], [], []);
+    ];
+    $request = new Request([], [], $server, [], []);
 
     // Dispatch request
     $router = new Router();

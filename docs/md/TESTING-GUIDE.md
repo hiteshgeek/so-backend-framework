@@ -29,18 +29,39 @@ php sixorbit test csrf               # CSRF protection test
 
 Run individual test file directly:
 ```bash
-php tests/security/sanitizer-bypass.test.php
+php tests/Integration/security/sanitizer-bypass.test.php
 ```
 
 ## Test Organization
 
-Tests are organized into three contextual folders:
+Tests are organized into **Integration** and **Unit** test categories:
 
-- **`tests/security/`** - Security-related tests
-- **`tests/infrastructure/`** - Core system tests
-- **`tests/application/`** - Application layer tests
+### Integration Tests (`tests/Integration/`)
 
-### Security Tests (`tests/security/`)
+Integration tests verify how multiple framework components work together. Organized into three contextual folders:
+
+- **`tests/Integration/security/`** - Security-related integration tests
+- **`tests/Integration/infrastructure/`** - Core system integration tests
+- **`tests/Integration/application/`** - Application layer integration tests
+
+### Unit Tests (`tests/Unit/`)
+
+Unit tests focus on testing individual classes/methods in isolation (coming soon).
+
+### Examples (`tests/examples/`)
+
+Demo files showing practical usage of framework features. These are **not automated tests** but educational examples:
+
+| Demo File | Description | Purpose |
+|-----------|-------------|---------|
+| `validation-demo.php` | Validation system examples | Shows 8 real-world validation scenarios with custom rules |
+
+Run examples directly:
+```bash
+php tests/examples/validation-demo.php
+```
+
+### Security Tests (`tests/Integration/security/`)
 
 Tests for authentication, authorization, and protection mechanisms.
 
@@ -52,7 +73,7 @@ Tests for authentication, authorization, and protection mechanisms.
 | `xss-prevention.test.php` | XSS attack prevention mechanisms | Input sanitization, output escaping |
 | `sanitizer-bypass.test.php` | Sanitizer bypass prevention with DOMDocument | Nested tags, malformed HTML, event handlers |
 
-### Core Infrastructure Tests (`tests/infrastructure/`)
+### Core Infrastructure Tests (`tests/Integration/infrastructure/`)
 
 Tests for core system components and services.
 
@@ -63,7 +84,7 @@ Tests for core system components and services.
 | `notifications.test.php` | Notification channels and delivery | DB notifications, mail integration |
 | `activity-logging.test.php` | User activity tracking and audit logs | Activity creation, metadata, pruning |
 
-### Application Layer Tests (`tests/application/`)
+### Application Layer Tests (`tests/Integration/application/`)
 
 Tests for application-level features and APIs.
 
@@ -185,7 +206,7 @@ Edit `core/Console/Commands/TestCommand.php` and add your test to the appropriat
 'security' => [
     'your-test' => [
         'name' => 'Your Test Name',
-        'file' => 'security/your-test.test.php'
+        'file' => 'Integration/security/your-test.test.php'
     ],
     // ... other tests
 ],
@@ -194,7 +215,8 @@ Edit `core/Console/Commands/TestCommand.php` and add your test to the appropriat
 **File naming convention:**
 - Use `.test.php` extension
 - Use hyphens for multi-word names (e.g., `csrf-protection.test.php`)
-- Place in appropriate category folder (`security/`, `infrastructure/`, or `application/`)
+- Place in appropriate category folder (`Integration/security/`, `Integration/infrastructure/`, or `Integration/application/`)
+- For unit tests, use `Unit/` folder (coming soon)
 
 ## CI/CD Integration
 
@@ -226,15 +248,16 @@ When framework features change:
 
 ### Test Coverage Goals
 
-- [x] Security: 100% coverage of authentication, authorization, XSS prevention
-- [x] Core Infrastructure: All major services (cache, queue, sessions, notifications)
-- [x] Application Layer: Validation, middleware, API, ORM relationships
-- [ ] Integration Tests: Coming soon (database transactions, full request lifecycle)
+- [x] Security Integration: 100% coverage of authentication, authorization, XSS prevention
+- [x] Core Infrastructure Integration: All major services (cache, queue, sessions, notifications)
+- [x] Application Layer Integration: Validation, middleware, API, ORM relationships
+- [ ] Unit Tests: Coming soon (individual class/method testing in isolation)
 
 ## Recent Updates
 
 ### 2026-01-30
-- [x] Organized test files into contextual folders (`security/`, `infrastructure/`, `application/`)
+- [x] Reorganized tests into `Integration/` and `Unit/` folders for proper test categorization
+- [x] Organized integration test files into contextual folders (`security/`, `infrastructure/`, `application/`)
 - [x] Renamed all test files to modern `.test.php` convention with hyphens
 - [x] Added colorful ANSI output to `sixorbit test` command (green/red/cyan)
 - [x] Added `sanitizer-bypass.test.php` - DOMDocument-based sanitizer testing

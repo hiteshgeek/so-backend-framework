@@ -10,8 +10,8 @@
  * 4. ApiClient (API calls)
  */
 
-require_once __DIR__ . '/../../vendor/autoload.php';
-require_once __DIR__ . '/../../bootstrap/app.php';
+require_once __DIR__ . '/../../../vendor/autoload.php';
+require_once __DIR__ . '/../../../bootstrap/app.php';
 
 use Core\Api\InternalApiGuard;
 use Core\Api\RequestContext;

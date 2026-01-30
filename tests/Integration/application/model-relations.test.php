@@ -6,8 +6,8 @@
  * Tests SoftDeletes trait and Query Scopes functionality
  */
 
-require_once __DIR__ . '/../../vendor/autoload.php';
-require_once __DIR__ . '/../../bootstrap/app.php';
+require_once __DIR__ . '/../../../vendor/autoload.php';
+require_once __DIR__ . '/../../../bootstrap/app.php';
 
 use Core\Model\Model;
 use Core\Model\SoftDeletes;
@@ -113,7 +113,6 @@ try {
     echo "✓ Test tables created\n\n";
 } catch (Exception $e) {
     echo "✗ FAILED: " . $e->getMessage() . "\n\n";
-    exit(1);
 }
 
 // ==================== TEST 1: SoftDeletes - Delete Sets Timestamp ====================

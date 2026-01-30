@@ -151,7 +151,8 @@ class Request
 
     public function header(string $key, mixed $default = null): mixed
     {
-        $key = strtoupper(str_replace('-', '_', $key));
+        // Normalize to uppercase with hyphens (matching parseHeaders format)
+        $key = strtoupper(str_replace('_', '-', $key));
         return $this->headers[$key] ?? $default;
     }
 
