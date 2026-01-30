@@ -40,6 +40,12 @@ return [
 
         // Default token time-to-live in seconds (1 hour)
         'ttl' => env('JWT_TTL', 3600),
+
+        // Enable JWT token blacklist for logout/revocation
+        'blacklist_enabled' => env('JWT_BLACKLIST_ENABLED', true),
+
+        // Grace period in seconds after blacklisting (for in-flight requests)
+        'blacklist_grace_period' => env('JWT_BLACKLIST_GRACE_PERIOD', 30),
     ],
 
     /*

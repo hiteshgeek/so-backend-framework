@@ -23,13 +23,15 @@ Read the documentation in this numbered sequence for the best learning experienc
 | 4 | [Comprehensive Guide](/docs/comprehensive) | Complete framework reference - READ THIS! | 45 min |
 | 5 | [Quick Start](/docs/quick-start) | Fast reference and common tasks | 5 min |
 
-### Phase 3: Security & Validation (1 hour)
+### Phase 3: Security & Validation (1.5 hours)
 
 | No. | Document | Description | Time |
 |-----|----------|-------------|------|
 | 6 | [Security Layer](/docs/security-layer) | CSRF, JWT, Rate Limiting, XSS Prevention | 25 min |
 | 7 | [Validation System](/docs/validation-system) | 27+ validation rules, custom rules | 20 min |
 | 8 | [Auth System](/docs/auth-system) | Authentication workflows | 30 min |
+| 8a | [Session Encryption](/docs/session-encryption) | AES-256-CBC encryption with HMAC tamper detection | 10 min |
+| 8b | [Auth Account Lockout](/docs/auth-lockout) | Brute force protection and account lockout | 10 min |
 
 ### Phase 4: Architecture Deep Dive (45 minutes)
 
@@ -579,12 +581,14 @@ If you can't find what you need:
 | **View Templates** | [x] | **VIEW-TEMPLATES.md** |
 | **Test Documentation** | [x] | **TEST-DOCUMENTATION.md** |
 | **Testing Guide** | [x] | **TESTING-GUIDE.md** |
+| **Session Encryption** | [x] | **SESSION-ENCRYPTION.md** |
+| **Auth Account Lockout** | [x] | **AUTH-LOCKOUT.md** |
 
 ---
 
 ## [Date] Last Updated
 
-This index was last updated: 2026-01-30
+This index was last updated: 2026-01-31
 
 For the latest documentation, check the source files in this directory.
 

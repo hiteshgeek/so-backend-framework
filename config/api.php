@@ -1,11 +1,34 @@
 <?php
 
 /**
- * Internal API Configuration
+ * API Configuration
  *
- * Configure internal API settings, context detection, and permissions
+ * Configure API settings including versioning, context detection, and permissions
  */
 return [
+    /*
+    |--------------------------------------------------------------------------
+    | API Versioning
+    |--------------------------------------------------------------------------
+    */
+
+    // Default API version when none is specified
+    'default_version' => env('API_DEFAULT_VERSION', 'v1'),
+
+    // List of supported API versions
+    'supported_versions' => ['v1', 'v2'],
+
+    // List of deprecated versions (still functional, but with warnings)
+    'deprecated_versions' => [],
+
+    // API route prefix (e.g., "/api")
+    'prefix' => env('API_PREFIX', 'api'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Internal API Layer
+    |--------------------------------------------------------------------------
+    */
     /*
     |--------------------------------------------------------------------------
     | Signature Authentication

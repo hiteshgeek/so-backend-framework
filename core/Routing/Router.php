@@ -100,6 +100,49 @@ class Router
     }
 
     /**
+     * Create a route group with API version prefix
+     *
+     * Usage:
+     *   Router::version('v1', function () {
+     *       Router::get('/users', [UserController::class, 'index']); // /api/v1/users
+     *   });
+     *
+     *   Router::version('v2', ['middleware' => 'throttle:60'], function () {
+     *       Router::get('/users', [UserControllerV2::class, 'index']);
+     *   });
+     *
+     * @param string $version Version identifier (e.g., 'v1', 'v2')
+     * @param array|callable $attributes Group attributes or callback
+     * @param callable|null $callback Callback if attributes provided
+     * @return void
+     */
+    public static function version(string $version, $attributes = [], ?callable $callback = null): void
+    {
+        // Support both syntaxes:
+        // version('v1', function() {}) and version('v1', ['middleware' => ...], function() {})
+        if (is_callable($attributes)) {
+            $callback = $attributes;
+            $attributes = [];
+        }
+
+        // Get API prefix from config (default: 'api')
+        $apiPrefix = config('api.prefix', 'api');
+
+        // Build version prefix: api/v1, api/v2, etc.
+        $versionPrefix = trim($apiPrefix, '/') . '/' . trim($version, '/');
+
+        // Merge with existing group prefix if any
+        if (isset($attributes['prefix'])) {
+            $attributes['prefix'] = $versionPrefix . '/' . trim($attributes['prefix'], '/');
+        } else {
+            $attributes['prefix'] = $versionPrefix;
+        }
+
+        // Create a group with the version prefix
+        self::group($attributes, $callback);
+    }
+
+    /**
      * Register global middleware (applied to all routes)
      *
      * @param array|string $middleware

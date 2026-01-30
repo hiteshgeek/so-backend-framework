@@ -10,7 +10,8 @@ use Core\Console\Command;
  * Run framework tests organized by category
  *
  * Usage:
- *   php sixorbit test                    # Run all tests
+ *   php sixorbit test                    # Show help/list tests
+ *   php sixorbit test --all              # Run all tests
  *   php sixorbit test --list             # List all tests
  *   php sixorbit test security           # Run security category
  *   php sixorbit test csrf               # Run specific test
@@ -46,6 +47,7 @@ class TestCommand extends Command
         ],
         'infrastructure' => [
             'cache' => ['name' => 'Cache and Sessions', 'file' => 'Integration/infrastructure/cache-sessions.test.php'],
+            'file-cache' => ['name' => 'File Cache Driver', 'file' => 'Integration/infrastructure/file-cache.test.php'],
             'queue' => ['name' => 'Queue System', 'file' => 'Integration/infrastructure/queue.test.php'],
             'notifications' => ['name' => 'Notification System', 'file' => 'Integration/infrastructure/notifications.test.php'],
             'activity' => ['name' => 'Activity Logging', 'file' => 'Integration/infrastructure/activity-logging.test.php'],
@@ -55,6 +57,7 @@ class TestCommand extends Command
             'validation' => ['name' => 'Validation System', 'file' => 'Integration/application/validation.test.php'],
             'middleware' => ['name' => 'Middleware System', 'file' => 'Integration/application/middleware.test.php'],
             'api' => ['name' => 'Internal API Layer', 'file' => 'Integration/application/api-layer.test.php'],
+            'api-versioning' => ['name' => 'API Versioning', 'file' => 'Integration/application/api-versioning.test.php'],
             'models' => ['name' => 'Model Enhancements', 'file' => 'Integration/application/model-relations.test.php'],
         ],
     ];

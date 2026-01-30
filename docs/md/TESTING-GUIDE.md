@@ -4,14 +4,15 @@ Comprehensive test suite for the SO Backend Framework, organized by functional c
 
 ## Quick Start
 
-List all available tests:
+Show help and list all available tests:
 ```bash
+php sixorbit test
 php sixorbit test --list
 ```
 
-Run all tests:
+Run all tests (requires --all flag):
 ```bash
-php sixorbit test
+php sixorbit test --all
 ```
 
 Run a specific category:
@@ -72,6 +73,7 @@ Tests for authentication, authorization, and protection mechanisms.
 | `rate-limit.test.php` | API rate limiting and throttling | Per-key limits, windows, cleanup |
 | `xss-prevention.test.php` | XSS attack prevention mechanisms | Input sanitization, output escaping |
 | `sanitizer-bypass.test.php` | Sanitizer bypass prevention with DOMDocument | Nested tags, malformed HTML, event handlers |
+| `auth-lockout.test.php` | Brute force protection and account lockout | Attempt tracking, lockout logic, IP+email separation |
 
 ### Core Infrastructure Tests (`tests/Integration/infrastructure/`)
 
@@ -83,6 +85,7 @@ Tests for core system components and services.
 | `queue.test.php` | Background job queueing and processing | Job dispatch, serialization, workers |
 | `notifications.test.php` | Notification channels and delivery | DB notifications, mail integration |
 | `activity-logging.test.php` | User activity tracking and audit logs | Activity creation, metadata, pruning |
+| `session-encryption.test.php` | AES-256-CBC session encryption and HMAC | Encryption/decryption, tamper detection, key validation |
 
 ### Application Layer Tests (`tests/Integration/application/`)
 

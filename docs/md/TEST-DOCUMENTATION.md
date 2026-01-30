@@ -4,20 +4,21 @@ Comprehensive testing framework for the SO Backend Framework with organized test
 
 ## Overview
 
-The SO Backend Framework includes a robust test suite with 13 comprehensive test files organized into three contextual categories:
+The SO Backend Framework includes a robust test suite with 15 comprehensive test files organized into three contextual categories:
 
-- **Security** (5 tests) - Authentication, authorization, CSRF, XSS, sanitization
-- **Infrastructure** (4 tests) - Cache, sessions, queue, notifications, activity logging
+- **Security** (6 tests) - Authentication, authorization, CSRF, XSS, sanitization, account lockout
+- **Infrastructure** (5 tests) - Cache, sessions, queue, notifications, activity logging, session encryption
 - **Application** (4 tests) - Validation, middleware, API layer, model relationships
 
 ## Quick Start
 
 ```bash
-# List all available tests
+# Show help and list all available tests
+php sixorbit test
 php sixorbit test --list
 
-# Run all tests
-php sixorbit test
+# Run all tests (requires --all flag)
+php sixorbit test --all
 
 # Run specific category
 php sixorbit test security
@@ -37,12 +38,14 @@ tests/
 │   ├── jwt-auth.test.php
 │   ├── rate-limit.test.php
 │   ├── xss-prevention.test.php
-│   └── sanitizer-bypass.test.php
+│   ├── sanitizer-bypass.test.php
+│   └── auth-lockout.test.php
 ├── infrastructure/        # Core system tests
 │   ├── cache-sessions.test.php
 │   ├── queue.test.php
 │   ├── notifications.test.php
-│   └── activity-logging.test.php
+│   ├── activity-logging.test.php
+│   └── session-encryption.test.php
 └── application/          # Application layer tests
     ├── validation.test.php
     ├── middleware.test.php
@@ -104,6 +107,7 @@ Each test run provides:
 | `rate-limit` | API rate limiting and throttling |
 | `xss` | XSS attack prevention mechanisms |
 | `sanitizer` | Sanitizer bypass prevention with DOMDocument |
+| `auth-lockout` | Brute force protection and account lockout |
 
 ### Infrastructure Tests
 
@@ -113,6 +117,7 @@ Each test run provides:
 | `queue` | Background job queueing and processing |
 | `notifications` | Notification channels and delivery |
 | `activity` | User activity tracking and audit logs |
+| `session-encryption` | AES-256-CBC session encryption and HMAC tamper detection |
 
 ### Application Tests
 
@@ -177,7 +182,7 @@ The test suite integrates seamlessly with CI/CD pipelines:
 
 ```bash
 # Run all tests (exit code 0 = success, 1 = failure)
-php sixorbit test
+php sixorbit test --all
 
 # Run specific category
 php sixorbit test security

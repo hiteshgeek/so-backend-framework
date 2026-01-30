@@ -12,6 +12,12 @@ return [
     |--------------------------------------------------------------------------
     |
     | This option controls the default cache store used by the application.
+    | Supported drivers: "array", "database", "file"
+    |
+    | - array: In-memory (request lifetime only)
+    | - database: Persistent, shared across servers
+    | - file: Persistent, filesystem-based
+    |
     | For ERP systems, 'database' is recommended for sharing across servers.
     |
     */
@@ -33,6 +39,11 @@ return [
         'database' => [
             'driver' => 'database',
             'table' => 'cache',
+        ],
+
+        'file' => [
+            'driver' => 'file',
+            'path' => env('CACHE_FILE_PATH', storage_path('cache')),
         ],
     ],
 

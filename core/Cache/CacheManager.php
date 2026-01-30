@@ -4,6 +4,7 @@ namespace Core\Cache;
 
 use Core\Cache\Drivers\DatabaseCache;
 use Core\Cache\Drivers\ArrayCache;
+use Core\Cache\Drivers\FileCache;
 use Core\Database\Connection;
 use Core\Cache\Lock;
 
@@ -60,6 +61,7 @@ class CacheManager
                 $this->config['prefix'] ?? ''
             ),
             'array' => new ArrayCache(),
+            'file' => new FileCache($config['path'] ?? null),
             default => throw new \InvalidArgumentException("Unsupported cache driver [{$driver}]."),
         };
 
