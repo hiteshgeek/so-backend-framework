@@ -67,6 +67,7 @@ class DocsController
             'framework-features' => 'FRAMEWORK-FEATURES.md',
 
             // Technical Documentation
+            'asset-management' => 'ASSET-MANAGEMENT.md',
             'auth-system' => 'AUTH-SYSTEM.md',
             'console-commands' => 'CONSOLE-COMMANDS.md',
             'view-templates' => 'VIEW-TEMPLATES.md',

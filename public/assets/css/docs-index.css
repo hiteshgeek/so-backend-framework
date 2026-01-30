@@ -1,0 +1,291 @@
+/**
+ * Docs Index CSS — documentation index/hub page
+ *
+ * Requires docs-base.css to be loaded first.
+ * Contains: header overrides, container, stat cards, sections,
+ * card grid, badges, footer.
+ */
+
+    /* Header (index page overrides) */
+    .docs-header {
+        padding: 32px 24px;
+    }
+
+    .docs-header h1 {
+        font-size: 22px;
+        font-weight: 700;
+        gap: 12px;
+    }
+
+    .docs-header h1 .mdi {
+        font-size: 28px;
+    }
+
+    .docs-header .subtitle {
+        font-size: 14px;
+        opacity: 0.75;
+        margin-top: 4px;
+        font-weight: 400;
+    }
+
+    /* Container */
+    .docs-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 32px 24px 48px;
+        counter-reset: card-num;
+    }
+
+    /* Stats Cards */
+    .docs-stats {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 24px;
+    }
+
+    .docs-stat-card {
+        background: var(--surface);
+        padding: 6px 12px;
+        border-radius: var(--radius);
+        border: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        position: relative;
+    }
+
+    .docs-stat-card .stat-icon {
+        display: none;
+    }
+
+    .docs-stat-card h3 {
+        font-size: 12px;
+        color: var(--surface);
+        background: var(--primary);
+        font-weight: 700;
+        line-height: 1;
+        padding: 3px 6px;
+        border-radius: 4px;
+        min-width: 18px;
+        text-align: center;
+    }
+
+    .docs-stat-card p {
+        font-size: 11px;
+        color: var(--text-secondary);
+        font-weight: 500;
+        line-height: 1;
+    }
+
+    /* Section */
+    .docs-section {
+        margin-bottom: 32px;
+    }
+
+    .docs-section-title {
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--text-secondary);
+        margin-bottom: 16px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .docs-section-title .mdi {
+        font-size: 18px;
+        color: var(--primary);
+    }
+
+    /* Card Grid */
+    .docs-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 12px;
+    }
+
+    .docs-grid-featured {
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 12px;
+        margin-bottom: 12px;
+    }
+
+    /* Card */
+    .doc-card {
+        background: var(--surface);
+        border-radius: var(--radius);
+        padding: 14px 16px;
+        text-decoration: none;
+        color: inherit;
+        display: flex;
+        flex-direction: column;
+        box-shadow: var(--shadow-sm);
+        border: 1px solid var(--border);
+        transition: all 0.2s;
+        position: relative;
+        counter-increment: card-num;
+    }
+
+    .doc-card h3::after {
+        content: counter(card-num);
+        margin-left: auto;
+        font-size: 10px;
+        font-weight: 800;
+        color: #fff;
+        background: var(--primary);
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    .doc-card:hover {
+        box-shadow: var(--shadow-lg);
+        border-color: transparent;
+    }
+
+    .doc-card h3 {
+        color: var(--text);
+        font-size: 13px;
+        font-weight: 600;
+        margin-bottom: 6px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .doc-card h3 .mdi {
+        font-size: 18px;
+        color: var(--primary);
+    }
+
+    .doc-card-body {
+        flex: 1;
+    }
+
+    .doc-card p {
+        color: var(--text-secondary);
+        font-size: 12px;
+        line-height: 1.4;
+    }
+
+    .doc-card .badge {
+        margin-top: 8px;
+        align-self: flex-start;
+    }
+
+    /* Featured Cards */
+    .doc-card.featured {
+        background: linear-gradient(135deg, var(--primary-bg) 0%, #dbeafe 100%);
+        border-color: var(--primary-light);
+    }
+
+    .doc-card.featured::before {
+        background: var(--primary-dark);
+        transform: scaleX(1);
+    }
+
+    .doc-card.featured h3 {
+        color: var(--primary-dark);
+    }
+
+    .doc-card.featured h3::after {
+        background: var(--primary-dark);
+        color: #fff;
+    }
+
+    .doc-card.featured h3 .mdi {
+        font-size: 18px;
+    }
+
+    /* Badges (base .badge in docs-base.css) */
+    .badge-essential {
+        background: #fef2f2;
+        color: #dc2626;
+    }
+
+    .badge-new {
+        background: #ecfdf5;
+        color: #059669;
+    }
+
+    .badge-default {
+        background: var(--primary-bg);
+        color: var(--primary);
+    }
+
+    .badge-enterprise {
+        background: #faf5ff;
+        color: #7c3aed;
+    }
+
+    .badge-technical {
+        background: #f1f5f9;
+        color: #475569;
+    }
+
+    .badge-featured {
+        background: var(--primary);
+        color: white;
+    }
+
+    /* Footer */
+    .docs-footer {
+        background: var(--surface);
+        padding: 32px 24px;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        margin-top: 48px;
+    }
+
+    .docs-footer p {
+        color: var(--text-secondary);
+        font-size: 14px;
+        margin-bottom: 8px;
+    }
+
+    .docs-footer p .mdi {
+        vertical-align: middle;
+        margin-right: 4px;
+    }
+
+    .docs-footer a {
+        color: var(--primary);
+        text-decoration: none;
+        font-weight: 500;
+    }
+
+    .docs-footer a:hover {
+        text-decoration: underline;
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+        .docs-stats {
+            flex-wrap: wrap;
+        }
+
+        .docs-grid,
+        .docs-grid-featured {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media (max-width: 600px) {
+        .docs-header {
+            padding: 16px;
+        }
+
+        .docs-header-inner {
+            text-align: center;
+        }
+
+        .docs-container {
+            padding: 24px 16px;
+        }
+    }

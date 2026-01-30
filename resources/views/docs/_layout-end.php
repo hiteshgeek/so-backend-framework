@@ -6,11 +6,13 @@
  */
 ?>
 
-        <?php include __DIR__ . '/_partials/_footer-nav.php'; ?>
+        <?php $position = 'bottom'; include __DIR__ . '/_partials/_footer-nav.php'; ?>
         <?php include __DIR__ . '/_partials/_footer.php'; ?>
 
     </article>
 </main>
 
+<?= render_assets('body_end') ?>
+<?= render_stack('scripts') ?>
 </body>
 </html>

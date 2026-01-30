@@ -171,7 +171,8 @@ class MarkdownParser {
         }
 
         $escaped = htmlspecialchars(rtrim($code));
-        return "<div class=\"code-container\"><div class=\"code-header\"><span class=\"code-lang\">{$lang}</span><button class=\"code-copy\" onclick=\"copyCode(this)\"><span class=\"mdi mdi-content-copy\"></span></button></div><pre class=\"code-block\"><code>{$escaped}</code></pre></div>";
+        $langClass = htmlspecialchars($lang);
+        return "<div class=\"code-container\"><div class=\"code-header\"><span class=\"code-lang\">{$lang}</span><button class=\"code-copy\" onclick=\"copyCode(this)\"><span class=\"mdi mdi-content-copy\"></span></button></div><pre class=\"code-block\"><code class=\"language-{$langClass}\">{$escaped}</code></pre></div>";
     }
 
     /**
@@ -490,9 +491,12 @@ class MarkdownParser {
         // Remove bracket prefixes like [#], [->], [Docs], [Book], [Date], etc.
         $title = preg_replace('/^\[[^\]]*\]\s*/', '', $title);
 
-        // Remove checkbox syntax [x] and [ ]
-        $title = preg_replace('/^\[x\]\s*/i', '', $title);
-        $title = preg_replace('/^\[ \]\s*/', '', $title);
+        // Remove checkbox syntax [x] and [ ] anywhere in title
+        $title = preg_replace('/\s*\[x\]\s*/i', ' ', $title);
+        $title = preg_replace('/\s*\[ \]\s*/', ' ', $title);
+
+        // Remove bracketed markers like [Config], [Beta], etc.
+        $title = preg_replace('/\s*\[[^\]]*\]\s*/', ' ', $title);
 
         // Remove numbered list prefix (1. 2. etc)
         $title = preg_replace('/^\d+\.\s*/', '', $title);
@@ -506,6 +510,14 @@ class MarkdownParser {
 
         // Remove link syntax [text](url) -> text
         $title = preg_replace('/\[([^\]]+)\]\([^\)]+\)/', '$1', $title);
+
+        // Remove emoji / unicode symbols
+        $title = preg_replace('/[\x{1F000}-\x{1FFFF}]/u', '', $title);
+        $title = preg_replace('/[\x{2600}-\x{27BF}]/u', '', $title);
+        $title = preg_replace('/[\x{FE00}-\x{FE0F}]/u', '', $title);
+
+        // Collapse multiple spaces
+        $title = preg_replace('/\s{2,}/', ' ', $title);
 
         return trim($title);
     }

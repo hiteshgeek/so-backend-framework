@@ -37,8 +37,8 @@ $badgeType = $badgeType ?? 'new';
 </header>
 
 <?php if (!empty($breadcrumbs)): ?>
-<div class="docs-content" style="padding: var(--space-2) var(--space-5); margin-bottom: 0; border-bottom: none; border-radius: var(--radius) var(--radius) 0 0;">
-    <nav class="breadcrumbs" style="margin-bottom: 0;">
+<div class="breadcrumb-bar">
+    <nav class="breadcrumbs">
         <a href="<?= htmlspecialchars(config('app.url')) ?>/docs" class="breadcrumb-item">
             <span class="mdi mdi-home"></span> Docs
         </a>

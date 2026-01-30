@@ -9,6 +9,10 @@ return [
     'timezone' => 'UTC',
     'locale' => 'en',
 
+    // Asset management
+    'asset_url' => env('ASSET_URL', ''),              // Empty = use app.url. Set CDN: 'https://cdn.example.com'
+    'asset_versioning' => env('ASSET_VERSIONING', true), // Cache busting via file modification time
+
     'providers' => [
         // Activity logging for audit trails (ERP compliance)
         \App\Providers\ActivityLogServiceProvider::class,

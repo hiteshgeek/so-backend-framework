@@ -27,7 +27,6 @@ $sections = $sections ?? [];
                     <?php foreach ($section['items'] ?? [] as $item): ?>
                         <li>
                             <a href="#<?= htmlspecialchars($item['id'] ?? '') ?>" class="toc-h<?= $item['level'] ?? 2 ?>">
-                                <span class="mdi mdi-<?= ($item['level'] ?? 2) == 2 ? 'chevron-right' : 'circle-small' ?>"></span>
                                 <?= htmlspecialchars($item['title'] ?? '') ?>
                             </a>
                         </li>
@@ -41,7 +40,6 @@ $sections = $sections ?? [];
             <?php foreach ($toc as $item): ?>
                 <li>
                     <a href="#<?= htmlspecialchars($item['id']) ?>" class="toc-h<?= $item['level'] ?>">
-                        <span class="mdi mdi-<?= $item['level'] == 2 ? 'chevron-right' : 'circle-small' ?>"></span>
                         <?= htmlspecialchars($item['title']) ?>
                     </a>
                 </li>

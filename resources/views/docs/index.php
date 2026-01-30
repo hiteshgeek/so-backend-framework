@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= htmlspecialchars($title ?? 'Documentation') ?></title>
     <?php include __DIR__ . '/_styles.php'; ?>
+    <?= render_assets('head') ?>
 </head>
 <body>
     <div class="docs-header">
@@ -31,33 +32,13 @@
             </div>
             <div class="docs-stat-card">
                 <span class="mdi mdi-file-document-multiple stat-icon"></span>
-                <h3>24</h3>
+                <h3>21</h3>
                 <p>Guide Documents</p>
             </div>
             <div class="docs-stat-card">
                 <span class="mdi mdi-rocket-launch stat-icon"></span>
                 <h3>100%</h3>
                 <p>Production Ready</p>
-            </div>
-        </div>
-
-        <div class="docs-section">
-            <div class="docs-section-title"><span class="mdi mdi-star"></span> Featured Guides</div>
-            <div class="docs-grid docs-grid-featured">
-                <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/comprehensive" class="doc-card featured">
-                    <div class="doc-card-body">
-                        <h3><span class="mdi mdi-book-open-variant"></span> Comprehensive Guide</h3>
-                        <p>Full documentation covering all features with examples and best practices.</p>
-                    </div>
-                    <span class="badge badge-featured">Complete</span>
-                </a>
-                <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/index" class="doc-card featured">
-                    <div class="doc-card-body">
-                        <h3><span class="mdi mdi-folder-table"></span> Documentation Index</h3>
-                        <p>Navigation hub for all docs organized by topic.</p>
-                    </div>
-                    <span class="badge badge-featured">Start Here</span>
-                </a>
             </div>
         </div>
 
@@ -81,43 +62,51 @@
                 <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/configuration" class="doc-card">
                     <div class="doc-card-body">
                         <h3><span class="mdi mdi-wrench"></span> Configuration</h3>
-                        <p>Configuration system and customization.</p>
+                        <p>Configuration system and environment setup.</p>
                     </div>
-                    <span class="badge badge-default">Config</span>
+                    <span class="badge badge-essential">Essential</span>
                 </a>
                 <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/quick-start" class="doc-card">
                     <div class="doc-card-body">
                         <h3><span class="mdi mdi-flash"></span> Quick Start</h3>
-                        <p>Fast reference for common tasks.</p>
+                        <p>Build your first route, controller, and view.</p>
                     </div>
-                    <span class="badge badge-default">Quick</span>
+                    <span class="badge badge-essential">Essential</span>
                 </a>
             </div>
         </div>
 
         <div class="docs-section">
-            <div class="docs-section-title"><span class="mdi mdi-palette"></span> Customization</div>
+            <div class="docs-section-title"><span class="mdi mdi-cube-outline"></span> Core Architecture</div>
             <div class="docs-grid">
-                <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/rename" class="doc-card">
+                <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/framework-features" class="doc-card">
                     <div class="doc-card-body">
-                        <h3><span class="mdi mdi-pencil"></span> Rename Process</h3>
-                        <p>Rename and customize framework branding.</p>
+                        <h3><span class="mdi mdi-office-building"></span> Framework Features</h3>
+                        <p>Overview of all systems and capabilities.</p>
                     </div>
-                    <span class="badge badge-default">Guide</span>
+                    <span class="badge badge-default">Overview</span>
                 </a>
-                <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/branding" class="doc-card">
+                <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/view-templates" class="doc-card">
                     <div class="doc-card-body">
-                        <h3><span class="mdi mdi-brush"></span> Framework Branding</h3>
-                        <p>Framework name and branding reference.</p>
+                        <h3><span class="mdi mdi-image-multiple"></span> View Templates</h3>
+                        <p>PHP native view templating and layouts.</p>
                     </div>
-                    <span class="badge badge-default">Reference</span>
+                    <span class="badge badge-default">Core</span>
                 </a>
-            </div>
-        </div>
-
-        <div class="docs-section">
-            <div class="docs-section-title"><span class="mdi mdi-shield-check"></span> Security & Validation</div>
-            <div class="docs-grid">
+                <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/asset-management" class="doc-card">
+                    <div class="doc-card-body">
+                        <h3><span class="mdi mdi-package-variant-closed"></span> Asset Management</h3>
+                        <p>CSS/JS loading, cache busting, CDN support.</p>
+                    </div>
+                    <span class="badge badge-default">Core</span>
+                </a>
+                <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/auth-system" class="doc-card">
+                    <div class="doc-card-body">
+                        <h3><span class="mdi mdi-shield-lock"></span> Authentication System</h3>
+                        <p>Session auth, JWT, remember me.</p>
+                    </div>
+                    <span class="badge badge-default">Core</span>
+                </a>
                 <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/security-layer" class="doc-card">
                     <div class="doc-card-body">
                         <h3><span class="mdi mdi-lock"></span> Security Layer</h3>
@@ -138,17 +127,17 @@
         <div class="docs-section">
             <div class="docs-section-title"><span class="mdi mdi-domain"></span> Enterprise Features</div>
             <div class="docs-grid">
-                <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/framework-features" class="doc-card">
+                <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/session-system" class="doc-card">
                     <div class="doc-card-body">
-                        <h3><span class="mdi mdi-office-building"></span> Framework Features</h3>
-                        <p>Overview of all table systems.</p>
+                        <h3><span class="mdi mdi-key"></span> Session System</h3>
+                        <p>Database-driven sessions for horizontal scaling.</p>
                     </div>
-                    <span class="badge badge-enterprise">Overview</span>
+                    <span class="badge badge-enterprise">Enterprise</span>
                 </a>
-                <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/activity-logging" class="doc-card">
+                <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/cache-system" class="doc-card">
                     <div class="doc-card-body">
-                        <h3><span class="mdi mdi-clipboard-text-clock"></span> Activity Logging</h3>
-                        <p>Audit trail and compliance.</p>
+                        <h3><span class="mdi mdi-database"></span> Cache System</h3>
+                        <p>Database and in-memory caching.</p>
                     </div>
                     <span class="badge badge-enterprise">Enterprise</span>
                 </a>
@@ -166,53 +155,59 @@
                     </div>
                     <span class="badge badge-enterprise">Enterprise</span>
                 </a>
-                <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/cache-system" class="doc-card">
+                <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/activity-logging" class="doc-card">
                     <div class="doc-card-body">
-                        <h3><span class="mdi mdi-database"></span> Cache System</h3>
-                        <p>Database and in-memory caching.</p>
+                        <h3><span class="mdi mdi-clipboard-text-clock"></span> Activity Logging</h3>
+                        <p>Audit trail and compliance.</p>
                     </div>
-                    <span class="badge badge-enterprise">Performance</span>
-                </a>
-                <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/session-system" class="doc-card">
-                    <div class="doc-card-body">
-                        <h3><span class="mdi mdi-key"></span> Session System</h3>
-                        <p>Database-driven sessions.</p>
-                    </div>
-                    <span class="badge badge-enterprise">Scalability</span>
+                    <span class="badge badge-enterprise">Enterprise</span>
                 </a>
             </div>
         </div>
 
         <div class="docs-section">
-            <div class="docs-section-title"><span class="mdi mdi-file-code"></span> Technical Documentation</div>
+            <div class="docs-section-title"><span class="mdi mdi-wrench"></span> Developer Tools</div>
             <div class="docs-grid">
-                <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/auth-system" class="doc-card">
-                    <div class="doc-card-body">
-                        <h3><span class="mdi mdi-shield-lock"></span> Authentication System</h3>
-                        <p>Session auth, JWT, remember me.</p>
-                    </div>
-                    <span class="badge badge-new">New</span>
-                </a>
                 <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/console-commands" class="doc-card">
                     <div class="doc-card-body">
                         <h3><span class="mdi mdi-console"></span> Console Commands</h3>
-                        <p>CLI reference for commands.</p>
+                        <p>CLI reference for scaffolding and tasks.</p>
                     </div>
-                    <span class="badge badge-new">New</span>
+                    <span class="badge badge-default">Tools</span>
                 </a>
-                <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/view-templates" class="doc-card">
+                <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/rename" class="doc-card">
                     <div class="doc-card-body">
-                        <h3><span class="mdi mdi-image-multiple"></span> View Templates</h3>
-                        <p>PHP native view templating guide.</p>
+                        <h3><span class="mdi mdi-pencil"></span> Rename Process</h3>
+                        <p>Rename and customize framework branding.</p>
                     </div>
-                    <span class="badge badge-new">New</span>
+                    <span class="badge badge-default">Tools</span>
                 </a>
-                <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/documentation-review" class="doc-card">
+                <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/branding" class="doc-card">
+                    <div class="doc-card-body">
+                        <h3><span class="mdi mdi-brush"></span> Framework Branding</h3>
+                        <p>Framework name and branding reference.</p>
+                    </div>
+                    <span class="badge badge-default">Reference</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="docs-section">
+            <div class="docs-section-title"><span class="mdi mdi-star"></span> Complete References</div>
+            <div class="docs-grid docs-grid-featured">
+                <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/comprehensive" class="doc-card featured">
+                    <div class="doc-card-body">
+                        <h3><span class="mdi mdi-book-open-variant"></span> Comprehensive Guide</h3>
+                        <p>Full documentation covering all features with examples and best practices.</p>
+                    </div>
+                    <span class="badge badge-featured">Complete</span>
+                </a>
+                <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/documentation-review" class="doc-card featured">
                     <div class="doc-card-body">
                         <h3><span class="mdi mdi-clipboard-check"></span> Documentation Review</h3>
                         <p>Coverage analysis of all modules.</p>
                     </div>
-                    <span class="badge badge-technical">Meta</span>
+                    <span class="badge badge-featured">Meta</span>
                 </a>
             </div>
         </div>

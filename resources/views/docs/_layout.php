@@ -43,6 +43,8 @@ $lastUpdated = $lastUpdated ?? date('Y-m-d');
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= htmlspecialchars($pageTitle) ?> - <?= htmlspecialchars(config('app.name', 'SO Framework')) ?> Documentation</title>
     <?php include __DIR__ . '/_design.php'; ?>
+    <?= render_assets('head') ?>
+    <?= render_stack('styles') ?>
 </head>
 <body>
 <?php
@@ -59,3 +61,4 @@ include __DIR__ . '/_partials/_header.php';
     <?php include __DIR__ . '/_partials/_sidebar.php'; ?>
 
     <article class="docs-content">
+        <?php $position = 'top'; include __DIR__ . '/_partials/_footer-nav.php'; ?>

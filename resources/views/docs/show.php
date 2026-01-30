@@ -6,6 +6,7 @@
     <title><?= htmlspecialchars($title ?? 'Documentation') ?></title>
     <?php include __DIR__ . '/_design.php'; ?>
     <?php include __DIR__ . '/_markdown.php'; ?>
+    <?= render_assets('head') ?>
 </head>
 <body>
     <?php
@@ -23,6 +24,16 @@
         </div>
     </header>
 
+    <div class="breadcrumb-bar">
+        <nav class="breadcrumbs">
+            <a href="<?= htmlspecialchars(config('app.url')) ?>/docs" class="breadcrumb-item">
+                <span class="mdi mdi-home"></span> Docs
+            </a>
+            <span class="mdi mdi-chevron-right breadcrumb-separator"></span>
+            <span class="breadcrumb-current"><?= htmlspecialchars($displayName) ?></span>
+        </nav>
+    </div>
+
     <?php
     $toc = extractToc($markdown ?? '');
     $content = parseMarkdown($markdown ?? '');
@@ -35,7 +46,6 @@
                 <?php foreach ($toc as $item): ?>
                 <li>
                     <a href="#<?= htmlspecialchars($item['id']) ?>" class="toc-h<?= $item['level'] ?>">
-                        <span class="mdi mdi-<?= $item['level'] == 2 ? 'chevron-right' : 'circle-small' ?>"></span>
                         <?= htmlspecialchars($item['title']) ?>
                     </a>
                 </li>
@@ -65,5 +75,6 @@
         }, { rootMargin: '-80px 0px -80% 0px' });
         document.querySelectorAll('.heading[id]').forEach(h => observer.observe(h));
     </script>
+<?= render_assets('body_end') ?>
 </body>
 </html>

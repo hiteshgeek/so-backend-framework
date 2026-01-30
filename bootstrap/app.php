@@ -61,6 +61,14 @@ $app->singleton('csrf', function ($app) {
     return new \Core\Security\Csrf($app->make('session'));
 });
 
+$app->singleton('assets', function ($app) {
+    $config = $app->make('config');
+    return new \Core\Support\AssetManager(
+        $config->get('app.asset_url', ''),
+        $config->get('app.asset_versioning', true)
+    );
+});
+
 // Register service providers from config
 $providers = $app->make('config')->get('app.providers', []);
 $providerInstances = [];

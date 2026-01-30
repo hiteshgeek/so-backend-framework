@@ -658,3 +658,72 @@ if (!function_exists('current_route_action')) {
         return \Core\Routing\Router::currentRouteAction();
     }
 }
+
+// ==========================================
+// Asset Management Helpers
+// ==========================================
+
+if (!function_exists('asset')) {
+    /**
+     * Generate URL to a public asset with cache busting
+     *
+     * @param string $path Path relative to public/assets/ (e.g., 'css/docs.css')
+     * @return string Full URL with version query string
+     */
+    function asset(string $path): string
+    {
+        return app('assets')->url($path);
+    }
+}
+
+if (!function_exists('assets')) {
+    /**
+     * Get the AssetManager instance
+     *
+     * @return \Core\Support\AssetManager
+     */
+    function assets(): \Core\Support\AssetManager
+    {
+        return app('assets');
+    }
+}
+
+if (!function_exists('push_stack')) {
+    /**
+     * Push content onto a named asset stack
+     *
+     * @param string $name Stack name ('styles', 'scripts', etc.)
+     * @param string $content Raw content
+     * @param int $priority Lower = rendered first (default 50)
+     */
+    function push_stack(string $name, string $content, int $priority = 50): void
+    {
+        app('assets')->push($name, $content, $priority);
+    }
+}
+
+if (!function_exists('render_stack')) {
+    /**
+     * Render a named asset stack
+     *
+     * @param string $name Stack name
+     * @return string
+     */
+    function render_stack(string $name): string
+    {
+        return app('assets')->renderStack($name);
+    }
+}
+
+if (!function_exists('render_assets')) {
+    /**
+     * Render all registered assets for a position
+     *
+     * @param string $position 'head' or 'body_end'
+     * @return string HTML tags
+     */
+    function render_assets(string $position): string
+    {
+        return app('assets')->renderAssets($position);
+    }
+}

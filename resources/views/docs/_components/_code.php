@@ -35,6 +35,8 @@ function codeBlock(string $lang, string $code, ?string $title = null, bool $show
         $escapedCode = implode("\n", array_map(fn($line) => '<span class="code-line">' . $line . '</span>', $lines));
     }
 
+    $langClass = htmlspecialchars($lang);
+
     return <<<HTML
 <div class="code-container">
     <div class="code-header">
@@ -46,7 +48,7 @@ function codeBlock(string $lang, string $code, ?string $title = null, bool $show
             <span class="mdi mdi-content-copy"></span>
         </button>
     </div>
-    <pre class="{$codeClass}"><code>{$escapedCode}</code></pre>
+    <pre class="{$codeClass}"><code class="language-{$langClass}">{$escapedCode}</code></pre>
 </div>
 HTML;
 }
@@ -63,6 +65,7 @@ function codeBlockWithFile(string $lang, string $code, string $filename): string
 {
     $escapedCode = htmlspecialchars(trim($code));
     $icon = getFileIcon(pathinfo($filename, PATHINFO_EXTENSION));
+    $langClass = htmlspecialchars($lang);
 
     return <<<HTML
 <div class="code-container">
@@ -75,7 +78,7 @@ function codeBlockWithFile(string $lang, string $code, string $filename): string
             <span class="mdi mdi-content-copy"></span>
         </button>
     </div>
-    <pre class="code-block"><code>{$escapedCode}</code></pre>
+    <pre class="code-block"><code class="language-{$langClass}">{$escapedCode}</code></pre>
 </div>
 HTML;
 }
@@ -158,7 +161,7 @@ function codeDiff(string $code, string $lang = 'diff'): string
             <span class="mdi mdi-content-copy"></span>
         </button>
     </div>
-    <pre class="code-block"><code>{$escapedCode}</code></pre>
+    <pre class="code-block"><code class="language-diff">{$escapedCode}</code></pre>
 </div>
 HTML;
 }
