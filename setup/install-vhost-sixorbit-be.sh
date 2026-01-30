@@ -12,9 +12,10 @@ GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 NC='\033[0m'
 
-DOMAIN="sixorbit.local"
-CONF_FILE="sixorbit.local.conf"
-PROJECT_DIR="$(cd "$(dirname "$0")" && pwd)"
+DOMAIN="sixorbit.be.local"
+CONF_FILE="sixorbit.be.local.conf"
+SETUP_DIR="$(cd "$(dirname "$0")" && pwd)"
+PROJECT_DIR="$(cd "${SETUP_DIR}/.." && pwd)"
 PUBLIC_DIR="${PROJECT_DIR}/public"
 
 echo ""
@@ -35,10 +36,33 @@ if ! command -v apache2 &> /dev/null; then
     exit 1
 fi
 
-# Step 1: Copy vhost config
-echo -e "${YELLOW}[1/6] Copying virtual host config...${NC}"
-cp "${PROJECT_DIR}/${CONF_FILE}" /etc/apache2/sites-available/${CONF_FILE}
-echo -e "${GREEN}      Copied to /etc/apache2/sites-available/${CONF_FILE}${NC}"
+# Step 1: Generate vhost config dynamically
+echo -e "${YELLOW}[1/6] Generating virtual host config...${NC}"
+cat > /etc/apache2/sites-available/${CONF_FILE} << EOF
+<VirtualHost *:80>
+    ServerName ${DOMAIN}
+    ServerAlias www.${DOMAIN}
+
+    DocumentRoot ${PUBLIC_DIR}
+
+    <Directory ${PUBLIC_DIR}>
+        Options Indexes FollowSymLinks
+        AllowOverride All
+        Require all granted
+    </Directory>
+
+    # Logging
+    ErrorLog \${APACHE_LOG_DIR}/${DOMAIN}-error.log
+    CustomLog \${APACHE_LOG_DIR}/${DOMAIN}-access.log combined
+
+    # PHP settings
+    <FilesMatch \.php$>
+        SetHandler application/x-httpd-php
+    </FilesMatch>
+</VirtualHost>
+EOF
+echo -e "${GREEN}      Generated /etc/apache2/sites-available/${CONF_FILE}${NC}"
+echo -e "${GREEN}      DocumentRoot: ${PUBLIC_DIR}${NC}"
 
 # Step 2: Enable the site
 echo -e "${YELLOW}[2/6] Enabling site...${NC}"

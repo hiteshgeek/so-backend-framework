@@ -14,6 +14,9 @@ use Core\Http\Request;
 // Load API Route Modules
 // ==========================================
 
+// Authentication API routes (login, register, logout, password reset)
+require __DIR__ . '/api/auth.php';
+
 // User API routes
 require __DIR__ . '/api/users.php';
 

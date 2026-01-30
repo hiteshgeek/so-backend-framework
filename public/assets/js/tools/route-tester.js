@@ -1,3 +1,69 @@
+        // Route grouping for sidebar organization
+        const groups = [
+            {
+                name: 'Fundamentals',
+                icon: 'star',
+                sections: ['http-methods', 'param-constraints', 'optional-params']
+            },
+            {
+                name: 'Resource Management',
+                icon: 'database',
+                sections: ['model-scopes', 'api-resource', 'nested-resources', 'model-binding']
+            },
+            {
+                name: 'Middleware & Security',
+                icon: 'shield',
+                sections: ['middleware-groups', 'middleware-chain', 'rate-limit', 'logging']
+            },
+            {
+                name: 'Advanced Routing',
+                icon: 'routes',
+                sections: ['named-routes', 'redirects', 'match', 'custom-constraints', 'fallback']
+            },
+            {
+                name: 'Request/Response',
+                icon: 'swap-horizontal-circle',
+                sections: ['content-negotiation', 'response-transform', 'file-upload']
+            },
+            {
+                name: 'Debugging & Performance',
+                icon: 'speedometer',
+                sections: ['route-info', 'performance']
+            }
+        ];
+
+        // Current active tab
+        let currentTab = 'routes';
+
+        // API Groups (mirrors structure of groups array)
+        const apiGroups = [
+            {
+                name: 'Authentication',
+                icon: 'shield-account',
+                sections: ['auth-register', 'auth-login', 'auth-logout', 'auth-remember']
+            },
+            {
+                name: 'Password Management',
+                icon: 'lock-reset',
+                sections: ['password-forgot', 'password-reset']
+            },
+            {
+                name: 'User CRUD (Protected)',
+                icon: 'shield-lock',
+                sections: ['users-protected']
+            },
+            {
+                name: 'User CRUD (Public v1)',
+                icon: 'account-multiple',
+                sections: ['users-public']
+            },
+            {
+                name: 'Error Handling',
+                icon: 'alert-circle',
+                sections: ['errors']
+            }
+        ];
+
         const S = [{
                 id: 'http-methods',
                 icon: 'swap-horizontal',
@@ -371,24 +437,284 @@
             }
         ];
 
+        // API Sections (A array - mirrors S array structure)
+        const A = [
+            {
+                id: 'auth-register',
+                icon: 'account-plus',
+                title: 'User Registration',
+                desc: 'Create a new user account with validation. Password is automatically hashed using Argon2ID by the User model. Returns JSON response.',
+                code: "// POST /api/auth/register\n// Validation rules:\n[\n    'name' => 'required|min:2|max:255',\n    'email' => 'required|email|unique:users,email',\n    'password' => 'required|min:8|confirmed',\n]\n\n// On success (201):\nreturn JsonResponse::success([\n    'message' => 'Account created successfully!',\n    'user' => [...],\n    'demo_token' => '...',\n], 201);",
+                routes: [{
+                    m: 'POST',
+                    url: '/api/auth/register',
+                    d: 'Register new user - validates and creates account',
+                    u: 'Requires: name (min:2), email (unique), password (min:8), password_confirmation. Returns 201 with user data and demo token',
+                    body: '{"name":"John Doe","email":"john@example.com","password":"SecurePass123!","password_confirmation":"SecurePass123!"}',
+                    tag: 'Register'
+                }]
+            },
+            {
+                id: 'auth-login',
+                icon: 'login',
+                title: 'User Login',
+                desc: 'Authenticate user with email and password. Returns JSON response with user data and demo token. Throttled to 5 attempts per minute.',
+                code: "// POST /api/auth/login\nif (auth()->attempt($credentials, $remember)) {\n    return JsonResponse::success([\n        'message' => 'Login successful!',\n        'user' => [...],\n        'demo_token' => '...',\n    ]);\n}\nreturn JsonResponse::error('Invalid email or password', 401);",
+                routes: [{
+                    m: 'POST',
+                    url: '/api/auth/login',
+                    d: 'Login with email and password - returns JSON with token',
+                    u: 'Rate limited: 5 attempts/minute. Returns 200 with user data on success, 401 on failure',
+                    body: '{"email":"john@example.com","password":"SecurePass123!"}',
+                    tag: 'Auth'
+                }]
+            },
+            {
+                id: 'auth-remember',
+                icon: 'checkbox-marked-circle',
+                title: 'Remember Me',
+                desc: 'Login with persistent authentication. Creates a remember token valid for 30 days that auto-authenticates on future visits.',
+                code: "// POST /api/auth/login with remember=1\nauth()->attempt($credentials, true);\n\n// Backend:\n// 1. Generates random 32-byte token\n// 2. Hashes token (SHA256) before DB storage\n// 3. Sets HTTP-only cookie (30 days)\n// 4. Auto-login via cookie on future requests",
+                routes: [{
+                    m: 'POST',
+                    url: '/api/auth/login',
+                    d: 'Login with remember=1 - creates 30-day persistent session',
+                    u: 'Sets remember_token cookie that bypasses login on return visits. Returns JSON with remember:true',
+                    body: '{"email":"john@example.com","password":"SecurePass123!","remember":"1"}',
+                    tag: 'Remember'
+                }]
+            },
+            {
+                id: 'auth-logout',
+                icon: 'logout',
+                title: 'User Logout',
+                desc: 'Destroys session and clears remember token. Requires active authentication. Returns JSON response.',
+                code: "// POST /api/auth/logout (requires AuthMiddleware)\nauth()->logout();\n\nreturn JsonResponse::success([\n    'message' => 'Logged out successfully'\n]);\n\n// Backend:\n// 1. Destroys session data\n// 2. Clears remember_token from database\n// 3. Deletes remember cookie\n// 4. Regenerates session ID",
+                routes: [{
+                    m: 'POST',
+                    url: '/api/auth/logout',
+                    d: 'Logout current user - destroys session and remember token',
+                    u: 'Requires: active session (AuthMiddleware). Returns 200 with success message, or 401 if not authenticated',
+                    tag: 'Auth Required'
+                }]
+            },
+            {
+                id: 'password-forgot',
+                icon: 'email-lock',
+                title: 'Forgot Password',
+                desc: 'Request a password reset token. Generates secure token stored in database, valid for 1 hour. Demo returns token in JSON, production sends email.',
+                code: "// POST /api/password/forgot\n$token = bin2hex(random_bytes(32));\n$hashedToken = hash('sha256', $token);\n\napp('db')->table('password_resets')->insert([\n    'email' => $email,\n    'token' => $hashedToken,\n    'expires_at' => date('Y-m-d H:i:s', strtotime('+1 hour')),\n]);\n\nreturn JsonResponse::success([\n    'demo_token' => $token,\n    'demo_reset_url' => '/password/reset/' . $token,\n]);",
+                routes: [{
+                    m: 'POST',
+                    url: '/api/password/forgot',
+                    d: 'Request password reset token - generates token valid for 1 hour',
+                    u: 'Throttled: 5/min. Returns 200 with demo token/URL. Production sends email. Always returns 200 (no user enumeration)',
+                    body: '{"email":"john@example.com"}',
+                    tag: 'Throttled'
+                }]
+            },
+            {
+                id: 'password-reset',
+                icon: 'lock-reset',
+                title: 'Reset Password',
+                desc: 'Reset password using token from forgot password request. Validates token expiration, updates password (auto-hashed), deletes used token, and returns JSON.',
+                code: "// POST /api/password/reset\n$hashedToken = hash('sha256', $token);\n\n$reset = app('db')->table('password_resets')\n    ->where('email', '=', $email)\n    ->where('token', '=', $hashedToken)\n    ->where('expires_at', '>', date('Y-m-d H:i:s'))\n    ->first();\n\nif (!$reset) {\n    return JsonResponse::error('Invalid or expired token', 400);\n}\n\n$user->password = $newPassword; // Auto-hashed\n$user->save();\n\nreturn JsonResponse::success(['message' => 'Password reset successfully!']);",
+                routes: [{
+                    m: 'POST',
+                    url: '/api/password/reset',
+                    d: 'Reset password with token - validates and updates password',
+                    u: 'Requires: token (from forgot request), email, password (min:8), password_confirmation. Returns 200 on success, 400/422 on error',
+                    body: '{"token":"abc123...","email":"john@example.com","password":"NewSecurePass123!","password_confirmation":"NewSecurePass123!"}',
+                    tag: 'Throttled'
+                }]
+            },
+            {
+                id: 'users-protected',
+                icon: 'shield-lock',
+                title: 'Protected User CRUD',
+                desc: 'User CRUD endpoints protected by AuthMiddleware. Requires valid session or JWT token. Returns 401 if not authenticated.',
+                code: "// routes/api/users.php\nRouter::group([\n    'prefix' => 'api',\n    'middleware' => [AuthMiddleware::class]\n], function () {\n    Router::get('/users', [UserApiController::class, 'index']);\n    Router::post('/users', [UserApiController::class, 'store']);\n    Router::get('/users/{id}', [UserApiController::class, 'show']);\n    Router::put('/users/{id}', [UserApiController::class, 'update']);\n    Router::delete('/users/{id}', [UserApiController::class, 'destroy']);\n});",
+                routes: [
+                    {
+                        m: 'GET',
+                        url: '/api/users',
+                        d: 'List all users (requires authentication)',
+                        u: 'AuthMiddleware checks session/JWT. Returns array of users or 401 if not authenticated',
+                        tag: 'Auth Required'
+                    },
+                    {
+                        m: 'POST',
+                        url: '/api/users',
+                        d: 'Create new user (requires authentication)',
+                        u: 'Validates: name (required|min:2), email (required|email|unique), password (required|min:8|confirmed). Returns 201 or 422',
+                        body: '{"name":"Jane Smith","email":"jane@example.com","password":"Password123!","password_confirmation":"Password123!"}',
+                        tag: 'Auth Required'
+                    },
+                    {
+                        m: 'GET',
+                        url: '/api/users/1',
+                        d: 'Get specific user by ID (requires authentication)',
+                        u: 'Returns user object or 404 if not found. Requires auth or returns 401',
+                        tag: 'Auth Required'
+                    },
+                    {
+                        m: 'PUT',
+                        url: '/api/users/1',
+                        d: 'Update user (requires authentication)',
+                        u: 'Partial updates supported. Password optional. Returns 200 or 422',
+                        body: '{"name":"Jane Doe","email":"jane.doe@example.com"}',
+                        tag: 'Auth Required'
+                    },
+                    {
+                        m: 'DELETE',
+                        url: '/api/users/2',
+                        d: 'Delete user (requires authentication)',
+                        u: 'Cannot delete own account (returns 403). Returns 200 on success',
+                        tag: 'Auth Required'
+                    }
+                ]
+            },
+            {
+                id: 'users-public',
+                icon: 'account-multiple',
+                title: 'Public User API (v1)',
+                desc: 'Version 1 user endpoints - public access, no authentication required. Useful for testing and public registration flows.',
+                code: "// routes/api/users.php\nRouter::group(['prefix' => 'api/v1'], function () {\n    Router::get('/users', [UserController::class, 'index']);\n    Router::post('/users', [UserController::class, 'store']);\n    Router::get('/users/{id}', [UserController::class, 'show']);\n    Router::put('/users/{id}', [UserController::class, 'update']);\n    Router::delete('/users/{id}', [UserController::class, 'destroy']);\n});",
+                routes: [
+                    {
+                        m: 'GET',
+                        url: '/api/v1/users',
+                        d: 'List all users (public access)',
+                        u: 'Returns array of users with count. No authentication required'
+                    },
+                    {
+                        m: 'POST',
+                        url: '/api/v1/users',
+                        d: 'Create user via public API',
+                        u: 'Simpler validation than protected API. Returns 422 on validation errors, 201 on success',
+                        body: '{"name":"Public User","email":"public@example.com","password":"TestPass123!"}'
+                    },
+                    {
+                        m: 'GET',
+                        url: '/api/v1/users/1',
+                        d: 'Get user by ID (public)',
+                        u: 'Returns 404 if not found, 200 with user object if found. No auth required'
+                    },
+                    {
+                        m: 'PUT',
+                        url: '/api/v1/users/1',
+                        d: 'Update user via public API',
+                        u: 'Uses fill() for mass assignment. Returns 200 on success',
+                        body: '{"name":"Updated Name"}'
+                    },
+                    {
+                        m: 'DELETE',
+                        url: '/api/v1/users/3',
+                        d: 'Delete user via public API',
+                        u: 'Hard delete. No restrictions. Returns 200 on success'
+                    }
+                ]
+            },
+            {
+                id: 'errors',
+                icon: 'alert-circle',
+                title: 'Error Response Examples',
+                desc: 'Common HTTP error responses: 401 Unauthorized, 404 Not Found, 422 Unprocessable Entity. Test error handling and validation.',
+                code: "// Common error responses:\n\n// 401 Unauthorized\nreturn JsonResponse::error('Unauthorized', 401);\n\n// 404 Not Found\nreturn JsonResponse::error('Resource not found', 404);\n\n// 422 Validation Error\nreturn JsonResponse::error('Validation failed', 422, [\n    'errors' => $validator->errors()\n]);",
+                routes: [
+                    {
+                        m: 'GET',
+                        url: '/api/users/999999',
+                        d: '404 Not Found - request non-existent user',
+                        u: 'Protected endpoint returns 401 if not authenticated, 404 if authenticated but user not found',
+                        tag: 'Error'
+                    },
+                    {
+                        m: 'POST',
+                        url: '/api/users',
+                        d: '401 Unauthorized - protected endpoint without auth',
+                        u: 'AuthMiddleware blocks request and returns 401 before reaching controller',
+                        body: '{}',
+                        tag: 'Error'
+                    },
+                    {
+                        m: 'POST',
+                        url: '/api/v1/users',
+                        d: '422 Validation Error - invalid data',
+                        u: 'Missing required fields or invalid format triggers validation errors',
+                        body: '{"name":"A"}',
+                        tag: 'Error'
+                    }
+                ]
+            }
+        ];
+
         const el = id => document.getElementById(id);
 
-        function render() {
-            const toc = el('tocList');
-            let t = '';
-            S.forEach(s => {
-                t += '<li><a href="#' + s.id + '" onclick="expand(\'' + s.id + '\')"><span class="mdi mdi-' + s.icon + '"></span> ' + s.title + '</a></li>';
-            });
-            toc.innerHTML = t;
+        // Switch between Routes and APIs tabs
+        function switchMainTab(tab) {
+            currentTab = tab;
 
+            // Update tab buttons
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.tab === tab);
+            });
+
+            // Update content panels
+            document.getElementById('routes-content').classList.toggle('active', tab === 'routes');
+            document.getElementById('apis-content').classList.toggle('active', tab === 'apis');
+
+            // Re-render sidebar
+            renderSidebar();
+
+            // Render API sections if switching to APIs tab
+            if (tab === 'apis') {
+                if (!document.querySelector('#api-sections .section')) {
+                    renderApiSections();
+                }
+                updateAuthStatus();
+            }
+
+            // Update URL hash
+            window.history.replaceState(null, '', '#' + tab);
+        }
+
+        // Render sidebar with grouping
+        function renderSidebar() {
+            const sidebar = el('tocList');
+            let t = '';
+
+            const activeGroups = currentTab === 'routes' ? groups : apiGroups;
+            const activeSections = currentTab === 'routes' ? S : A;
+
+            activeGroups.forEach((group, gi) => {
+                t += '<h3><span class="mdi mdi-' + group.icon + '"></span> ' + group.name + '</h3>';
+                t += '<ul>';
+
+                group.sections.forEach(sectionId => {
+                    const s = activeSections.find(sec => sec.id === sectionId);
+                    if (s) {
+                        const routeCount = s.routes.length;
+                        t += '<li><a href="#' + s.id + '" onclick="expand(\'' + s.id + '\')"><span class="mdi mdi-' + s.icon + '"></span> ' + s.title + ' <span class="route-count-badge">' + routeCount + '</span></a></li>';
+                    }
+                });
+
+                t += '</ul>';
+            });
+
+            sidebar.innerHTML = t;
+        }
+
+        // Render routes tab content
+        function render() {
             const wrap = el('sections');
             let h = '';
             S.forEach((sec, si) => {
                 h += '<div class="section" id="' + sec.id + '">';
-                h += '<div class="section-title" onclick="toggleSec(this)"><span class="mdi mdi-' + sec.icon + '"></span> ' + sec.title + '<span class="mdi mdi-chevron-down arrow"></span></div>';
+                h += '<div class="section-title"><span class="mdi mdi-' + sec.icon + '"></span> ' + sec.title + '</div>';
                 h += '<p class="section-desc">' + sec.desc + '</p>';
                 if (sec.code) {
-                    h += '<div class="section-code"><div class="section-code-header"><span class="section-code-lang">PHP</span></div><div class="section-code-body">' + esc(sec.code) + '</div></div>';
+                    h += '<div class="code-container"><div class="code-header"><span class="code-lang">PHP</span><button class="code-copy" onclick="copyCode(this)" aria-label="Copy code"><span class="mdi mdi-content-copy"></span></button></div><pre class="code-block"><code class="language-php">' + esc(sec.code) + '</code></pre></div>';
                 }
                 h += '<div class="route-list">';
                 sec.routes.forEach((r, ri) => {
@@ -404,6 +730,57 @@
                 h += '</div></div>';
             });
             wrap.innerHTML = h;
+
+            // Apply syntax highlighting
+            if (typeof hljs !== 'undefined') {
+                document.querySelectorAll('#sections .code-block code').forEach(block => {
+                    if (!block.dataset.highlighted) {
+                        hljs.highlightElement(block);
+                        block.dataset.highlighted = 'yes';
+                    }
+                });
+            }
+        }
+
+        // Render API sections
+        function renderApiSections() {
+            const wrap = el('api-sections');
+            let h = '';
+
+            A.forEach((sec, si) => {
+                h += '<div class="section" id="' + sec.id + '">';
+                h += '<div class="section-title"><span class="mdi mdi-' + sec.icon + '"></span> ' + sec.title + '</div>';
+                h += '<p class="section-desc">' + sec.desc + '</p>';
+
+                if (sec.code) {
+                    h += '<div class="code-container"><div class="code-header"><span class="code-lang">PHP</span><button class="code-copy" onclick="copyCode(this)" aria-label="Copy code"><span class="mdi mdi-content-copy"></span></button></div><pre class="code-block"><code class="language-php">' + esc(sec.code) + '</code></pre></div>';
+                }
+
+                h += '<div class="route-list">';
+                sec.routes.forEach((r, ri) => {
+                    const mc = r.m.toLowerCase();
+                    const uh = esc(r.url).replace(/\{([^}]+)\}/g, '<span class="api-path-param">{$1}</span>');
+                    const tg = r.tag ? '<span class="route-tag">' + r.tag + '</span>' : '';
+                    h += '<div class="route-card">';
+                    h += '<div class="route-header"><span class="api-method api-method-' + mc + '">' + r.m + '</span><span class="api-path">' + uh + '</span>' + tg + '<button class="btn-test" onclick="fireApi(' + si + ',' + ri + ')"><span class="mdi mdi-play"></span> Test</button></div>';
+                    h += '<div class="route-body"><div class="route-desc">' + r.d + '</div>';
+                    if (r.u) h += '<div class="route-usage">' + r.u + '</div>';
+                    h += '</div></div>';
+                });
+                h += '</div></div>';
+            });
+
+            wrap.innerHTML = h;
+
+            // Apply syntax highlighting
+            if (typeof hljs !== 'undefined') {
+                document.querySelectorAll('#api-sections .code-block code').forEach(block => {
+                    if (!block.dataset.highlighted) {
+                        hljs.highlightElement(block);
+                        block.dataset.highlighted = 'yes';
+                    }
+                });
+            }
         }
 
         function esc(s) {
@@ -448,6 +825,171 @@
 
         function closeModal() {
             el('modal').classList.remove('show');
+        }
+
+        // Mock auth token management
+        function getAuthToken() {
+            return sessionStorage.getItem('demo_auth_token');
+        }
+
+        function setAuthToken(token) {
+            sessionStorage.setItem('demo_auth_token', token);
+            updateAuthStatus();
+        }
+
+        function clearAuth() {
+            sessionStorage.removeItem('demo_auth_token');
+            updateAuthStatus();
+        }
+
+        function updateAuthStatus() {
+            const token = getAuthToken();
+            const statusDiv = el('authStatus');
+            const statusText = el('authStatusText');
+            const clearBtn = el('clearAuthBtn');
+
+            if (!statusDiv) return; // Not on APIs tab
+
+            if (token) {
+                statusDiv.classList.add('authenticated');
+                statusDiv.querySelector('.mdi').className = 'mdi mdi-account-check';
+                statusText.textContent = 'Authenticated (Demo Token)';
+                clearBtn.style.display = 'flex';
+            } else {
+                statusDiv.classList.remove('authenticated');
+                statusDiv.querySelector('.mdi').className = 'mdi mdi-account-off';
+                statusText.textContent = 'Not authenticated';
+                clearBtn.style.display = 'none';
+            }
+        }
+
+        // Fire API request (for APIs tab)
+        function fireApi(si, ri) {
+            const r = A[si].routes[ri];
+            const m = r.m === 'ANY' ? 'GET' : r.m;
+
+            // Check if this is a login request
+            const isLoginRequest = r.url === '/login' && m === 'POST';
+
+            if (['POST', 'PUT', 'PATCH'].includes(m)) {
+                // Open modal with isApiRequest flag
+                openModalForApi(m, r.url, r.body || '{}', isLoginRequest);
+                return;
+            }
+
+            sendApiRequest(m, r.url, null, isLoginRequest);
+        }
+
+        function openModalForApi(method, url, body, isLoginRequest) {
+            el('modal').classList.add('show');
+            el('modalTitle').textContent = method + ' Request';
+            el('modalUrl').value = url;
+            try {
+                el('modalBody').value = JSON.stringify(JSON.parse(body), null, 2);
+            } catch (e) {
+                el('modalBody').value = body;
+            }
+
+            // Store for send button
+            el('modalSend').onclick = function() {
+                sendApiRequest(method, el('modalUrl').value, el('modalBody').value, isLoginRequest);
+                closeModal();
+            };
+        }
+
+        async function sendApiRequest(method, url, body, isLoginRequest = false) {
+            // Show loading in response panel
+            const m = el('resMethod');
+            m.textContent = method;
+            m.className = 'api-method api-method-' + method.toLowerCase();
+            el('resUrl').textContent = url;
+            el('resStatus').textContent = '...';
+            el('resStatus').className = 'res-status';
+            el('resTime').textContent = '';
+            el('resBody').textContent = 'Loading...';
+            el('resPanel').classList.add('show');
+
+            const opts = {
+                method,
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            };
+
+            // Add auth token if available (except for login/register requests)
+            if (!isLoginRequest && !url.includes('/register')) {
+                const token = getAuthToken();
+                if (token) {
+                    opts.headers['Authorization'] = 'Bearer ' + token;
+                }
+            }
+
+            if (body && !['GET', 'HEAD', 'DELETE'].includes(method)) {
+                opts.body = body;
+            }
+
+            const t0 = performance.now();
+            try {
+                const res = await fetch(url, opts);
+                const ms = Math.round(performance.now() - t0);
+                const text = await res.text();
+
+                // Handle login/register success - extract demo token from JSON response
+                if ((isLoginRequest || url.includes('/api/auth/register')) && res.ok && text) {
+                    try {
+                        const jsonData = JSON.parse(text);
+                        if (jsonData.data && jsonData.data.demo_token) {
+                            setAuthToken(jsonData.data.demo_token);
+                        } else if (jsonData.demo_token) {
+                            setAuthToken(jsonData.demo_token);
+                        }
+                    } catch (e) {
+                        // If JSON parsing fails, ignore
+                    }
+                }
+
+                // Update status display
+                el('resStatus').textContent = res.status + ' ' + res.statusText;
+                if (res.status < 300) el('resStatus').className = 'res-status s2xx';
+                else if (res.status < 400) el('resStatus').className = 'res-status s3xx';
+                else if (res.status < 500) el('resStatus').className = 'res-status s4xx';
+                else el('resStatus').className = 'res-status s5xx';
+
+                el('resTime').textContent = ms + 'ms';
+
+                // Format and highlight response
+                try {
+                    const formatted = JSON.stringify(JSON.parse(text), null, 2);
+                    const codeEl = document.createElement('code');
+                    codeEl.className = 'language-json';
+                    codeEl.textContent = formatted;
+
+                    if (typeof hljs !== 'undefined') {
+                        hljs.highlightElement(codeEl);
+                    }
+
+                    el('resBody').innerHTML = '';
+                    el('resBody').appendChild(codeEl);
+                } catch (e) {
+                    el('resBody').textContent = text || '(empty response)';
+                }
+            } catch (err) {
+                el('resStatus').textContent = 'Error';
+                el('resStatus').className = 'res-status s5xx';
+
+                const errorJson = JSON.stringify({ error: err.message }, null, 2);
+                const codeEl = document.createElement('code');
+                codeEl.className = 'language-json';
+                codeEl.textContent = errorJson;
+
+                if (typeof hljs !== 'undefined') {
+                    hljs.highlightElement(codeEl);
+                }
+
+                el('resBody').innerHTML = '';
+                el('resBody').appendChild(codeEl);
+            }
         }
 
         async function sendRequest(method, url, body) {
@@ -515,8 +1057,32 @@
                 closeModal();
             }
         });
-        render();
-        S.forEach(s => {
-            const sec = document.getElementById(s.id);
-            if (sec) observer.observe(sec);
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check URL hash for tab
+            const hash = window.location.hash.slice(1);
+            if (hash === 'apis') {
+                currentTab = 'apis';
+                document.querySelector('[data-tab="apis"]').classList.add('active');
+                document.querySelector('[data-tab="routes"]').classList.remove('active');
+                document.getElementById('routes-content').classList.remove('active');
+                document.getElementById('apis-content').classList.add('active');
+            }
+
+            // Render initial content
+            render(); // Routes content
+            renderSidebar();
+
+            // If APIs tab is active, render that too
+            if (currentTab === 'apis') {
+                renderApiSections();
+                updateAuthStatus();
+            }
+
+            // Set up observers for routes tab
+            S.forEach(s => {
+                const sec = document.getElementById(s.id);
+                if (sec) observer.observe(sec);
+            });
         });

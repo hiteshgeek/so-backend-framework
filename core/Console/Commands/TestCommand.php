@@ -54,6 +54,7 @@ class TestCommand extends Command
             'session-encryption' => ['name' => 'Session Encryption', 'file' => 'Integration/infrastructure/session-encryption.test.php'],
         ],
         'application' => [
+            'routing' => ['name' => 'Routing System', 'file' => 'Integration/application/routing.test.php'],
             'validation' => ['name' => 'Validation System', 'file' => 'Integration/application/validation.test.php'],
             'middleware' => ['name' => 'Middleware System', 'file' => 'Integration/application/middleware.test.php'],
             'api' => ['name' => 'Internal API Layer', 'file' => 'Integration/application/api-layer.test.php'],

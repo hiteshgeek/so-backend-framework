@@ -383,7 +383,441 @@ Router::get('/api/demo/has-route/{name}', function (Request $request, string $na
 })->name('demo.hasRoute');
 
 // =============================================
-// M) Fallback Route (404 catch-all for demo prefix)
+// M) Optional Route Parameters
+// =============================================
+
+Router::group(['prefix' => 'api/demo'], function () {
+
+    // Optional ID - returns all users if no ID, specific user if ID provided
+    Router::get('/users/{id?}', function (Request $request, $id = null) {
+        if ($id === null) {
+            return JsonResponse::success([
+                'message' => 'All users (no ID provided)',
+                'users' => [
+                    ['id' => 1, 'name' => 'Alice'],
+                    ['id' => 2, 'name' => 'Bob'],
+                    ['id' => 3, 'name' => 'Charlie'],
+                ],
+                'note' => 'Optional parameter {id?} defaults to null',
+            ], 'User list');
+        }
+
+        return JsonResponse::success([
+            'user' => ['id' => $id, 'name' => 'User #' . $id],
+            'note' => 'Optional parameter {id?} was provided',
+        ], 'Single user');
+    })->name('demo.users.optional');
+
+    // Optional page with default value
+    Router::get('/posts/{page?}', function (Request $request, int $page = 1) {
+        return JsonResponse::success([
+            'page' => $page,
+            'posts' => array_map(fn($i) => ['id' => $i, 'title' => "Post $i"], range(($page-1)*10+1, $page*10)),
+            'note' => 'Optional parameter {page?} defaults to 1',
+        ], "Posts page $page");
+    })->whereNumber('page')->name('demo.posts.paginated');
+
+});
+
+// =============================================
+// N) Route Model Binding
+// =============================================
+
+Router::group(['prefix' => 'api/demo/binding'], function () {
+
+    // Automatic model injection by ID
+    Router::get('/products/{id}', function (Request $request, int $id) {
+        try {
+            $product = \App\Models\Product::find($id);
+            if (!$product) {
+                // Return mock data for demo
+                return JsonResponse::success([
+                    'product' => [
+                        'id' => $id,
+                        'name' => "Demo Product #$id",
+                        'slug' => "demo-product-$id",
+                        'price' => 99.99,
+                        'stock' => 50,
+                        'status' => 'active'
+                    ],
+                    'note' => 'Model auto-loaded from database using Product::find($id)',
+                    'demo_mode' => 'Using mock data - database not configured',
+                ], 'Route Model Binding (by ID)');
+            }
+            return JsonResponse::success([
+                'product' => $product->toArray(),
+                'note' => 'Model auto-loaded from database using Product::find($id)',
+            ], 'Route Model Binding (by ID)');
+        } catch (\Exception $e) {
+            // Return mock data on error
+            return JsonResponse::success([
+                'product' => [
+                    'id' => $id,
+                    'name' => "Demo Product #$id",
+                    'slug' => "demo-product-$id",
+                    'price' => 99.99,
+                    'stock' => 50,
+                    'status' => 'active'
+                ],
+                'note' => 'Model auto-loaded from database using Product::find($id)',
+                'demo_mode' => 'Using mock data - database not configured',
+            ], 'Route Model Binding (by ID)');
+        }
+    })->whereNumber('id')->name('demo.binding.product');
+
+    // Model binding by slug (custom key)
+    Router::get('/products-by-slug/{slug}', function (Request $request, string $slug) {
+        try {
+            $result = \App\Models\Product::where('slug', '=', $slug)->first();
+
+            if (!$result) {
+                // Return mock data for demo
+                return JsonResponse::success([
+                    'product' => [
+                        'id' => 1,
+                        'name' => ucwords(str_replace('-', ' ', $slug)),
+                        'slug' => $slug,
+                        'price' => 1299.99,
+                        'stock' => 25,
+                        'status' => 'active'
+                    ],
+                    'note' => 'Model auto-loaded by custom key (slug)',
+                    'demo_mode' => 'Using mock data - no matching product found',
+                ], 'Route Model Binding (by slug)');
+            }
+
+            // where()->first() returns array, not Model instance
+            return JsonResponse::success([
+                'product' => $result,
+                'note' => 'Model auto-loaded by custom key (slug)',
+            ], 'Route Model Binding (by slug)');
+        } catch (\Exception $e) {
+            // Return mock data on error
+            return JsonResponse::success([
+                'product' => [
+                    'id' => 1,
+                    'name' => ucwords(str_replace('-', ' ', $slug)),
+                    'slug' => $slug,
+                    'price' => 1299.99,
+                    'stock' => 25,
+                    'status' => 'active'
+                ],
+                'note' => 'Model auto-loaded by custom key (slug)',
+                'demo_mode' => 'Using mock data - database error: ' . $e->getMessage(),
+            ], 'Route Model Binding (by slug)');
+        }
+    })->whereSlug('slug')->name('demo.binding.productBySlug');
+
+    // Model binding with 404 demonstration
+    Router::get('/categories/{id}', function (Request $request, int $id) {
+        try {
+            $category = \App\Models\Category::find($id);
+
+            // For IDs > 900, demonstrate 404
+            if ($id > 900 || !$category) {
+                return JsonResponse::error('Category not found - Model binding returns 404 for missing resources', 404);
+            }
+
+            if ($category) {
+                return JsonResponse::success([
+                    'category' => $category->toArray(),
+                    'note' => 'Automatic 404 when model not found',
+                ], 'Category loaded');
+            }
+
+            // Return mock data for demo
+            return JsonResponse::success([
+                'category' => [
+                    'id' => $id,
+                    'name' => "Demo Category #$id",
+                    'slug' => "demo-category-$id",
+                ],
+                'note' => 'Automatic 404 when model not found (try ID 999 to see 404)',
+                'demo_mode' => 'Using mock data - database not configured',
+            ], 'Category loaded');
+        } catch (\Exception $e) {
+            // Return mock data on error (except for demo 404)
+            if ($id > 900) {
+                return JsonResponse::error('Category not found - Model binding returns 404 for missing resources', 404);
+            }
+            return JsonResponse::success([
+                'category' => [
+                    'id' => $id,
+                    'name' => "Demo Category #$id",
+                    'slug' => "demo-category-$id",
+                ],
+                'note' => 'Automatic 404 when model not found (try ID 999 to see 404)',
+                'demo_mode' => 'Using mock data - database not configured',
+            ], 'Category loaded');
+        }
+    })->whereNumber('id')->name('demo.binding.category');
+
+});
+
+// =============================================
+// O) Multiple Middleware Chaining
+// =============================================
+
+// Create a simple middleware chain demonstrator
+Router::group([
+    'prefix' => 'api/demo/secure',
+    'middleware' => [
+        AuthMiddleware::class,
+        ThrottleMiddleware::class . ':30,1',
+        LogRequestMiddleware::class,
+    ]
+], function () {
+
+    Router::post('/data', function (Request $request) {
+        return JsonResponse::success([
+            'message' => 'Request passed through 3 middleware layers',
+            'middleware_chain' => [
+                '1. AuthMiddleware - Authentication check',
+                '2. ThrottleMiddleware - Rate limiting (30/min)',
+                '3. LogRequestMiddleware - Request logging',
+            ],
+            'data' => $request->all(),
+        ], 'Multi-middleware chain success');
+    })->name('demo.secure.data');
+
+    Router::get('/status', function (Request $request) {
+        return JsonResponse::success([
+            'authenticated' => true,
+            'rate_limit_remaining' => '30 per minute',
+            'logged' => true,
+            'note' => 'This route has 3 chained middleware',
+        ], 'Secure status');
+    })->name('demo.secure.status');
+
+});
+
+// =============================================
+// P) File Upload Routes
+// =============================================
+
+Router::group(['prefix' => 'api/demo'], function () {
+
+    Router::post('/upload', function (Request $request) {
+        $file = $request->file('document');
+
+        if (!$file) {
+            return JsonResponse::error('No file uploaded', 400);
+        }
+
+        return JsonResponse::success([
+            'name' => $file->getClientFilename(),
+            'size' => $file->getSize(),
+            'type' => $file->getClientMediaType(),
+            'size_formatted' => round($file->getSize() / 1024, 2) . ' KB',
+            'note' => 'File uploaded successfully (not saved to disk in demo)',
+        ], 'File upload successful');
+    })->name('demo.upload');
+
+    Router::post('/upload/multiple', function (Request $request) {
+        $files = $request->files();
+
+        if (empty($files)) {
+            return JsonResponse::error('No files uploaded', 400);
+        }
+
+        $uploaded = [];
+        foreach ($files as $key => $file) {
+            if (is_array($file)) {
+                foreach ($file as $f) {
+                    $uploaded[] = [
+                        'field' => $key,
+                        'name' => $f->getClientFilename(),
+                        'size' => $f->getSize(),
+                        'type' => $f->getClientMediaType(),
+                    ];
+                }
+            } else {
+                $uploaded[] = [
+                    'field' => $key,
+                    'name' => $file->getClientFilename(),
+                    'size' => $file->getSize(),
+                    'type' => $file->getClientMediaType(),
+                ];
+            }
+        }
+
+        return JsonResponse::success([
+            'count' => count($uploaded),
+            'files' => $uploaded,
+        ], 'Multiple files uploaded');
+    })->name('demo.upload.multiple');
+
+});
+
+// =============================================
+// Q) Content Negotiation (JSON/XML/Plain Text)
+// =============================================
+
+Router::get('/api/demo/content-negotiation/{id}', function (Request $request, int $id) {
+    try {
+        $product = \App\Models\Product::find($id);
+
+        if (!$product) {
+            // Use mock data
+            $product = (object) [
+                'id' => $id,
+                'name' => "Demo Product #$id",
+                'price' => 99.99,
+                'stock' => 50,
+                'status' => 'active'
+            ];
+        } else {
+            // Convert Model to object for consistent handling
+            $product = (object) $product->toArray();
+        }
+    } catch (\Exception $e) {
+        // Use mock data on error
+        $product = (object) [
+            'id' => $id,
+            'name' => "Demo Product #$id",
+            'price' => 99.99,
+            'stock' => 50,
+            'status' => 'active'
+        ];
+    }
+
+    $acceptHeader = $request->header('Accept', 'application/json');
+
+    // Check what format the client wants
+    if (str_contains($acceptHeader, 'application/xml') || str_contains($acceptHeader, 'text/xml')) {
+        // Return XML
+        $xml = '<?xml version="1.0" encoding="UTF-8"?>';
+        $xml .= '<product>';
+        $xml .= '<id>' . htmlspecialchars($product->id) . '</id>';
+        $xml .= '<name>' . htmlspecialchars($product->name) . '</name>';
+        $xml .= '<price>' . htmlspecialchars($product->price) . '</price>';
+        $xml .= '<note>Content negotiation: XML format requested via Accept header</note>';
+        $xml .= '</product>';
+
+        return new \Core\Http\Response($xml, 200, ['Content-Type' => 'application/xml']);
+    } elseif (str_contains($acceptHeader, 'text/plain')) {
+        // Return plain text
+        $text = "Product #{$product->id}\n";
+        $text .= "Name: {$product->name}\n";
+        $text .= "Price: \${$product->price}\n";
+        $text .= "\nNote: Content negotiation - plain text format requested via Accept header";
+
+        return new \Core\Http\Response($text, 200, ['Content-Type' => 'text/plain']);
+    } else {
+        // Default: JSON
+        return JsonResponse::success([
+            'product' => (array) $product,
+            'note' => 'Content negotiation: JSON format (default)',
+            'tip' => 'Try with Accept: application/xml or Accept: text/plain',
+        ], 'Product data');
+    }
+})->whereNumber('id')->name('demo.contentNegotiation');
+
+// =============================================
+// R) Response Transformation Middleware
+// =============================================
+
+// Simulated response wrapper middleware
+Router::get('/api/demo/wrapped/data', function (Request $request) {
+    // In a real scenario, middleware would wrap this response
+    $data = ['message' => 'This is the actual data'];
+
+    // Simulate what ResponseTransformMiddleware would do
+    return JsonResponse::success([
+        'success' => true,
+        'data' => $data,
+        'metadata' => [
+            'timestamp' => date('c'),
+            'request_id' => uniqid('req_'),
+            'version' => '1.0',
+        ],
+        'note' => 'Response wrapped in standardized envelope',
+    ], 'Wrapped response');
+})->name('demo.wrapped.data');
+
+Router::get('/api/demo/wrapped/error', function (Request $request) {
+    // Simulated error response with standard format
+    return JsonResponse::error('Something went wrong', 500, [
+        'error_code' => 'DEMO_ERROR',
+        'metadata' => [
+            'timestamp' => date('c'),
+            'request_id' => uniqid('req_'),
+        ],
+        'note' => 'Errors also follow standardized format',
+    ]);
+})->name('demo.wrapped.error');
+
+// =============================================
+// S) Custom Route Constraints
+// =============================================
+
+Router::group(['prefix' => 'api/demo/locale'], function () {
+
+    // Locale-specific routes with custom constraint
+    Router::get('/{locale}/products', function (Request $request, string $locale) {
+        try {
+            $products = \App\Models\Product::whereNull('deleted_at')->limit(5)->get();
+
+            if (empty($products)) {
+                // Use mock data
+                $products = [
+                    ['id' => 1, 'name' => 'Product 1', 'price' => 19.99],
+                    ['id' => 2, 'name' => 'Product 2', 'price' => 29.99],
+                    ['id' => 3, 'name' => 'Product 3', 'price' => 39.99],
+                ];
+            }
+        } catch (\Exception $e) {
+            // Use mock data on error
+            $products = [
+                ['id' => 1, 'name' => 'Product 1', 'price' => 19.99],
+                ['id' => 2, 'name' => 'Product 2', 'price' => 29.99],
+                ['id' => 3, 'name' => 'Product 3', 'price' => 39.99],
+            ];
+        }
+
+        return JsonResponse::success([
+            'locale' => $locale,
+            'message' => "Products in $locale language",
+            'products' => $products,
+            'note' => 'Custom constraint: locale must be en|es|fr|de',
+        ], "Products ($locale)");
+    })->where('locale', 'en|es|fr|de')->name('demo.locale.products');
+
+    // Invalid locale returns 404
+    Router::get('/{locale}/about', function (Request $request, string $locale) {
+        return JsonResponse::success([
+            'locale' => $locale,
+            'message' => "About page in $locale",
+            'note' => 'Try invalid locale (e.g., /zz/about) to see constraint in action',
+        ], 'About page');
+    })->where('locale', 'en|es|fr|de')->name('demo.locale.about');
+
+});
+
+// =============================================
+// T) Route Performance Info
+// =============================================
+
+Router::get('/api/demo/performance', function (Request $request) {
+    $startTime = microtime(true);
+
+    // Simulate route resolution
+    $namedRoutes = Router::getNamedRoutes();
+    $demoRoutes = array_filter($namedRoutes, fn($name) => str_starts_with($name, 'demo.'), ARRAY_FILTER_USE_KEY);
+
+    $endTime = microtime(true);
+    $duration = round(($endTime - $startTime) * 1000, 2);
+
+    return JsonResponse::success([
+        'total_demo_routes' => count($demoRoutes),
+        'resolution_time_ms' => $duration,
+        'note' => 'Route caching (via route:cache) can improve this 10x',
+        'tip' => 'Run: php sixorbit route:cache (if implemented)',
+    ], 'Performance metrics');
+})->name('demo.performance');
+
+// =============================================
+// U) Fallback Route (404 catch-all for demo prefix)
 // =============================================
 // Note: This is registered last to catch unmatched demo routes.
 // The global fallback applies to ALL unmatched routes.

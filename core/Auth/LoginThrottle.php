@@ -278,7 +278,7 @@ class LoginThrottle
      *
      * @return bool
      */
-    protected function isAvailable(): bool
+    public function isAvailable(): bool
     {
         return $this->enabled && $this->cache !== null;
     }

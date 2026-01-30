@@ -1,44 +1,4 @@
-:root {
-  --primary: #2563eb;
-  --primary-dark: #1d4ed8;
-  --primary-light: #3b82f6;
-  --primary-bg: #eff6ff;
-  --success: #10b981;
-  --success-bg: #d1fae5;
-  --surface: #ffffff;
-  --background: #f8fafc;
-  --text: #1e293b;
-  --text-secondary: #64748b;
-  --text-muted: #94a3b8;
-  --border: #e2e8f0;
-  --border-light: #f1f5f9;
-  --code-bg: #0f172a;
-  --code-text: #e2e8f0;
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
-  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  --radius: 8px;
-  --radius-sm: 4px;
-}
-
-[data-theme="dark"] {
-  --primary: #3b82f6;
-  --primary-dark: #2563eb;
-  --primary-light: #60a5fa;
-  --primary-bg: #1e3a5f;
-  --success: #34d399;
-  --success-bg: #064e3b;
-  --surface: #1e293b;
-  --background: #0f172a;
-  --text: #f1f5f9;
-  --text-secondary: #94a3b8;
-  --text-muted: #64748b;
-  --border: #334155;
-  --border-light: #1e293b;
-  --code-bg: #020617;
-  --code-text: #e2e8f0;
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
-  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
-}
+/* CSS variables are inherited from base.css - do not redefine them here */
 
 * {
   margin: 0;
@@ -134,9 +94,9 @@ body {
 
 .docs-sidebar {
   position: sticky;
-  top: 88px;
+  top: 136px;
   height: fit-content;
-  max-height: calc(100vh - 112px);
+  max-height: calc(100vh - 156px);
   overflow-y: auto;
   background: var(--surface);
   border-radius: var(--radius);
@@ -158,26 +118,26 @@ body {
 }
 
 .docs-sidebar h3 {
-  font-size: 10px;
+  font-size: 13px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--text-muted);
-  padding: 12px 14px 10px;
+  letter-spacing: 0.08em;
+  color: var(--primary);
+  margin: 0;
   display: flex;
   align-items: center;
-  gap: 6px;
-  border-bottom: 1px solid var(--border-light);
-  background: linear-gradient(
-    180deg,
-    var(--background) 0%,
-    var(--surface) 100%
-  );
+  gap: 8px;
+  background: linear-gradient(135deg, var(--primary-bg) 0%, transparent 100%);
+}
+
+.docs-sidebar h3:first-child {
+  margin-top: 8px;
 }
 
 .docs-sidebar h3 .mdi {
-  font-size: 14px;
+  font-size: 16px;
   color: var(--primary);
+  opacity: 1;
 }
 
 .docs-sidebar ul {
@@ -204,6 +164,28 @@ body {
   color: var(--primary-light);
   flex-shrink: 0;
   opacity: 0.85;
+}
+
+.route-count-badge {
+  margin-left: auto;
+  background: var(--primary-bg);
+  color: var(--primary);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 10px;
+  min-width: 20px;
+  text-align: center;
+}
+
+.docs-sidebar a:hover .route-count-badge {
+  background: var(--primary);
+  color: white;
+}
+
+.docs-sidebar a.active .route-count-badge {
+  background: var(--primary-dark);
+  color: white;
 }
 
 .docs-sidebar a:hover {
@@ -294,39 +276,10 @@ body {
   line-height: 1.6;
 }
 
-.section-code {
-  margin-bottom: 16px;
-  border-radius: var(--radius);
-  overflow: hidden;
-  box-shadow: var(--shadow-sm);
-}
-
-.section-code-header {
-  background: #1e293b;
-  padding: 6px 16px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.section-code-lang {
-  font-size: 11px;
-  font-weight: 500;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.section-code-body {
-  background: var(--code-bg);
-  padding: 16px 20px;
-  overflow-x: auto;
-  font-family: "JetBrains Mono", monospace;
-  font-size: 13px;
-  line-height: 1.7;
-  color: var(--code-text);
-  white-space: pre-wrap;
-}
+/* Code block styles inherited from docs.css:
+   - .code-container, .code-header, .code-block, .code-lang, .code-copy
+   - All code block styling now comes from docs.css for consistency
+*/
 
 .route-list {
   display: flex;
@@ -590,7 +543,7 @@ body {
   display: none;
   position: fixed;
   inset: 0;
-  background: rgba(15, 23, 42, 0.5);
+  background: rgba(0, 0, 0, 0.5);
   z-index: 200;
   align-items: center;
   justify-content: center;
@@ -663,7 +616,7 @@ body {
   height: 180px;
   padding: 12px;
   background: var(--code-bg);
-  border: 1px solid #334155;
+  border: 1px solid var(--border);
   border-radius: 6px;
   color: var(--code-text);
   font-family: "JetBrains Mono", monospace;
@@ -716,16 +669,46 @@ body {
 }
 
 /* ===== DARK MODE OVERRIDES ===== */
-[data-theme="dark"] .api-method-get { background: #064e3b; color: #6ee7b7; }
-[data-theme="dark"] .api-method-post { background: #1e3a5f; color: #93c5fd; }
-[data-theme="dark"] .api-method-put { background: #422006; color: #fcd34d; }
-[data-theme="dark"] .api-method-patch { background: #312e81; color: #c7d2fe; }
-[data-theme="dark"] .api-method-delete { background: #450a0a; color: #fca5a5; }
-[data-theme="dark"] .api-method-any { background: #3b0764; color: #e9d5ff; }
-[data-theme="dark"] .res-bar .res-status.s2xx { background: #064e3b; color: #6ee7b7; }
-[data-theme="dark"] .res-bar .res-status.s3xx { background: #422006; color: #fcd34d; }
-[data-theme="dark"] .res-bar .res-status.s4xx { background: #450a0a; color: #fca5a5; }
-[data-theme="dark"] .res-bar .res-status.s5xx { background: #4a044e; color: #f9a8d4; }
+[data-theme="dark"] .api-method-get {
+  background: #064e3b;
+  color: #6ee7b7;
+}
+[data-theme="dark"] .api-method-post {
+  background: #1e3a5f;
+  color: #93c5fd;
+}
+[data-theme="dark"] .api-method-put {
+  background: #422006;
+  color: #fcd34d;
+}
+[data-theme="dark"] .api-method-patch {
+  background: #312e81;
+  color: #c7d2fe;
+}
+[data-theme="dark"] .api-method-delete {
+  background: #450a0a;
+  color: #fca5a5;
+}
+[data-theme="dark"] .api-method-any {
+  background: #3b0764;
+  color: #e9d5ff;
+}
+[data-theme="dark"] .res-bar .res-status.s2xx {
+  background: #064e3b;
+  color: #6ee7b7;
+}
+[data-theme="dark"] .res-bar .res-status.s3xx {
+  background: #422006;
+  color: #fcd34d;
+}
+[data-theme="dark"] .res-bar .res-status.s4xx {
+  background: #450a0a;
+  color: #fca5a5;
+}
+[data-theme="dark"] .res-bar .res-status.s5xx {
+  background: #4a044e;
+  color: #f9a8d4;
+}
 
 @media (max-width: 900px) {
   .docs-layout {
@@ -756,4 +739,113 @@ body {
   .route-header {
     flex-wrap: wrap;
   }
+}
+
+/* ===== TAB NAVIGATION ===== */
+.tabs-wrapper {
+  position: sticky;
+  top: 64px;
+  z-index: 90;
+  background: var(--background);
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+  border-bottom: 1px solid var(--border);
+}
+
+/* Tab content visibility */
+#routes-content,
+#apis-content {
+  display: none;
+}
+
+#routes-content.active,
+#apis-content.active {
+  display: block;
+}
+
+.tabs-header {
+  display: flex;
+  gap: 0;
+}
+
+.tab-button {
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: inherit;
+}
+
+.tab-button:hover {
+  color: var(--text);
+  background: var(--border-light);
+}
+
+.tab-button.active {
+  color: var(--primary);
+  border-bottom-color: var(--primary);
+}
+
+.tab-button .mdi {
+  font-size: 18px;
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+/* ===== AUTH STATUS INDICATOR ===== */
+.auth-status {
+  margin: 20px 0;
+  padding: 16px 20px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+}
+
+.auth-status.authenticated {
+  background: var(--success-bg);
+  border-color: var(--success);
+  color: var(--success);
+}
+
+.auth-status .mdi {
+  font-size: 20px;
+}
+
+.btn-clear-auth {
+  margin-left: auto;
+  padding: 6px 12px;
+  background: var(--danger);
+  color: white;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: opacity 0.2s;
+}
+
+.btn-clear-auth:hover {
+  opacity: 0.9;
 }
