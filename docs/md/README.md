@@ -203,7 +203,7 @@ curl -X POST http://localhost:8000/api/v1/users \
 | **[Documentation Index](/docs/index)** | [Docs] Complete documentation navigation |
 | **[Setup Guide](/docs/setup)** | [->] Installation and setup guide |
 | **[Configuration](/docs/configuration)** | [Config] Configuration system guide |
-| **[Quick Start](/docs/quick-start)** | ⚡ Fast reference guide |
+| **[Quick Start](/docs/quick-start)** | Fast reference guide |
 | **[Rename Process](/docs/rename)** | [Note] Step-by-step rename guide |
 | **[Framework Branding](/docs/branding)** | 🎨 Complete branding reference |
 

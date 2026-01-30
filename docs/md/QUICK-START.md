@@ -1,6 +1,6 @@
 # Quick Start Guide
 
-## ⚡ Change Framework Name in One Place
+## Change Framework Name in One Place
 
 ### Step 1: Edit .env
 

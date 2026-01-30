@@ -313,7 +313,7 @@ find . -name "*.md" -exec sed -i 's/SO Framework/Your Framework/g' {} +
 find . -name "*.md" -exec sed -i 's/so-framework/your-framework/g' {} +
 ```
 
-**Total Time:** ~7 minutes to completely rebrand! ⚡
+**Total Time:** ~7 minutes to completely rebrand!
 
 ---
 

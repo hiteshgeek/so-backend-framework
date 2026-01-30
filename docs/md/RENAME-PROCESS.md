@@ -562,7 +562,7 @@ Instead of following this manual process, you can use the automated script:
 ./rename-framework.sh "Your Framework Name" "your-database" "vendor/package"
 ```
 
-The script does **exactly the same steps** as this document, but automatically! ⚡
+The script does **exactly the same steps** as this document, but automatically!
 
 It also includes:
 - [x] Automatic backups
