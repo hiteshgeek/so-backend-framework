@@ -21,8 +21,6 @@ $toc = [
     ['id' => 'security', 'title' => 'Security Features', 'level' => 2],
     ['id' => 'troubleshooting', 'title' => 'Troubleshooting', 'level' => 2],
 ];
-$prevPage = ['url' => '/docs/readme', 'title' => 'README'];
-$nextPage = ['url' => '/docs/quick-start', 'title' => 'Quick Start'];
 $breadcrumbs = [['label' => 'Setup Guide']];
 $lastUpdated = '2026-01-30';
 
@@ -122,7 +120,9 @@ exit;') ?>
     ['method' => 'DELETE', 'path' => '/api/v1/users/{id}', 'description' => 'Delete user'],
 ]) ?>
 
-<h4 class="heading heading-4 mt-4">Example Requests</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">Example Requests</span>
+</h3>
 
 <?= codeTabs([
     ['label' => 'Get All', 'lang' => 'bash', 'code' => 'curl http://localhost:8000/api/v1/users'],
@@ -251,7 +251,9 @@ Router::resource(\'products\', ProductController::class);', 'routes/web.php') ?>
 
 <div class="grid grid-3 gap-3">
     <div>
-        <h4 class="heading heading-4">SQL Injection Prevention</h4>
+        <h3 class="heading heading-3">
+            <span class="heading-text">SQL Injection Prevention</span>
+        </h3>
         <p class="text-muted">All queries use prepared statements automatically.</p>
         <?= codeBlock('php', '// Safe - uses prepared statements
 User::where(\'email\', \'=\', $email)->first();
@@ -262,7 +264,9 @@ app(\'db\')->table(\'users\')
     ->first();') ?>
     </div>
     <div>
-        <h4 class="heading heading-4">Password Hashing</h4>
+        <h3 class="heading heading-3">
+            <span class="heading-text">Password Hashing</span>
+        </h3>
         <p class="text-muted">Argon2ID hashing in User model.</p>
         <?= codeBlock('php', 'protected function setPasswordAttribute(string $value): void
 {
@@ -273,7 +277,9 @@ app(\'db\')->table(\'users\')
 }') ?>
     </div>
     <div>
-        <h4 class="heading heading-4">XSS Prevention</h4>
+        <h3 class="heading heading-3">
+            <span class="heading-text">XSS Prevention</span>
+        </h3>
         <p class="text-muted">Always escape output in views.</p>
         <?= codeBlock('php', '<!-- Using helper -->
 <h1><?= e($title) ?></h1>

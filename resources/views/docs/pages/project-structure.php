@@ -19,8 +19,6 @@ $toc = [
     ['id' => 'quick-reference', 'title' => 'Quick Reference', 'level' => 2],
     ['id' => 'naming-conventions', 'title' => 'Naming Conventions', 'level' => 2],
 ];
-$prevPage = ['url' => '/docs/quick-start', 'title' => 'Quick Start'];
-$nextPage = ['url' => '/docs/routing-system', 'title' => 'Routing System'];
 $breadcrumbs = [['label' => 'Project Structure']];
 $lastUpdated = '2026-01-30';
 
@@ -55,7 +53,9 @@ include __DIR__ . '/../_layout.php';
 ├── rename-framework.sh     # Framework rename script
 └── debug-login.php         # Debug tool') ?>
 
-<h4 class="heading heading-4 mt-4">Key Root Files</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">Key Root Files</span>
+</h3>
 
 <?= dataTable(
     ['File', 'Purpose'],
@@ -111,7 +111,9 @@ include __DIR__ . '/../_layout.php';
     ├── QueueServiceProvider.php
     └── SessionServiceProvider.php') ?>
 
-<h4 class="heading heading-4 mt-4">Controllers</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">Controllers</span>
+</h3>
 
 <p>Controllers handle HTTP requests and return responses. They should be thin - delegate business logic to services or models.</p>
 
@@ -124,7 +126,9 @@ include __DIR__ . '/../_layout.php';
     }
 }', 'app/Controllers/UserController.php') ?>
 
-<h4 class="heading heading-4 mt-4">Models</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">Models</span>
+</h3>
 
 <p>Models represent database tables and handle data operations.</p>
 
@@ -135,7 +139,9 @@ include __DIR__ . '/../_layout.php';
     protected array $hidden = [\'password\'];
 }', 'app/Models/User.php') ?>
 
-<h4 class="heading heading-4 mt-4">Middleware</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">Middleware</span>
+</h3>
 
 <p>Middleware filters HTTP requests before they reach controllers.</p>
 
@@ -169,7 +175,9 @@ include __DIR__ . '/../_layout.php';
     ['icon' => 'console', 'title' => 'Console/', 'description' => 'CLI commands system'],
 ], 4) ?>
 
-<h4 class="heading heading-4 mt-4">Key Core Classes</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">Key Core Classes</span>
+</h3>
 
 <?= dataTable(
     ['Class', 'Purpose'],
@@ -204,7 +212,9 @@ include __DIR__ . '/../_layout.php';
 ├── security.php            # Security settings
 └── session.php             # Session configuration') ?>
 
-<h4 class="heading heading-4 mt-4">Accessing Configuration</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">Accessing Configuration</span>
+</h3>
 
 <?= codeBlock('php', '// Get single value
 $appName = config(\'app.name\');
@@ -258,7 +268,9 @@ $dbConfig = config(\'database\');') ?>
     │   └── pages/          # Converted doc pages
     └── welcome.php         # Home page') ?>
 
-<h4 class="heading heading-4 mt-4">View Rendering</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">View Rendering</span>
+</h3>
 
 <?= codeTabs([
     ['label' => 'Controller', 'lang' => 'php', 'code' => 'return Response::view(\'dashboard/index\', [

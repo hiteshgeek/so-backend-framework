@@ -16,8 +16,6 @@ $toc = [
     ['id' => 'advanced-usage', 'title' => 'Advanced Usage', 'level' => 2],
     ['id' => 'best-practices', 'title' => 'Best Practices', 'level' => 2],
 ];
-$prevPage = ['url' => '/docs/security-layer', 'title' => 'Security Layer'];
-$nextPage = ['url' => '/docs/session-system', 'title' => 'Session System'];
 $breadcrumbs = [['label' => 'Validation System']];
 $lastUpdated = '2026-01-30';
 
@@ -64,7 +62,9 @@ $user = User::create($validated);
 // → Clean, validated data only</code></pre>
 ', 'Good Practice', 'check-circle') ?>
 
-<h4 class="heading heading-4 mt-4">Features</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">Features</span>
+</h3>
 
 <?= featureGrid([
     ['icon' => 'format-list-checks', 'title' => '27+ Built-in Rules', 'description' => 'Required, email, min/max, unique, and more'],
@@ -81,7 +81,9 @@ $user = User::create($validated);
     <span class="heading-text">Quick Start</span>
 </h2>
 
-<h4 class="heading heading-4">Basic Usage</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">Basic Usage</span>
+</h3>
 
 <?= codeBlock('php', 'use Core\Validation\Validator;
 
@@ -105,7 +107,9 @@ if ($validator->fails()) {
     $validated = $validator->validated();
 }') ?>
 
-<h4 class="heading heading-4 mt-4">Using Helper Function</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">Using Helper Function</span>
+</h3>
 
 <?= codeBlock('php', 'try {
     $validated = validate($_POST, [
@@ -120,7 +124,9 @@ if ($validator->fails()) {
     return Response::json([\'errors\' => $errors], 422);
 }') ?>
 
-<h4 class="heading heading-4 mt-4">In Controllers</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">In Controllers</span>
+</h3>
 
 <?= codeBlockWithFile('php', 'class UserController
 {
@@ -145,7 +151,9 @@ if ($validator->fails()) {
     <span class="heading-text">Available Rules</span>
 </h2>
 
-<h4 class="heading heading-4">Required Rules</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">Required Rules</span>
+</h3>
 
 <?= dataTable(
     ['Rule', 'Description', 'Example'],
@@ -156,7 +164,9 @@ if ($validator->fails()) {
     ]
 ) ?>
 
-<h4 class="heading heading-4 mt-4">Type Rules</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">Type Rules</span>
+</h3>
 
 <?= dataTable(
     ['Rule', 'Description', 'Valid Examples'],
@@ -169,7 +179,9 @@ if ($validator->fails()) {
     ]
 ) ?>
 
-<h4 class="heading heading-4 mt-4">String Rules</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">String Rules</span>
+</h3>
 
 <?= dataTable(
     ['Rule', 'Description', 'Valid Examples'],
@@ -183,7 +195,9 @@ if ($validator->fails()) {
     ]
 ) ?>
 
-<h4 class="heading heading-4 mt-4">Size Rules</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">Size Rules</span>
+</h3>
 
 <?= dataTable(
     ['Rule', 'Description', 'Example'],
@@ -194,7 +208,9 @@ if ($validator->fails()) {
     ]
 ) ?>
 
-<h4 class="heading heading-4 mt-4">Comparison Rules</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">Comparison Rules</span>
+</h3>
 
 <?= dataTable(
     ['Rule', 'Description', 'Example'],
@@ -205,7 +221,9 @@ if ($validator->fails()) {
     ]
 ) ?>
 
-<h4 class="heading heading-4 mt-4">List Rules</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">List Rules</span>
+</h3>
 
 <?= dataTable(
     ['Rule', 'Description', 'Example'],
@@ -215,7 +233,9 @@ if ($validator->fails()) {
     ]
 ) ?>
 
-<h4 class="heading heading-4 mt-4">Date Rules</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">Date Rules</span>
+</h3>
 
 <?= dataTable(
     ['Rule', 'Description', 'Example'],
@@ -226,7 +246,9 @@ if ($validator->fails()) {
     ]
 ) ?>
 
-<h4 class="heading heading-4 mt-4">Database Rules</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">Database Rules</span>
+</h3>
 
 <?= dataTable(
     ['Rule', 'Description', 'Example'],
@@ -242,7 +264,9 @@ if ($validator->fails()) {
     <span class="heading-text">Custom Rules</span>
 </h2>
 
-<h4 class="heading heading-4">Closure-Based Rules</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">Closure-Based Rules</span>
+</h3>
 
 <?= codeBlock('php', '$rules = [
     \'discount\' => [
@@ -257,7 +281,9 @@ if ($validator->fails()) {
     ],
 ];') ?>
 
-<h4 class="heading heading-4 mt-4">Rule Classes</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">Rule Classes</span>
+</h3>
 
 <?= codeTabs([
     ['label' => 'Create Rule', 'lang' => 'php', 'code' => '<?php
@@ -293,7 +319,9 @@ validate($data, $rules);
     <span class="heading-text">Error Messages</span>
 </h2>
 
-<h4 class="heading heading-4">Custom Messages</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">Custom Messages</span>
+</h3>
 
 <?= codeBlock('php', '$rules = [
     \'email\' => \'required|email\',
@@ -308,7 +336,9 @@ $messages = [
 
 $validator = new Validator($data, $rules, $messages);') ?>
 
-<h4 class="heading heading-4 mt-4">Available Placeholders</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">Available Placeholders</span>
+</h3>
 
 <?= dataTable(
     ['Placeholder', 'Description'],
@@ -327,7 +357,9 @@ $validator = new Validator($data, $rules, $messages);') ?>
     <span class="heading-text">Advanced Usage</span>
 </h2>
 
-<h4 class="heading heading-4">Array Validation</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">Array Validation</span>
+</h3>
 
 <?= codeBlock('php', '$data = [
     \'users\' => [
@@ -342,7 +374,9 @@ $rules = [
     \'users.*.email\' => \'required|email\',
 ];') ?>
 
-<h4 class="heading heading-4 mt-4">Conditional Validation</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">Conditional Validation</span>
+</h3>
 
 <?= codeBlock('php', '$rules = [
     \'payment_method\' => \'required|in:cash,credit_card\',
@@ -350,7 +384,9 @@ $rules = [
     \'cvv\' => \'required_if:payment_method,credit_card|numeric|between:3,4\',
 ];') ?>
 
-<h4 class="heading heading-4 mt-4">Multiple Rule Formats</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">Multiple Rule Formats</span>
+</h3>
 
 <?= codeBlock('php', '// Pipe syntax (string)
 \'email\' => \'required|email|max:255\'

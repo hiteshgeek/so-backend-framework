@@ -74,7 +74,7 @@ function featureGrid(array $features, int $columns = 3): string
     }
 
     return <<<HTML
-<div class="feature-grid" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
+<div class="feature-grid">
     {$cardsHtml}
 </div>
 HTML;

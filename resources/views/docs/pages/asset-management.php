@@ -23,8 +23,6 @@ $toc = [
     ['id' => 'best-practices', 'title' => 'Best Practices', 'level' => 2],
     ['id' => 'api-reference', 'title' => 'API Reference', 'level' => 2],
 ];
-$prevPage = ['url' => '/docs/view-templates', 'title' => 'View Templates'];
-$nextPage = ['url' => '/docs/auth-system', 'title' => 'Authentication System'];
 $breadcrumbs = [['label' => 'Asset Management']];
 $lastUpdated = '2026-01-30';
 
@@ -53,7 +51,9 @@ include __DIR__ . '/../_layout.php';
     <span class="heading-text">Introduction</span>
 </h2>
 
-<h4 class="heading heading-4">Key Features</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">Key Features</span>
+</h3>
 
 <?= featureGrid([
     ['icon' => 'refresh', 'title' => 'Cache Busting', 'description' => 'Automatic ?v=filemtime() query strings change on every file update'],
@@ -72,7 +72,9 @@ include __DIR__ . '/../_layout.php';
     <span class="heading-text">Quick Start</span>
 </h2>
 
-<h4 class="heading heading-4">1. Register assets in your view</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">1. Register assets in your view</span>
+</h3>
 
 <?= codeBlock('php', '<?php
 assets()->cdn(\'https://cdn.jsdelivr.net/npm/@mdi/font@7.4.47/css/materialdesignicons.min.css\', \'css\', \'head\', 5);
@@ -80,7 +82,9 @@ assets()->css(\'css/app.css\', \'head\', 10);
 assets()->js(\'js/app.js\', \'body_end\', 10);
 ?>') ?>
 
-<h4 class="heading heading-4">2. Render in your layout</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">2. Render in your layout</span>
+</h3>
 
 <?= codeBlock('php', '<head>
     <?= render_assets(\'head\') ?>
@@ -90,7 +94,9 @@ assets()->js(\'js/app.js\', \'body_end\', 10);
     <?= render_assets(\'body_end\') ?>
 </body>') ?>
 
-<h4 class="heading heading-4">3. Generated HTML output</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">3. Generated HTML output</span>
+</h3>
 
 <?= codeBlock('html', '<head>
     <link href="https://cdn.jsdelivr.net/npm/@mdi/font@7.4.47/css/materialdesignicons.min.css" rel="stylesheet">
@@ -117,7 +123,9 @@ $url = asset(\'css/app.css\');
 <img src="<?= asset(\'images/logo.png\') ?>">
 <link rel="icon" href="<?= asset(\'images/favicon.ico\') ?>">') ?>
 
-<h4 class="heading heading-4">CDN Support</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">CDN Support</span>
+</h3>
 
 <p>Set <code class="code-inline">ASSET_URL</code> in your <code class="code-inline">.env</code> to prefix all asset URLs:</p>
 
@@ -127,7 +135,9 @@ ASSET_URL=https://cdn.example.com', 'Environment') ?>
 <?= codeBlock('php', 'asset(\'css/app.css\')
 // → https://cdn.example.com/assets/css/app.css?v=1706620800') ?>
 
-<h4 class="heading heading-4">Disable Versioning</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">Disable Versioning</span>
+</h3>
 
 <?= codeBlock('bash', '# Globally via .env
 ASSET_VERSIONING=false', 'Environment') ?>
@@ -259,7 +269,9 @@ assets()->cdn(\'https://cdn.example.com/lib.js\', \'js\', \'body_end\', 5, [
 </body>
 </html>', 'Layout Template') ?>
 
-<h4 class="heading heading-4">Priority Loading Order</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">Priority Loading Order</span>
+</h3>
 
 <?= dataTable(
     ['Priority', 'Usage', 'Example'],
@@ -279,7 +291,9 @@ assets()->cdn(\'https://cdn.example.com/lib.js\', \'js\', \'body_end\', 5, [
 
 <p>Push raw content to named stacks and render them in your layout. Similar to Laravel's <code class="code-inline">@push</code> / <code class="code-inline">@stack</code> directives.</p>
 
-<h4 class="heading heading-4">Push Content</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">Push Content</span>
+</h3>
 
 <?= codeBlock('php', '// Push inline styles
 push_stack(\'styles\', \'<style>.highlight { background: yellow; }</style>\');
@@ -287,7 +301,9 @@ push_stack(\'styles\', \'<style>.highlight { background: yellow; }</style>\');
 // Push with priority
 push_stack(\'styles\', \'<style>.critical { color: red; }</style>\', 10);') ?>
 
-<h4 class="heading heading-4">Block Capture</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">Block Capture</span>
+</h3>
 
 <?= codeBlock('php', '<?php assets()->startPush(\'scripts\'); ?>
 <script>
@@ -297,7 +313,9 @@ push_stack(\'styles\', \'<style>.critical { color: red; }</style>\', 10);') ?>
 </script>
 <?php assets()->endPush(); ?>') ?>
 
-<h4 class="heading heading-4">Render in Layout</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">Render in Layout</span>
+</h3>
 
 <?= codeBlock('php', '<head>
     <?= render_assets(\'head\') ?>
@@ -308,7 +326,9 @@ push_stack(\'styles\', \'<style>.critical { color: red; }</style>\', 10);') ?>
     <?= render_stack(\'scripts\') ?>
 </body>') ?>
 
-<h4 class="heading heading-4">Conditional Stack Rendering</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">Conditional Stack Rendering</span>
+</h3>
 
 <?= codeBlock('php', '<?php if (assets()->hasStack(\'charts\')): ?>
     <div id="chart-container"></div>
@@ -415,14 +435,18 @@ ASSET_VERSIONING=false', '.env') ?>
     <span class="heading-text">Best Practices</span>
 </h2>
 
-<h4 class="heading heading-4">Use Consistent Priority Levels</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">Use Consistent Priority Levels</span>
+</h3>
 
 <?= codeBlock('text', 'Priority  5  — CDN dependencies (fonts, icon libraries)
 Priority 10  — Base/framework CSS and JS
 Priority 20  — Layout CSS
 Priority 50  — Page-specific CSS/JS (default)') ?>
 
-<h4 class="heading heading-4">DashboardConfig Pattern for PHP Values in JS</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">DashboardConfig Pattern for PHP Values in JS</span>
+</h3>
 
 <p>When JavaScript needs PHP-generated values, use a small inline config block instead of putting PHP in <code class="code-inline">.js</code> files:</p>
 

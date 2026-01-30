@@ -16,8 +16,6 @@ $toc = [
     ['id' => 'renaming', 'title' => 'Renaming Framework', 'level' => 2],
     ['id' => 'best-practices', 'title' => 'Best Practices', 'level' => 2],
 ];
-$prevPage = ['url' => '/docs/quick-start', 'title' => 'Quick Start'];
-$nextPage = ['url' => '/docs/project-structure', 'title' => 'Project Structure'];
 $breadcrumbs = [['label' => 'Configuration']];
 $lastUpdated = '2026-01-30';
 
@@ -42,7 +40,9 @@ include __DIR__ . '/../_layout.php';
     <span class="heading-text">Quick Configuration</span>
 </h2>
 
-<h4 class="heading heading-4">1. Framework Name</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">1. Framework Name</span>
+</h3>
 
 <?= codeBlock('bash', 'APP_NAME="Your Framework Name"', '.env') ?>
 
@@ -55,7 +55,9 @@ include __DIR__ . '/../_layout.php';
     <li>Any place using <code class="code-inline">config('app.name')</code></li>
 </ul>
 
-<h4 class="heading heading-4 mt-4">2. Database Name</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">2. Database Name</span>
+</h3>
 
 <?= codeBlock('bash', 'DB_DATABASE=your-database-name', '.env') ?>
 
@@ -63,7 +65,9 @@ include __DIR__ . '/../_layout.php';
 
 <?= codeBlock('bash', 'php database/migrations/generate-setup.php') ?>
 
-<h4 class="heading heading-4 mt-4">3. Application URL</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">3. Application URL</span>
+</h3>
 
 <?= codeBlock('bash', 'APP_URL=https://yourdomain.com', '.env') ?>
 
@@ -75,7 +79,9 @@ include __DIR__ . '/../_layout.php';
     <span class="heading-text">Environment Variables Reference</span>
 </h2>
 
-<h4 class="heading heading-4">Application Settings</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">Application Settings</span>
+</h3>
 
 <?= dataTable(
     ['Variable', 'Default', 'Description'],
@@ -88,7 +94,9 @@ include __DIR__ . '/../_layout.php';
     ]
 ) ?>
 
-<h4 class="heading heading-4 mt-4">Database Settings</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">Database Settings</span>
+</h3>
 
 <?= dataTable(
     ['Variable', 'Default', 'Description'],
@@ -102,7 +110,9 @@ include __DIR__ . '/../_layout.php';
     ]
 ) ?>
 
-<h4 class="heading heading-4 mt-4">Session Settings</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">Session Settings</span>
+</h3>
 
 <?= dataTable(
     ['Variable', 'Default', 'Description'],
@@ -198,45 +208,36 @@ return [
     <span class="heading-text">Renaming Your Framework</span>
 </h2>
 
-<div class="steps">
-    <div class="step">
-        <div class="step-number">1</div>
-        <div class="step-content">
-            <h4 class="step-title">Update Environment</h4>
-            <?= codeBlock('bash', 'APP_NAME="My Awesome Framework"
+<h3 class="heading heading-3">
+    <span class="heading-text">1. Update Environment</span>
+</h3>
+
+<?= codeBlock('bash', 'APP_NAME="My Awesome Framework"
 DB_DATABASE=my-awesome-framework', '.env') ?>
-        </div>
-    </div>
 
-    <div class="step">
-        <div class="step-number">2</div>
-        <div class="step-content">
-            <h4 class="step-title">Regenerate Database Setup</h4>
-            <?= codeBlock('bash', 'php database/migrations/generate-setup.php') ?>
-        </div>
-    </div>
+<h3 class="heading heading-3">
+    <span class="heading-text">2. Regenerate Database Setup</span>
+</h3>
 
-    <div class="step">
-        <div class="step-number">3</div>
-        <div class="step-content">
-            <h4 class="step-title">Update Composer (Optional)</h4>
-            <?= codeBlock('json', '{
+<?= codeBlock('bash', 'php database/migrations/generate-setup.php') ?>
+
+<h3 class="heading heading-3">
+    <span class="heading-text">3. Update Composer (Optional)</span>
+</h3>
+
+<?= codeBlock('json', '{
     "name": "vendor/my-awesome-framework",
     "description": "Your custom description"
 }', 'composer.json') ?>
-            <p class="mt-2">Then run: <code class="code-inline">composer dump-autoload</code></p>
-        </div>
-    </div>
 
-    <div class="step">
-        <div class="step-number">4</div>
-        <div class="step-content">
-            <h4 class="step-title">Test Changes</h4>
-            <?= codeBlock('bash', 'curl http://localhost:8000       # Test homepage
+<p class="mt-2">Then run: <code class="code-inline">composer dump-autoload</code></p>
+
+<h3 class="heading heading-3">
+    <span class="heading-text">4. Test Changes</span>
+</h3>
+
+<?= codeBlock('bash', 'curl http://localhost:8000       # Test homepage
 curl http://localhost:8000/api/test  # Test API') ?>
-        </div>
-    </div>
-</div>
 
 <!-- Best Practices -->
 <h2 id="best-practices" class="heading heading-2">
@@ -254,7 +255,9 @@ curl http://localhost:8000/api/test  # Test API') ?>
     <?= callout('warning', '<strong>Type Cast Environment Values</strong><br>Environment variables are strings. Use <code class="code-inline">(bool)</code>, <code class="code-inline">(int)</code> in config files.') ?>
 </div>
 
-<h4 class="heading heading-4 mt-4">Environment-Specific Configuration</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">Environment-Specific Configuration</span>
+</h3>
 
 <?= codeTabs([
     ['label' => 'Development', 'lang' => 'bash', 'code' => 'APP_ENV=development
@@ -269,7 +272,9 @@ APP_DEBUG=true
 DB_DATABASE=framework_test'],
 ]) ?>
 
-<h4 class="heading heading-4 mt-4">Helper Functions</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">Helper Functions</span>
+</h3>
 
 <?= codeBlock('php', '// Get configuration value
 config(\'app.name\')

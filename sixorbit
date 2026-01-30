@@ -34,6 +34,8 @@ $kernel->registerCommands([
     \Core\Console\Commands\MakeListenerCommand::class,
     \Core\Console\Commands\MakeProviderCommand::class,
     \Core\Console\Commands\MakeExceptionCommand::class,
+    // Test command
+    \Core\Console\Commands\TestCommand::class,
 ]);
 
 // Execute command

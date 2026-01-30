@@ -22,8 +22,6 @@ $toc = [
     ['id' => 'best-practices', 'title' => 'Best Practices', 'level' => 2],
     ['id' => 'quick-reference', 'title' => 'Quick Reference', 'level' => 2],
 ];
-$prevPage = ['url' => '/docs/project-structure', 'title' => 'Project Structure'];
-$nextPage = ['url' => '/docs/auth-system', 'title' => 'Authentication System'];
 $breadcrumbs = [['label' => 'Routing System']];
 $lastUpdated = '2026-01-30';
 
@@ -48,7 +46,9 @@ include __DIR__ . '/../_layout.php';
 
 <p>Routes are defined in <?= filePath('routes/web.php') ?> for web routes and <?= filePath('routes/api.php') ?> for API routes.</p>
 
-<h4 class="heading heading-4">HTTP Methods</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">HTTP Methods</span>
+</h3>
 
 <?= codeBlock('php', 'use Core\Routing\Router;
 
@@ -73,7 +73,9 @@ Router::any(\'/contact\', [ContactController::class, \'handle\']);
 // Match specific HTTP methods
 Router::match([\'GET\', \'POST\'], \'/form\', [FormController::class, \'handle\']);') ?>
 
-<h4 class="heading heading-4 mt-4">Closure Routes</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">Closure Routes</span>
+</h3>
 
 <p>For simple routes, you can use closures instead of controllers:</p>
 
@@ -91,7 +93,9 @@ Router::get(\'/user/{id}\', function ($id) {
     <span class="heading-text">Route Parameters</span>
 </h2>
 
-<h4 class="heading heading-4">Required Parameters</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">Required Parameters</span>
+</h3>
 
 <p>Capture URI segments using curly braces:</p>
 
@@ -103,7 +107,9 @@ Router::get(\'/posts/{post}/comments/{comment}\', function ($post, $comment) {
     return json([\'post\' => $post, \'comment\' => $comment]);
 });') ?>
 
-<h4 class="heading heading-4 mt-4">Optional Parameters</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">Optional Parameters</span>
+</h3>
 
 <p>Add <code class="code-inline">?</code> after the parameter name:</p>
 
@@ -119,7 +125,9 @@ Router::get(\'/posts/{post}/comments/{comment}\', function ($post, $comment) {
 
 <p>Constrain route parameters using regex patterns for enhanced security.</p>
 
-<h4 class="heading heading-4">Built-in Constraint Methods</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">Built-in Constraint Methods</span>
+</h3>
 
 <?= dataTable(
     ['Method', 'Pattern', 'Example'],
@@ -171,7 +179,9 @@ Router::get(\'/users/{user}/posts/{post}\', [PostController::class, \'show\'])
 Router::post(\'/login\', [AuthController::class, \'login\'])
     ->name(\'auth.login\');') ?>
 
-<h4 class="heading heading-4 mt-4">Generating URLs</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">Generating URLs</span>
+</h3>
 
 <?= codeTabs([
     ['label' => 'PHP', 'lang' => 'php', 'code' => '// Using route() helper
@@ -312,14 +322,18 @@ class UserController
 
 <div class="grid grid-2 gap-4">
     <div>
-        <h4 class="heading heading-4">Fallback Routes</h4>
+        <h3 class="heading heading-3">
+            <span class="heading-text">Fallback Routes</span>
+        </h3>
         <p class="text-muted">Catch-all for unmatched requests</p>
         <?= codeBlock('php', 'Router::fallback(function () {
     return Response::view(\'errors.404\', [], 404);
 });') ?>
     </div>
     <div>
-        <h4 class="heading heading-4">Redirect Routes</h4>
+        <h3 class="heading heading-3">
+            <span class="heading-text">Redirect Routes</span>
+        </h3>
         <p class="text-muted">Redirect to other URLs</p>
         <?= codeBlock('php', '// Temporary (302)
 Router::redirect(\'/old\', \'/new\');
@@ -328,7 +342,9 @@ Router::redirect(\'/old\', \'/new\');
 Router::permanentRedirect(\'/legacy\', \'/modern\');') ?>
     </div>
     <div>
-        <h4 class="heading heading-4">View Routes</h4>
+        <h3 class="heading heading-3">
+            <span class="heading-text">View Routes</span>
+        </h3>
         <p class="text-muted">Return view without controller</p>
         <?= codeBlock('php', 'Router::view(\'/about\', \'about\');
 

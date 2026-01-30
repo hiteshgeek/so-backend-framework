@@ -13,8 +13,6 @@ $toc = [
     ['id' => 'examples', 'title' => 'Examples', 'level' => 2],
     ['id' => 'test-changes', 'title' => 'Test Your Changes', 'level' => 2],
 ];
-$prevPage = ['url' => '/docs/setup', 'title' => 'Setup Guide'];
-$nextPage = ['url' => '/docs/project-structure', 'title' => 'Project Structure'];
 $breadcrumbs = [['label' => 'Quick Start']];
 $lastUpdated = '2026-01-30';
 
@@ -39,48 +37,40 @@ include __DIR__ . '/../_layout.php';
     <span class="heading-text">Change Framework Name in One Place</span>
 </h2>
 
-<div class="steps">
-    <div class="step">
-        <div class="step-number">1</div>
-        <div class="step-content">
-            <h4 class="step-title">Edit .env</h4>
-            <?= codeBlock('bash', 'nano .env') ?>
-            <p class="mt-2">Change these two lines:</p>
-            <?= codeBlock('bash', 'APP_NAME="Your Framework Name Here"
+<h3 class="heading heading-3">
+    <span class="heading-text">1. Edit .env</span>
+</h3>
+
+<?= codeBlock('bash', 'nano .env') ?>
+
+<p class="mt-2">Change these two lines:</p>
+
+<?= codeBlock('bash', 'APP_NAME="Your Framework Name Here"
 DB_DATABASE=your-database-name', '.env') ?>
-        </div>
-    </div>
 
-    <div class="step">
-        <div class="step-number">2</div>
-        <div class="step-content">
-            <h4 class="step-title">Regenerate SQL (if database name changed)</h4>
-            <?= codeBlock('bash', 'php database/migrations/generate-setup.php') ?>
-        </div>
-    </div>
+<h3 class="heading heading-3">
+    <span class="heading-text">2. Regenerate SQL (if database name changed)</span>
+</h3>
 
-    <div class="step">
-        <div class="step-number">3</div>
-        <div class="step-content">
-            <h4 class="step-title">Import Database</h4>
-            <?= codeBlock('bash', 'mysql -u root -p < database/migrations/setup.sql') ?>
-        </div>
-    </div>
+<?= codeBlock('bash', 'php database/migrations/generate-setup.php') ?>
 
-    <div class="step">
-        <div class="step-number">4</div>
-        <div class="step-content">
-            <h4 class="step-title">Done!</h4>
-            <p>Your framework name now appears everywhere:</p>
-            <ul class="list list-check">
-                <li>Page titles</li>
-                <li>Welcome page</li>
-                <li>API responses</li>
-                <li>Database name</li>
-            </ul>
-        </div>
-    </div>
-</div>
+<h3 class="heading heading-3">
+    <span class="heading-text">3. Import Database</span>
+</h3>
+
+<?= codeBlock('bash', 'mysql -u root -p < database/migrations/setup.sql') ?>
+
+<h3 class="heading heading-3">
+    <span class="heading-text">4. Done!</span>
+</h3>
+
+<p>Your framework name now appears everywhere:</p>
+<ul class="list list-check">
+    <li>Page titles</li>
+    <li>Welcome page</li>
+    <li>API responses</li>
+    <li>Database name</li>
+</ul>
 
 <!-- Auto-Updated Locations -->
 <h2 id="auto-updates" class="heading heading-2">
@@ -88,7 +78,9 @@ DB_DATABASE=your-database-name', '.env') ?>
     <span class="heading-text">What Gets Updated Automatically</span>
 </h2>
 
-<h4 class="heading heading-4">When you change <code class="code-inline">APP_NAME</code></h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">When you change <code class="code-inline">APP_NAME</code></span>
+</h3>
 
 <?= dataTable(
     ['Location', 'What Changes'],
@@ -100,7 +92,9 @@ DB_DATABASE=your-database-name', '.env') ?>
     ]
 ) ?>
 
-<h4 class="heading heading-4 mt-4">When you change <code class="code-inline">DB_DATABASE</code></h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">When you change <code class="code-inline">DB_DATABASE</code></span>
+</h3>
 
 <?= dataTable(
     ['Location', 'What Changes'],
@@ -117,7 +111,9 @@ DB_DATABASE=your-database-name', '.env') ?>
     <span class="heading-text">Examples</span>
 </h2>
 
-<h4 class="heading heading-4">Change to "My Awesome API"</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">Change to "My Awesome API"</span>
+</h3>
 
 <?= codeBlock('bash', '# Edit .env
 APP_NAME="My Awesome API"
@@ -136,7 +132,9 @@ mysql -u root -p < database/migrations/setup.sql') ?>
     <li>Everything connected!</li>
 </ul>
 
-<h4 class="heading heading-4 mt-4">Use in Your Code</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">Use in Your Code</span>
+</h3>
 
 <?= codeTabs([
     ['label' => 'PHP', 'lang' => 'php', 'code' => '// Automatically gets "My Awesome API"

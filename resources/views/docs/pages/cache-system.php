@@ -16,8 +16,6 @@ $toc = [
     ['id' => 'erp-use-cases', 'title' => 'ERP Use Cases', 'level' => 2],
     ['id' => 'best-practices', 'title' => 'Best Practices', 'level' => 2],
 ];
-$prevPage = ['url' => '/docs/session-system', 'title' => 'Session System'];
-$nextPage = ['url' => '/docs/queue-system', 'title' => 'Queue System'];
 $breadcrumbs = [['label' => 'Cache System']];
 $lastUpdated = '2026-01-30';
 
@@ -45,7 +43,9 @@ include __DIR__ . '/../_layout.php';
     <span class="heading-text">Introduction</span>
 </h2>
 
-<h4 class="heading heading-4">What Gets Cached?</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">What Gets Cached?</span>
+</h3>
 
 <?= featureGrid([
     ['icon' => 'database', 'title' => 'Database Queries', 'description' => 'Cache query results instead of querying every time'],
@@ -54,7 +54,9 @@ include __DIR__ . '/../_layout.php';
     ['icon' => 'file-document', 'title' => 'Templates', 'description' => 'Cache rendered views/reports'],
 ], 4) ?>
 
-<h4 class="heading heading-4 mt-4">Performance Impact</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">Performance Impact</span>
+</h3>
 
 <?= dataTable(
     ['Metric', 'Improvement'],
@@ -199,7 +201,9 @@ return [
 ];'],
 ]) ?>
 
-<h4 class="heading heading-4 mt-4">Database Schema</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">Database Schema</span>
+</h3>
 
 <?= codeBlock('sql', 'CREATE TABLE cache (
     `key` VARCHAR(255) PRIMARY KEY,
@@ -223,7 +227,9 @@ CREATE TABLE cache_locks (
 
 <div class="space-y-4">
     <div>
-        <h4 class="heading heading-4">Product Catalog</h4>
+        <h3 class="heading heading-3">
+            <span class="heading-text">Product Catalog</span>
+        </h3>
         <p class="text-muted">Problem: 50,000 products queried on every page load</p>
         <?= codeBlock('php', '$products = cache()->remember(\'products.catalog\', 3600, function() {
     return Product::with(\'category\', \'images\')
@@ -241,7 +247,9 @@ public function update(Request $request, $id)
     </div>
 
     <div>
-        <h4 class="heading heading-4">User Permissions</h4>
+        <h3 class="heading heading-3">
+            <span class="heading-text">User Permissions</span>
+        </h3>
         <p class="text-muted">Problem: Permission check on every request queries database</p>
         <?= codeBlock('php', 'function userHasPermission($userId, $permission) {
     $permissions = cache()->remember("permissions:{$userId}", 3600, function() use ($userId) {
@@ -256,7 +264,9 @@ public function update(Request $request, $id)
     </div>
 
     <div>
-        <h4 class="heading heading-4">Expensive Reports</h4>
+        <h3 class="heading heading-3">
+            <span class="heading-text">Expensive Reports</span>
+        </h3>
         <p class="text-muted">Problem: Complex report takes 5 minutes to generate</p>
         <?= codeBlock('php', '$lock = cache()->lock(\'monthly-report\', 600);
 
@@ -280,7 +290,9 @@ if ($lock->acquire()) {
     <span class="heading-text">Best Practices</span>
 </h2>
 
-<h4 class="heading heading-4">Cache Key Naming</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">Cache Key Naming</span>
+</h3>
 
 <?= codeTabs([
     ['label' => 'Good', 'lang' => 'php', 'code' => '// Clear, hierarchical
@@ -294,7 +306,9 @@ if ($lock->acquire()) {
 \'result\''],
 ]) ?>
 
-<h4 class="heading heading-4 mt-4">TTL Selection</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">TTL Selection</span>
+</h3>
 
 <?= dataTable(
     ['Data Type', 'TTL', 'Example'],

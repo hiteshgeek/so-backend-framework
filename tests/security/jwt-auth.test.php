@@ -6,8 +6,8 @@
  * Tests JWT token encoding, decoding, expiration, and middleware functionality.
  */
 
-require_once __DIR__ . '/../vendor/autoload.php';
-require_once __DIR__ . '/../bootstrap/app.php';
+require_once __DIR__ . '/../../vendor/autoload.php';
+require_once __DIR__ . '/../../bootstrap/app.php';
 
 echo "=== JWT Authentication Test ===\n\n";
 

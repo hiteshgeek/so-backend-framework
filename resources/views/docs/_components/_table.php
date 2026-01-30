@@ -50,11 +50,17 @@ function dataTable(array $headers, array $rows, array $options = []): string
         foreach ($row as $cell) {
             // Check if cell is an array with special formatting
             if (is_array($cell)) {
-                $content = htmlspecialchars($cell['content'] ?? '');
+                $content = $cell['raw'] ?? false ? $cell['content'] : htmlspecialchars($cell['content'] ?? '');
                 $class = isset($cell['class']) ? ' class="' . htmlspecialchars($cell['class']) . '"' : '';
                 $rowsHtml .= "<td{$class}>{$content}</td>";
             } else {
-                $rowsHtml .= '<td>' . htmlspecialchars((string)$cell) . '</td>';
+                // Check if cell contains HTML tags (links, etc.) - if so, don't escape
+                $cellStr = (string)$cell;
+                if (preg_match('/<a\s+[^>]*href=/', $cellStr) || preg_match('/<(strong|em|code|span|b|i)/', $cellStr)) {
+                    $rowsHtml .= '<td>' . $cellStr . '</td>';
+                } else {
+                    $rowsHtml .= '<td>' . htmlspecialchars($cellStr) . '</td>';
+                }
             }
         }
         $rowsHtml .= '</tr>';

@@ -50,21 +50,23 @@ Read the documentation in this numbered sequence for the best learning experienc
 | 16 | [Cache System](/docs/cache-system) | Performance optimization | 15 min |
 | 17 | [Session System](/docs/session-system) | Database sessions for scaling | 12 min |
 
-### Phase 6: Developer Tools (55 minutes)
+### Phase 6: Developer Tools & Testing (1 hour 25 minutes)
 
 | No. | Document | Description | Time |
 |-----|----------|-------------|------|
 | 18 | [Console Commands](/docs/console-commands) | CLI reference for artisan commands | 25 min |
 | 19 | [View Templates](/docs/view-templates) | PHP native view templating | 30 min |
+| 20 | [Test Documentation](/docs/test-documentation) | Test suite overview, categories, and usage | 10 min |
+| 21 | [Testing Guide](/docs/testing-guide) | Complete testing guide with examples | 20 min |
 
 ### Phase 7: Customization (Optional)
 
 | No. | Document | Description | Time |
 |-----|----------|-------------|------|
-| 20 | [Framework Branding](/docs/branding) | Complete branding reference | 10 min |
-| 21 | [Rename Process](/docs/rename) | Step-by-step rename guide | 10 min |
+| 22 | [Framework Branding](/docs/branding) | Complete branding reference | 10 min |
+| 23 | [Rename Process](/docs/rename) | Step-by-step rename guide | 10 min |
 
-**Total Reading Time: ~5.5 hours** (can skip optional sections)
+**Total Reading Time: ~6 hours** (can skip optional sections)
 
 ---
 
@@ -295,6 +297,13 @@ All features are **production-tested** and **enterprise-ready**. Includes OWASP-
 |----------|-------------|--------------|
 | [Console Commands](/docs/console-commands) | Complete CLI reference for all artisan commands | 25 min |
 | [View Templates](/docs/view-templates) | Twig templating engine complete guide | 30 min |
+
+### Testing & Quality Assurance * NEW
+
+| Document | Description | Time to Read |
+|----------|-------------|--------------|
+| [Test Documentation](/docs/test-documentation) | Test suite overview, categories, and usage | 10 min |
+| [Testing Guide](/docs/testing-guide) | Complete testing guide with examples and best practices | 20 min |
 
 ### Enterprise Framework Features (Laravel Table Systems)
 
@@ -568,12 +577,14 @@ If you can't find what you need:
 | **Console Commands** | [x] | **CONSOLE-COMMANDS.md** |
 | **Authentication** | [x] | **AUTH-SYSTEM.md** |
 | **View Templates** | [x] | **VIEW-TEMPLATES.md** |
+| **Test Documentation** | [x] | **TEST-DOCUMENTATION.md** |
+| **Testing Guide** | [x] | **TESTING-GUIDE.md** |
 
 ---
 
 ## [Date] Last Updated
 
-This index was last updated: 2026-01-29
+This index was last updated: 2026-01-30
 
 For the latest documentation, check the source files in this directory.
 

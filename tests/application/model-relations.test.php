@@ -6,8 +6,8 @@
  * Tests SoftDeletes trait and Query Scopes functionality
  */
 
-require_once __DIR__ . '/../vendor/autoload.php';
-require_once __DIR__ . '/../bootstrap/app.php';
+require_once __DIR__ . '/../../vendor/autoload.php';
+require_once __DIR__ . '/../../bootstrap/app.php';
 
 use Core\Model\Model;
 use Core\Model\SoftDeletes;

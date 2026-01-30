@@ -19,8 +19,6 @@ $toc = [
     ['id' => 'authorization', 'title' => 'Authorization & Roles', 'level' => 2],
     ['id' => 'security-best-practices', 'title' => 'Security Best Practices', 'level' => 2],
 ];
-$prevPage = ['url' => '/docs/routing-system', 'title' => 'Routing System'];
-$nextPage = ['url' => '/docs/security-layer', 'title' => 'Security Layer'];
 $breadcrumbs = [['label' => 'Authentication']];
 $lastUpdated = '2026-01-30';
 
@@ -58,7 +56,9 @@ include __DIR__ . '/../_layout.php';
     ['icon' => 'account-check', 'title' => 'CSRF Protection', 'description' => 'Built-in CSRF token validation'],
 ], 3) ?>
 
-<h4 class="heading heading-4 mt-4">Auth Components</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">Auth Components</span>
+</h3>
 
 <?= dataTable(
     ['Component', 'Purpose', 'File'],
@@ -77,7 +77,9 @@ include __DIR__ . '/../_layout.php';
     <span class="heading-text">Quick Start</span>
 </h2>
 
-<h4 class="heading heading-4">1. Login Controller</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">1. Login Controller</span>
+</h3>
 
 <?= codeBlockWithFile('php', '<?php
 
@@ -111,7 +113,9 @@ class AuthController
     }
 }', 'app/Controllers/AuthController.php') ?>
 
-<h4 class="heading heading-4 mt-4">2. Login Form</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">2. Login Form</span>
+</h3>
 
 <?= codeBlock('php', '<form method="POST" action="/login">
     <?= csrf_field() ?>
@@ -136,7 +140,9 @@ class AuthController
     <button type="submit">Login</button>
 </form>') ?>
 
-<h4 class="heading heading-4 mt-4">3. Protect Routes</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">3. Protect Routes</span>
+</h3>
 
 <?= codeBlockWithFile('php', '// Public routes
 Router::get(\'/login\', [AuthController::class, \'showLogin\']);
@@ -185,7 +191,9 @@ auth()->logout();') ?>
     <span class="heading-text">Session-Based Authentication</span>
 </h2>
 
-<h4 class="heading heading-4">How It Works</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">How It Works</span>
+</h3>
 
 <ol class="list">
     <li>User submits credentials via login form</li>
@@ -196,7 +204,9 @@ auth()->logout();') ?>
     <li>Middleware checks session for authentication</li>
 </ol>
 
-<h4 class="heading heading-4 mt-4">Configuration</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">Configuration</span>
+</h3>
 
 <?= codeBlock('ini', 'SESSION_DRIVER=database
 SESSION_LIFETIME=120  # minutes
@@ -213,13 +223,17 @@ SESSION_SAME_SITE=lax', '.env') ?>
 
 <p>JWT (JSON Web Token) is stateless and ideal for APIs. Tokens are signed and verified using a secret key.</p>
 
-<h4 class="heading heading-4">Configuration</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">Configuration</span>
+</h3>
 
 <?= codeBlock('ini', 'JWT_SECRET=your-secret-key-here
 JWT_ALGORITHM=HS256
 JWT_EXPIRATION=3600  # 1 hour', '.env') ?>
 
-<h4 class="heading heading-4 mt-4">Generating Tokens</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">Generating Tokens</span>
+</h3>
 
 <?= codeBlock('php', 'public function login(Request $request): JsonResponse
 {
@@ -245,7 +259,9 @@ JWT_EXPIRATION=3600  # 1 hour', '.env') ?>
     ]);
 }') ?>
 
-<h4 class="heading heading-4 mt-4">API Usage</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">API Usage</span>
+</h3>
 
 <?= codeTabs([
     ['label' => 'Login', 'lang' => 'bash', 'code' => 'curl -X POST http://localhost/api/v1/auth/login \
@@ -322,7 +338,9 @@ if (auth()->guest()) {
     <span class="heading-text">Password Management</span>
 </h2>
 
-<h4 class="heading heading-4">Automatic Password Hashing</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">Automatic Password Hashing</span>
+</h3>
 
 <?= codeBlockWithFile('php', 'class User extends Model
 {
@@ -348,7 +366,9 @@ if (auth()->guest()) {
     <span class="heading-text">Authorization & Roles</span>
 </h2>
 
-<h4 class="heading heading-4">User Model with Roles</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">User Model with Roles</span>
+</h3>
 
 <?= codeBlock('php', 'class User extends Model
 {
@@ -368,7 +388,9 @@ if (auth()->guest()) {
     }
 }') ?>
 
-<h4 class="heading heading-4 mt-4">Role Middleware</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">Role Middleware</span>
+</h3>
 
 <?= codeBlock('php', 'class RoleMiddleware implements MiddlewareInterface
 {

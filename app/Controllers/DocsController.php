@@ -37,6 +37,39 @@ class DocsController
     }
 
     /**
+     * Get navigation data for a specific page
+     *
+     * @param string $currentKey Current page key
+     * @return array{prevPage: array|null, nextPage: array|null}
+     */
+    private function getNavigation(string $currentKey): array
+    {
+        $navigation = require __DIR__ . '/../../config/docs-navigation.php';
+
+        $currentIndex = null;
+        foreach ($navigation as $index => $page) {
+            if ($page['key'] === $currentKey) {
+                $currentIndex = $index;
+                break;
+            }
+        }
+
+        if ($currentIndex === null) {
+            return ['prevPage' => null, 'nextPage' => null];
+        }
+
+        $prevPage = isset($navigation[$currentIndex - 1])
+            ? ['url' => $navigation[$currentIndex - 1]['url'], 'title' => $navigation[$currentIndex - 1]['title']]
+            : null;
+
+        $nextPage = isset($navigation[$currentIndex + 1])
+            ? ['url' => $navigation[$currentIndex + 1]['url'], 'title' => $navigation[$currentIndex + 1]['title']]
+            : null;
+
+        return ['prevPage' => $prevPage, 'nextPage' => $nextPage];
+    }
+
+    /**
      * Show specific documentation file
      *
      * Checks for PHP view first, falls back to markdown parsing
@@ -75,6 +108,10 @@ class DocsController
             'routing-system' => 'ROUTING-SYSTEM.md',
             'project-structure' => 'PROJECT-STRUCTURE.md',
 
+            // Testing & Quality Assurance
+            'test-documentation' => 'TEST-DOCUMENTATION.md',
+            'testing-guide' => 'TESTING-GUIDE.md',
+
             // Visual Guides
             'request-flow' => 'REQUEST-FLOW.md',
 
@@ -107,12 +144,15 @@ class DocsController
             return Response::view('errors/404', [], 404);
         }
 
+        // Get navigation data
+        $navigation = $this->getNavigation($file);
+
         // Check if a PHP view exists for this documentation
         $phpViewPath = __DIR__ . '/../../resources/views/docs/pages/' . $file . '.php';
         if (file_exists($phpViewPath)) {
-            return Response::view('docs/pages/' . $file, [
+            return Response::view('docs/pages/' . $file, array_merge([
                 'title' => ucwords(str_replace('-', ' ', $file)) . ' - ' . config('app.name')
-            ]);
+            ], $navigation));
         }
 
         // Fallback to markdown parsing
@@ -131,10 +171,10 @@ class DocsController
         $markdown = file_get_contents($filePath);
         $markdown = str_replace('{{APP_VERSION}}', config('app.version'), $markdown);
 
-        return Response::view('docs/show', [
+        return Response::view('docs/show', array_merge([
             'title' => ucwords(str_replace('-', ' ', $file)) . ' - ' . config('app.name'),
             'markdown' => $markdown,
             'filename' => $allowedFiles[$file]
-        ]);
+        ], $navigation));
     }
 }

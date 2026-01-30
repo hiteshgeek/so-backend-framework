@@ -33,7 +33,7 @@
             </div>
             <div class="docs-stat-card">
                 <span class="mdi mdi-file-document-multiple stat-icon"></span>
-                <h3>35</h3>
+                <h3>37</h3>
                 <p>Guide Documents</p>
             </div>
             <div class="docs-stat-card">
@@ -193,6 +193,20 @@
                             <p>CLI reference for scaffolding and tasks.</p>
                         </div>
                         <span class="badge badge-default">Tools</span>
+                    </a>
+                    <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/test-documentation" class="doc-card">
+                        <div class="doc-card-body">
+                            <h3><span class="mdi mdi-test-tube"></span> Test Documentation</h3>
+                            <p>Test suite overview, categories, and usage.</p>
+                        </div>
+                        <span class="badge badge-new">New</span>
+                    </a>
+                    <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/testing-guide" class="doc-card">
+                        <div class="doc-card-body">
+                            <h3><span class="mdi mdi-clipboard-check-outline"></span> Testing Guide</h3>
+                            <p>Complete testing guide with examples.</p>
+                        </div>
+                        <span class="badge badge-new">New</span>
                     </a>
                     <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/rename" class="doc-card">
                         <div class="doc-card-body">

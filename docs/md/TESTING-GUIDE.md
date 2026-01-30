@@ -1,0 +1,248 @@
+# SO Backend Framework - Test Suite
+
+Comprehensive test suite for the SO Backend Framework, organized by functional category.
+
+## Quick Start
+
+List all available tests:
+```bash
+php sixorbit test --list
+```
+
+Run all tests:
+```bash
+php sixorbit test
+```
+
+Run a specific category:
+```bash
+php sixorbit test security           # Security tests only
+php sixorbit test infrastructure     # Infrastructure tests only
+php sixorbit test application        # Application tests only
+```
+
+Run a specific test:
+```bash
+php sixorbit test sanitizer          # Sanitizer bypass test
+php sixorbit test csrf               # CSRF protection test
+```
+
+Run individual test file directly:
+```bash
+php tests/security/sanitizer-bypass.test.php
+```
+
+## Test Organization
+
+Tests are organized into three contextual folders:
+
+- **`tests/security/`** - Security-related tests
+- **`tests/infrastructure/`** - Core system tests
+- **`tests/application/`** - Application layer tests
+
+### Security Tests (`tests/security/`)
+
+Tests for authentication, authorization, and protection mechanisms.
+
+| Test File | Description | Tests |
+|-----------|-------------|-------|
+| `csrf-protection.test.php` | CSRF token generation, validation, and middleware | Token lifecycle, persistence, helpers |
+| `jwt-auth.test.php` | JWT encoding/decoding, expiration, signatures | Token creation, validation, security |
+| `rate-limit.test.php` | API rate limiting and throttling | Per-key limits, windows, cleanup |
+| `xss-prevention.test.php` | XSS attack prevention mechanisms | Input sanitization, output escaping |
+| `sanitizer-bypass.test.php` | Sanitizer bypass prevention with DOMDocument | Nested tags, malformed HTML, event handlers |
+
+### Core Infrastructure Tests (`tests/infrastructure/`)
+
+Tests for core system components and services.
+
+| Test File | Description | Tests |
+|-----------|-------------|-------|
+| `cache-sessions.test.php` | Cache drivers and session management | DB cache, session CRUD, expiration |
+| `queue.test.php` | Background job queueing and processing | Job dispatch, serialization, workers |
+| `notifications.test.php` | Notification channels and delivery | DB notifications, mail integration |
+| `activity-logging.test.php` | User activity tracking and audit logs | Activity creation, metadata, pruning |
+
+### Application Layer Tests (`tests/application/`)
+
+Tests for application-level features and APIs.
+
+| Test File | Description | Tests |
+|-----------|-------------|-------|
+| `validation.test.php` | Input validation rules and error handling | 27+ rules, nested arrays, custom validators |
+| `middleware.test.php` | Middleware pipeline and execution | Groups, aliases, parameter passing |
+| `api-layer.test.php` | Internal API endpoints and responses | CRUD operations, JSON responses |
+| `model-relations.test.php` | ORM features and relationships | HasOne, HasMany, BelongsTo, eager loading |
+
+## SixOrbit Test Command
+
+The `php sixorbit test` command provides a unified interface for running all framework tests.
+
+### Features
+
+- **List all available tests** with categories
+- **Run all tests** or filter by category
+- **Run specific individual tests**
+- **Grouped results** by category (Security, Infrastructure, Application)
+- **Per-test and per-category statistics**
+- **Overall summary** with pass rate and duration
+- **Colorful ANSI output** with green for passing tests and red for failures
+- **Clean, formatted output** with progress indicators
+
+### Usage
+
+**List all tests:**
+```bash
+php sixorbit test --list
+# Shows all categories and tests with short names
+```
+
+**Run all tests:**
+```bash
+php sixorbit test
+# Runs all 13 test suites across 3 categories
+```
+
+**Run by category:**
+```bash
+php sixorbit test security           # All security tests (5 suites)
+php sixorbit test infrastructure     # All infrastructure tests (4 suites)
+php sixorbit test application        # All application tests (4 suites)
+```
+
+**Run specific test:**
+```bash
+php sixorbit test csrf               # CSRF Protection only
+php sixorbit test sanitizer          # Sanitizer Bypass Prevention only
+php sixorbit test validation         # Validation System only
+```
+
+### Output Example
+
+```
+╔═══════════════════════════════════════════════════════════════╗
+║  Security                                                     ║
+╚═══════════════════════════════════════════════════════════════╝
+
+Running: Sanitizer Bypass Prevention
+───────────────────────────────────────────────────────────────
+  Result: 15/15 passed (100%) ✓
+
+Category Summary: 60/61 passed (98.4%) ✓
+
+╔═══════════════════════════════════════════════════════════════╗
+║                      OVERALL SUMMARY                          ║
+╚═══════════════════════════════════════════════════════════════╝
+
+Results by Category:
+───────────────────────────────────────────────────────────────
+  Security:                  60/ 61 passed ( 98.4%) ✗
+  Infrastructure:            30/ 30 passed (100.0%) ✓
+  Application:               77/ 77 passed (100.0%) ✓
+```
+
+## Test Statistics
+
+| Category | Test Suites | Coverage |
+|----------|-------------|----------|
+| Security | 5 | CSRF, JWT, Rate Limiting, XSS, Sanitizer |
+| Core Infrastructure | 4 | Cache, Sessions, Queue, Notifications, Activity |
+| Application Layer | 4 | Validation, Middleware, API, Models |
+| **Total** | **13** | **Comprehensive framework coverage** |
+
+## Writing New Tests
+
+### Test File Template
+
+Test files should follow the `.test.php` naming convention and use hyphens for multi-word names.
+
+```php
+#!/usr/bin/env php
+<?php
+
+require_once __DIR__ . '/../../vendor/autoload.php';
+
+echo "=== Your Test Name ===\n\n";
+
+// Test 1
+echo "Test 1: Description\n";
+if ($condition) {
+    echo "✓ PASS: Test passed\n";
+} else {
+    echo "✗ FAIL: Test failed\n";
+}
+
+// Final summary
+echo "\n=== Test Complete ===\n";
+exit($failedCount > 0 ? 1 : 0);
+```
+
+### Adding to Test Runner
+
+Edit `core/Console/Commands/TestCommand.php` and add your test to the appropriate category in the `$testSuites` array:
+
+```php
+'security' => [
+    'your-test' => [
+        'name' => 'Your Test Name',
+        'file' => 'security/your-test.test.php'
+    ],
+    // ... other tests
+],
+```
+
+**File naming convention:**
+- Use `.test.php` extension
+- Use hyphens for multi-word names (e.g., `csrf-protection.test.php`)
+- Place in appropriate category folder (`security/`, `infrastructure/`, or `application/`)
+
+## CI/CD Integration
+
+The test suite is designed for CI/CD pipelines:
+
+```bash
+# Run all tests (exit code 0 = success, 1 = failure)
+php sixorbit test
+
+# Run security tests only
+php sixorbit test security
+
+# Run infrastructure tests only
+php sixorbit test infrastructure
+
+# Run application tests only
+php sixorbit test application
+```
+
+## Maintenance
+
+### Updating Tests
+
+When framework features change:
+1. Update relevant test file in its category folder
+2. Run test to verify: `php sixorbit test <test-name>`
+3. Run full suite: `php sixorbit test`
+4. Update this guide if test coverage changes
+
+### Test Coverage Goals
+
+- ✅ Security: 100% coverage of authentication, authorization, XSS prevention
+- ✅ Core Infrastructure: All major services (cache, queue, sessions, notifications)
+- ✅ Application Layer: Validation, middleware, API, ORM relationships
+- ⏳ Integration Tests: Coming soon (database transactions, full request lifecycle)
+
+## Recent Updates
+
+### 2026-01-30
+- ✅ Organized test files into contextual folders (`security/`, `infrastructure/`, `application/`)
+- ✅ Renamed all test files to modern `.test.php` convention with hyphens
+- ✅ Added colorful ANSI output to `sixorbit test` command (green/red/cyan)
+- ✅ Added `sanitizer-bypass.test.php` - DOMDocument-based sanitizer testing
+- ✅ Created comprehensive test runner with category grouping
+- ✅ Updated security test suite to include sanitizer tests
+
+---
+
+**Framework Version:** 2.0
+**Test Suite Version:** 2.0
+**Last Updated:** 2026-01-30

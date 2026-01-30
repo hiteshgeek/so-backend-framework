@@ -6,8 +6,8 @@
  * Tests Validator class with 27+ validation rules.
  */
 
-require_once __DIR__ . '/../vendor/autoload.php';
-require_once __DIR__ . '/../bootstrap/app.php';
+require_once __DIR__ . '/../../vendor/autoload.php';
+require_once __DIR__ . '/../../bootstrap/app.php';
 
 echo "=== Validation System Test ===\n\n";
 

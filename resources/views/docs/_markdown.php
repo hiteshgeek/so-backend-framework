@@ -445,9 +445,51 @@ class MarkdownParser {
     }
 
     private function parseInline($text) {
+        // Step 1: Extract and preserve existing HTML links
+        $htmlLinks = [];
+        $linkPlaceholder = '___HTML_LINK_';
+        $linkIndex = 0;
+
+        $text = preg_replace_callback('/<a\s+[^>]*href=["\']([^"\']+)["\'][^>]*>(.*?)<\/a>/i', function($matches) use (&$htmlLinks, &$linkIndex, $linkPlaceholder) {
+            $placeholder = $linkPlaceholder . $linkIndex . '___';
+            $htmlLinks[$placeholder] = $matches[0];
+            $linkIndex++;
+            return $placeholder;
+        }, $text);
+
+        // Step 2: Convert markdown images (must come before links)
+        $text = preg_replace_callback('/!\[([^\]]*)\]\(([^\)]+)\)/', function($matches) {
+            $alt = htmlspecialchars($matches[1]);
+            $src = htmlspecialchars($matches[2]);
+            return '<img src="' . $src . '" alt="' . $alt . '" class="inline-image">';
+        }, $text);
+
+        // Step 3: Convert markdown links
+        $text = preg_replace_callback('/\[([^\]]+)\]\(([^\)]+)\)/', function($matches) {
+            $linkText = htmlspecialchars($matches[1]);
+            $url = htmlspecialchars($matches[2]);
+            return '<a href="' . $url . '" class="link">' . $linkText . '</a>';
+        }, $text);
+
+        // Step 4: Now escape remaining HTML
+        // But we need to preserve our generated links and images
+        $generatedTags = [];
+        $tagPlaceholder = '___TAG_';
+        $tagIndex = 0;
+
+        // Preserve generated links and images
+        $text = preg_replace_callback('/<(a|img)[^>]*>.*?<\/\1>|<img[^>]*>/i', function($matches) use (&$generatedTags, &$tagIndex, $tagPlaceholder) {
+            $placeholder = $tagPlaceholder . $tagIndex . '___';
+            $generatedTags[$placeholder] = $matches[0];
+            $tagIndex++;
+            return $placeholder;
+        }, $text);
+
+        // Escape everything else
         $text = htmlspecialchars($text);
 
-        // Convert checkboxes [x] and [ ] anywhere in text
+        // Step 5: Process markdown syntax on escaped text
+        // Convert checkboxes
         $text = preg_replace('/\[x\]/i', '<span class="checkbox-inline checked"><span class="mdi mdi-check-circle"></span></span>', $text);
         $text = preg_replace('/\[ \]/', '<span class="checkbox-inline"><span class="mdi mdi-checkbox-blank-circle-outline"></span></span>', $text);
 
@@ -458,11 +500,13 @@ class MarkdownParser {
         // Inline code
         $text = preg_replace('/`([^`]+)`/', '<code class="inline-code">$1</code>', $text);
 
-        // Images (must come before links)
-        $text = preg_replace('/!\[([^\]]*)\]\(([^\)]+)\)/', '<img src="$2" alt="$1" class="inline-image">', $text);
-
-        // Links
-        $text = preg_replace('/\[([^\]]+)\]\(([^\)]+)\)/', '<a href="$2" class="link">$1</a>', $text);
+        // Step 6: Restore all preserved tags
+        foreach ($generatedTags as $placeholder => $tag) {
+            $text = str_replace($placeholder, $tag, $text);
+        }
+        foreach ($htmlLinks as $placeholder => $link) {
+            $text = str_replace($placeholder, $link, $text);
+        }
 
         return $text;
     }

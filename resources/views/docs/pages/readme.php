@@ -18,8 +18,6 @@ $toc = [
     ['id' => 'security', 'title' => 'Security', 'level' => 2],
     ['id' => 'documentation', 'title' => 'Documentation', 'level' => 2],
 ];
-$prevPage = null;
-$nextPage = ['url' => '/docs/setup', 'title' => 'Setup Guide'];
 $breadcrumbs = [['label' => 'README']];
 $lastUpdated = '2026-01-30';
 
@@ -106,14 +104,74 @@ curl http://localhost:8000/api/test') ?>
 
 <p class="paragraph">All interfaces route through a unified internal API layer:</p>
 
-<div class="code-container">
-    <div class="code-header">
-        <span class="code-lang">ARCHITECTURE</span>
+<div class="architecture-diagram">
+    <div class="arch-column arch-sources">
+        <div class="arch-box arch-source">
+            <div class="arch-box-icon"><span class="mdi mdi-web"></span></div>
+            <div class="arch-box-title">Web Interface</div>
+            <div class="arch-box-meta">Session Auth</div>
+        </div>
+        <div class="arch-box arch-source">
+            <div class="arch-box-icon"><span class="mdi mdi-cellphone"></span></div>
+            <div class="arch-box-title">Mobile Apps</div>
+            <div class="arch-box-meta">JWT Auth</div>
+        </div>
+        <div class="arch-box arch-source">
+            <div class="arch-box-icon"><span class="mdi mdi-clock-outline"></span></div>
+            <div class="arch-box-title">Cron Jobs</div>
+            <div class="arch-box-meta">Signature Auth</div>
+        </div>
+        <div class="arch-box arch-source">
+            <div class="arch-box-icon"><span class="mdi mdi-api"></span></div>
+            <div class="arch-box-title">External APIs</div>
+            <div class="arch-box-meta">API Key + JWT</div>
+        </div>
     </div>
-    <pre class="code-block"><code>Web Interface (Session Auth) --+
-Mobile Apps (JWT Auth) --------+--> Internal API Layer --> Services --> Models --> Database
-Cron Jobs (Signature Auth) ----+
-External APIs (API Key+JWT) ---+</code></pre>
+
+    <div class="arch-arrow">
+        <span class="mdi mdi-arrow-right"></span>
+    </div>
+
+    <div class="arch-column arch-pipeline">
+        <div class="arch-box arch-highlight">
+            <div class="arch-box-icon"><span class="mdi mdi-gate"></span></div>
+            <div class="arch-box-title">Internal API Layer</div>
+            <div class="arch-box-meta">Auth, Rate Limiting, Validation</div>
+        </div>
+    </div>
+
+    <div class="arch-arrow">
+        <span class="mdi mdi-arrow-right"></span>
+    </div>
+
+    <div class="arch-column arch-pipeline">
+        <div class="arch-box">
+            <div class="arch-box-icon"><span class="mdi mdi-cog"></span></div>
+            <div class="arch-box-title">Services</div>
+        </div>
+    </div>
+
+    <div class="arch-arrow">
+        <span class="mdi mdi-arrow-right"></span>
+    </div>
+
+    <div class="arch-column arch-pipeline">
+        <div class="arch-box">
+            <div class="arch-box-icon"><span class="mdi mdi-cube"></span></div>
+            <div class="arch-box-title">Models</div>
+        </div>
+    </div>
+
+    <div class="arch-arrow">
+        <span class="mdi mdi-arrow-right"></span>
+    </div>
+
+    <div class="arch-column arch-pipeline">
+        <div class="arch-box arch-database">
+            <div class="arch-box-icon"><span class="mdi mdi-database"></span></div>
+            <div class="arch-box-title">Database</div>
+        </div>
+    </div>
 </div>
 
 <p class="paragraph">Each interface has distinct permissions, rate limits, and guardrails enforced at the internal API layer.</p>

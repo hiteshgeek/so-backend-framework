@@ -16,8 +16,6 @@ $toc = [
     ['id' => 'erp-use-cases', 'title' => 'ERP Use Cases', 'level' => 2],
     ['id' => 'best-practices', 'title' => 'Best Practices', 'level' => 2],
 ];
-$prevPage = ['url' => '/docs/validation-system', 'title' => 'Validation System'];
-$nextPage = ['url' => '/docs/cache-system', 'title' => 'Cache System'];
 $breadcrumbs = [['label' => 'Session System']];
 $lastUpdated = '2026-01-30';
 
@@ -45,7 +43,9 @@ include __DIR__ . '/../_layout.php';
     <span class="heading-text">Introduction</span>
 </h2>
 
-<h4 class="heading heading-4">Why Database Sessions?</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">Why Database Sessions?</span>
+</h3>
 
 <?= dataTable(
     ['Approach', 'Scaling', 'Use Case'],
@@ -68,13 +68,17 @@ include __DIR__ . '/../_layout.php';
     <span class="heading-text">Quick Start</span>
 </h2>
 
-<h4 class="heading heading-4">Step 1: Enable Database Sessions</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">Step 1: Enable Database Sessions</span>
+</h3>
 
 <?= codeBlock('env', 'SESSION_DRIVER=database
 SESSION_LIFETIME=120
 SESSION_COOKIE=so_session', '.env') ?>
 
-<h4 class="heading heading-4 mt-4">Step 2: Use Sessions (Same API)</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">Step 2: Use Sessions (Same API)</span>
+</h3>
 
 <?= codeBlock('php', '// Store data
 session()->put(\'user_id\', 42);
@@ -95,7 +99,9 @@ session()->forget(\'temp_data\');
 // Clear all
 session()->flush();') ?>
 
-<h4 class="heading heading-4 mt-4">Step 3: Monitor Active Sessions</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">Step 3: Monitor Active Sessions</span>
+</h3>
 
 <?= codeBlock('sql', '-- View active sessions
 SELECT id, user_id, ip_address, user_agent, last_activity
@@ -150,7 +156,9 @@ session()->forget([\'key1\', \'key2\']);
 session()->flush();'],
 ]) ?>
 
-<h4 class="heading heading-4 mt-4">Regenerate Session ID</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">Regenerate Session ID</span>
+</h3>
 
 <?= callout('warning', 'Always regenerate the session ID after login to prevent session fixation attacks.') ?>
 
@@ -174,7 +182,9 @@ session()->flush();'],
     <span class="heading-text">Session Security</span>
 </h2>
 
-<h4 class="heading heading-4">Secure Cookie Parameters</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">Secure Cookie Parameters</span>
+</h3>
 
 <?= codeBlockWithFile('php', '<?php
 
@@ -195,7 +205,9 @@ return [
     \'lifetime\' => env(\'SESSION_LIFETIME\', 120),
 ];', 'config/session.php') ?>
 
-<h4 class="heading heading-4 mt-4">Force Logout from All Devices</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">Force Logout from All Devices</span>
+</h3>
 
 <?= codeBlock('php', '// Security breach or password change
 public function forceLogoutAllDevices($userId)
@@ -222,7 +234,9 @@ public function forceLogoutAllDevices($userId)
     ]
 ) ?>
 
-<h4 class="heading heading-4 mt-4">Database Schema</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">Database Schema</span>
+</h3>
 
 <?= codeBlock('sql', 'CREATE TABLE sessions (
     id VARCHAR(255) PRIMARY KEY,
@@ -241,7 +255,9 @@ public function forceLogoutAllDevices($userId)
     <span class="heading-text">ERP Use Cases</span>
 </h2>
 
-<h4 class="heading heading-4">Multi-Server Deployment</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">Multi-Server Deployment</span>
+</h3>
 
 <?= codeBlock('text', '+-------------+
 | Load        |
@@ -261,7 +277,9 @@ public function forceLogoutAllDevices($userId)
               |  (Sessions) |
               +-------------+') ?>
 
-<h4 class="heading heading-4 mt-4">Active User Monitoring</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">Active User Monitoring</span>
+</h3>
 
 <?= codeBlock('php', 'function getActiveUsers($minutes = 15)
 {

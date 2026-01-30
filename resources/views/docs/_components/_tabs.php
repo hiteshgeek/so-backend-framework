@@ -118,10 +118,19 @@ function codeTabs(array $codeExamples): string
         // Generate code block content
         $escapedCode = htmlspecialchars(trim($code));
         $langLabel = strtoupper($lang);
+        $langClass = htmlspecialchars($lang);
 
         $content = <<<HTML
 <div class="code-container" style="margin: 0; border-radius: 0; box-shadow: none;">
-    <pre class="code-block"><code>{$escapedCode}</code></pre>
+    <div class="code-header">
+        <div class="code-header-left">
+            <span class="code-lang">{$langLabel}</span>
+        </div>
+        <button class="code-copy" onclick="navigator.clipboard.writeText(this.closest('.code-container').querySelector('code').textContent).then(() => { this.innerHTML = '<span class=\\'mdi mdi-check\\'></span>'; setTimeout(() => { this.innerHTML = '<span class=\\'mdi mdi-content-copy\\'></span>'; }, 2000); })">
+            <span class="mdi mdi-content-copy"></span>
+        </button>
+    </div>
+    <pre class="code-block"><code class="language-{$langClass}">{$escapedCode}</code></pre>
 </div>
 HTML;
 

