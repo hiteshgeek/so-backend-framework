@@ -1,7 +1,7 @@
 # SO Framework Documentation Review & Analysis
 
 **Date**: 2026-01-29
-**Framework Version**: 2.0.0
+**Framework Version**: {{APP_VERSION}}
 **Review Type**: Comprehensive Coverage Analysis
 
 ---

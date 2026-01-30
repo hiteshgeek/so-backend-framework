@@ -697,4 +697,4 @@ The Notification System provides:
 - Build notification center UI
 - Review [Framework Features](/docs/framework-features) for overview
 
-**Version**: 2.0.0 | **Last Updated**: 2026-01-29
+**Version**: {{APP_VERSION}} | **Last Updated**: 2026-01-29

@@ -21,6 +21,12 @@ $badgeType = $badgeType ?? 'new';
 
 <header class="docs-header">
     <div class="docs-header-inner">
+        <button class="sidebar-toggle" aria-label="Toggle sidebar">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </button>
         <h1>
             <span class="mdi mdi-<?= htmlspecialchars($icon) ?>"></span>
             <?= htmlspecialchars($title) ?>

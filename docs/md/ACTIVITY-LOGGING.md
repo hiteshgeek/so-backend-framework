@@ -727,4 +727,4 @@ The Activity Logging system provides:
 - Review [Framework Features](/docs/framework-features) for complete system overview
 - Explore other systems: [Queue](/docs/queue-system), [Cache](/docs/cache-system), [Notifications](/docs/notification-system)
 
-**Version**: 2.0.0 | **Last Updated**: 2026-01-29
+**Version**: {{APP_VERSION}} | **Last Updated**: 2026-01-29

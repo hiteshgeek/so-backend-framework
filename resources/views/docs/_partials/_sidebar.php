@@ -14,7 +14,11 @@ $sections = $sections ?? [];
 ?>
 
 <aside class="docs-sidebar">
-    <h3><span class="mdi mdi-format-list-bulleted"></span> On This Page</h3>
+    <div class="sidebar-header">
+        <button class="sidebar-close" aria-label="Close sidebar">
+            <span class="mdi mdi-close"></span>
+        </button>
+    </div>
 
     <?php if (!empty($sections)): ?>
         <?php foreach ($sections as $section): ?>
@@ -53,6 +57,7 @@ $sections = $sections ?? [];
         </ul>
     <?php endif; ?>
 </aside>
+<div class="sidebar-backdrop"></div>
 
 <script>
 // Active section highlighting on scroll

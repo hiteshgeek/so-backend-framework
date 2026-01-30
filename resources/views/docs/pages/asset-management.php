@@ -363,18 +363,30 @@ ASSET_VERSIONING=false', '.env') ?>
 
 <?= codeBlock('text', 'public/
 └── assets/
-    ├── css/           ← Stylesheets
-    │   ├── app.css
-    │   ├── auth.css
-    │   ├── dashboard.css
-    │   └── docs.css
-    ├── js/            ← JavaScript
-    │   ├── app.js
-    │   ├── dashboard.js
-    │   └── docs.js
-    ├── images/        ← Images (PNG, SVG, etc.)
+    ├── css/                  ← Stylesheets (organized by module)
+    │   ├── auth/
+    │   │   └── auth.css
+    │   ├── dashboard/
+    │   │   ├── dashboard.css
+    │   │   └── dashboard-form.css
+    │   ├── docs/
+    │   │   ├── docs-base.css
+    │   │   ├── docs.css
+    │   │   └── docs-index.css
+    │   ├── pages/
+    │   │   └── welcome.css
+    │   └── tools/
+    │       └── route-tester.css
+    ├── js/                   ← JavaScript (organized by module)
+    │   ├── dashboard/
+    │   │   └── dashboard.js
+    │   ├── docs/
+    │   │   └── docs.js
+    │   └── tools/
+    │       └── route-tester.js
+    ├── images/               ← Images (PNG, SVG, etc.)
     │   └── logo.png
-    └── fonts/         ← Custom fonts
+    └── fonts/                ← Custom fonts
         └── custom.woff2') ?>
 
 <?= callout('info', 'All files under <code class="code-inline">public/assets/</code> are served directly by Apache. The <code class="code-inline">asset()</code> helper generates URLs pointing to this directory.') ?>

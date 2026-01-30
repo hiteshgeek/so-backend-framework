@@ -8,8 +8,8 @@
     <?php
     assets()->cdn('https://cdn.jsdelivr.net/npm/@mdi/font@7.4.47/css/materialdesignicons.min.css', 'css', 'head', 5);
     assets()->cdn('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap', 'css', 'head', 5);
-    assets()->css('css/route-tester.css', 'head', 10);
-    assets()->js('js/route-tester.js', 'body_end', 10);
+    assets()->css('css/tools/route-tester.css', 'head', 10);
+    assets()->js('js/tools/route-tester.js', 'body_end', 10);
     ?>
     <?= render_assets('head') ?>
 </head>

@@ -1,6 +1,6 @@
 # View Templates Guide
 
-**SO Framework** | **PHP Native Templates** | **Version 2.0.0**
+**SO Framework** | **PHP Native Templates** | **Version {{APP_VERSION}}**
 
 Complete guide to the view and templating system in the SO Framework.
 
@@ -583,7 +583,7 @@ include base_path('resources/views/layouts/app.php');
 
 <!-- CSS -->
 <link rel="stylesheet" href="<?= url('/assets/css/app.css') ?>">
-<link rel="stylesheet" href="<?= url('/assets/css/dashboard.css') ?>">
+<link rel="stylesheet" href="<?= url('/assets/css/dashboard/dashboard.css') ?>">
 
 <!-- JavaScript -->
 <script src="<?= url('/assets/js/app.js') ?>"></script>
@@ -819,4 +819,4 @@ PHP native templates keep your views simple, fast, and maintainable while levera
 ---
 
 **Last Updated**: 2026-01-30
-**Framework Version**: 2.0.0
+**Framework Version**: {{APP_VERSION}}

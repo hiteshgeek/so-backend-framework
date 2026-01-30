@@ -431,7 +431,7 @@ $baseUrl = getenv('APP_URL') ?: 'http://sixorbit.local';
     <div class="header">
         <div class="header-inner">
             <h1><span class="mdi mdi-book-open-page-variant"></span> SO Framework Documentation</h1>
-            <p><span class="mdi mdi-tag"></span> Version 2.0.0</p>
+            <p><span class="mdi mdi-tag"></span> Version <?= htmlspecialchars(getenv('APP_VERSION') ?: '2.0.0') ?></p>
         </div>
     </div>
 
@@ -693,7 +693,7 @@ $baseUrl = getenv('APP_URL') ?: 'http://sixorbit.local';
     </div>
 
     <footer>
-        <p><strong><span class="mdi mdi-cube"></span> <?= htmlspecialchars(config('app.name', 'SO Framework')) ?> v<?= htmlspecialchars(config('app.version', '1.0.0')) ?></strong></p>
+        <p><strong><span class="mdi mdi-cube"></span> <?= htmlspecialchars(config('app.name', 'SO Framework')) ?> v<?= htmlspecialchars(config('app.version', '2.0.0')) ?></strong></p>
         <p><span class="mdi mdi-language-php"></span> Built with PHP 8.3+ | <span class="mdi mdi-application-brackets"></span> Modern Architecture | <span class="mdi mdi-shield-check"></span> Security First</p>
         <p style="margin-top: 12px;">
             <a href="/docs/readme"><span class="mdi mdi-play-circle"></span> Start Here</a> |

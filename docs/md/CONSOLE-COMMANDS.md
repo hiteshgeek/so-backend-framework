@@ -1,6 +1,6 @@
 # Console Commands Reference
 
-**SO Framework** | **SixOrbit CLI** | **Version 2.0.0**
+**SO Framework** | **SixOrbit CLI** | **Version {{APP_VERSION}}**
 
 Complete reference for all command-line interface (CLI) commands available in the SO Framework.
 
@@ -860,4 +860,4 @@ All commands follow Laravel conventions and can be scheduled with cron or proces
 ---
 
 **Last Updated**: 2026-01-29
-**Framework Version**: 2.0.0
+**Framework Version**: {{APP_VERSION}}

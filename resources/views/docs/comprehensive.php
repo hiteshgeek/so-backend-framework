@@ -11,6 +11,12 @@
 <body>
     <header class="docs-header">
         <div class="docs-header-inner">
+            <button class="sidebar-toggle" aria-label="Toggle sidebar">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
             <h1><span class="mdi mdi-book-open-variant"></span> Comprehensive Guide</h1>
             <a href="<?= htmlspecialchars(config('app.url')) ?>/docs" class="docs-nav-link">
                 <span class="mdi mdi-arrow-left"></span> Back to Docs
@@ -35,7 +41,11 @@
 
     <main class="docs-layout">
         <aside class="docs-sidebar">
-            <h3><span class="mdi mdi-format-list-bulleted"></span> On This Page</h3>
+            <div class="sidebar-header">
+                <button class="sidebar-close" aria-label="Close sidebar">
+                    <span class="mdi mdi-close"></span>
+                </button>
+            </div>
             <ul>
                 <?php foreach ($toc as $item): ?>
                 <li>
@@ -51,6 +61,7 @@
                 <?php endif; ?>
             </ul>
         </aside>
+        <div class="sidebar-backdrop"></div>
 
         <article class="docs-content">
             <?= $content ?>

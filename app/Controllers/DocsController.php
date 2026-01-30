@@ -28,6 +28,7 @@ class DocsController
     public function comprehensive(Request $request): Response
     {
         $markdown = file_get_contents(__DIR__ . '/../../docs/md/COMPREHENSIVE-GUIDE.md');
+        $markdown = str_replace('{{APP_VERSION}}', config('app.version'), $markdown);
 
         return Response::view('docs/comprehensive', [
             'title' => 'Comprehensive Guide - ' . config('app.name'),
@@ -110,6 +111,7 @@ class DocsController
         }
 
         $markdown = file_get_contents($filePath);
+        $markdown = str_replace('{{APP_VERSION}}', config('app.version'), $markdown);
 
         return Response::view('docs/show', [
             'title' => ucwords(str_replace('-', ' ', $file)) . ' - ' . config('app.name'),

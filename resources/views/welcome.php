@@ -7,8 +7,8 @@
     <?php
     assets()->cdn('https://cdn.jsdelivr.net/npm/@mdi/font@7.4.47/css/materialdesignicons.min.css', 'css', 'head', 5);
     assets()->cdn('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap', 'css', 'head', 5);
-    assets()->css('css/docs-base.css', 'head', 8);
-    assets()->css('css/welcome.css', 'head', 10);
+    assets()->css('css/docs/docs-base.css', 'head', 8);
+    assets()->css('css/pages/welcome.css', 'head', 10);
     ?>
     <?= render_assets('head') ?>
 </head>
@@ -56,7 +56,7 @@
         </div>
 
         <div class="version">
-            <?= htmlspecialchars(config('app.name', 'SO Framework')) ?> v<?= htmlspecialchars(config('app.version', '1.0.0')) ?> | PHP <?= PHP_VERSION ?>
+            <?= htmlspecialchars(config('app.name', 'SO Framework')) ?> v<?= htmlspecialchars(config('app.version', '2.0.0')) ?> | PHP <?= PHP_VERSION ?>
         </div>
     </div>
 </body>

@@ -57,26 +57,28 @@ html {
 
 /* Global Custom Scrollbars */
 *::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
 }
 
 *::-webkit-scrollbar-track {
-  background: transparent;
+  background: var(--background);
+  border-radius: 4px;
 }
 
 *::-webkit-scrollbar-thumb {
-  background: var(--border);
-  border-radius: 3px;
+  background: var(--text-muted);
+  border-radius: 4px;
+  border: 2px solid var(--background);
 }
 
 *::-webkit-scrollbar-thumb:hover {
-  background: var(--text-muted);
+  background: var(--text-secondary);
 }
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: var(--border) transparent;
+  scrollbar-color: var(--text-muted) var(--background);
 }
 
 body {

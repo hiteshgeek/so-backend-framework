@@ -41,7 +41,7 @@ require __DIR__ . '/api/demo.php';
 Router::get('/api/health', function (Request $request) {
     return \Core\Http\JsonResponse::success([
         'status' => 'ok',
-        'version' => '1.0.0',
+        'version' => config('app.version'),
         'timestamp' => date('c'),
     ]);
 })->name('api.health');

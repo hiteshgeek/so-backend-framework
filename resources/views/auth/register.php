@@ -7,8 +7,8 @@
     <title><?= htmlspecialchars($title ?? 'Register') ?></title>
     <?php
     assets()->cdn('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap', 'css', 'head', 5);
-    assets()->css('css/docs-base.css', 'head', 8);
-    assets()->css('css/auth.css', 'head', 10);
+    assets()->css('css/docs/docs-base.css', 'head', 8);
+    assets()->css('css/auth/auth.css', 'head', 10);
     ?>
     <?= render_assets('head') ?>
 </head>

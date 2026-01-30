@@ -100,7 +100,7 @@ class MarkdownParser {
                     $this->closeOpenElements();
                     $this->inList = true;
                     $this->listType = 'ol';
-                    $this->html .= '<ol class="numbered-list">';
+                    $this->html .= '<ol>';
                 }
                 $this->html .= $this->renderListItem($m[2], $m[1]);
                 continue;
@@ -112,7 +112,7 @@ class MarkdownParser {
                     $this->closeOpenElements();
                     $this->inList = true;
                     $this->listType = 'ul';
-                    $this->html .= '<ul class="bullet-list">';
+                    $this->html .= '<ul>';
                 }
                 $this->html .= $this->renderBulletItem($m[1]);
                 continue;
@@ -430,7 +430,7 @@ class MarkdownParser {
     }
 
     private function renderListItem($text, $num) {
-        return "<li class=\"list-item numbered-item\"><span class=\"item-number\">{$num}</span><span class=\"item-content\">{$this->parseInline($text)}</span></li>";
+        return "<li>{$this->parseInline($text)}</li>";
     }
 
     private function renderBulletItem($text) {
@@ -441,7 +441,7 @@ class MarkdownParser {
         if (preg_match('/^\[ \]\s*(.+)$/', $text, $m)) {
             return "<li class=\"list-item checkbox-item\"><span class=\"checkbox\"></span><span class=\"item-content\">{$this->parseInline($m[1])}</span></li>";
         }
-        return "<li class=\"list-item bullet-item\"><span class=\"mdi mdi-circle-small bullet-icon\"></span><span class=\"item-content\">{$this->parseInline($text)}</span></li>";
+        return "<li>{$this->parseInline($text)}</li>";
     }
 
     private function parseInline($text) {

@@ -1,6 +1,6 @@
 # SO Framework - Comprehensive Guide
 
-**Version 2.0.0** | **PHP 8.3+** | **Status: 100% Complete [x]**
+**Version {{APP_VERSION}}** | **PHP 8.3+** | **Status: 100% Complete [x]**
 
 A complete reference for all implemented features of the SO Framework including all 5 Laravel framework table systems for enterprise ERP applications.
 
@@ -1466,7 +1466,7 @@ MIT License - See LICENSE file for details
 
 ---
 
-**Framework Version**: 1.0.0
+**Framework Version**: {{APP_VERSION}}
 **PHP Version**: 8.3.6
 **Last Updated**: 2026-01-29
 

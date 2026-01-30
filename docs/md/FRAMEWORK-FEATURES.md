@@ -1,6 +1,6 @@
-# SO Backend Framework - Complete Feature List
+# Complete Feature List
 
-**Version 2.0.0** | **Production Ready** | **Enterprise ERP Systems**
+**Version {{APP_VERSION}}** | **Production Ready** | **Enterprise ERP Systems**
 
 A comprehensive overview of all framework features, with focus on the 5 Laravel framework table systems that enable horizontal scaling, compliance, and enterprise-grade functionality.
 
@@ -36,6 +36,7 @@ The SO Backend Framework combines a lightweight, modern PHP framework with **5 p
 ## Core Framework Features
 
 ### 1. Dependency Injection Container [x]
+
 - Service provider pattern for clean architecture
 - Singleton and factory bindings
 - Automatic dependency resolution via reflection
@@ -54,6 +55,7 @@ $service = app(UserService::class);
 ---
 
 ### 2. Database Layer [x]
+
 - PDO-based connection management with prepared statements
 - Fluent query builder with chainable methods
 - Model with Active Record pattern (fillable/guarded)
@@ -77,6 +79,7 @@ $users = DB::table('users')
 ---
 
 ### 3. Routing System [x]
+
 - RESTful routing with HTTP methods (GET, POST, PUT, DELETE, PATCH)
 - Route parameters and named routes
 - Route groups with prefixes and middleware
@@ -95,6 +98,7 @@ Router::group(['prefix' => 'api', 'middleware' => 'auth'], function() {
 ---
 
 ### 4. HTTP Foundation [x]
+
 - Request/Response abstraction
 - Input handling (GET, POST, JSON, files)
 - Cookie and header management
@@ -114,6 +118,7 @@ return Response::redirect('/dashboard');
 ---
 
 ### 5. Configuration System [x]
+
 - Environment-based configuration (.env files)
 - Configuration files with dot notation access
 - Dynamic framework branding
@@ -135,6 +140,7 @@ $dbHost = config('database.host', '127.0.0.1');
 **Purpose**: Complete audit trail for compliance and security
 
 **Features**:
+
 - Automatic model change tracking (before/after values)
 - User action logging with causer identification
 - Custom log properties and event tracking
@@ -144,11 +150,13 @@ $dbHost = config('database.host', '127.0.0.1');
 **Database**: `activity_log` table
 
 **Key Files**:
+
 - `core/ActivityLog/ActivityLogger.php` - Main logging service
 - `core/ActivityLog/LogsActivity.php` - Trait for automatic logging
 - `core/ActivityLog/ActivityLogObserver.php` - Model observer
 
 **Usage**:
+
 ```php
 // Automatic logging (add trait to model)
 class User extends Model {
@@ -164,6 +172,7 @@ activity()
 ```
 
 **ERP Use Cases**:
+
 - Track all inventory changes for audits
 - Log financial transaction approvals
 - Monitor user permissions changes
@@ -179,6 +188,7 @@ activity()
 **Purpose**: Background job processing for heavy operations
 
 **Features**:
+
 - Database-backed queue with job persistence
 - Automatic retry logic (configurable attempts)
 - Failed job tracking and manual retry
@@ -189,6 +199,7 @@ activity()
 **Database**: `jobs`, `failed_jobs`, `job_batches` tables
 
 **Key Files**:
+
 - `core/Queue/Job.php` - Base job class
 - `core/Queue/QueueManager.php` - Connection manager
 - `core/Queue/DatabaseQueue.php` - Database driver
@@ -196,6 +207,7 @@ activity()
 - `core/Console/Commands/QueueWorkCommand.php` - CLI worker
 
 **Usage**:
+
 ```php
 // Create job class
 class GenerateMonthlyReport extends Job {
@@ -214,6 +226,7 @@ php sixorbit queue:work
 ```
 
 **ERP Use Cases**:
+
 - Large report generation (sales, inventory, financial)
 - Bulk data imports/exports (CSV, Excel)
 - Email notifications (order confirmations, alerts)
@@ -230,6 +243,7 @@ php sixorbit queue:work
 **Purpose**: User communication and workflow alerts
 
 **Features**:
+
 - Database notification storage (in-app display)
 - Unread notification tracking
 - Mark as read functionality
@@ -240,12 +254,14 @@ php sixorbit queue:work
 **Database**: `notifications` table
 
 **Key Files**:
+
 - `core/Notifications/Notification.php` - Base notification class
 - `core/Notifications/Notifiable.php` - Trait for receiving notifications
 - `core/Notifications/DatabaseChannel.php` - Database delivery
 - `core/Notifications/NotificationManager.php` - Dispatcher
 
 **Usage**:
+
 ```php
 // Create notification
 class OrderShipped extends Notification {
@@ -270,6 +286,7 @@ $notifications = $user->unreadNotifications;
 ```
 
 **ERP Use Cases**:
+
 - Approval workflow notifications (purchase orders, leave requests)
 - Task assignments and reminders
 - Order status updates (shipped, delivered)
@@ -287,6 +304,7 @@ $notifications = $user->unreadNotifications;
 **Purpose**: Performance optimization and load reduction
 
 **Features**:
+
 - Multiple cache drivers (database, array/request-level)
 - Remember pattern (compute once, cache result)
 - TTL (time-to-live) management
@@ -297,12 +315,14 @@ $notifications = $user->unreadNotifications;
 **Database**: `cache`, `cache_locks` tables
 
 **Key Files**:
+
 - `core/Cache/Repository.php` - Main cache interface
 - `core/Cache/CacheManager.php` - Driver manager
 - `core/Cache/Drivers/DatabaseCache.php` - Database driver
 - `core/Cache/Lock.php` - Locking mechanism
 
 **Usage**:
+
 ```php
 // Basic operations
 cache()->put('products.featured', $products, 3600);
@@ -322,6 +342,7 @@ if ($lock->acquire()) {
 ```
 
 **ERP Use Cases**:
+
 - Product catalog caching (reduce database queries by 80%)
 - Pricing rules and discount calculations
 - User permissions and roles
@@ -339,6 +360,7 @@ if ($lock->acquire()) {
 **Purpose**: Horizontal scaling and session management
 
 **Features**:
+
 - Database session storage (sessions table)
 - User, IP address, User Agent tracking
 - Horizontal scaling support (load balancing)
@@ -349,11 +371,13 @@ if ($lock->acquire()) {
 **Database**: `sessions` table
 
 **Key Files**:
+
 - `core/Session/DatabaseSessionHandler.php` - SessionHandlerInterface
 - `app/Providers/SessionServiceProvider.php` - Configuration
 - `config/session.php` - Session configuration
 
 **Usage**:
+
 ```php
 // Sessions work automatically (no code changes needed)
 session()->put('user_id', 42);
@@ -369,6 +393,7 @@ $activeSessions = DB::table('sessions')
 ```
 
 **ERP Use Cases**:
+
 - Multi-server deployment with load balancer
 - Active user monitoring in real-time
 - Security audit (track WHO logged in WHEN and WHERE)
@@ -382,28 +407,33 @@ $activeSessions = DB::table('sessions')
 ## ERP Benefits
 
 ### Horizontal Scaling
+
 - **Database sessions** allow multiple web servers behind load balancer
 - No session affinity required - users can hit any server
 - Share session data across all application servers
 
 ### Performance
+
 - **Cache system** reduces database load by 60-80%
 - Fast lookup for permissions, settings, pricing, catalogs
 - Remember pattern prevents duplicate complex calculations
 
 ### Compliance & Audit
+
 - **Activity logging** tracks WHO changed WHAT and WHEN
 - Complete audit trail for GDPR, SOX, HIPAA compliance
 - Before/after values for all changes
 - Dispute resolution with full history
 
 ### Background Processing
+
 - **Queue system** prevents timeout on heavy operations
 - Reports generate in background (5-10 minutes)
 - Bulk operations don't block users
 - Email queuing for better deliverability
 
 ### User Experience
+
 - **Notifications** for workflow events (approvals, alerts)
 - Real-time task assignments
 - Order status updates
@@ -481,18 +511,19 @@ stdout_logfile=/var/www/html/so-backend-framework/storage/logs/worker.log
 
 ## Database Tables Overview
 
-| Table | Purpose | Size (Est.) | Retention | Indexes |
-|-------|---------|-------------|-----------|---------|
-| `activity_log` | Audit trail | Large | 365 days | log_name, subject_type, subject_id, causer_id, created_at |
-| `jobs` | Queued jobs | Medium | Auto-cleanup | queue, available_at |
-| `failed_jobs` | Failed jobs | Small | Manual review | failed_at |
-| `job_batches` | Batch tracking | Small | 30 days | id, created_at |
-| `notifications` | User notifications | Medium | 30 days (read) | notifiable_type, notifiable_id, read_at |
-| `cache` | Performance cache | Medium | TTL-based | key, expiration |
-| `cache_locks` | Lock management | Small | Auto-expire | key, expiration |
-| `sessions` | Active sessions | Medium | 2 hours | id, user_id, last_activity |
+| Table           | Purpose            | Size (Est.) | Retention      | Indexes                                                   |
+| --------------- | ------------------ | ----------- | -------------- | --------------------------------------------------------- |
+| `activity_log`  | Audit trail        | Large       | 365 days       | log_name, subject_type, subject_id, causer_id, created_at |
+| `jobs`          | Queued jobs        | Medium      | Auto-cleanup   | queue, available_at                                       |
+| `failed_jobs`   | Failed jobs        | Small       | Manual review  | failed_at                                                 |
+| `job_batches`   | Batch tracking     | Small       | 30 days        | id, created_at                                            |
+| `notifications` | User notifications | Medium      | 30 days (read) | notifiable_type, notifiable_id, read_at                   |
+| `cache`         | Performance cache  | Medium      | TTL-based      | key, expiration                                           |
+| `cache_locks`   | Lock management    | Small       | Auto-expire    | key, expiration                                           |
+| `sessions`      | Active sessions    | Medium      | 2 hours        | id, user_id, last_activity                                |
 
 **Total Storage** (estimated for 10,000 users, 1 year):
+
 - activity_log: 5-10 GB
 - jobs/failed_jobs: 100-500 MB
 - notifications: 1-2 GB
@@ -588,6 +619,7 @@ The SO Backend Framework now includes **5 production-ready Laravel framework tab
 [x] **Session System** - Horizontal scaling
 
 **All systems are:**
+
 - [x] Implemented and tested
 - [x] Production-ready
 - [x] Documented with examples
@@ -598,6 +630,6 @@ The SO Backend Framework now includes **5 production-ready Laravel framework tab
 
 ---
 
-**Version**: 2.0.0
+**Version**: {{APP_VERSION}}
 **Last Updated**: 2026-01-29
 **Status**: Production Ready [x]

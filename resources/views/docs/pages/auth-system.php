@@ -40,7 +40,7 @@ include __DIR__ . '/../_layout.php';
 <div class="flex gap-2 mb-4">
     <span class="badge badge-stable">Session-Based Auth</span>
     <span class="badge badge-stable">JWT Support</span>
-    <span class="badge badge-stable">Version 2.0.0</span>
+    <span class="badge badge-stable">Version <?= htmlspecialchars(config('app.version')) ?></span>
 </div>
 
 <!-- Overview -->

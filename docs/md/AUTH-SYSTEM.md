@@ -1,6 +1,6 @@
 # Authentication System Guide
 
-**SO Framework** | **Session-Based Auth** | **Version 2.0.0**
+**SO Framework** | **Session-Based Auth** | **Version {{APP_VERSION}}**
 
 Complete guide to user authentication and authorization in the SO Framework.
 
@@ -957,4 +957,4 @@ All authentication methods follow security best practices and are production-rea
 ---
 
 **Last Updated**: 2026-01-29
-**Framework Version**: 2.0.0
+**Framework Version**: {{APP_VERSION}}

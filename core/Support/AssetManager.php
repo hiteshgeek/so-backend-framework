@@ -67,9 +67,9 @@ class AssetManager
     /**
      * Generate a URL to a public asset with optional cache busting.
      *
-     * @param string $path Relative path within public/assets/ (e.g., 'css/docs.css')
+     * @param string $path Relative path within public/assets/ (e.g., 'css/docs/docs.css')
      * @param bool|null $version Override versioning for this call
-     * @return string Full URL like '/assets/css/docs.css?v=1706620800'
+     * @return string Full URL like '/assets/css/docs/docs.css?v=1706620800'
      */
     public function url(string $path, ?bool $version = null): string
     {
