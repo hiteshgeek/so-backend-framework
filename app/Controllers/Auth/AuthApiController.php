@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Controllers\Auth;
 
-use App\Models\User;
+use App\Services\Auth\AuthenticationService;
+use App\Validation\UserValidationRules;
 use Core\Http\JsonResponse;
 use Core\Http\Request;
 use Core\Http\Response;
@@ -11,10 +12,18 @@ use Core\Validation\Validator;
 /**
  * API Authentication Controller
  *
- * Returns JSON responses for AJAX/API authentication requests
+ * Returns JSON responses for AJAX/API authentication requests.
+ * Uses AuthenticationService for business logic.
  */
 class AuthApiController
 {
+    private AuthenticationService $authService;
+
+    public function __construct()
+    {
+        $this->authService = new AuthenticationService();
+    }
+
     /**
      * API Register - Create new user account
      *
@@ -22,11 +31,8 @@ class AuthApiController
      */
     public function register(Request $request): Response
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|min:2|max:255',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|min:8|confirmed',
-        ]);
+        // Validate using centralized rules
+        $validator = Validator::make($request->all(), UserValidationRules::registration());
 
         if ($validator->fails()) {
             return JsonResponse::error('Validation failed', 422, [
@@ -34,8 +40,8 @@ class AuthApiController
             ]);
         }
 
-        // Create new user (password is hashed automatically by User model)
-        $user = User::create([
+        // Create user via service
+        $user = $this->authService->register([
             'name' => $request->input('name'),
             'email' => $request->input('email'),
             'password' => $request->input('password'),
@@ -46,11 +52,7 @@ class AuthApiController
 
         return JsonResponse::success([
             'message' => 'Account created successfully!',
-            'user' => [
-                'id' => $user->id,
-                'name' => $user->name,
-                'email' => $user->email,
-            ],
+            'user' => $this->authService->userToArray($user),
             'demo_token' => 'demo_token_' . time(), // For demo purposes
         ], 201);
     }
@@ -62,10 +64,8 @@ class AuthApiController
      */
     public function login(Request $request): Response
     {
-        $validator = Validator::make($request->all(), [
-            'email' => 'required|email',
-            'password' => 'required',
-        ]);
+        // Validate using centralized rules
+        $validator = Validator::make($request->all(), UserValidationRules::login());
 
         if ($validator->fails()) {
             return JsonResponse::error('Validation failed', 422, [
@@ -73,23 +73,19 @@ class AuthApiController
             ]);
         }
 
-        $credentials = [
-            'email' => $request->input('email'),
-            'password' => $request->input('password'),
-        ];
-
         $remember = $request->input('remember') === '1' || $request->input('remember') === 1;
 
-        if (auth()->attempt($credentials, $remember)) {
-            $user = auth()->user();
+        // Attempt login via service
+        if ($this->authService->login(
+            $request->input('email'),
+            $request->input('password'),
+            $remember
+        )) {
+            $user = $this->authService->getCurrentUser();
 
             return JsonResponse::success([
                 'message' => 'Login successful!',
-                'user' => [
-                    'id' => $user->id,
-                    'name' => $user->name,
-                    'email' => $user->email,
-                ],
+                'user' => $this->authService->userToArray($user),
                 'demo_token' => 'demo_token_' . time(), // For demo purposes
                 'remember' => $remember,
             ]);
@@ -105,7 +101,7 @@ class AuthApiController
      */
     public function logout(Request $request): Response
     {
-        auth()->logout();
+        $this->authService->logout();
 
         return JsonResponse::success([
             'message' => 'Logged out successfully',

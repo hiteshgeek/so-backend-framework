@@ -139,6 +139,7 @@ class DocsController
 
             // API & Architecture
             'api-versioning' => 'API-VERSIONING.md',
+            'service-layer' => 'SERVICE-LAYER.md',
 
             // Test Documentation (from tests/ folder)
             'middleware' => '../../tests/MIDDLEWARE_IMPLEMENTATION_SUMMARY.md',

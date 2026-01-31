@@ -154,6 +154,13 @@
                         </div>
                         <span class="badge badge-new">New</span>
                     </a>
+                    <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/service-layer" class="doc-card">
+                        <div class="doc-card-body">
+                            <h3><span class="mdi mdi-layers"></span> Service Layer</h3>
+                            <p>Business logic separation, eliminating code duplication.</p>
+                        </div>
+                        <span class="badge badge-new">New</span>
+                    </a>
                 </div>
             </div>
 

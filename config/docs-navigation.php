@@ -65,6 +65,11 @@ return [
         'title' => 'API Versioning',
         'url' => '/docs/api-versioning',
     ],
+    [
+        'key' => 'service-layer',
+        'title' => 'Service Layer',
+        'url' => '/docs/service-layer',
+    ],
 
     // Enterprise Features
     [

@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Controllers\Auth;
 
-use App\Models\User;
+use App\Services\Auth\PasswordResetService;
+use App\Validation\PasswordValidationRules;
 use Core\Http\Request;
 use Core\Http\Response;
 use Core\Validation\Validator;
@@ -10,10 +11,18 @@ use Core\Validation\Validator;
 /**
  * Password Reset Controller
  *
- * Handles password reset functionality
+ * Handles password reset functionality for web interface.
+ * Uses PasswordResetService for business logic.
  */
 class PasswordController
 {
+    private PasswordResetService $passwordResetService;
+
+    public function __construct()
+    {
+        $this->passwordResetService = new PasswordResetService();
+    }
+
     /**
      * Show forgot password form
      */
@@ -31,9 +40,8 @@ class PasswordController
      */
     public function sendResetLink(Request $request): Response
     {
-        $validator = Validator::make($request->all(), [
-            'email' => 'required|email',
-        ]);
+        // Validate using centralized rules
+        $validator = Validator::make($request->all(), PasswordValidationRules::forgotPassword());
 
         if ($validator->fails()) {
             return redirect(url('/password/forgot'))
@@ -42,34 +50,20 @@ class PasswordController
         }
 
         $email = $request->input('email');
-        $user = User::findByEmail($email);
 
-        if (!$user) {
+        // Check if user exists
+        if (!$this->passwordResetService->userExists($email)) {
             // Don't reveal if email exists (security)
             return redirect(url('/password/forgot'))
                 ->with('success', 'If that email exists in our system, a password reset link has been sent.');
         }
 
-        // Generate secure token
-        $token = bin2hex(random_bytes(32));
-        $expiresAt = date('Y-m-d H:i:s', strtotime('+1 hour'));
-
-        // Delete any existing reset tokens for this email
-        app('db')->table('password_resets')
-            ->where('email', '=', $email)
-            ->delete();
-
-        // Store hashed token in database
-        app('db')->table('password_resets')->insert([
-            'email' => $email,
-            'token' => hash('sha256', $token),
-            'created_at' => date('Y-m-d H:i:s'),
-            'expires_at' => $expiresAt,
-        ]);
+        // Generate and store token via service
+        $token = $this->passwordResetService->createResetToken($email);
 
         // In production, send email with reset link
         // For demo, display the reset link
-        $resetUrl = url('/password/reset/' . $token);
+        $resetUrl = $this->passwordResetService->buildResetUrl($token);
 
         return redirect(url('/password/forgot'))
             ->with('success', 'Password reset link: ' . $resetUrl . ' (valid for 1 hour)');
@@ -80,9 +74,13 @@ class PasswordController
      */
     public function showResetForm(Request $request, string $token): Response
     {
-        // Verify token exists and is not expired
+        // Note: We can't fully verify token without email at this stage
+        // The verification happens during actual password reset
+
+        // Get email from token record if exists
+        $hashedToken = hash('sha256', $token);
         $resetRecord = app('db')->table('password_resets')
-            ->where('token', '=', hash('sha256', $token))
+            ->where('token', '=', $hashedToken)
             ->first();
 
         if (!$resetRecord) {
@@ -109,53 +107,25 @@ class PasswordController
      */
     public function reset(Request $request): Response
     {
-        $validator = Validator::make($request->all(), [
-            'email' => 'required|email',
-            'token' => 'required',
-            'password' => 'required|min:8|confirmed',
-        ]);
+        // Validate using centralized rules
+        $validator = Validator::make($request->all(), PasswordValidationRules::resetPassword());
 
         if ($validator->fails()) {
             return back()
                 ->withErrors($validator->errors());
         }
 
-        $token = $request->input('token');
-        $email = $request->input('email');
+        // Reset password via service
+        $success = $this->passwordResetService->resetPassword(
+            $request->input('token'),
+            $request->input('email'),
+            $request->input('password')
+        );
 
-        // Verify token
-        $resetRecord = app('db')->table('password_resets')
-            ->where('token', '=', hash('sha256', $token))
-            ->where('email', '=', $email)
-            ->first();
-
-        if (!$resetRecord) {
+        if (!$success) {
             return redirect(url('/password/forgot'))
-                ->with('error', 'Invalid reset token.');
+                ->with('error', 'Invalid or expired reset token.');
         }
-
-        // Check expiration
-        if (strtotime($resetRecord['expires_at']) < time()) {
-            return redirect(url('/password/forgot'))
-                ->with('error', 'This reset token has expired.');
-        }
-
-        // Find user and update password
-        $user = User::findByEmail($email);
-
-        if (!$user) {
-            return redirect(url('/password/forgot'))
-                ->with('error', 'User not found.');
-        }
-
-        // Update password (automatically hashed by User model)
-        $user->password = $request->input('password');
-        $user->save();
-
-        // Delete used token
-        app('db')->table('password_resets')
-            ->where('email', '=', $email)
-            ->delete();
 
         return redirect(url('/login'))
             ->with('success', 'Password reset successfully! You can now login with your new password.');

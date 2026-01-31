@@ -33,11 +33,12 @@ Read the documentation in this numbered sequence for the best learning experienc
 | 8a | [Session Encryption](/docs/session-encryption) | AES-256-CBC encryption with HMAC tamper detection | 10 min |
 | 8b | [Auth Account Lockout](/docs/auth-lockout) | Brute force protection and account lockout | 10 min |
 
-### Phase 4: Architecture Deep Dive (45 minutes)
+### Phase 4: Architecture Deep Dive (1 hour 10 minutes)
 
 | No. | Document | Description | Time |
 |-----|----------|-------------|------|
 | 9 | [Middleware Guide](/docs/middleware) | Request pipeline and middleware | 15 min |
+| 9a | [Service Layer](/docs/service-layer) | Business logic separation, eliminating code duplication | 25 min |
 | 10 | [Internal API Layer](/docs/internal-api) | Context detection and permissions | 18 min |
 | 10a | [API Versioning](/docs/api-versioning) | URL/header-based API version management | 12 min |
 | 11 | [Model Enhancements](/docs/model-enhancements) | Soft deletes, query scopes | 12 min |

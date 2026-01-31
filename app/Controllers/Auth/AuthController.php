@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Controllers\Auth;
 
-use App\Models\User;
+use App\Services\Auth\AuthenticationService;
+use App\Validation\UserValidationRules;
 use Core\Http\Request;
 use Core\Http\Response;
 use Core\Validation\Validator;
@@ -10,10 +11,18 @@ use Core\Validation\Validator;
 /**
  * Authentication Controller
  *
- * Handles user registration, login, and logout
+ * Handles user registration, login, and logout for web interface.
+ * Uses AuthenticationService for business logic.
  */
 class AuthController
 {
+    private AuthenticationService $authService;
+
+    public function __construct()
+    {
+        $this->authService = new AuthenticationService();
+    }
+
     /**
      * Show registration form
      */
@@ -31,11 +40,8 @@ class AuthController
      */
     public function register(Request $request): Response
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|min:2|max:255',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|min:8|confirmed',
-        ]);
+        // Validate using centralized rules
+        $validator = Validator::make($request->all(), UserValidationRules::registration());
 
         if ($validator->fails()) {
             return redirect(url('/register'))
@@ -43,8 +49,8 @@ class AuthController
                 ->withInput($request->except(['password', 'password_confirmation']));
         }
 
-        // Create new user (password is hashed automatically by User model)
-        $user = User::create([
+        // Create user via service
+        $user = $this->authService->register([
             'name' => $request->input('name'),
             'email' => $request->input('email'),
             'password' => $request->input('password'),
@@ -74,10 +80,8 @@ class AuthController
      */
     public function login(Request $request): Response
     {
-        $validator = Validator::make($request->all(), [
-            'email' => 'required|email',
-            'password' => 'required',
-        ]);
+        // Validate using centralized rules
+        $validator = Validator::make($request->all(), UserValidationRules::login());
 
         if ($validator->fails()) {
             return redirect(url('/login'))
@@ -85,16 +89,17 @@ class AuthController
                 ->withInput($request->only(['email']));
         }
 
-        $credentials = [
-            'email' => $request->input('email'),
-            'password' => $request->input('password'),
-        ];
-
         $remember = $request->input('remember') === '1';
 
-        if (auth()->attempt($credentials, $remember)) {
+        // Attempt login via service
+        if ($this->authService->login(
+            $request->input('email'),
+            $request->input('password'),
+            $remember
+        )) {
+            $user = $this->authService->getCurrentUser();
             return redirect(url('/dashboard'))
-                ->with('success', 'Welcome back, ' . auth()->user()->name . '!');
+                ->with('success', 'Welcome back, ' . $user->name . '!');
         }
 
         return redirect(url('/login'))
@@ -107,7 +112,7 @@ class AuthController
      */
     public function logout(Request $request): Response
     {
-        auth()->logout();
+        $this->authService->logout();
 
         return redirect(url('/login'))
             ->with('success', 'You have been logged out successfully.');

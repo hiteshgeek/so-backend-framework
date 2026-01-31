@@ -8,8 +8,8 @@
  */
 
 use Core\Routing\Router;
-use App\Controllers\AuthApiController;
-use App\Controllers\PasswordApiController;
+use App\Controllers\Auth\AuthApiController;
+use App\Controllers\Auth\PasswordApiController;
 use App\Middleware\AuthMiddleware;
 use App\Middleware\ThrottleMiddleware;
 

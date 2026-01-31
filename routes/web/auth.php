@@ -7,8 +7,8 @@
  */
 
 use Core\Routing\Router;
-use App\Controllers\AuthController;
-use App\Controllers\PasswordController;
+use App\Controllers\Auth\AuthController;
+use App\Controllers\Auth\PasswordController;
 use App\Middleware\GuestMiddleware;
 use App\Middleware\AuthMiddleware;
 use App\Middleware\CsrfMiddleware;

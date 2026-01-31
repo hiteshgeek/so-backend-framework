@@ -17,16 +17,17 @@ class User extends Model
     protected static string $table = 'users';
 
     protected array $fillable = [
-        'id',
         'name',
         'email',
         'password',
+    ];
+
+    protected array $guarded = [
+        'id',
         'remember_token',
         'created_at',
         'updated_at',
     ];
-
-    protected array $guarded = [];
 
     /**
      * Activity logging configuration
