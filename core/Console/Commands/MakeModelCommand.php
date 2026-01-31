@@ -12,10 +12,13 @@ use Core\Console\Command;
  * Usage:
  *   php sixorbit make:model User
  *   php sixorbit make:model Post --soft-deletes
+ *   php sixorbit make:model Product --force
+ *   php sixorbit make:model User --dry-run
+ *   php sixorbit make:model Product --migration (or -m)
  */
 class MakeModelCommand extends Command
 {
-    protected string $signature = 'make:model {name} {--soft-deletes}';
+    protected string $signature = 'make:model {name} {--soft-deletes} {--m|migration} {--force} {--dry-run}';
 
     protected string $description = 'Create a new model class';
 
@@ -28,37 +31,109 @@ class MakeModelCommand extends Command
             return 1;
         }
 
+        // Parse nested paths (e.g., Blog/Post)
+        $parsedName = $this->parseName($name);
+        $className = $parsedName['class'];
+        $namespace = $parsedName['namespace'];
+        $relativePath = $parsedName['path'];
+
         $basePath = getcwd();
-        $relativePath = 'app/Models/' . $name . '.php';
         $filePath = $basePath . '/' . $relativePath;
 
-        if (file_exists($filePath)) {
+        // Check if file exists
+        if (file_exists($filePath) && !$this->option('force', false)) {
             $this->error("Model already exists: {$relativePath}");
+            $this->comment("Use --force to overwrite");
             return 1;
         }
 
+        $useSoftDeletes = $this->option('soft-deletes', false);
+        $tableName = $this->toTableName($className);
+        $content = $this->buildModel($className, $namespace, $tableName, $useSoftDeletes);
+
+        // Dry run - show what would be created
+        if ($this->option('dry-run', false)) {
+            $this->comment("Would create: {$relativePath}");
+            $this->info("\n" . $content);
+            return 0;
+        }
+
+        // Create directory if it doesn't exist
         $dir = dirname($filePath);
         if (!is_dir($dir)) {
             mkdir($dir, 0755, true);
         }
 
-        $useSoftDeletes = $this->option('soft-deletes', false);
-        $tableName = $this->toTableName($name);
-        $content = $this->buildModel($name, $tableName, $useSoftDeletes);
-
+        // Write file
         if (file_put_contents($filePath, $content) === false) {
             $this->error("Failed to create model: {$relativePath}");
             return 1;
         }
 
         $this->info("Model created successfully: {$relativePath}");
+
+        // Create migration if --migration flag is set
+        if ($this->option('migration', false) || $this->option('m', false)) {
+            $this->createMigration($className, $tableName);
+        }
+
         return 0;
+    }
+
+    /**
+     * Create a migration for the model.
+     */
+    protected function createMigration(string $className, string $tableName): void
+    {
+        $migrationName = "create_{$tableName}_table";
+
+        $this->comment("\nCreating migration for {$className}...");
+
+        // Use passthru to run the make:migration command
+        $command = "php sixorbit make:migration {$migrationName} --create={$tableName}";
+        passthru($command, $returnCode);
+
+        if ($returnCode === 0) {
+            $this->info("Migration created successfully.");
+        }
+    }
+
+    /**
+     * Parse the name to extract class name, namespace, and file path
+     */
+    protected function parseName(string $name): array
+    {
+        // Remove .php extension if provided
+        $name = str_replace('.php', '', $name);
+
+        // Split by forward slash for nested paths
+        $parts = explode('/', $name);
+        $className = array_pop($parts);
+
+        // Build namespace
+        $namespace = 'App\\Models';
+        if (!empty($parts)) {
+            $namespace .= '\\' . implode('\\', $parts);
+        }
+
+        // Build file path
+        $path = 'app/Models';
+        if (!empty($parts)) {
+            $path .= '/' . implode('/', $parts);
+        }
+        $path .= '/' . $className . '.php';
+
+        return [
+            'class' => $className,
+            'namespace' => $namespace,
+            'path' => $path,
+        ];
     }
 
     /**
      * Build the model class content
      */
-    protected function buildModel(string $name, string $tableName, bool $useSoftDeletes): string
+    protected function buildModel(string $className, string $namespace, string $tableName, bool $useSoftDeletes): string
     {
         $useStatements = "use Core\\Model\\Model;\n";
         $traitUse = '';
@@ -71,13 +146,13 @@ class MakeModelCommand extends Command
         return <<<PHP
 <?php
 
-namespace App\Models;
+namespace {$namespace};
 
 {$useStatements}
 /**
- * {$name} Model
+ * {$className} Model
  */
-class {$name} extends Model
+class {$className} extends Model
 {{$traitUse}
     protected static string \$table = '{$tableName}';
 

@@ -11,12 +11,15 @@ use Core\Console\Command;
  *
  * Usage:
  *   php sixorbit make:controller UserController
+ *   php sixorbit make:controller Admin/UserController
  *   php sixorbit make:controller UserController --api
  *   php sixorbit make:controller UserController --resource
+ *   php sixorbit make:controller UserController --force
+ *   php sixorbit make:controller UserController --dry-run
  */
 class MakeControllerCommand extends Command
 {
-    protected string $signature = 'make:controller {name} {--api} {--resource}';
+    protected string $signature = 'make:controller {name} {--api} {--resource} {--force} {--dry-run}';
 
     protected string $description = 'Create a new controller class';
 
@@ -29,31 +32,47 @@ class MakeControllerCommand extends Command
             return 1;
         }
 
+        // Parse nested paths (e.g., Admin/UserController)
+        $parsedName = $this->parseName($name);
+        $className = $parsedName['class'];
+        $namespace = $parsedName['namespace'];
+        $relativePath = $parsedName['path'];
+
         $basePath = getcwd();
-        $relativePath = 'app/Controllers/' . $name . '.php';
         $filePath = $basePath . '/' . $relativePath;
 
-        if (file_exists($filePath)) {
+        // Check if file exists
+        if (file_exists($filePath) && !$this->option('force', false)) {
             $this->error("Controller already exists: {$relativePath}");
+            $this->comment("Use --force to overwrite");
             return 1;
-        }
-
-        $dir = dirname($filePath);
-        if (!is_dir($dir)) {
-            mkdir($dir, 0755, true);
         }
 
         $isApi = $this->option('api', false);
         $isResource = $this->option('resource', false);
 
         if ($isApi) {
-            $content = $this->buildApiController($name);
+            $content = $this->buildApiController($className, $namespace);
         } elseif ($isResource) {
-            $content = $this->buildResourceController($name);
+            $content = $this->buildResourceController($className, $namespace);
         } else {
-            $content = $this->buildBasicController($name);
+            $content = $this->buildBasicController($className, $namespace);
         }
 
+        // Dry run - show what would be created
+        if ($this->option('dry-run', false)) {
+            $this->comment("Would create: {$relativePath}");
+            $this->info("\n" . $content);
+            return 0;
+        }
+
+        // Create directory if it doesn't exist
+        $dir = dirname($filePath);
+        if (!is_dir($dir)) {
+            mkdir($dir, 0755, true);
+        }
+
+        // Write file
         if (file_put_contents($filePath, $content) === false) {
             $this->error("Failed to create controller: {$relativePath}");
             return 1;
@@ -64,22 +83,55 @@ class MakeControllerCommand extends Command
     }
 
     /**
+     * Parse the name to extract class name, namespace, and file path
+     * Supports nested paths like Admin/UserController
+     */
+    protected function parseName(string $name): array
+    {
+        // Remove .php extension if provided
+        $name = str_replace('.php', '', $name);
+
+        // Split by forward slash for nested paths
+        $parts = explode('/', $name);
+        $className = array_pop($parts);
+
+        // Build namespace
+        $namespace = 'App\\Controllers';
+        if (!empty($parts)) {
+            $namespace .= '\\' . implode('\\', $parts);
+        }
+
+        // Build file path
+        $path = 'app/Controllers';
+        if (!empty($parts)) {
+            $path .= '/' . implode('/', $parts);
+        }
+        $path .= '/' . $className . '.php';
+
+        return [
+            'class' => $className,
+            'namespace' => $namespace,
+            'path' => $path,
+        ];
+    }
+
+    /**
      * Build a basic controller with no methods
      */
-    protected function buildBasicController(string $name): string
+    protected function buildBasicController(string $className, string $namespace): string
     {
         return <<<PHP
 <?php
 
-namespace App\Controllers;
+namespace {$namespace};
 
 use Core\Http\Request;
 use Core\Http\Response;
 
 /**
- * {$name}
+ * {$className}
  */
-class {$name}
+class {$className}
 {
     //
 }
@@ -89,22 +141,22 @@ PHP;
     /**
      * Build an API controller with JSON resource methods
      */
-    protected function buildApiController(string $name): string
+    protected function buildApiController(string $className, string $namespace): string
     {
         return <<<PHP
 <?php
 
-namespace App\Controllers;
+namespace {$namespace};
 
 use Core\Http\Request;
 use Core\Http\JsonResponse;
 
 /**
- * {$name}
+ * {$className}
  *
  * API resource controller
  */
-class {$name}
+class {$className}
 {
     /**
      * Display a listing of the resource.
@@ -167,29 +219,31 @@ PHP;
     /**
      * Build a resource controller with view-returning methods
      */
-    protected function buildResourceController(string $name): string
+    protected function buildResourceController(string $className, string $namespace): string
     {
+        $viewPath = $this->guessViewPath($className);
+
         return <<<PHP
 <?php
 
-namespace App\Controllers;
+namespace {$namespace};
 
 use Core\Http\Request;
 use Core\Http\Response;
 
 /**
- * {$name}
+ * {$className}
  *
  * Resource controller
  */
-class {$name}
+class {$className}
 {
     /**
      * Display a listing of the resource.
      */
     public function index(Request \$request): Response
     {
-        return Response::view('{$this->guessViewPath($name)}/index', [
+        return Response::view('{$viewPath}/index', [
             //
         ]);
     }
@@ -199,7 +253,7 @@ class {$name}
      */
     public function create(Request \$request): Response
     {
-        return Response::view('{$this->guessViewPath($name)}/create', [
+        return Response::view('{$viewPath}/create', [
             //
         ]);
     }
@@ -220,7 +274,7 @@ class {$name}
      */
     public function show(Request \$request, int \$id): Response
     {
-        return Response::view('{$this->guessViewPath($name)}/show', [
+        return Response::view('{$viewPath}/show', [
             //
         ]);
     }
@@ -230,7 +284,7 @@ class {$name}
      */
     public function edit(Request \$request, int \$id): Response
     {
-        return Response::view('{$this->guessViewPath($name)}/edit', [
+        return Response::view('{$viewPath}/edit', [
             //
         ]);
     }

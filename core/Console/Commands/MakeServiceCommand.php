@@ -5,32 +5,32 @@ namespace Core\Console\Commands;
 use Core\Console\Command;
 
 /**
- * Make Listener Command
+ * Make Service Command
  *
- * Generates a new event listener class file.
+ * Generates a new service class file.
  *
  * Usage:
- *   php sixorbit make:listener SendWelcomeEmail
- *   php sixorbit make:listener Auth/SendWelcomeEmail
- *   php sixorbit make:listener SendWelcomeEmail --force
- *   php sixorbit make:listener SendWelcomeEmail --dry-run
+ *   php sixorbit make:service UserService
+ *   php sixorbit make:service Payment/StripeService
+ *   php sixorbit make:service UserService --force
+ *   php sixorbit make:service UserService --dry-run
  */
-class MakeListenerCommand extends Command
+class MakeServiceCommand extends Command
 {
-    protected string $signature = 'make:listener {name} {--force} {--dry-run}';
+    protected string $signature = 'make:service {name} {--force} {--dry-run}';
 
-    protected string $description = 'Create a new event listener class';
+    protected string $description = 'Create a new service class';
 
     public function handle(): int
     {
         $name = $this->argument(0);
 
         if (!$name) {
-            $this->error('Listener name is required.');
+            $this->error('Service name is required.');
             return 1;
         }
 
-        // Parse nested paths (e.g., Auth/SendWelcomeEmail)
+        // Parse nested paths (e.g., Payment/StripeService)
         $parsedName = $this->parseName($name);
         $className = $parsedName['class'];
         $namespace = $parsedName['namespace'];
@@ -41,12 +41,12 @@ class MakeListenerCommand extends Command
 
         // Check if file exists
         if (file_exists($filePath) && !$this->option('force', false)) {
-            $this->error("Listener already exists: {$relativePath}");
+            $this->error("Service already exists: {$relativePath}");
             $this->comment("Use --force to overwrite");
             return 1;
         }
 
-        $content = $this->buildListener($className, $namespace);
+        $content = $this->buildService($className, $namespace);
 
         // Dry run - show what would be created
         if ($this->option('dry-run', false)) {
@@ -63,17 +63,17 @@ class MakeListenerCommand extends Command
 
         // Write file
         if (file_put_contents($filePath, $content) === false) {
-            $this->error("Failed to create listener: {$relativePath}");
+            $this->error("Failed to create service: {$relativePath}");
             return 1;
         }
 
-        $this->info("Listener created successfully: {$relativePath}");
+        $this->info("Service created successfully: {$relativePath}");
         return 0;
     }
 
     /**
      * Parse the name to extract class name, namespace, and file path
-     * Supports nested paths like Auth/SendWelcomeEmail
+     * Supports nested paths like Payment/StripeService
      */
     protected function parseName(string $name): array
     {
@@ -85,13 +85,13 @@ class MakeListenerCommand extends Command
         $className = array_pop($parts);
 
         // Build namespace
-        $namespace = 'App\\Listeners';
+        $namespace = 'App\\Services';
         if (!empty($parts)) {
             $namespace .= '\\' . implode('\\', $parts);
         }
 
         // Build file path
-        $path = 'app/Listeners';
+        $path = 'app/Services';
         if (!empty($parts)) {
             $path .= '/' . implode('/', $parts);
         }
@@ -105,36 +105,77 @@ class MakeListenerCommand extends Command
     }
 
     /**
-     * Build the listener class content
+     * Build a service class with basic CRUD methods
      */
-    protected function buildListener(string $className, string $namespace): string
+    protected function buildService(string $className, string $namespace): string
     {
         return <<<PHP
 <?php
 
 namespace {$namespace};
 
-use Core\Events\Event;
-
 /**
  * {$className}
+ *
+ * Service layer for business logic
  */
 class {$className}
 {
     /**
-     * Create a new listener instance.
+     * Create a new resource
+     *
+     * @param array \$data
+     * @return mixed
      */
-    public function __construct()
+    public function create(array \$data): mixed
     {
-        //
+        // Implement create logic
     }
 
     /**
-     * Handle the event.
+     * Find a resource by ID
+     *
+     * @param int \$id
+     * @return mixed
      */
-    public function handle(Event \$event): void
+    public function find(int \$id): mixed
     {
-        //
+        // Implement find logic
+    }
+
+    /**
+     * Get all resources
+     *
+     * @param array \$filters
+     * @return array
+     */
+    public function all(array \$filters = []): array
+    {
+        // Implement list logic
+    }
+
+    /**
+     * Update a resource
+     *
+     * @param int \$id
+     * @param array \$data
+     * @return mixed
+     */
+    public function update(int \$id, array \$data): mixed
+    {
+        // Implement update logic
+    }
+
+    /**
+     * Delete a resource
+     *
+     * @param int \$id
+     * @return bool
+     */
+    public function delete(int \$id): bool
+    {
+        // Implement delete logic
+        return true;
     }
 }
 PHP;

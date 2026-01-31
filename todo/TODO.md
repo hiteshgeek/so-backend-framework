@@ -461,3 +461,5 @@
 **Current Focus**: ✅ Week 5 COMPLETE - Model Enhancements production-ready (Soft Deletes & Query Scopes)
 **Next Milestone**: Documentation & Integration Testing
 **Last Updated**: 2026-01-29
+
+now check we have docs section for developer where we provice different sections to create different things step by step, study it and suggest what elese we can provide so that we can take full advantage of the framework and use best practices and any new developer can easily study it and can learn it, alos in e

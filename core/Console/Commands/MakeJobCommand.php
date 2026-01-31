@@ -5,32 +5,32 @@ namespace Core\Console\Commands;
 use Core\Console\Command;
 
 /**
- * Make Listener Command
+ * Make Job Command
  *
- * Generates a new event listener class file.
+ * Generates a new queue job class file.
  *
  * Usage:
- *   php sixorbit make:listener SendWelcomeEmail
- *   php sixorbit make:listener Auth/SendWelcomeEmail
- *   php sixorbit make:listener SendWelcomeEmail --force
- *   php sixorbit make:listener SendWelcomeEmail --dry-run
+ *   php sixorbit make:job ProcessPayment
+ *   php sixorbit make:job Email/SendWelcomeEmail
+ *   php sixorbit make:job ProcessPayment --force
+ *   php sixorbit make:job ProcessPayment --dry-run
  */
-class MakeListenerCommand extends Command
+class MakeJobCommand extends Command
 {
-    protected string $signature = 'make:listener {name} {--force} {--dry-run}';
+    protected string $signature = 'make:job {name} {--force} {--dry-run}';
 
-    protected string $description = 'Create a new event listener class';
+    protected string $description = 'Create a new job class';
 
     public function handle(): int
     {
         $name = $this->argument(0);
 
         if (!$name) {
-            $this->error('Listener name is required.');
+            $this->error('Job name is required.');
             return 1;
         }
 
-        // Parse nested paths (e.g., Auth/SendWelcomeEmail)
+        // Parse nested paths (e.g., Email/SendWelcomeEmail)
         $parsedName = $this->parseName($name);
         $className = $parsedName['class'];
         $namespace = $parsedName['namespace'];
@@ -41,12 +41,12 @@ class MakeListenerCommand extends Command
 
         // Check if file exists
         if (file_exists($filePath) && !$this->option('force', false)) {
-            $this->error("Listener already exists: {$relativePath}");
+            $this->error("Job already exists: {$relativePath}");
             $this->comment("Use --force to overwrite");
             return 1;
         }
 
-        $content = $this->buildListener($className, $namespace);
+        $content = $this->buildJob($className, $namespace);
 
         // Dry run - show what would be created
         if ($this->option('dry-run', false)) {
@@ -63,17 +63,17 @@ class MakeListenerCommand extends Command
 
         // Write file
         if (file_put_contents($filePath, $content) === false) {
-            $this->error("Failed to create listener: {$relativePath}");
+            $this->error("Failed to create job: {$relativePath}");
             return 1;
         }
 
-        $this->info("Listener created successfully: {$relativePath}");
+        $this->info("Job created successfully: {$relativePath}");
         return 0;
     }
 
     /**
      * Parse the name to extract class name, namespace, and file path
-     * Supports nested paths like Auth/SendWelcomeEmail
+     * Supports nested paths like Email/SendWelcomeEmail
      */
     protected function parseName(string $name): array
     {
@@ -85,13 +85,13 @@ class MakeListenerCommand extends Command
         $className = array_pop($parts);
 
         // Build namespace
-        $namespace = 'App\\Listeners';
+        $namespace = 'App\\Jobs';
         if (!empty($parts)) {
             $namespace .= '\\' . implode('\\', $parts);
         }
 
         // Build file path
-        $path = 'app/Listeners';
+        $path = 'app/Jobs';
         if (!empty($parts)) {
             $path .= '/' . implode('/', $parts);
         }
@@ -105,36 +105,67 @@ class MakeListenerCommand extends Command
     }
 
     /**
-     * Build the listener class content
+     * Build a job class extending Core\Queue\Job
      */
-    protected function buildListener(string $className, string $namespace): string
+    protected function buildJob(string $className, string $namespace): string
     {
         return <<<PHP
 <?php
 
 namespace {$namespace};
 
-use Core\Events\Event;
+use Core\Queue\Job;
 
 /**
  * {$className}
+ *
+ * Queue job for background processing
  */
-class {$className}
+class {$className} extends Job
 {
     /**
-     * Create a new listener instance.
+     * Number of times the job may be attempted
+     */
+    public int \$tries = 3;
+
+    /**
+     * Number of seconds the job can run before timing out
+     */
+    public int \$timeout = 60;
+
+    /**
+     * The name of the queue the job should be sent to
+     */
+    public string \$queue = 'default';
+
+    /**
+     * Create a new job instance
      */
     public function __construct()
     {
-        //
+        // Initialize job properties
     }
 
     /**
-     * Handle the event.
+     * Execute the job
+     *
+     * @return void
      */
-    public function handle(Event \$event): void
+    public function handle(): void
     {
-        //
+        // Implement job logic here
+    }
+
+    /**
+     * Handle a job failure
+     *
+     * @param \\Exception \$exception
+     * @return void
+     */
+    public function failed(\\Exception \$exception): void
+    {
+        // Handle job failure
+        // Log error, send notification, etc.
     }
 }
 PHP;

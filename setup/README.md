@@ -33,36 +33,37 @@ Creates a clean copy of the framework for starting a new project.
 
 ✅ **Included:**
 - Core framework (`core/`)
-- Application structure (`app/`)
-- Controllers (Auth, User)
-- Services (User, Auth, Password Reset)
-- Validation rules
-- Routes (web, api)
-- Configuration files
-- Public assets
-- Database schema
+- Application folder structure (`app/`)
+- Routes structure (`routes/`)
+- Configuration files (`config/`)
+- Public folder with base assets
+- Database folder structure
+- Layouts and error views
 - `.env.example`
 
 ❌ **Excluded:**
 - Documentation (`docs/`) - unless `--keep-docs` flag used
 - Tests (`tests/`)
 - Development notes (`todo/`)
-- Demo controllers
-- Example views
-- API testing pages
+- Setup scripts (`setup/`)
 - Git history
 - node_modules
 - vendor (run `composer install` after copy)
 
 ### What Gets Cleaned
 
-The script also removes example data from necessary files:
+The script creates a blank project with empty folder structures:
 
-- **Route files** - Removes `require` statements for demo routes
-- **Database seeders** - Removes DemoSeeder, ExampleSeeder, TestSeeder
-- **Migrations** - Removes demo/example/test migrations
-- **Controllers** - Removes DemoController, ExampleController
-- **Views** - Removes demo/example view folders
+- **Controllers** - `app/Controllers/Auth/`, `app/Controllers/User/` (empty with .gitkeep)
+- **Services** - `app/Services/Auth/`, `app/Services/User/` (empty with .gitkeep)
+- **Validation** - `app/Validation/` (empty with .gitkeep)
+- **Models** - `app/Models/` (empty with .gitkeep)
+- **Routes** - `routes/web/`, `routes/api/` (empty with .gitkeep)
+- **Migrations** - `database/migrations/` (empty with .gitkeep)
+- **Seeders** - `database/seeders/` (empty with .gitkeep)
+- **Views** - Removes auth, dashboard, api, docs views
+- **Assets** - Removes demo/testing/docs CSS and JS
+- **Config** - Removes `docs-navigation.php` (unless --keep-docs)
 
 ### After Running
 

@@ -215,16 +215,22 @@
   font-weight: 600;
   font-size: 13px;
   color: var(--text);
-  padding: 8px 4px;
+  padding: 8px 16px;
   border-left-width: 3px;
   border-left-color: transparent;
 }
 
-.docs-sidebar .toc-h2:hover,
+.docs-sidebar .toc-h2:hover {
+  background: var(--primary-bg);
+  color: var(--primary-dark);
+  border-left-color: var(--primary-light);
+}
+
 .docs-sidebar .toc-h2.active {
-  border-left-color: transparent;
-  background: none;
-  color: var(--text);
+  background: var(--primary-bg);
+  color: var(--primary);
+  border-left-color: var(--primary);
+  font-weight: 700;
 }
 
 .docs-sidebar li:first-child .toc-h2 {

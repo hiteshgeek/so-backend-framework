@@ -19,6 +19,7 @@ class QueryBuilder
     protected array $groups = [];
     protected array $havings = [];
     protected array $havingBindings = [];
+    protected bool $distinct = false;
 
     public function __construct(Connection $connection)
     {
@@ -34,6 +35,12 @@ class QueryBuilder
     public function select(...$columns): self
     {
         $this->columns = array_map(fn($col) => $this->sanitizeColumn($col), $columns);
+        return $this;
+    }
+
+    public function distinct(): self
+    {
+        $this->distinct = true;
         return $this;
     }
 
@@ -379,7 +386,8 @@ class QueryBuilder
     protected function buildSelectSql(): string
     {
         $columns = implode(', ', $this->columns);
-        $sql = "SELECT {$columns} FROM {$this->table}";
+        $distinctKeyword = $this->distinct ? 'DISTINCT ' : '';
+        $sql = "SELECT {$distinctKeyword}{$columns} FROM {$this->table}";
 
         if (!empty($this->joins)) {
             $sql .= $this->buildJoins();

@@ -11,10 +11,13 @@ use Core\Console\Command;
  *
  * Usage:
  *   php sixorbit make:mail WelcomeEmail
+ *   php sixorbit make:mail Notifications/WelcomeEmail
+ *   php sixorbit make:mail WelcomeEmail --force
+ *   php sixorbit make:mail WelcomeEmail --dry-run
  */
 class MakeMailCommand extends Command
 {
-    protected string $signature = 'make:mail {name}';
+    protected string $signature = 'make:mail {name} {--force} {--dry-run}';
 
     protected string $description = 'Create a new mailable class';
 
@@ -27,22 +30,38 @@ class MakeMailCommand extends Command
             return 1;
         }
 
+        // Parse nested paths (e.g., Notifications/WelcomeEmail)
+        $parsedName = $this->parseName($name);
+        $className = $parsedName['class'];
+        $namespace = $parsedName['namespace'];
+        $relativePath = $parsedName['path'];
+
         $basePath = getcwd();
-        $relativePath = 'app/Mail/' . $name . '.php';
         $filePath = $basePath . '/' . $relativePath;
 
-        if (file_exists($filePath)) {
+        // Check if file exists
+        if (file_exists($filePath) && !$this->option('force', false)) {
             $this->error("Mailable already exists: {$relativePath}");
+            $this->comment("Use --force to overwrite");
             return 1;
         }
 
+        $content = $this->buildMailable($className, $namespace);
+
+        // Dry run - show what would be created
+        if ($this->option('dry-run', false)) {
+            $this->comment("Would create: {$relativePath}");
+            $this->info("\n" . $content);
+            return 0;
+        }
+
+        // Create directory if it doesn't exist
         $dir = dirname($filePath);
         if (!is_dir($dir)) {
             mkdir($dir, 0755, true);
         }
 
-        $content = $this->buildMailable($name);
-
+        // Write file
         if (file_put_contents($filePath, $content) === false) {
             $this->error("Failed to create mailable: {$relativePath}");
             return 1;
@@ -53,23 +72,56 @@ class MakeMailCommand extends Command
     }
 
     /**
+     * Parse the name to extract class name, namespace, and file path
+     * Supports nested paths like Notifications/WelcomeEmail
+     */
+    protected function parseName(string $name): array
+    {
+        // Remove .php extension if provided
+        $name = str_replace('.php', '', $name);
+
+        // Split by forward slash for nested paths
+        $parts = explode('/', $name);
+        $className = array_pop($parts);
+
+        // Build namespace
+        $namespace = 'App\\Mail';
+        if (!empty($parts)) {
+            $namespace .= '\\' . implode('\\', $parts);
+        }
+
+        // Build file path
+        $path = 'app/Mail';
+        if (!empty($parts)) {
+            $path .= '/' . implode('/', $parts);
+        }
+        $path .= '/' . $className . '.php';
+
+        return [
+            'class' => $className,
+            'namespace' => $namespace,
+            'path' => $path,
+        ];
+    }
+
+    /**
      * Build the mailable class content
      */
-    protected function buildMailable(string $name): string
+    protected function buildMailable(string $className, string $namespace): string
     {
-        $viewName = $this->toViewName($name);
+        $viewName = $this->toViewName($className);
 
         return <<<PHP
 <?php
 
-namespace App\Mail;
+namespace {$namespace};
 
 use Core\Mail\Mailable;
 
 /**
- * {$name}
+ * {$className}
  */
-class {$name} extends Mailable
+class {$className} extends Mailable
 {
     /**
      * Create a new mailable instance.
@@ -85,7 +137,7 @@ class {$name} extends Mailable
     public function build(): static
     {
         return \$this
-            ->subject('{$this->toSubject($name)}')
+            ->subject('{$this->toSubject($className)}')
             ->view('{$viewName}');
     }
 }

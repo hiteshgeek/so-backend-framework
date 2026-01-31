@@ -42,6 +42,14 @@ $app->singleton('db', function ($app) {
         public function lastInsertId(): string {
             return $this->connection->lastInsertId();
         }
+
+        public function execute(string $sql, array $params = []): int {
+            return $this->connection->query($sql, $params)->rowCount();
+        }
+
+        public function query(string $sql, array $params = []): \PDOStatement {
+            return $this->connection->query($sql, $params);
+        }
     };
 });
 
