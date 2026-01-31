@@ -2,6 +2,8 @@
 
 namespace App\Validation;
 
+use App\Constants\DatabaseTables;
+
 /**
  * User Validation Rules
  *
@@ -21,7 +23,7 @@ class UserValidationRules
     {
         return [
             'name' => 'required|min:2|max:255',
-            'email' => 'required|email|unique:users,email',
+            'email' => 'required|email|unique:' . DatabaseTables::AUSER . ',email',
             'password' => 'required|min:8|confirmed',
         ];
     }

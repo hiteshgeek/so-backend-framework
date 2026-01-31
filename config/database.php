@@ -16,6 +16,18 @@ return [
             'prefix' => '',
         ],
 
+        'essentials' => [
+            'driver' => env('DB_ESSENTIALS_CONNECTION', 'mysql'),
+            'host' => env('DB_ESSENTIALS_HOST', '127.0.0.1'),
+            'port' => env('DB_ESSENTIALS_PORT', 3306),
+            'database' => env('DB_ESSENTIALS_DATABASE', 'so_essentials'),
+            'username' => env('DB_ESSENTIALS_USERNAME', 'root'),
+            'password' => env('DB_ESSENTIALS_PASSWORD', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+        ],
+
         'pgsql' => [
             'driver' => 'pgsql',
             'host' => env('DB_HOST', '127.0.0.1'),

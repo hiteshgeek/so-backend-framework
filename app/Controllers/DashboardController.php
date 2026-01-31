@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\User;
+use App\Constants\DatabaseTables;
 use Core\Http\Request;
 use Core\Http\Response;
 use Core\Validation\Validator;
@@ -55,7 +56,7 @@ class DashboardController
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|min:2|max:255',
-            'email' => 'required|email|unique:users,email',
+            'email' => 'required|email|unique:' . DatabaseTables::AUSER . ',email',
             'password' => 'required|min:8|confirmed',
         ]);
 

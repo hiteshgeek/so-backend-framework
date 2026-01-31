@@ -1,24 +1,30 @@
 -- ============================================
--- SO Framework - Initial Database Setup
+-- SO Framework - Demo/Testing Tables Migration
 -- ============================================
--- This migration creates all required tables for the framework
--- Run with: mysql -u root -p database_name < 001_initial_setup.sql
+-- This migration creates DEMO tables for testing the framework
+-- These tables go in your main application database
+-- Run with: mysql -u root -p < 002_demo_tables.sql
+--
+-- Table Constants Reference: App\Constants\DatabaseTables
+-- Database Connection: app('db')
+--
+-- NOTE: These are DEMO tables. You can safely remove or modify them
+-- for your production application.
 -- ============================================
 
--- 1. Users Table
-CREATE TABLE IF NOT EXISTS users (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    email VARCHAR(255) NOT NULL UNIQUE,
-    password VARCHAR(255) NOT NULL,
-    remember_token VARCHAR(100) NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    INDEX idx_email (email),
-    INDEX idx_remember_token (remember_token)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+-- Create database if it doesn't exist
+-- IMPORTANT: Change 'so_framework' to your application database name
+CREATE DATABASE IF NOT EXISTS so_framework
+    CHARACTER SET utf8mb4
+    COLLATE utf8mb4_unicode_ci;
 
--- 2. Posts Table
+-- Use the database
+USE so_framework;
+
+-- ============================================
+
+-- 1. Posts Table (Demo content)
+-- Constant: DatabaseTables::POSTS
 CREATE TABLE IF NOT EXISTS posts (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
@@ -28,150 +34,12 @@ CREATE TABLE IF NOT EXISTS posts (
     published_at TIMESTAMP NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     INDEX idx_user_id (user_id),
     INDEX idx_status (status)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- 3. Password Resets Table
-CREATE TABLE IF NOT EXISTS password_resets (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    email VARCHAR(255) NOT NULL,
-    token VARCHAR(255) NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    expires_at TIMESTAMP NOT NULL,
-    INDEX idx_email (email),
-    INDEX idx_token (token),
-    INDEX idx_expires_at (expires_at)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- 4. Sessions Table (Database-driven sessions)
-CREATE TABLE IF NOT EXISTS sessions (
-    id VARCHAR(255) NOT NULL PRIMARY KEY,
-    user_id BIGINT UNSIGNED NULL,
-    ip_address VARCHAR(45) NULL,
-    user_agent TEXT NULL,
-    payload LONGTEXT NOT NULL,
-    last_activity INT NOT NULL,
-    INDEX sessions_user_id_index (user_id),
-    INDEX sessions_last_activity_index (last_activity)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- 5. Jobs Table (Queue system)
-CREATE TABLE IF NOT EXISTS jobs (
-    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    queue VARCHAR(255) NOT NULL,
-    payload LONGTEXT NOT NULL,
-    attempts TINYINT UNSIGNED NOT NULL DEFAULT 0,
-    reserved_at INT UNSIGNED NULL,
-    available_at INT UNSIGNED NOT NULL,
-    created_at INT UNSIGNED NOT NULL,
-    INDEX jobs_queue_index (queue)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- 6. Failed Jobs Table
-CREATE TABLE IF NOT EXISTS failed_jobs (
-    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    uuid VARCHAR(255) NOT NULL UNIQUE,
-    connection TEXT NOT NULL,
-    queue TEXT NOT NULL,
-    payload LONGTEXT NOT NULL,
-    exception LONGTEXT NOT NULL,
-    failed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    INDEX failed_jobs_uuid_index (uuid)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- 7. Job Batches Table
-CREATE TABLE IF NOT EXISTS job_batches (
-    id VARCHAR(255) NOT NULL PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    total_jobs INT NOT NULL,
-    pending_jobs INT NOT NULL,
-    failed_jobs INT NOT NULL,
-    failed_job_ids LONGTEXT NOT NULL,
-    options MEDIUMTEXT NULL,
-    cancelled_at INT NULL,
-    created_at INT NOT NULL,
-    finished_at INT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- 8. Notifications Table
-CREATE TABLE IF NOT EXISTS notifications (
-    id CHAR(36) NOT NULL PRIMARY KEY,
-    type VARCHAR(255) NOT NULL,
-    notifiable_type VARCHAR(255) NOT NULL,
-    notifiable_id BIGINT UNSIGNED NOT NULL,
-    data TEXT NOT NULL,
-    read_at TIMESTAMP NULL,
-    created_at TIMESTAMP NULL,
-    updated_at TIMESTAMP NULL,
-    INDEX notifications_notifiable_type_notifiable_id_index (notifiable_type, notifiable_id),
-    INDEX notifications_read_at_index (read_at)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- 9. Activity Log Table (Audit trail)
-CREATE TABLE IF NOT EXISTS activity_log (
-    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    log_name VARCHAR(255) NULL,
-    description TEXT NOT NULL,
-    subject_type VARCHAR(255) NULL,
-    subject_id BIGINT UNSIGNED NULL,
-    event VARCHAR(255) NULL,
-    causer_type VARCHAR(255) NULL,
-    causer_id BIGINT UNSIGNED NULL,
-    properties JSON NULL,
-    batch_uuid CHAR(36) NULL,
-    created_at TIMESTAMP NULL,
-    updated_at TIMESTAMP NULL,
-    INDEX subject (subject_type, subject_id),
-    INDEX causer (causer_type, causer_id),
-    INDEX log_name (log_name),
-    INDEX created_at_index (created_at)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- 10. Cache Table
-CREATE TABLE IF NOT EXISTS cache (
-    `key` VARCHAR(255) NOT NULL PRIMARY KEY,
-    value MEDIUMTEXT NOT NULL,
-    expiration INT NOT NULL,
-    INDEX cache_expiration_index (expiration)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- 11. Cache Locks Table
-CREATE TABLE IF NOT EXISTS cache_locks (
-    `key` VARCHAR(255) NOT NULL PRIMARY KEY,
-    owner VARCHAR(255) NOT NULL,
-    expiration INT NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- 12. Personal Access Tokens Table (API authentication)
-CREATE TABLE IF NOT EXISTS personal_access_tokens (
-    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    tokenable_type VARCHAR(255) NOT NULL,
-    tokenable_id BIGINT UNSIGNED NOT NULL,
-    name VARCHAR(255) NOT NULL,
-    token VARCHAR(64) NOT NULL UNIQUE,
-    abilities TEXT NULL,
-    last_used_at TIMESTAMP NULL,
-    expires_at TIMESTAMP NULL,
-    created_at TIMESTAMP NULL,
-    updated_at TIMESTAMP NULL,
-    INDEX personal_access_tokens_tokenable_type_tokenable_id_index (tokenable_type, tokenable_id),
-    INDEX personal_access_tokens_token_index (token)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- 13. Migrations Table (Track migrations)
-CREATE TABLE IF NOT EXISTS migrations (
-    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    migration VARCHAR(255) NOT NULL,
-    batch INT NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- ============================================
--- DEMO TABLES - Routing & Feature Demos
--- ============================================
-
--- 14. Categories Table (Nested/hierarchical data)
+-- 2. Categories Table (Nested/hierarchical data demo)
+-- Constant: DatabaseTables::CATEGORIES
 CREATE TABLE IF NOT EXISTS categories (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
@@ -187,7 +55,8 @@ CREATE TABLE IF NOT EXISTS categories (
     INDEX idx_is_active (is_active)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- 15. Products Table (Full-featured with soft deletes)
+-- 3. Products Table (Full-featured demo with soft deletes)
+-- Constant: DatabaseTables::PRODUCTS
 CREATE TABLE IF NOT EXISTS products (
     id INT AUTO_INCREMENT PRIMARY KEY,
     category_id INT NULL,
@@ -210,7 +79,8 @@ CREATE TABLE IF NOT EXISTS products (
     INDEX idx_deleted_at (deleted_at)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- 16. Tags Table (Many-to-many demo)
+-- 4. Tags Table (Many-to-many demo)
+-- Constant: DatabaseTables::TAGS
 CREATE TABLE IF NOT EXISTS tags (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
@@ -219,7 +89,8 @@ CREATE TABLE IF NOT EXISTS tags (
     INDEX idx_slug (slug)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- 17. Product Tags Pivot Table
+-- 5. Product Tags Pivot Table (Many-to-many relationship)
+-- Constant: DatabaseTables::PRODUCT_TAGS
 CREATE TABLE IF NOT EXISTS product_tags (
     product_id INT NOT NULL,
     tag_id INT NOT NULL,
@@ -228,7 +99,8 @@ CREATE TABLE IF NOT EXISTS product_tags (
     FOREIGN KEY (tag_id) REFERENCES tags(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- 18. Reviews Table (Nested resource demo)
+-- 6. Reviews Table (Nested resource demo)
+-- Constant: DatabaseTables::REVIEWS
 CREATE TABLE IF NOT EXISTS reviews (
     id INT AUTO_INCREMENT PRIMARY KEY,
     product_id INT NOT NULL,
@@ -240,7 +112,6 @@ CREATE TABLE IF NOT EXISTS reviews (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL,
     INDEX idx_product_id (product_id),
     INDEX idx_user_id (user_id),
     INDEX idx_rating (rating),
@@ -248,14 +119,11 @@ CREATE TABLE IF NOT EXISTS reviews (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ============================================
--- DUMMY DATA
+-- DEMO DATA (Optional - for testing)
 -- ============================================
-
--- Demo user (password: password123)
-INSERT IGNORE INTO users (id, name, email, password) VALUES
-(1, 'Admin User', 'admin@example.com', '$argon2id$v=19$m=65536,t=4,p=1$d3dUWjdQeHlKUkNPdmxZYg$FkH3VwT8R5cSJmqXYQ2K+Dg8nL6mZ5P9vX1wB0kA3hY'),
-(2, 'John Doe', 'john@example.com', '$argon2id$v=19$m=65536,t=4,p=1$d3dUWjdQeHlKUkNPdmxZYg$FkH3VwT8R5cSJmqXYQ2K+Dg8nL6mZ5P9vX1wB0kA3hY'),
-(3, 'Jane Smith', 'jane@example.com', '$argon2id$v=19$m=65536,t=4,p=1$d3dUWjdQeHlKUkNPdmxZYg$FkH3VwT8R5cSJmqXYQ2K+Dg8nL6mZ5P9vX1wB0kA3hY');
+-- This section inserts sample data for testing purposes.
+-- You can safely remove this entire section for production.
+-- ============================================
 
 -- Categories (parent + child hierarchy)
 INSERT IGNORE INTO categories (id, name, slug, description, parent_id, is_active) VALUES
@@ -315,6 +183,8 @@ INSERT IGNORE INTO product_tags (product_id, tag_id) VALUES
 (15, 6), (15, 4);
 
 -- Reviews
+-- Note: user_id references users in so_essentials.users table
+-- Make sure you have created demo users first (see 001_framework_essentials.sql)
 INSERT IGNORE INTO reviews (id, product_id, user_id, rating, title, comment, is_approved) VALUES
 (1,  1, 1, 5, 'Incredible performance', 'Best laptop I have ever owned. The M3 chip is blazing fast.', 1),
 (2,  1, 2, 4, 'Great but pricey',       'Amazing build quality, wish it was a bit cheaper.', 1),
@@ -328,3 +198,14 @@ INSERT IGNORE INTO reviews (id, product_id, user_id, rating, title, comment, is_
 (10, 9, 3, 4, 'Solid reference book',    'Well-written, good for intermediate developers.', 1),
 (11, 10, 2, 3, 'Decent read',            'Interesting plot but slow in the middle.', 0),
 (12, 12, 1, 4, 'Easy to setup',          'Connected to WiFi in seconds. Great app.', 1);
+
+-- ============================================
+-- END OF DEMO TABLES
+-- ============================================
+-- Total Tables: 6 (posts, categories, products, tags, product_tags, reviews)
+-- Database: Your application database
+-- Access: app('db')->table(DatabaseTables::CONSTANT_NAME)
+--
+-- To remove demo tables and data for production:
+-- DROP TABLE IF EXISTS reviews, product_tags, tags, products, categories, posts;
+-- ============================================

@@ -3,6 +3,7 @@
 namespace App\Services\Auth;
 
 use App\Models\User;
+use App\Constants\DatabaseTables;
 use Core\Validation\Validator;
 
 /**
@@ -23,7 +24,7 @@ class AuthenticationService
     {
         $validator = Validator::make($data, [
             'name' => 'required|min:2|max:255',
-            'email' => 'required|email|unique:users,email',
+            'email' => 'required|email|unique:' . DatabaseTables::AUSER . ',email',
             'password' => 'required|min:8|confirmed',
         ]);
 
@@ -48,7 +49,33 @@ class AuthenticationService
         $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
+            'mobile' => $data['mobile'] ?? '',
             'password' => $data['password'], // Auto-hashed by User model
+            // Required auser table fields with defaults
+            'is_admin' => 0,
+            'is_super' => 0,
+            'non_login' => 0,
+            'ustatusid' => 1,
+            'company_id' => 2018,
+            'empid' => 0,
+            'description' => '',
+            'designation' => '',
+            'email_signature' => '',
+            'address_line_1' => '',
+            'address_line_2' => '',
+            'mail_box_hostname' => '',
+            'mail_box_port' => 0,
+            'mail_box_service' => '',
+            'mail_box_username' => '',
+            'mail_box_password' => '',
+            'coverlid' => 0,
+            'genderid' => 0,
+            'zip_code' => '',
+            'photo' => '',
+            'licid' => 0,
+            'hard_limit' => 0,
+            'soft_limit' => 0,
+            'is_multipler' => 0,
         ]);
 
         return $user;

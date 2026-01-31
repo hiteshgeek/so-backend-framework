@@ -43,6 +43,14 @@
             </div>
 
             <div class="form-group">
+                <label for="mobile">Mobile Number</label>
+                <input type="tel" id="mobile" name="mobile" value="<?= e(old('mobile', '')) ?>" placeholder="Optional">
+                <?php if (isset($errors['mobile'])): ?>
+                    <div class="error"><?= e($errors['mobile'][0]) ?></div>
+                <?php endif; ?>
+            </div>
+
+            <div class="form-group">
                 <label for="password">Password</label>
                 <input type="password" id="password" name="password" required>
                 <?php if (isset($errors['password'])): ?>

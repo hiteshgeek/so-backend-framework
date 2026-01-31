@@ -59,7 +59,7 @@ class AuthController
         // Log the user in
         auth()->login($user);
 
-        return redirect(url('/dashboard'))
+        return redirect(url('/dashboard/'))
             ->with('success', 'Account created successfully! Welcome, ' . $user->name . '!');
     }
 
@@ -98,7 +98,7 @@ class AuthController
             $remember
         )) {
             $user = $this->authService->getCurrentUser();
-            return redirect(url('/dashboard'))
+            return redirect(url('/dashboard/'))
                 ->with('success', 'Welcome back, ' . $user->name . '!');
         }
 

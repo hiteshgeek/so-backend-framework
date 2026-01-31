@@ -92,7 +92,9 @@ class Auth
         // Regenerate CSRF token on login for security
         Csrf::regenerate();
 
+        error_log("Auth->login() - User ID: " . var_export($user->id, true) . ", UID: " . var_export($user->uid, true));
         $this->session->set($this->sessionKey, $user->id);
+        error_log("Auth->login() - Session after set: " . var_export($this->session->get($this->sessionKey), true));
 
         if ($remember) {
             $this->setRememberToken($user);
@@ -105,10 +107,16 @@ class Auth
     public function logout(): void
     {
         // Clear remember token from database if user is logged in
+        // Note: auser table doesn't have remember_token column, so skip this
         $user = $this->user();
-        if ($user) {
-            $user->remember_token = null;
-            $user->save();
+        if ($user && property_exists($user, 'remember_token')) {
+            try {
+                $user->remember_token = null;
+                $user->save();
+            } catch (\Exception $e) {
+                // Ignore if remember_token column doesn't exist
+                error_log("Could not clear remember token: " . $e->getMessage());
+            }
         }
 
         $this->session->forget($this->sessionKey);
@@ -157,25 +165,35 @@ class Auth
 
     /**
      * Generate and set a remember token for the user
+     * Note: Skipped for auser table as it doesn't have remember_token column
      */
     protected function setRememberToken(User $user): void
     {
+        // auser table doesn't support remember tokens, skip this
+        if (!property_exists($user, 'remember_token')) {
+            return;
+        }
+
         $token = bin2hex(random_bytes(32));
 
-        // Save hashed token to database for security
-        $user->remember_token = hash('sha256', $token);
-        $user->save();
+        try {
+            // Save hashed token to database for security
+            $user->remember_token = hash('sha256', $token);
+            $user->save();
 
-        // Set cookie with raw token (user presents this to authenticate)
-        setcookie(
-            $this->rememberCookieName,
-            $token,
-            time() + $this->rememberDuration,
-            '/',
-            $this->cookieDomain,
-            $this->secureCookie,
-            true   // HTTP only
-        );
+            // Set cookie with raw token (user presents this to authenticate)
+            setcookie(
+                $this->rememberCookieName,
+                $token,
+                time() + $this->rememberDuration,
+                '/',
+                $this->cookieDomain,
+                $this->secureCookie,
+                true   // HTTP only
+            );
+        } catch (\Exception $e) {
+            error_log("Could not set remember token: " . $e->getMessage());
+        }
     }
 
     /**
@@ -196,6 +214,7 @@ class Auth
 
     /**
      * Attempt to authenticate user via remember token
+     * Note: Not supported for auser table (no remember_token column)
      */
     public function loginViaRememberToken(): bool
     {
@@ -203,22 +222,29 @@ class Auth
             return false;
         }
 
-        $token = $_COOKIE[$this->rememberCookieName];
-        $hashedToken = hash('sha256', $token);
+        try {
+            $token = $_COOKIE[$this->rememberCookieName];
+            $hashedToken = hash('sha256', $token);
 
-        // Find user by hashed remember token
-        $result = User::where('remember_token', '=', $hashedToken)->first();
+            // Find user by hashed remember token
+            $result = User::where('remember_token', '=', $hashedToken)->first();
 
-        if ($result) {
-            $user = new User($result);
-            $user->exists = true;
-            $user->original = $result;
-            $this->login($user, true); // Refresh the remember token
-            return true;
+            if ($result) {
+                $user = new User($result);
+                $user->exists = true;
+                $user->original = $result;
+                $this->login($user, true); // Refresh the remember token
+                return true;
+            }
+
+            // Token not valid, clear cookie
+            $this->clearRememberCookie();
+            return false;
+        } catch (\Exception $e) {
+            // Remember token not supported for this user table
+            error_log("Remember token login failed: " . $e->getMessage());
+            $this->clearRememberCookie();
+            return false;
         }
-
-        // Token not valid, clear cookie
-        $this->clearRememberCookie();
-        return false;
     }
 }

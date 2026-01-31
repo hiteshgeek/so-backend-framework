@@ -462,4 +462,4 @@
 **Next Milestone**: Documentation & Integration Testing
 **Last Updated**: 2026-01-29
 
-now check we have docs section for developer where we provice different sections to create different things step by step, study it and suggest what elese we can provide so that we can take full advantage of the framework and use best practices and any new developer can easily study it and can learn it, alos in e
+now we made so many changes to framework so make necesssary changes in create-project.sh to include necessary files and excludde other firlx, also add a simple welcome page instead of current one when copying

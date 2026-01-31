@@ -43,6 +43,14 @@
                     <?php endif; ?>
                 </div>
 
+                <div class="form-group">
+                    <label for="mobile">Mobile Number</label>
+                    <input type="tel" id="mobile" name="mobile" value="<?= e(old('mobile', $editUser->mobile ?? '')) ?>" placeholder="Optional">
+                    <?php if (isset($errors['mobile'])): ?>
+                        <div class="error"><?= e($errors['mobile'][0]) ?></div>
+                    <?php endif; ?>
+                </div>
+
                 <div class="section-divider">
                     <div class="section-title">Change Password (Optional)</div>
                     <div class="info-text info-text--spaced">Leave blank to keep current password</div>

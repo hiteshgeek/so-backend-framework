@@ -4,11 +4,14 @@ namespace App\Providers;
 
 use Core\Container\Container;
 use Core\Session\DatabaseSessionHandler;
+use Core\Session\AuserSessionHandler;
+use App\Constants\DatabaseTables;
 
 /**
  * Session Service Provider
  *
  * Registers session handler in the container
+ * Uses custom AuserSessionHandler for existing auser_session table
  */
 class SessionServiceProvider
 {
@@ -28,8 +31,9 @@ class SessionServiceProvider
             $driver = config('session.driver', 'database');
 
             if ($driver === 'database') {
+                // Use main database connection (not essentials) for auser_session table
                 $db = $app->make('db');
-                $table = config('session.table', 'sessions');
+                $table = DatabaseTables::AUSER_SESSION;  // Use existing auser_session table
                 $lifetime = config('session.lifetime', 120);
 
                 // Check if session encryption is enabled
@@ -46,7 +50,8 @@ class SessionServiceProvider
                     }
                 }
 
-                return new DatabaseSessionHandler($db->connection, $table, $lifetime, $encrypter, $encrypt);
+                // Use custom AuserSessionHandler for existing auser_session table
+                return new AuserSessionHandler($db->connection, $table, $lifetime, $encrypter, $encrypt);
             }
 
             // File-based handler as fallback (though not recommended for ERP)
