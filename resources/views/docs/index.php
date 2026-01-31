@@ -563,16 +563,12 @@
         localStorage.setItem('docs-active-tab', tabId);
     }
 
-    // Track visited cards
+    // Track last visited card (store only the card we're coming back from)
     function trackCardVisit(url) {
-        var visited = JSON.parse(localStorage.getItem('docs-visited-cards') || '[]');
-        if (!visited.includes(url)) {
-            visited.push(url);
-            localStorage.setItem('docs-visited-cards', JSON.stringify(visited));
-        }
+        localStorage.setItem('docs-last-visited-card', url);
     }
 
-    // Mark visited cards and restore active tab
+    // Mark only the last visited card and restore active tab
     (function() {
         // Restore active tab from localStorage or hash
         var savedTab = localStorage.getItem('docs-active-tab');
@@ -584,19 +580,62 @@
             if (btn) switchDocsTab(btn);
         }
 
-        // Mark visited cards
-        var visited = JSON.parse(localStorage.getItem('docs-visited-cards') || '[]');
+        // Mark only the last visited card
+        var lastVisited = localStorage.getItem('docs-last-visited-card');
+        var visitedCard = null;
+
+        // Normalize URL for comparison (remove trailing slash, hash, query params)
+        function normalizeUrl(url) {
+            if (!url) return '';
+            try {
+                var urlObj = new URL(url, window.location.origin);
+                return urlObj.origin + urlObj.pathname.replace(/\/$/, '');
+            } catch (e) {
+                return url.replace(/\/$/, '').split('#')[0].split('?')[0];
+            }
+        }
+
+        var normalizedLastVisited = normalizeUrl(lastVisited);
+        console.log('Docs Index: Looking for last visited ->', normalizedLastVisited);
+
+        var matchFound = false;
         document.querySelectorAll('.doc-card').forEach(function(card) {
             var href = card.getAttribute('href');
-            if (href && visited.includes(href)) {
+            var normalizedHref = normalizeUrl(href);
+
+            // Mark only if this is the last visited card
+            if (normalizedHref && normalizedHref === normalizedLastVisited) {
                 card.classList.add('visited');
+                visitedCard = card;
+                matchFound = true;
+                console.log('Docs Index: MATCH FOUND!', normalizedHref);
             }
 
-            // Track visits when clicking cards
+            // Track visit when clicking cards
             card.addEventListener('click', function() {
                 trackCardVisit(href);
             });
         });
+
+        if (!matchFound && normalizedLastVisited) {
+            console.log('Docs Index: NO MATCH - Last visited URL not found in cards');
+            console.log('Docs Index: Checking first 3 card URLs...');
+            var sampleCards = document.querySelectorAll('.doc-card');
+            for (var i = 0; i < Math.min(3, sampleCards.length); i++) {
+                console.log('  Card ' + i + ':', normalizeUrl(sampleCards[i].getAttribute('href')));
+            }
+        }
+
+        // Auto-scroll to visited card
+        if (visitedCard) {
+            setTimeout(function() {
+                visitedCard.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'center',
+                    inline: 'nearest'
+                });
+            }, 300);
+        }
     })();
     </script>
 <?= render_assets('body_end') ?>

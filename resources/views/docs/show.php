@@ -71,6 +71,27 @@
 
     <script src="<?= url('/assets/js/docs/scroll-spy.js') ?>"></script>
     <?= render_assets('body_end') ?>
+
+    <script>
+    // Track current documentation page visit for "last visited" highlighting
+    (function() {
+        // Normalize URL for storage (remove trailing slash, hash, query params)
+        function normalizeUrl(url) {
+            try {
+                var urlObj = new URL(url, window.location.origin);
+                return urlObj.origin + urlObj.pathname.replace(/\/$/, '');
+            } catch (e) {
+                return url.replace(/\/$/, '').split('#')[0].split('?')[0];
+            }
+        }
+
+        // Store the current page URL when viewing any documentation page
+        var currentUrl = normalizeUrl(window.location.href);
+        localStorage.setItem('docs-last-visited-card', currentUrl);
+
+        console.log('Docs: Stored last visited ->', currentUrl);
+    })();
+    </script>
 </body>
 
 </html>

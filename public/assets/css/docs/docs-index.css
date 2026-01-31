@@ -209,8 +209,18 @@
 }
 
 .doc-card.visited {
-  background: linear-gradient(135deg, var(--surface) 0%, rgba(37, 99, 235, 0.05) 100%);
-  border-color: rgba(37, 99, 235, 0.3);
+  background: linear-gradient(135deg, var(--surface) 0%, rgba(37, 99, 235, 0.12) 100%);
+  border: 2px solid var(--primary);
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15), var(--shadow-md);
+  }
+  50% {
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.25), 0 0 20px rgba(37, 99, 235, 0.2), var(--shadow-lg);
+  }
 }
 
 .doc-card h3 {
@@ -365,6 +375,20 @@
 /* ===== DARK MODE OVERRIDES ===== */
 [data-theme="dark"] .doc-card.featured {
   background: linear-gradient(135deg, var(--primary-bg) 0%, #1e293b 100%);
+}
+[data-theme="dark"] .doc-card.visited {
+  background: linear-gradient(135deg, var(--surface) 0%, rgba(59, 130, 246, 0.15) 100%);
+  border-color: var(--primary-light);
+  animation: pulse-glow-dark 2s ease-in-out infinite;
+}
+
+@keyframes pulse-glow-dark {
+  0%, 100% {
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2), var(--shadow-md);
+  }
+  50% {
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.3), 0 0 20px rgba(59, 130, 246, 0.25), var(--shadow-lg);
+  }
 }
 [data-theme="dark"] .badge-essential { background: #450a0a; color: #fca5a5; }
 [data-theme="dark"] .badge-new { background: #052e16; color: #86efac; }
