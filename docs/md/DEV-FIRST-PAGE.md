@@ -32,11 +32,11 @@ You are going to build a **Contact Us** page that:
 
 ```
 Request: GET /contact
-    → routes/web/contact.php      (route definition)
-    → ContactController::show()   (controller method)
-    → resources/views/contact/index.php  (view template)
-    → public/assets/css/contact/contact.css  (page styles)
-    → public/assets/js/contact/contact.js    (page scripts)
+    -> routes/web/contact.php      (route definition)
+    -> ContactController::show()   (controller method)
+    -> resources/views/contact/index.php  (view template)
+    -> public/assets/css/contact/contact.css  (page styles)
+    -> public/assets/js/contact/contact.js    (page scripts)
 ```
 
 ---
@@ -599,7 +599,7 @@ Building a new page requires exactly **5 files** (plus one small edit):
 Every page in the framework follows this same flow:
 
 ```
-Route File           →  Controller          →  View                →  Assets
+Route File           ->  Controller          ->  View                ->  Assets
 routes/web/X.php        app/Controllers/       resources/views/       public/assets/css/X/
                         XController.php        X/index.php            public/assets/js/X/
 ```

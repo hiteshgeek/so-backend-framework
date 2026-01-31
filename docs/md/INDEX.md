@@ -538,7 +538,7 @@ When you change the framework:
 
 ## [i] Tips for Reading
 
-- [Book] Read in order for first time: README → SETUP → CONFIGURATION
+- [Book] Read in order for first time: README -> SETUP -> CONFIGURATION
 - [*] Jump to specific doc for specific task
 - Use QUICK-START for fast reference
 - 🔍 Use INDEX (this file) to find what you need

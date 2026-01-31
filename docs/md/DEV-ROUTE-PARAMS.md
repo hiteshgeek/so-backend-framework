@@ -296,14 +296,14 @@ use App\Models\Post;
 
 class PostController
 {
-    public function show(Request $request, Post $id): Response
+    public function show(Request $request, Post $post): Response
     {
-        // $id is automatically resolved via Post::find($id)
+        // $post is automatically resolved via Post::find($id)
         // If no post is found, a NotFoundException is thrown (404)
         return json([
-            'id'    => $id->id,
-            'title' => $id->title,
-            'body'  => $id->body,
+            'id'    => $post->id,
+            'title' => $post->title,
+            'body'  => $post->body,
         ]);
     }
 }
@@ -312,9 +312,9 @@ class PostController
 When a request hits `GET /posts/7`, the framework:
 
 1. Extracts `7` from the `{id}` segment.
-2. Sees that `$id` is type-hinted as `Post` (a `Model` subclass).
+2. Sees that `$post` is type-hinted as `Post` (a `Model` subclass).
 3. Calls `Post::find(7)`.
-4. If a post with ID 7 exists, it is injected as `$id`.
+4. If a post with ID 7 exists, it is injected as `$post`.
 5. If no post exists, a `NotFoundException` is thrown and a 404 response is returned.
 
 ### Closure Routes with Model Binding
@@ -322,8 +322,8 @@ When a request hits `GET /posts/7`, the framework:
 Model binding also works with closure routes via `Route::resolveClosureBindings()`:
 
 ```php
-Router::get('/users/{id}', function (Request $request, \App\Models\User $id) {
-    return json($id->toArray());
+Router::get('/users/{id}', function (Request $request, \App\Models\User $user) {
+    return json($user->toArray());
 });
 ```
 
@@ -398,13 +398,13 @@ Router::get('/posts/{id}', [PostController::class, 'show'])
 ```php
 class PostController
 {
-    public function show(Request $request, Post $id): Response
+    public function show(Request $request, Post $post): Response
     {
         // 1. whereNumber('id') ensures only digit strings reach this method.
         //    Requests like /posts/abc are rejected before the controller runs.
         // 2. Model binding calls Post::find($id) automatically.
         // 3. If no post exists, a 404 is returned.
-        return json($id->toArray());
+        return json($post->toArray());
     }
 }
 ```
@@ -421,9 +421,9 @@ use App\Models\Order;
 
 class OrderController
 {
-    public function show(Request $request, Order $uuid): Response
+    public function show(Request $request, Order $order): Response
     {
-        return json($uuid->toArray());
+        return json($order->toArray());
     }
 }
 ```
@@ -473,20 +473,20 @@ class ArticleController
         return json($articles);
     }
 
-    public function show(Request $request, Article $id): Response
+    public function show(Request $request, Article $article): Response
     {
-        return json($id->toArray());
+        return json($article->toArray());
     }
 
-    public function update(Request $request, Article $id): Response
+    public function update(Request $request, Article $article): Response
     {
-        $id->update($request->only(['title', 'body']));
-        return json($id->toArray());
+        $article->update($request->only(['title', 'body']));
+        return json($article->toArray());
     }
 
-    public function destroy(Request $request, Article $id): Response
+    public function destroy(Request $request, Article $article): Response
     {
-        $id->delete();
+        $article->delete();
         return json(['message' => 'Article deleted']);
     }
 }

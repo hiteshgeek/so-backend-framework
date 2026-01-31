@@ -67,7 +67,7 @@ $request = Request::createFromGlobals();
 // 5. Age flash data from previous request
 session()->ageFlashData();
 
-// 6. Dispatch request through router → middleware → controller
+// 6. Dispatch request through router -> middleware -> controller
 $response = $app->handleWebRequest($request);
 
 // 7. Send HTTP response to client
@@ -80,11 +80,11 @@ $app->terminate();
 ```
 index.php
  ├── autoload
- ├── bootstrap/app.php   → creates Application
- ├── routes/web.php      → registers web routes
- ├── routes/api.php      → registers API routes
+ ├── bootstrap/app.php   -> creates Application
+ ├── routes/web.php      -> registers web routes
+ ├── routes/api.php      -> registers API routes
  ├── Request::createFromGlobals()
- ├── handleWebRequest()  → dispatch + middleware + controller
+ ├── handleWebRequest()  -> dispatch + middleware + controller
  ├── Response::send()
  └── terminate()
 ```
@@ -100,17 +100,17 @@ The bootstrap file creates the `Application` instance (which extends the DI `Con
 ```
 Application (extends Container)
  │
- ├── Load .env             → Env::load()
- ├── Create Application    → new Application(basePath)
+ ├── Load .env             -> Env::load()
+ ├── Create Application    -> new Application(basePath)
  │
  ├── Register Core Services (singletons)
- │   ├── config   → Config (loads /config/*.php files)
- │   ├── db       → Database Connection + QueryBuilder
- │   ├── session  → Session (database-driven)
- │   ├── router   → Router
- │   ├── auth     → Auth (session + JWT)
- │   ├── csrf     → CSRF token manager
- │   └── assets   → AssetManager (CSS/JS loading)
+ │   ├── config   -> Config (loads /config/*.php files)
+ │   ├── db       -> Database Connection + QueryBuilder
+ │   ├── session  -> Session (database-driven)
+ │   ├── router   -> Router
+ │   ├── auth     -> Auth (session + JWT)
+ │   ├── csrf     -> CSRF token manager
+ │   └── assets   -> AssetManager (CSS/JS loading)
  │
  ├── Register Service Providers
  │   └── foreach provider: $provider->register()
@@ -151,11 +151,11 @@ The `Request` object wraps all PHP superglobals into a clean, object-oriented in
 ```
 Request::createFromGlobals()
  │
- ├── $_GET      → query parameters
- ├── $_POST     → form data (or parsed JSON body)
- ├── $_SERVER   → headers, method, URI, IP
- ├── $_FILES    → uploaded files
- └── $_COOKIE   → cookies
+ ├── $_GET      -> query parameters
+ ├── $_POST     -> form data (or parsed JSON body)
+ ├── $_SERVER   -> headers, method, URI, IP
+ ├── $_FILES    -> uploaded files
+ └── $_COOKIE   -> cookies
 ```
 
 ### Key Methods
@@ -214,9 +214,9 @@ Router::dispatch($request)
  │   └── Route::matches($request)
  │       ├── Check HTTP method (GET, POST, etc.)
  │       ├── Compile URI to regex pattern
- │       │   ├── {id}     → (?P<id>[^/]+)
- │       │   ├── {slug?}  → (?P<slug>[^/]*)
- │       │   └── where()  → custom constraints
+ │       │   ├── {id}     -> (?P<id>[^/]+)
+ │       │   ├── {slug?}  -> (?P<slug>[^/]*)
+ │       │   └── where()  -> custom constraints
  │       ├── Match against request URI
  │       └── Extract route parameters
  │
@@ -282,7 +282,7 @@ Request enters pipeline
 │  │  │  ├── Generate key (user:id or ip:addr)   │   │  │
 │  │  │  ├── Check: tooManyAttempts?              │   │  │
 │  │  │  ├── Increment counter                   │   │  │
-│  │  │  ├── $next($request) ──→ CONTROLLER      │   │  │
+│  │  │  ├── $next($request) ──-> CONTROLLER      │   │  │
 │  │  │  └── Add rate limit headers to response  │   │  │
 │  │  └──────────────────────────────────────────┘   │  │
 │  └────────────────────────────────────────────────┘  │
@@ -356,9 +356,9 @@ After middleware passes, the `Route::run()` method executes the controller actio
 Route::run($request)
  │
  ├── Action is [Controller::class, 'method']
- │   ├── app()->make(Controller::class)  → instantiate with DI
+ │   ├── app()->make(Controller::class)  -> instantiate with DI
  │   ├── Resolve route model bindings
- │   │   └── Type-hinted Model? → Model::find($id) or 404
+ │   │   └── Type-hinted Model? -> Model::find($id) or 404
  │   └── app()->call([$controller, $method], $params)
  │       └── Reflection-based parameter injection
  │
@@ -402,7 +402,7 @@ class PostController
     public function show(Request $request, Post $id): Response
     {
         // $id is automatically: Post::find($id)
-        // If not found: throws NotFoundException → 404
+        // If not found: throws NotFoundException -> 404
         return Response::view('posts/show', ['post' => $id]);
     }
 }
@@ -439,14 +439,14 @@ Controller returns Response
 ```
 Response::send()
  │
- ├── session_write_close()     → persist session data
- ├── http_response_code($code) → set status (200, 404, etc.)
+ ├── session_write_close()     -> persist session data
+ ├── http_response_code($code) -> set status (200, 404, etc.)
  ├── Send headers
  │   ├── Content-Type
  │   ├── Location (redirects)
  │   ├── X-RateLimit-* (throttle)
  │   └── Custom headers
- └── echo $content              → output body
+ └── echo $content              -> output body
 ```
 
 ---
@@ -464,12 +464,12 @@ Application::handleWebRequest()
  │
  ├── catch HttpException (404, 403, 500, etc.)
  │   ├── Look for: resources/views/errors/{code}.php
- │   ├── View exists → render custom error page
- │   └── No view → render default HTML error
+ │   ├── View exists -> render custom error page
+ │   └── No view -> render default HTML error
  │
  └── catch \Exception (unexpected errors)
-     ├── Debug mode ON → show full trace
-     └── Debug mode OFF → generic 500 error
+     ├── Debug mode ON -> show full trace
+     └── Debug mode OFF -> generic 500 error
 ```
 
 ### Throwing Errors
@@ -507,7 +507,7 @@ throw new HttpException('Bad request', 400);
           ┌─────────────────▼─────────────────┐
           │         Router::dispatch()         │
           │                                    │
-          │  Loop routes → match URI + method  │
+          │  Loop routes -> match URI + method  │
           │  Extract parameters: {id} = 42     │
           └─────────────────┬─────────────────┘
                             │
@@ -534,8 +534,8 @@ throw new HttpException('Bad request', 400);
           ┌─────────────────▼─────────────────┐
           │          Response::send()          │
           │                                    │
-          │  Write session → Set status code   │
-          │  Send headers → Output body        │
+          │  Write session -> Set status code   │
+          │  Send headers -> Output body        │
           └─────────────────┬─────────────────┘
                             │
                     ┌───────▼────────┐
@@ -573,33 +573,33 @@ These helper functions provide quick access to the framework's services througho
 
 ```
 GET /dashboard
- → AuthMiddleware (check session)
- → CsrfMiddleware (skip — GET request)
- → DashboardController::index()
- → Response::view('dashboard/index', $data)
- → HTML response
+ -> AuthMiddleware (check session)
+ -> CsrfMiddleware (skip — GET request)
+ -> DashboardController::index()
+ -> Response::view('dashboard/index', $data)
+ -> HTML response
 ```
 
 ### API Request (JSON)
 
 ```
 POST /api/users  (Authorization: Bearer <token>)
- → AuthMiddleware (verify JWT)
- → ThrottleMiddleware (rate limit: 60/min)
- → UserController::store()
- → JsonResponse::created($user)
- → JSON response with 201 status
+ -> AuthMiddleware (verify JWT)
+ -> ThrottleMiddleware (rate limit: 60/min)
+ -> UserController::store()
+ -> JsonResponse::created($user)
+ -> JSON response with 201 status
 ```
 
 ### Form Submission
 
 ```
 POST /login  (_token=abc123)
- → CsrfMiddleware (verify _token)
- → GuestMiddleware (redirect if already logged in)
- → AuthController::login()
- → redirect('/dashboard')->with('success', '...')
- → 302 redirect with flash data
+ -> CsrfMiddleware (verify _token)
+ -> GuestMiddleware (redirect if already logged in)
+ -> AuthController::login()
+ -> redirect('/dashboard')->with('success', '...')
+ -> 302 redirect with flash data
 ```
 
 ---

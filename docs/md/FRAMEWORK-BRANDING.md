@@ -431,11 +431,11 @@ composer install
 
 To rename your framework:
 
-1. **Edit `.env`** → Change `APP_NAME` and `DB_DATABASE`
-2. **Edit `composer.json`** → Change package `name`
-3. **Run generator** → `php database/migrations/generate-setup.php`
-4. **Update docs** → Find/replace in `.md` files (optional)
-5. **Test** → Verify everything works
+1. **Edit `.env`** -> Change `APP_NAME` and `DB_DATABASE`
+2. **Edit `composer.json`** -> Change package `name`
+3. **Run generator** -> `php database/migrations/generate-setup.php`
+4. **Update docs** -> Find/replace in `.md` files (optional)
+5. **Test** -> Verify everything works
 
 **That's it!** Your framework is now completely rebranded! [->]
 

@@ -288,35 +288,6 @@ If validation passes, proceed with your business logic:
 }
 ```
 
-### Alternative: Using validate() Helper
-
-The global `validate()` helper combines creation and checking into one call. It throws a `ValidationException` if validation fails:
-
-```php
-use Core\Validation\ValidationException;
-
-public function register(Request $request): Response
-{
-    try {
-        $validated = validate($request->all(), [
-            'name'     => 'required|string|min:2|max:255',
-            'email'    => 'required|email|unique:users,email',
-            'password' => 'required|min:8|confirmed',
-        ]);
-
-        $user = User::create($validated);
-        auth()->login($user);
-
-        return redirect(url('/dashboard'));
-
-    } catch (ValidationException $e) {
-        return redirect(url('/register'))
-            ->withErrors($e->getErrors())
-            ->withInput($request->only(['name', 'email']));
-    }
-}
-```
-
 ### Custom Error Messages
 
 Pass a third argument to override the default messages for specific field/rule combinations:
@@ -502,19 +473,19 @@ The following table lists the most frequently used built-in rules. Rules can be 
 | Rule | Description | Example |
 |------|-------------|---------|
 | `required` | Field must be present and not empty | `'name' => 'required'` |
-| `string` | Field must be a string | `'name' => 'required\|string'` |
-| `numeric` | Field must be a number (int or float) | `'price' => 'required\|numeric'` |
-| `integer` | Field must be an integer | `'age' => 'required\|integer'` |
+| `string` | Field must be a string | `'name' => 'required|string'` |
+| `numeric` | Field must be a number (int or float) | `'price' => 'required|numeric'` |
+| `integer` | Field must be an integer | `'age' => 'required|integer'` |
 | `boolean` | Field must be `true`, `false`, `1`, `0`, `'1'`, or `'0'` | `'active' => 'boolean'` |
-| `email` | Field must be a valid email address | `'email' => 'required\|email'` |
+| `email` | Field must be a valid email address | `'email' => 'required|email'` |
 | `url` | Field must be a valid URL | `'website' => 'url'` |
-| `date` | Field must be a parseable date string | `'dob' => 'required\|date'` |
-| `min:N` | Minimum value (numbers) or length (strings) | `'password' => 'required\|min:8'` |
-| `max:N` | Maximum value (numbers) or length (strings) | `'name' => 'required\|max:255'` |
-| `between:min,max` | Value/length must be between min and max (inclusive) | `'age' => 'integer\|between:18,120'` |
-| `in:val1,val2,...` | Field must be one of the listed values | `'status' => 'required\|in:draft,published,archived'` |
+| `date` | Field must be a parseable date string | `'dob' => 'required|date'` |
+| `min:N` | Minimum value (numbers) or length (strings) | `'password' => 'required|min:8'` |
+| `max:N` | Maximum value (numbers) or length (strings) | `'name' => 'required|max:255'` |
+| `between:min,max` | Value/length must be between min and max (inclusive) | `'age' => 'integer|between:18,120'` |
+| `in:val1,val2,...` | Field must be one of the listed values | `'status' => 'required|in:draft,published'` |
 | `not_in:val1,val2` | Field must not be one of the listed values | `'role' => 'not_in:superadmin'` |
-| `confirmed` | A matching `{field}_confirmation` field must exist | `'password' => 'required\|confirmed'` |
+| `confirmed` | A matching `{field}_confirmation` field must exist | `'password' => 'required|confirmed'` |
 | `same:field` | Field must match the value of another field | `'confirm_email' => 'same:email'` |
 | `different:field` | Field must differ from another field | `'new_pass' => 'different:old_pass'` |
 | `unique:table,column` | Value must not already exist in the database table | `'email' => 'unique:users,email'` |
@@ -524,10 +495,10 @@ The following table lists the most frequently used built-in rules. Rules can be 
 | `alpha_num` | Only letters and numbers | `'username' => 'alpha_num'` |
 | `alpha_dash` | Letters, numbers, dashes, and underscores | `'slug' => 'alpha_dash'` |
 | `ip` | Must be a valid IP address | `'server_ip' => 'ip'` |
-| `before:date` | Must be a date before the given date | `'start' => 'date\|before:2026-12-31'` |
-| `after:date` | Must be a date after the given date | `'end' => 'date\|after:2026-01-01'` |
+| `before:date` | Must be a date before the given date | `'start' => 'date|before:2026-12-31'` |
+| `after:date` | Must be a date after the given date | `'end' => 'date|after:2026-01-01'` |
 | `array` | Field must be an array | `'tags' => 'array'` |
-| `required_if:field,value` | Required only when another field equals a value | `'billing' => 'required_if:payment,credit_card'` |
+| `required_if:field,value` | Required only when another field equals a value | `'billing' => 'required_if:payment,card'` |
 | `required_with:field` | Required only when another field is present | `'confirm' => 'required_with:password'` |
 
 ### Array Syntax for Rules

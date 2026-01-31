@@ -37,15 +37,15 @@ The Security Layer provides enterprise-grade protection for your ERP application
 
 ```
 Request
-  ↓
-CsrfMiddleware → Validates CSRF token
-  ↓
-JwtMiddleware → Validates JWT token (API routes)
-  ↓
-ThrottleMiddleware → Checks rate limits
-  ↓
+  |
+CsrfMiddleware -> Validates CSRF token
+  |
+JwtMiddleware -> Validates JWT token (API routes)
+  |
+ThrottleMiddleware -> Checks rate limits
+  |
 Your Application
-  ↓
+  |
 Response (with sanitized output)
 ```
 
@@ -68,17 +68,17 @@ If the user is logged in, this could delete their account!
 
 ```
 1. User visits your form
-   ↓
+   |
 2. Generate unique CSRF token
-   ↓
+   |
 3. Embed token in form (hidden field)
-   ↓
+   |
 4. User submits form
-   ↓
+   |
 5. Middleware validates token
-   ↓
-6. Token matches? → Allow
-   Token invalid? → Reject (419 error)
+   |
+6. Token matches? -> Allow
+   Token invalid? -> Reject (419 error)
 ```
 
 ### Implementation
@@ -254,17 +254,17 @@ eyJhbGc...  .eyJ1c2Vy... .SflKxwRJ...
 
 ```
 1. User logs in with credentials
-   ↓
+   |
 2. Server generates JWT token
-   ↓
+   |
 3. Client stores token (localStorage/cookie)
-   ↓
+   |
 4. Client sends token in Authorization header
-   ↓
+   |
 5. Server verifies signature & expiration
-   ↓
-6. Valid? → Allow access
-   Invalid? → 401 Unauthorized
+   |
+6. Valid? -> Allow access
+   Invalid? -> 401 Unauthorized
 ```
 
 ### Implementation
@@ -454,14 +454,14 @@ Prevents abuse by limiting requests per time window.
 **Example Attack Without Rate Limiting**:
 ```
 Attacker tries 1000 passwords/second
-→ Account compromised in minutes
+-> Account compromised in minutes
 ```
 
 **With Rate Limiting**:
 ```
 Allow only 5 login attempts per minute
-→ Attack takes 200 minutes for 1000 attempts
-→ Account locked after failed attempts
+-> Attack takes 200 minutes for 1000 attempts
+-> Account locked after failed attempts
 ```
 
 ### Implementation

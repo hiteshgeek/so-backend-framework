@@ -830,13 +830,13 @@ Router::resource('users', UserController::class);
 ```
 
 This registers the following routes:
-- `GET /users` → `index()`
-- `GET /users/create` → `create()`
-- `POST /users` → `store()`
-- `GET /users/{id}` → `show($id)`
-- `GET /users/{id}/edit` → `edit($id)`
-- `PUT /users/{id}` → `update($id)`
-- `DELETE /users/{id}` → `destroy($id)`
+- `GET /users` -> `index()`
+- `GET /users/create` -> `create()`
+- `POST /users` -> `store()`
+- `GET /users/{id}` -> `show($id)`
+- `GET /users/{id}/edit` -> `edit($id)`
+- `PUT /users/{id}` -> `update($id)`
+- `DELETE /users/{id}` -> `destroy($id)`
 
 ### Subdirectory Deployment
 

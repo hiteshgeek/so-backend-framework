@@ -31,7 +31,7 @@ $user = User::create([
     'email' => $_POST['email'], // Could be anything!
     'age' => $_POST['age'],     // Could be negative, string, etc.
 ]);
-// → Database errors, security issues, data corruption
+// -> Database errors, security issues, data corruption
 ```
 
 **With Validation**:
@@ -42,7 +42,7 @@ $validated = validate($_POST, [
 ]);
 
 $user = User::create($validated);
-// → Clean, validated data only
+// -> Clean, validated data only
 ```
 
 ### Features

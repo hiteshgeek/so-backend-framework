@@ -205,7 +205,12 @@
 
 .doc-card:hover {
   box-shadow: var(--shadow-lg);
-  border-color: transparent;
+  border-color: var(--primary);
+}
+
+.doc-card.visited {
+  background: linear-gradient(135deg, var(--surface) 0%, rgba(37, 99, 235, 0.05) 100%);
+  border-color: rgba(37, 99, 235, 0.3);
 }
 
 .doc-card h3 {

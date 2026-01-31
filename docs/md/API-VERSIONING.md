@@ -60,9 +60,9 @@ curl http://api.example.com/api/users  # Uses default (v1)
 The middleware extracts the version from the URL path:
 
 ```
-/api/v1/users       → version: v1
-/api/v2/products    → version: v2
-/v1/users           → version: v1
+/api/v1/users       -> version: v1
+/api/v2/products    -> version: v2
+/v1/users           -> version: v1
 ```
 
 **Pattern matched:** `/v(\d+)`
@@ -72,9 +72,9 @@ The middleware extracts the version from the URL path:
 If no version in URL, the middleware checks the Accept header:
 
 ```
-Accept: application/vnd.api.v1+json    → version: v1
-Accept: application/vnd.api.v2+json    → version: v2
-Accept: application/vnd.myapp.v1+json  → version: v1
+Accept: application/vnd.api.v1+json    -> version: v1
+Accept: application/vnd.api.v2+json    -> version: v2
+Accept: application/vnd.myapp.v1+json  -> version: v1
 ```
 
 **Pattern matched:** `\.v(\d+)`
@@ -166,8 +166,8 @@ class ApiVersionMiddleware implements MiddlewareInterface
     {
         // Detect version from URL or header
         // Attach to request:
-        //   $request->api_version        → "v1", "v2", etc.
-        //   $request->api_version_number → 1, 2, etc.
+        //   $request->api_version        -> "v1", "v2", etc.
+        //   $request->api_version_number -> 1, 2, etc.
 
         return $next($request);
     }
@@ -339,7 +339,7 @@ Track when versions will be removed:
 
 3. **Update URL**
    ```
-   /api/v1/users → /api/v2/users
+   /api/v1/users -> /api/v2/users
    ```
 
 4. **Test Thoroughly**

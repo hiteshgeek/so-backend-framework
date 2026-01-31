@@ -20,29 +20,6 @@
     </div>
 
     <div class="docs-container">
-        <div class="docs-stats">
-            <div class="docs-stat-card">
-                <span class="mdi mdi-check-circle stat-icon"></span>
-                <h3>100%</h3>
-                <p>Documentation Coverage</p>
-            </div>
-            <div class="docs-stat-card">
-                <span class="mdi mdi-cube-outline stat-icon"></span>
-                <h3>20</h3>
-                <p>Core Modules</p>
-            </div>
-            <div class="docs-stat-card">
-                <span class="mdi mdi-file-document-multiple stat-icon"></span>
-                <h3>41</h3>
-                <p>Guide Documents</p>
-            </div>
-            <div class="docs-stat-card">
-                <span class="mdi mdi-rocket-launch stat-icon"></span>
-                <h3>100%</h3>
-                <p>Production Ready</p>
-            </div>
-        </div>
-
         <div class="docs-tabs">
             <button class="docs-tab-button active" data-tab="docs-panel" onclick="switchDocsTab(this)">
                 <span class="mdi mdi-book-open-page-variant"></span> Docs
@@ -347,6 +324,20 @@
                         </div>
                         <span class="badge badge-guide">Guide</span>
                     </a>
+                    <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/dev-file-uploads" class="doc-card">
+                        <div class="doc-card-body">
+                            <h3><span class="mdi mdi-file-upload"></span> File Uploads</h3>
+                            <p>Handle file uploads, validation, storage, and security.</p>
+                        </div>
+                        <span class="badge badge-guide">Guide</span>
+                    </a>
+                    <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/dev-pagination" class="doc-card">
+                        <div class="doc-card-body">
+                            <h3><span class="mdi mdi-page-layout-header"></span> Pagination</h3>
+                            <p>Paginate database queries and display page links.</p>
+                        </div>
+                        <span class="badge badge-guide">Guide</span>
+                    </a>
                 </div>
             </div>
 
@@ -373,10 +364,24 @@
                         </div>
                         <span class="badge badge-guide">Guide</span>
                     </a>
+                    <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/dev-api-auth" class="doc-card">
+                        <div class="doc-card-body">
+                            <h3><span class="mdi mdi-key-chain"></span> API Authentication (JWT)</h3>
+                            <p>JWT tokens, API authentication, and token management.</p>
+                        </div>
+                        <span class="badge badge-guide">Guide</span>
+                    </a>
                     <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/dev-security" class="doc-card">
                         <div class="doc-card-body">
                             <h3><span class="mdi mdi-speedometer"></span> CSRF, Rate Limiting & CORS</h3>
                             <p>Security middleware configuration and usage.</p>
+                        </div>
+                        <span class="badge badge-guide">Guide</span>
+                    </a>
+                    <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/dev-error-handling" class="doc-card">
+                        <div class="doc-card-body">
+                            <h3><span class="mdi mdi-alert-circle"></span> Error Handling</h3>
+                            <p>Exception handling, custom error pages, and logging.</p>
                         </div>
                         <span class="badge badge-guide">Guide</span>
                     </a>
@@ -407,6 +412,125 @@
                         </div>
                         <span class="badge badge-guide">Guide</span>
                     </a>
+                    <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/dev-migrations" class="doc-card">
+                        <div class="doc-card-body">
+                            <h3><span class="mdi mdi-database-arrow-right"></span> Database Migrations</h3>
+                            <p>Schema builder, creating tables, and migration strategies.</p>
+                        </div>
+                        <span class="badge badge-guide">Guide</span>
+                    </a>
+                    <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/dev-seeders" class="doc-card">
+                        <div class="doc-card-body">
+                            <h3><span class="mdi mdi-database-import"></span> Database Seeders</h3>
+                            <p>Populate database with test data and sample records.</p>
+                        </div>
+                        <span class="badge badge-guide">Guide</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="docs-section">
+                <div class="docs-section-title"><span class="mdi mdi-layers-triple"></span> Architecture & Patterns</div>
+                <div class="docs-grid">
+                    <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/dev-services-repositories" class="doc-card">
+                        <div class="doc-card-body">
+                            <h3><span class="mdi mdi-cube-outline"></span> Service Layer & Repository Pattern</h3>
+                            <p>Clean architecture, business logic separation, and testability.</p>
+                        </div>
+                        <span class="badge badge-guide">Guide</span>
+                    </a>
+                    <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/dev-events" class="doc-card">
+                        <div class="doc-card-body">
+                            <h3><span class="mdi mdi-bell-ring"></span> Events & Listeners</h3>
+                            <p>Event-driven architecture and decoupled application logic.</p>
+                        </div>
+                        <span class="badge badge-guide">Guide</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="docs-section">
+                <div class="docs-section-title"><span class="mdi mdi-cog-outline"></span> Background Processing</div>
+                <div class="docs-grid">
+                    <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/dev-queues" class="doc-card">
+                        <div class="doc-card-body">
+                            <h3><span class="mdi mdi-tray-full"></span> Queue System</h3>
+                            <p>Background jobs, async tasks, and queue workers.</p>
+                        </div>
+                        <span class="badge badge-guide">Guide</span>
+                    </a>
+                    <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/dev-mail" class="doc-card">
+                        <div class="doc-card-body">
+                            <h3><span class="mdi mdi-email"></span> Mail System</h3>
+                            <p>Sending emails, templates, and attachments.</p>
+                        </div>
+                        <span class="badge badge-guide">Guide</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="docs-section">
+                <div class="docs-section-title"><span class="mdi mdi-console-line"></span> CLI Tools</div>
+                <div class="docs-grid">
+                    <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/dev-cli-commands" class="doc-card">
+                        <div class="doc-card-body">
+                            <h3><span class="mdi mdi-console"></span> CLI Commands</h3>
+                            <p>Code generation, migrations, seeders, and development workflows.</p>
+                        </div>
+                        <span class="badge badge-guide">Guide</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="docs-section">
+                <div class="docs-section-title"><span class="mdi mdi-speedometer"></span> Performance & Caching</div>
+                <div class="docs-grid">
+                    <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/dev-caching" class="doc-card">
+                        <div class="doc-card-body">
+                            <h3><span class="mdi mdi-lightning-bolt"></span> Caching Strategies</h3>
+                            <p>Cache queries, API calls, and computed values for better performance.</p>
+                        </div>
+                        <span class="badge badge-guide">Guide</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="docs-section">
+                <div class="docs-section-title"><span class="mdi mdi-bug"></span> Debugging & Monitoring</div>
+                <div class="docs-grid">
+                    <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/dev-logging" class="doc-card">
+                        <div class="doc-card-body">
+                            <h3><span class="mdi mdi-file-document-outline"></span> Logging & Debugging</h3>
+                            <p>Application logging, log levels, channels, and debugging tips.</p>
+                        </div>
+                        <span class="badge badge-guide">Guide</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="docs-section">
+                <div class="docs-section-title"><span class="mdi mdi-test-tube"></span> Testing & Quality</div>
+                <div class="docs-grid">
+                    <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/dev-testing" class="doc-card">
+                        <div class="doc-card-body">
+                            <h3><span class="mdi mdi-checkbox-marked-circle"></span> Writing Tests</h3>
+                            <p>PHPUnit tests, unit tests, integration tests, and test patterns.</p>
+                        </div>
+                        <span class="badge badge-guide">Guide</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="docs-section">
+                <div class="docs-section-title"><span class="mdi mdi-hammer-wrench"></span> Utilities & Reference</div>
+                <div class="docs-grid">
+                    <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/dev-helpers" class="doc-card">
+                        <div class="doc-card-body">
+                            <h3><span class="mdi mdi-function-variant"></span> Helper Functions</h3>
+                            <p>Complete reference of available helper functions and utilities.</p>
+                        </div>
+                        <span class="badge badge-guide">Guide</span>
+                    </a>
                 </div>
             </div>
         </div>
@@ -433,14 +557,46 @@
         button.classList.add('active');
         var target = document.getElementById(button.getAttribute('data-tab'));
         if (target) target.classList.add('active');
-        window.history.replaceState(null, '', '#' + button.getAttribute('data-tab'));
+        var tabId = button.getAttribute('data-tab');
+        window.history.replaceState(null, '', '#' + tabId);
+        // Save active tab to localStorage
+        localStorage.setItem('docs-active-tab', tabId);
     }
+
+    // Track visited cards
+    function trackCardVisit(url) {
+        var visited = JSON.parse(localStorage.getItem('docs-visited-cards') || '[]');
+        if (!visited.includes(url)) {
+            visited.push(url);
+            localStorage.setItem('docs-visited-cards', JSON.stringify(visited));
+        }
+    }
+
+    // Mark visited cards and restore active tab
     (function() {
+        // Restore active tab from localStorage or hash
+        var savedTab = localStorage.getItem('docs-active-tab');
         var hash = window.location.hash.replace('#', '');
-        if (hash) {
-            var btn = document.querySelector('.docs-tab-button[data-tab="' + hash + '"]');
+        var tabToActivate = hash || savedTab;
+
+        if (tabToActivate) {
+            var btn = document.querySelector('.docs-tab-button[data-tab="' + tabToActivate + '"]');
             if (btn) switchDocsTab(btn);
         }
+
+        // Mark visited cards
+        var visited = JSON.parse(localStorage.getItem('docs-visited-cards') || '[]');
+        document.querySelectorAll('.doc-card').forEach(function(card) {
+            var href = card.getAttribute('href');
+            if (href && visited.includes(href)) {
+                card.classList.add('visited');
+            }
+
+            // Track visits when clicking cards
+            card.addEventListener('click', function() {
+                trackCardVisit(href);
+            });
+        });
     })();
     </script>
 <?= render_assets('body_end') ?>

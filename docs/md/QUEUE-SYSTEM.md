@@ -27,10 +27,10 @@ The Queue System enables background processing of time-consuming tasks, preventi
 
 A queue system allows you to defer time-consuming tasks (jobs) to be processed in the background:
 
-1. **User makes request** → Application responds immediately
-2. **Job queued** → Stored in database with status "pending"
-3. **Worker processes** → Picks up job and executes it
-4. **Job completes** → Removed from queue (or moved to failed_jobs on error)
+1. **User makes request** -> Application responds immediately
+2. **Job queued** -> Stored in database with status "pending"
+3. **Worker processes** -> Picks up job and executes it
+4. **Job completes** -> Removed from queue (or moved to failed_jobs on error)
 
 ### Why Essential for ERP?
 
@@ -155,31 +155,31 @@ That's it! Jobs are now processed in the background.
 
 ```
 +-------------+
-| Dispatched  | → Job created and stored in jobs table
+| Dispatched  | -> Job created and stored in jobs table
 +------+------+
        |
        v
 +-------------+
-|   Queued    | → Waiting in database (status: pending)
+|   Queued    | -> Waiting in database (status: pending)
 +------+------+
        |
        v
 +-------------+
-| Processing  | → Worker picks up and executes job
+| Processing  | -> Worker picks up and executes job
 +------+------+
        |
-       +- Success → Job deleted from table
+       +- Success -> Job deleted from table
        |
        +- Failure +
                   |
                   v
           +--------------+
-          | Retry Logic  | → Attempts < max_tries?
+          | Retry Logic  | -> Attempts < max_tries?
           +------+-------+
                  |
-                 +- Yes → Back to Queued (with delay)
+                 +- Yes -> Back to Queued (with delay)
                  |
-                 +- No → Moved to failed_jobs table
+                 +- No -> Moved to failed_jobs table
 ```
 
 ### Database Schema

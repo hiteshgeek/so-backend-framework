@@ -21,6 +21,7 @@ class MarkdownParser {
     private $inTable = false;
     private $tableRows = [];
     private $inBlockquote = false;
+    private $usedIds = [];
 
     public function parse($markdown) {
         $this->lines = explode("\n", $markdown);
@@ -158,7 +159,17 @@ class MarkdownParser {
         // Clean the title using same method as TOC extraction
         $cleanText = $this->cleanTocTitle($text);
         // Generate ID: lowercase FIRST, then replace non-alphanumeric with hyphens, trim hyphens
-        $id = trim(preg_replace('/[^a-z0-9]+/', '-', strtolower($cleanText)), '-');
+        $baseId = trim(preg_replace('/[^a-z0-9]+/', '-', strtolower($cleanText)), '-');
+
+        // Make ID unique by appending a number if it already exists
+        $id = $baseId;
+        $counter = 2;
+        while (isset($this->usedIds[$id])) {
+            $id = $baseId . '-' . $counter;
+            $counter++;
+        }
+        $this->usedIds[$id] = true;
+
         $icons = [1 => 'book-open-variant', 2 => 'text-box-outline', 3 => 'chevron-right', 4 => 'chevron-right', 5 => 'minus', 6 => 'minus'];
         $icon = $icons[$level] ?? 'minus';
         return "<h{$level} id=\"{$id}\" class=\"heading heading-{$level}\"><span class=\"mdi mdi-{$icon} heading-icon\"></span><span class=\"heading-text\">{$this->parseInline($cleanText)}</span></h{$level}>";
@@ -409,7 +420,7 @@ class MarkdownParser {
     private function renderTable($rows) {
         if (empty($rows)) return '';
         $html = '<div class="table-container"><table class="data-table"><thead><tr>';
-        $headerCells = array_map('trim', explode('|', trim($rows[0], '|')));
+        $headerCells = $this->splitTableRow($rows[0]);
         foreach ($headerCells as $cell) {
             $html .= '<th>' . $this->parseInline($cell) . '</th>';
         }
@@ -417,7 +428,7 @@ class MarkdownParser {
         if (count($rows) > 1) {
             $html .= '<tbody>';
             for ($i = 1; $i < count($rows); $i++) {
-                $cells = array_map('trim', explode('|', trim($rows[$i], '|')));
+                $cells = $this->splitTableRow($rows[$i]);
                 $html .= '<tr>';
                 foreach ($cells as $cell) {
                     $html .= '<td>' . $this->parseInline($cell) . '</td>';
@@ -427,6 +438,40 @@ class MarkdownParser {
             $html .= '</tbody>';
         }
         return $html . '</table></div>';
+    }
+
+    private function splitTableRow($row) {
+        // Remove leading and trailing pipes
+        $row = trim($row, '|');
+        $cells = [];
+        $currentCell = '';
+        $inBackticks = false;
+        $len = strlen($row);
+
+        for ($i = 0; $i < $len; $i++) {
+            $char = $row[$i];
+
+            // Toggle backtick state
+            if ($char === '`') {
+                $inBackticks = !$inBackticks;
+                $currentCell .= $char;
+            }
+            // Split on pipe only if not inside backticks
+            else if ($char === '|' && !$inBackticks) {
+                $cells[] = trim($currentCell);
+                $currentCell = '';
+            }
+            else {
+                $currentCell .= $char;
+            }
+        }
+
+        // Add the last cell
+        if ($currentCell !== '') {
+            $cells[] = trim($currentCell);
+        }
+
+        return $cells;
     }
 
     private function renderListItem($text, $num) {
@@ -513,15 +558,37 @@ class MarkdownParser {
 
     public function extractToc($markdown) {
         $toc = [];
+        $usedTocIds = [];
+
         foreach (explode("\n", $markdown) as $line) {
             if (preg_match('/^##\s+(.+)$/', $line, $m)) {
                 $title = $this->cleanTocTitle(trim($m[1]));
                 // Generate ID: lowercase FIRST, then replace non-alphanumeric with hyphens, trim hyphens
-                $id = trim(preg_replace('/[^a-z0-9]+/', '-', strtolower($title)), '-');
+                $baseId = trim(preg_replace('/[^a-z0-9]+/', '-', strtolower($title)), '-');
+
+                // Make ID unique
+                $id = $baseId;
+                $counter = 2;
+                while (isset($usedTocIds[$id])) {
+                    $id = $baseId . '-' . $counter;
+                    $counter++;
+                }
+                $usedTocIds[$id] = true;
+
                 $toc[] = ['level' => 2, 'title' => $title, 'id' => $id];
             } else if (preg_match('/^###\s+(.+)$/', $line, $m)) {
                 $title = $this->cleanTocTitle(trim($m[1]));
-                $id = trim(preg_replace('/[^a-z0-9]+/', '-', strtolower($title)), '-');
+                $baseId = trim(preg_replace('/[^a-z0-9]+/', '-', strtolower($title)), '-');
+
+                // Make ID unique
+                $id = $baseId;
+                $counter = 2;
+                while (isset($usedTocIds[$id])) {
+                    $id = $baseId . '-' . $counter;
+                    $counter++;
+                }
+                $usedTocIds[$id] = true;
+
                 $toc[] = ['level' => 3, 'title' => $title, 'id' => $id];
             }
         }

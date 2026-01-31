@@ -13,9 +13,9 @@ You can either:
 This rename process changes your framework identity from:
 
 ```
-Current:  SO Framework  →  Your Framework Name
-Database: so-framework  →  your-database
-Package:  so/framework  →  vendor/package
+Current:  SO Framework  ->  Your Framework Name
+Database: so-framework  ->  your-database
+Package:  so/framework  ->  vendor/package
 ```
 
 **Files that will be modified:**
@@ -234,8 +234,8 @@ This step is **optional** but recommended for consistency.
 nano README.md
 
 # Find and replace:
-# "SO Framework" → "Your Framework Name"
-# "so-framework" → "your-database-name"
+# "SO Framework" -> "Your Framework Name"
+# "so-framework" -> "your-database-name"
 
 # Save and exit
 ```

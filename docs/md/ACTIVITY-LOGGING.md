@@ -407,7 +407,7 @@ function displayActivityTimeline($subjectType, $subjectId)
             foreach ($properties['attributes'] as $key => $newValue) {
                 $oldValue = $properties['old'][$key] ?? null;
                 if ($oldValue != $newValue) {
-                    echo "  - {$key}: {$oldValue} → {$newValue}\n";
+                    echo "  - {$key}: {$oldValue} -> {$newValue}\n";
                 }
             }
         }

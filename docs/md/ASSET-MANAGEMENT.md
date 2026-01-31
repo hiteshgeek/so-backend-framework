@@ -99,7 +99,7 @@ Generate a versioned URL to any file in `public/assets/`:
 ```php
 // Basic usage
 $url = asset('css/app.css');
-// → http://yourapp.com/assets/css/app.css?v=1706620800
+// -> http://yourapp.com/assets/css/app.css?v=1706620800
 
 // In HTML
 <img src="<?= asset('images/logo.png') ?>">
@@ -112,10 +112,10 @@ The `?v=` parameter is the file's `filemtime()` — it changes whenever the file
 
 ```php
 // Version is based on file modification time
-asset('css/app.css')  →  /assets/css/app.css?v=1706620800
+asset('css/app.css')  ->  /assets/css/app.css?v=1706620800
 
 // Edit css/app.css and save...
-asset('css/app.css')  →  /assets/css/app.css?v=1706625000  // New version!
+asset('css/app.css')  ->  /assets/css/app.css?v=1706625000  // New version!
 ```
 
 ### CDN Support
@@ -128,7 +128,7 @@ ASSET_URL=https://cdn.example.com
 
 ```php
 asset('css/app.css')
-// → https://cdn.example.com/assets/css/app.css?v=1706620800
+// -> https://cdn.example.com/assets/css/app.css?v=1706620800
 ```
 
 ### Disable Versioning
@@ -139,7 +139,7 @@ ASSET_VERSIONING=false
 
 // Per-call override
 app('assets')->url('css/app.css', false);
-// → /assets/css/app.css (no ?v= parameter)
+// -> /assets/css/app.css (no ?v= parameter)
 ```
 
 ---
@@ -362,11 +362,11 @@ ES modules are supported via the attributes parameter:
 ```php
 // ES Module
 assets()->js('js/app.mjs', 'body_end', 50, ['type' => 'module']);
-// → <script src="/assets/js/app.mjs?v=..." type="module"></script>
+// -> <script src="/assets/js/app.mjs?v=..." type="module"></script>
 
 // Legacy fallback with nomodule
 assets()->js('js/app-legacy.js', 'body_end', 50, ['nomodule' => true]);
-// → <script src="/assets/js/app-legacy.js?v=..." nomodule></script>
+// -> <script src="/assets/js/app-legacy.js?v=..." nomodule></script>
 
 // Module + crossorigin
 assets()->js('js/app.mjs', 'body_end', 50, [
@@ -539,10 +539,10 @@ Then reference `AppConfig.userId` in your external JS file.
 ### 4. CDN for Third-Party, Local for Your Code
 
 ```php
-// Third-party → CDN (cached globally, no build needed)
+// Third-party -> CDN (cached globally, no build needed)
 assets()->cdn('https://cdn.jsdelivr.net/npm/chart.js', 'js', 'body_end', 5);
 
-// Your code → local files (versioned, full control)
+// Your code -> local files (versioned, full control)
 assets()->js('js/charts-init.js', 'body_end', 10);
 ```
 

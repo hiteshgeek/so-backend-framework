@@ -150,9 +150,9 @@ php sixorbit test validation         # Validation System only
 
 Running: Sanitizer Bypass Prevention
 ───────────────────────────────────────────────────────────────
-  Result: 15/15 passed (100%) ✓
+  Result: 15/15 passed (100%) OK
 
-Category Summary: 60/61 passed (98.4%) ✓
+Category Summary: 60/61 passed (98.4%) OK
 
 ╔═══════════════════════════════════════════════════════════════╗
 ║                      OVERALL SUMMARY                          ║
@@ -160,9 +160,9 @@ Category Summary: 60/61 passed (98.4%) ✓
 
 Results by Category:
 ───────────────────────────────────────────────────────────────
-  Security:                  60/ 61 passed ( 98.4%) ✗
-  Infrastructure:            30/ 30 passed (100.0%) ✓
-  Application:               77/ 77 passed (100.0%) ✓
+  Security:                  60/ 61 passed ( 98.4%) FAIL
+  Infrastructure:            30/ 30 passed (100.0%) OK
+  Application:               77/ 77 passed (100.0%) OK
 ```
 
 ## Test Statistics
@@ -191,9 +191,9 @@ echo "=== Your Test Name ===\n\n";
 // Test 1
 echo "Test 1: Description\n";
 if ($condition) {
-    echo "✓ PASS: Test passed\n";
+    echo "OK PASS: Test passed\n";
 } else {
-    echo "✗ FAIL: Test failed\n";
+    echo "FAIL FAIL: Test failed\n";
 }
 
 // Final summary

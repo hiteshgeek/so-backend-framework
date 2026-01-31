@@ -141,13 +141,13 @@ $token = $this->passwordResetService->createResetToken($email);
 ```php
 // UserApiController.php
 public function show(int $id) {
-    $user = User::find($id);  // ❌ No authorization check
+    $user = User::find($id);  // - No authorization check
     return JsonResponse::success(['user' => $user]);
 }
 
 // Api/V1/UserController.php
 public function show(int $id) {
-    $user = User::find($id);  // ❌ Same vulnerability
+    $user = User::find($id);  // - Same vulnerability
     return JsonResponse::success(['user' => $user]);
 }
 ```
@@ -324,21 +324,21 @@ app/
 
 ```
 Browser/API Client
-       ↓
+       |
 ┌──────────────────┐
 │   Controller     │  1. Receive HTTP request
 │                  │  2. Validate input (using ValidationRules)
 │                  │  3. Call Service method
 │                  │  4. Return HTTP response
 └────────┬─────────┘
-         ↓
+         |
 ┌──────────────────┐
 │    Service       │  1. Execute business logic
 │                  │  2. Check authorization
 │                  │  3. Call Model methods
 │                  │  4. Return data
 └────────┬─────────┘
-         ↓
+         |
 ┌──────────────────┐
 │     Model        │  1. Query database
 │                  │  2. Transform data
@@ -576,11 +576,11 @@ public function index(Request $request): JsonResponse
 ### When to Create a Service
 
 Create a service when you have:
-- ✅ Business logic that's used in multiple places
-- ✅ Complex operations that don't belong in controllers
-- ✅ Logic that needs to be tested independently
-- ✅ Authorization checks or calculations
-- ✅ Third-party API integrations
+- - Business logic that's used in multiple places
+- - Complex operations that don't belong in controllers
+- - Logic that needs to be tested independently
+- - Authorization checks or calculations
+- - Third-party API integrations
 
 ### Service Template
 
@@ -756,7 +756,7 @@ class OrderController
 
 ### 1. **One Service Per Domain**
 
-✅ **Good:**
+- **Good:**
 ```
 Services/
 ├── User/UserService.php
@@ -767,7 +767,7 @@ Services/
     └── PasswordResetService.php
 ```
 
-❌ **Bad:**
+- **Bad:**
 ```
 Services/
 └── MainService.php  ← Everything in one file
@@ -777,7 +777,7 @@ Services/
 
 ### 2. **Services Don't Handle HTTP**
 
-✅ **Good:**
+- **Good:**
 ```php
 // Service returns data
 public function createUser(array $data): User
@@ -793,7 +793,7 @@ public function store(Request $request): JsonResponse
 }
 ```
 
-❌ **Bad:**
+- **Bad:**
 ```php
 // Service returns HTTP response (wrong!)
 public function createUser(array $data): JsonResponse
@@ -807,7 +807,7 @@ public function createUser(array $data): JsonResponse
 
 ### 3. **Services Don't Do Validation**
 
-✅ **Good:**
+- **Good:**
 ```php
 // Controller validates
 $validator = Validator::make($request->all(), UserValidationRules::registration());
@@ -819,7 +819,7 @@ if ($validator->fails()) {
 $user = $this->userService->createUser($request->all());
 ```
 
-❌ **Bad:**
+- **Bad:**
 ```php
 // Service validates (mixing concerns)
 public function createUser(array $data): User
@@ -835,14 +835,14 @@ public function createUser(array $data): User
 
 ### 4. **Use Descriptive Method Names**
 
-✅ **Good:**
+- **Good:**
 ```php
 $user = $userService->createUser($data);
 $token = $passwordResetService->createResetToken($email);
 $canAccess = $userService->canAccessUser($userId, $requesterId);
 ```
 
-❌ **Bad:**
+- **Bad:**
 ```php
 $user = $userService->create($data);  // Create what?
 $token = $passwordResetService->generate($email);  // Generate what?
@@ -853,7 +853,7 @@ $canAccess = $userService->check($userId, $requesterId);  // Check what?
 
 ### 5. **Return Data, Not Views**
 
-✅ **Good:**
+- **Good:**
 ```php
 // Service returns data
 public function getUserProfile(int $id): array
@@ -874,7 +874,7 @@ public function show(int $id): Response
 }
 ```
 
-❌ **Bad:**
+- **Bad:**
 ```php
 // Service renders view (wrong!)
 public function getUserProfile(int $id): Response
@@ -888,7 +888,7 @@ public function getUserProfile(int $id): Response
 
 ### 6. **Don't Inject Request Objects**
 
-✅ **Good:**
+- **Good:**
 ```php
 // Controller extracts data from request
 public function store(Request $request): JsonResponse
@@ -906,7 +906,7 @@ public function createUser(array $data): User
 }
 ```
 
-❌ **Bad:**
+- **Bad:**
 ```php
 // Service receives Request object (wrong!)
 public function createUser(Request $request): User
@@ -1111,14 +1111,14 @@ public function salesReport(Request $request): Response
 
 ### When to Use Services
 
-✅ Create a service when you have:
+- Create a service when you have:
 - Business logic used in multiple places
 - Complex operations
 - Authorization checks
 - Calculations or transformations
 - Third-party integrations
 
-❌ Don't create a service for:
+- Don't create a service for:
 - Simple CRUD (use models directly)
 - One-time operations
 - HTTP-specific logic (keep in controllers)
@@ -1140,4 +1140,4 @@ public function salesReport(Request $request): Response
 
 ---
 
-**Next:** [Internal API Layer](/docs/internal-api) →
+**Next:** [Internal API Layer](/docs/internal-api) ->

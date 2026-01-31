@@ -59,20 +59,7 @@
         </article>
     </main>
 
-    <script>
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    document.querySelectorAll('.docs-sidebar a').forEach(a => a.classList.remove('active'));
-                    const link = document.querySelector(`.docs-sidebar a[href="#${entry.target.id}"]`);
-                    if (link) link.classList.add('active');
-                }
-            });
-        }, {
-            rootMargin: '-80px 0px -80% 0px'
-        });
-        document.querySelectorAll('.heading[id]').forEach(h => observer.observe(h));
-    </script>
+    <script src="<?= url('/assets/js/docs/scroll-spy.js') ?>"></script>
     <?= render_assets('body_end') ?>
 </body>
 

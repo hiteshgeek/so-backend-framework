@@ -108,4 +108,4 @@ See [Configuration](/docs/configuration) for complete documentation.
 
 ## [!] That's It!
 
-Change name **once** in `.env` → Works **everywhere** automatically!
+Change name **once** in `.env` -> Works **everywhere** automatically!

@@ -152,10 +152,10 @@ $failed = 0;
 // Test case
 echo "Test 1: Description\n";
 if ($condition) {
-    echo "✓ PASS: Test passed\n";
+    echo "OK PASS: Test passed\n";
     $passed++;
 } else {
-    echo "✗ FAIL: Test failed\n";
+    echo "FAIL FAIL: Test failed\n";
     $failed++;
 }
 

@@ -92,25 +92,25 @@ The [Comprehensive Guide](/docs/comprehensive) includes a complete request lifec
 
 ```
 1. HTTP Request arrives
-   ↓
+   |
 2. Application::handleWebRequest(Request)
-   ↓
+   |
 3. Router::dispatch(Request)
-   ↓
+   |
 4. Route matching with pattern compilation
-   ↓
-5. Middleware pipeline setup (global → route-specific)
-   ↓
+   |
+5. Middleware pipeline setup (global -> route-specific)
+   |
 6. Middleware execution chain
-   ↓
+   |
 7. Controller/Handler execution (dependency injected)
-   ↓
+   |
 8. Response generation
-   ↓
+   |
 9. Session write-close
-   ↓
+   |
 10. Response sent to client
-    ↓
+    |
 11. Application::terminate() cleanup
 ```
 
@@ -172,7 +172,7 @@ Entry point flow documented in COMPREHENSIVE-GUIDE.md:
 Complete MVC flow diagram in COMPREHENSIVE-GUIDE.md:
 
 ```
-Request → Router → Middleware → Controller → Service → Model → Database
+Request -> Router -> Middleware -> Controller -> Service -> Model -> Database
 ```
 
 **Location**: COMPREHENSIVE-GUIDE.md (lines 26-66)

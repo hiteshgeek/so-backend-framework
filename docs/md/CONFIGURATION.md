@@ -359,11 +359,11 @@ config_path('database.php')
 
 ## Summary
 
-[x] **Single Source of Truth**: Change `APP_NAME` in `.env` → affects everywhere
+[x] **Single Source of Truth**: Change `APP_NAME` in `.env` -> affects everywhere
 
-[x] **Dynamic SQL**: Run generator → creates SQL with your database name
+[x] **Dynamic SQL**: Run generator -> creates SQL with your database name
 
-[x] **Easy Deployment**: Copy `.env.example` → customize → deploy
+[x] **Easy Deployment**: Copy `.env.example` -> customize -> deploy
 
 [x] **Type Safe**: Configuration files cast types properly
 
