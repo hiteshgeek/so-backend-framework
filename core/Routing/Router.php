@@ -5,6 +5,7 @@ namespace Core\Routing;
 use Core\Http\Request;
 use Core\Http\Response;
 use Core\Exceptions\NotFoundException;
+use Core\Middleware\TerminableMiddleware;
 
 /**
  * Router Class
@@ -30,6 +31,18 @@ class Router
     protected static array $middlewareAliases = [];
     protected static ?Route $fallbackRoute = null;
     protected static ?Route $currentRoute = null;
+
+    /**
+     * Middleware priority order (higher priority = runs first)
+     * Middleware not in this list runs in order of definition
+     */
+    protected static array $middlewarePriority = [];
+
+    /**
+     * Resolved middleware instances for the current request
+     * Used to call terminate() after response is sent
+     */
+    protected array $resolvedMiddleware = [];
 
     public static function get(string $uri, $action): Route
     {
@@ -179,6 +192,37 @@ class Router
     }
 
     /**
+     * Set middleware priority order
+     *
+     * Middleware with lower index in the array runs first.
+     *
+     * Usage:
+     *   Router::middlewarePriority([
+     *       CorsMiddleware::class,        // Runs first
+     *       ThrottleMiddleware::class,
+     *       AuthMiddleware::class,
+     *       CsrfMiddleware::class,        // Runs last
+     *   ]);
+     *
+     * @param array $priority Array of middleware class names in priority order
+     * @return void
+     */
+    public static function middlewarePriority(array $priority): void
+    {
+        self::$middlewarePriority = $priority;
+    }
+
+    /**
+     * Get the middleware priority list
+     *
+     * @return array
+     */
+    public static function getMiddlewarePriority(): array
+    {
+        return self::$middlewarePriority;
+    }
+
+    /**
      * Resolve middleware names — expand groups and aliases to class names
      */
     protected static function resolveMiddleware(array $middleware): array
@@ -207,7 +251,44 @@ class Router
             $resolved[] = $item;
         }
 
-        return array_unique($resolved);
+        $resolved = array_unique($resolved);
+
+        // Sort by priority if priority list is defined
+        if (!empty(self::$middlewarePriority)) {
+            $resolved = self::sortMiddlewareByPriority($resolved);
+        }
+
+        return $resolved;
+    }
+
+    /**
+     * Sort middleware by priority order
+     *
+     * @param array $middleware
+     * @return array
+     */
+    protected static function sortMiddlewareByPriority(array $middleware): array
+    {
+        usort($middleware, function ($a, $b) {
+            // Extract class name without parameters
+            $classA = is_string($a) && str_contains($a, ':') ? explode(':', $a, 2)[0] : $a;
+            $classB = is_string($b) && str_contains($b, ':') ? explode(':', $b, 2)[0] : $b;
+
+            $indexA = array_search($classA, self::$middlewarePriority);
+            $indexB = array_search($classB, self::$middlewarePriority);
+
+            // Items not in priority list go to the end
+            if ($indexA === false) {
+                $indexA = PHP_INT_MAX;
+            }
+            if ($indexB === false) {
+                $indexB = PHP_INT_MAX;
+            }
+
+            return $indexA <=> $indexB;
+        });
+
+        return $middleware;
     }
 
     public static function resource(string $name, string $controller): void
@@ -324,6 +405,9 @@ class Router
 
     protected function runRouteWithMiddleware(Route $route, Request $request): Response
     {
+        // Clear resolved middleware from previous request
+        $this->resolvedMiddleware = [];
+
         // Merge global middleware with route middleware, then resolve groups/aliases
         $middleware = self::resolveMiddleware(
             array_merge(self::$globalMiddleware, $route->getMiddleware())
@@ -333,11 +417,12 @@ class Router
             return $route->run($request);
         }
 
-        // Build middleware pipeline
+        // Build middleware pipeline and track instances
+        $router = $this;
         $pipeline = array_reduce(
             array_reverse($middleware),
-            function ($next, $middleware) {
-                return function ($request) use ($next, $middleware) {
+            function ($next, $middleware) use ($router) {
+                return function ($request) use ($next, $middleware, $router) {
                     // Parse middleware parameters (e.g. "App\Middleware\Throttle:5,1")
                     $parameters = [];
                     if (is_string($middleware) && str_contains($middleware, ':')) {
@@ -346,6 +431,10 @@ class Router
                     }
 
                     $middlewareInstance = app()->make($middleware);
+
+                    // Track instance for terminate phase
+                    $router->resolvedMiddleware[] = $middlewareInstance;
+
                     return $middlewareInstance->handle($request, $next, ...$parameters);
                 };
             },
@@ -355,6 +444,40 @@ class Router
         );
 
         return $pipeline($request);
+    }
+
+    /**
+     * Run terminate phase for all middleware
+     *
+     * This should be called after the response has been sent to the client.
+     * Middleware implementing the TerminableMiddleware interface will have
+     * their terminate() method called.
+     *
+     * Usage:
+     *   $response->send();
+     *   $router->terminate($request, $response);
+     *
+     * @param Request $request
+     * @param Response $response
+     * @return void
+     */
+    public function terminate(Request $request, Response $response): void
+    {
+        foreach ($this->resolvedMiddleware as $middleware) {
+            if ($middleware instanceof TerminableMiddleware) {
+                $middleware->terminate($request, $response);
+            }
+        }
+    }
+
+    /**
+     * Get resolved middleware instances (for testing)
+     *
+     * @return array
+     */
+    public function getResolvedMiddleware(): array
+    {
+        return $this->resolvedMiddleware;
     }
 
     public function url(string $name, array $parameters = []): string

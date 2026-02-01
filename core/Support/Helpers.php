@@ -1214,3 +1214,506 @@ if (!function_exists('is_cdn_enabled')) {
         return (new \Core\Media\CdnManager())->isEnabled();
     }
 }
+
+// ============================================
+// Array Helper Functions
+// ============================================
+
+if (!function_exists('array_dot')) {
+    /**
+     * Flatten a multi-dimensional array into dot notation
+     *
+     * @param array $array The array to flatten
+     * @param string $prepend Prefix for keys
+     * @return array
+     */
+    function array_dot(array $array, string $prepend = ''): array
+    {
+        $results = [];
+
+        foreach ($array as $key => $value) {
+            if (is_array($value) && !empty($value)) {
+                $results = array_merge($results, array_dot($value, $prepend . $key . '.'));
+            } else {
+                $results[$prepend . $key] = $value;
+            }
+        }
+
+        return $results;
+    }
+}
+
+if (!function_exists('array_get')) {
+    /**
+     * Get an item from an array using dot notation
+     *
+     * @param array $array The source array
+     * @param string|int|null $key The dot-notation key
+     * @param mixed $default Default value if not found
+     * @return mixed
+     */
+    function array_get(array $array, string|int|null $key, mixed $default = null): mixed
+    {
+        if ($key === null) {
+            return $array;
+        }
+
+        if (array_key_exists($key, $array)) {
+            return $array[$key];
+        }
+
+        if (!str_contains((string) $key, '.')) {
+            return $array[$key] ?? value($default);
+        }
+
+        foreach (explode('.', (string) $key) as $segment) {
+            if (!is_array($array) || !array_key_exists($segment, $array)) {
+                return value($default);
+            }
+            $array = $array[$segment];
+        }
+
+        return $array;
+    }
+}
+
+if (!function_exists('array_set')) {
+    /**
+     * Set an array item to a given value using dot notation
+     *
+     * @param array $array The array to modify
+     * @param string|int|null $key The dot-notation key
+     * @param mixed $value The value to set
+     * @return array
+     */
+    function array_set(array &$array, string|int|null $key, mixed $value): array
+    {
+        if ($key === null) {
+            return $array = $value;
+        }
+
+        $keys = explode('.', (string) $key);
+
+        foreach ($keys as $i => $segment) {
+            if (count($keys) === 1) {
+                break;
+            }
+
+            unset($keys[$i]);
+
+            if (!isset($array[$segment]) || !is_array($array[$segment])) {
+                $array[$segment] = [];
+            }
+
+            $array = &$array[$segment];
+        }
+
+        $array[array_shift($keys)] = $value;
+
+        return $array;
+    }
+}
+
+if (!function_exists('array_has')) {
+    /**
+     * Check if an item exists in an array using dot notation
+     *
+     * @param array $array The array to check
+     * @param string|array $keys The key(s) to check for
+     * @return bool
+     */
+    function array_has(array $array, string|array $keys): bool
+    {
+        $keys = (array) $keys;
+
+        if (empty($array) || $keys === []) {
+            return false;
+        }
+
+        foreach ($keys as $key) {
+            $subArray = $array;
+
+            if (array_key_exists($key, $array)) {
+                continue;
+            }
+
+            foreach (explode('.', $key) as $segment) {
+                if (!is_array($subArray) || !array_key_exists($segment, $subArray)) {
+                    return false;
+                }
+                $subArray = $subArray[$segment];
+            }
+        }
+
+        return true;
+    }
+}
+
+if (!function_exists('array_forget')) {
+    /**
+     * Remove an item from an array using dot notation
+     *
+     * @param array $array The array to modify
+     * @param string|array $keys The key(s) to remove
+     * @return void
+     */
+    function array_forget(array &$array, string|array $keys): void
+    {
+        $keys = (array) $keys;
+
+        foreach ($keys as $key) {
+            if (array_key_exists($key, $array)) {
+                unset($array[$key]);
+                continue;
+            }
+
+            $parts = explode('.', $key);
+            $current = &$array;
+
+            while (count($parts) > 1) {
+                $part = array_shift($parts);
+
+                if (!isset($current[$part]) || !is_array($current[$part])) {
+                    continue 2;
+                }
+
+                $current = &$current[$part];
+            }
+
+            unset($current[array_shift($parts)]);
+        }
+    }
+}
+
+if (!function_exists('array_only')) {
+    /**
+     * Get a subset of the items from an array
+     *
+     * @param array $array The source array
+     * @param array $keys The keys to keep
+     * @return array
+     */
+    function array_only(array $array, array $keys): array
+    {
+        return array_intersect_key($array, array_flip($keys));
+    }
+}
+
+if (!function_exists('array_except')) {
+    /**
+     * Get all items except for those with the specified keys
+     *
+     * @param array $array The source array
+     * @param array $keys The keys to remove
+     * @return array
+     */
+    function array_except(array $array, array $keys): array
+    {
+        return array_diff_key($array, array_flip($keys));
+    }
+}
+
+if (!function_exists('array_first')) {
+    /**
+     * Get the first element matching a condition or the first element
+     *
+     * @param array $array The array to search
+     * @param callable|null $callback The condition callback
+     * @param mixed $default Default value if not found
+     * @return mixed
+     */
+    function array_first(array $array, ?callable $callback = null, mixed $default = null): mixed
+    {
+        if ($callback === null) {
+            if (empty($array)) {
+                return value($default);
+            }
+
+            foreach ($array as $item) {
+                return $item;
+            }
+        }
+
+        foreach ($array as $key => $value) {
+            if ($callback($value, $key)) {
+                return $value;
+            }
+        }
+
+        return value($default);
+    }
+}
+
+if (!function_exists('array_last')) {
+    /**
+     * Get the last element matching a condition or the last element
+     *
+     * @param array $array The array to search
+     * @param callable|null $callback The condition callback
+     * @param mixed $default Default value if not found
+     * @return mixed
+     */
+    function array_last(array $array, ?callable $callback = null, mixed $default = null): mixed
+    {
+        if ($callback === null) {
+            return empty($array) ? value($default) : end($array);
+        }
+
+        return array_first(array_reverse($array, true), $callback, $default);
+    }
+}
+
+if (!function_exists('array_wrap')) {
+    /**
+     * Wrap a value in an array if it isn't already one
+     *
+     * @param mixed $value The value to wrap
+     * @return array
+     */
+    function array_wrap(mixed $value): array
+    {
+        if (is_null($value)) {
+            return [];
+        }
+
+        return is_array($value) ? $value : [$value];
+    }
+}
+
+if (!function_exists('array_flatten')) {
+    /**
+     * Flatten a multi-dimensional array into a single level
+     *
+     * @param array $array The array to flatten
+     * @param int $depth Maximum depth to flatten (default: INF)
+     * @return array
+     */
+    function array_flatten(array $array, int $depth = PHP_INT_MAX): array
+    {
+        $result = [];
+
+        foreach ($array as $item) {
+            if (!is_array($item)) {
+                $result[] = $item;
+            } else {
+                $values = $depth === 1
+                    ? array_values($item)
+                    : array_flatten($item, $depth - 1);
+
+                foreach ($values as $value) {
+                    $result[] = $value;
+                }
+            }
+        }
+
+        return $result;
+    }
+}
+
+if (!function_exists('array_pull')) {
+    /**
+     * Get a value from an array and remove it
+     *
+     * @param array $array The array to modify
+     * @param string $key The key to pull
+     * @param mixed $default Default value if not found
+     * @return mixed
+     */
+    function array_pull(array &$array, string $key, mixed $default = null): mixed
+    {
+        $value = array_get($array, $key, $default);
+        array_forget($array, $key);
+        return $value;
+    }
+}
+
+if (!function_exists('array_pluck')) {
+    /**
+     * Pluck an array of values from an array
+     *
+     * @param array $array The source array
+     * @param string $value The key to pluck
+     * @param string|null $key The key to use as the index
+     * @return array
+     */
+    function array_pluck(array $array, string $value, ?string $key = null): array
+    {
+        $results = [];
+
+        foreach ($array as $item) {
+            $itemValue = is_object($item) ? ($item->$value ?? null) : ($item[$value] ?? null);
+
+            if ($key === null) {
+                $results[] = $itemValue;
+            } else {
+                $itemKey = is_object($item) ? ($item->$key ?? null) : ($item[$key] ?? null);
+                $results[$itemKey] = $itemValue;
+            }
+        }
+
+        return $results;
+    }
+}
+
+if (!function_exists('array_where')) {
+    /**
+     * Filter an array using a callback
+     *
+     * @param array $array The array to filter
+     * @param callable $callback The filter callback
+     * @return array
+     */
+    function array_where(array $array, callable $callback): array
+    {
+        return array_filter($array, $callback, ARRAY_FILTER_USE_BOTH);
+    }
+}
+
+if (!function_exists('array_collapse')) {
+    /**
+     * Collapse an array of arrays into a single array
+     *
+     * @param array $array The array of arrays
+     * @return array
+     */
+    function array_collapse(array $array): array
+    {
+        $results = [];
+
+        foreach ($array as $values) {
+            if (!is_array($values)) {
+                continue;
+            }
+
+            $results[] = $values;
+        }
+
+        return array_merge([], ...$results);
+    }
+}
+
+if (!function_exists('array_undot')) {
+    /**
+     * Convert a flattened dot-notation array back to a nested array
+     *
+     * @param array $array The flattened array
+     * @return array
+     */
+    function array_undot(array $array): array
+    {
+        $result = [];
+
+        foreach ($array as $key => $value) {
+            array_set($result, $key, $value);
+        }
+
+        return $result;
+    }
+}
+
+if (!function_exists('array_random')) {
+    /**
+     * Get one or more random elements from an array
+     *
+     * @param array $array The source array
+     * @param int|null $number Number of elements to get (null = 1)
+     * @return mixed
+     */
+    function array_random(array $array, ?int $number = null): mixed
+    {
+        $requested = $number ?? 1;
+        $count = count($array);
+
+        if ($requested > $count) {
+            throw new \InvalidArgumentException(
+                "Cannot request {$requested} elements from an array of {$count} elements"
+            );
+        }
+
+        if ($number === null) {
+            return $array[array_rand($array)];
+        }
+
+        if ($number === 0) {
+            return [];
+        }
+
+        $keys = array_rand($array, $number);
+
+        $results = [];
+        foreach ((array) $keys as $key) {
+            $results[] = $array[$key];
+        }
+
+        return $results;
+    }
+}
+
+if (!function_exists('array_sort_recursive')) {
+    /**
+     * Recursively sort an array by keys
+     *
+     * @param array $array The array to sort
+     * @param int $options Sort options (SORT_REGULAR, etc.)
+     * @param bool $descending Sort descending
+     * @return array
+     */
+    function array_sort_recursive(array $array, int $options = SORT_REGULAR, bool $descending = false): array
+    {
+        foreach ($array as &$value) {
+            if (is_array($value)) {
+                $value = array_sort_recursive($value, $options, $descending);
+            }
+        }
+
+        if (array_is_list($array)) {
+            $descending ? rsort($array, $options) : sort($array, $options);
+        } else {
+            $descending ? krsort($array, $options) : ksort($array, $options);
+        }
+
+        return $array;
+    }
+}
+
+if (!function_exists('array_is_list')) {
+    /**
+     * Check if an array is a list (sequential numeric keys)
+     *
+     * @param array $array The array to check
+     * @return bool
+     */
+    function array_is_list(array $array): bool
+    {
+        if (function_exists('array_is_list')) {
+            return \array_is_list($array);
+        }
+
+        if ($array === []) {
+            return true;
+        }
+
+        return array_keys($array) === range(0, count($array) - 1);
+    }
+}
+
+// ============================================
+// String Helper Functions (Str Facade)
+// ============================================
+
+if (!function_exists('str')) {
+    /**
+     * Get the Str utility class or call a method on it
+     *
+     * @param string|null $value If provided, returns Str::of($value) equivalent
+     * @return \Core\Support\Str|string
+     */
+    function str(?string $value = null): \Core\Support\Str|string
+    {
+        if ($value === null) {
+            return new \Core\Support\Str();
+        }
+
+        return $value;
+    }
+}

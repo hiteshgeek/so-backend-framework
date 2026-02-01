@@ -41,8 +41,9 @@ The SO Backend Framework combines a lightweight, modern PHP framework with **5 p
 - Singleton and factory bindings
 - Automatic dependency resolution via reflection
 - Constructor and method injection
+- **Contextual bindings** - Different implementations per consumer class
 
-**Location**: `core/Container/Container.php`
+**Location**: `core/Container/Container.php`, `core/Container/ContextualBindingBuilder.php`
 
 ```php
 app()->singleton(UserService::class, function($app) {
@@ -50,6 +51,15 @@ app()->singleton(UserService::class, function($app) {
 });
 
 $service = app(UserService::class);
+
+// Contextual bindings - different implementations per consumer
+app()->when(ReportGenerator::class)
+    ->needs(LoggerInterface::class)
+    ->give(FileLogger::class);
+
+app()->when(ApiController::class)
+    ->needs(LoggerInterface::class)
+    ->give(JsonLogger::class);
 ```
 
 ---
@@ -61,8 +71,12 @@ $service = app(UserService::class);
 - Model with Active Record pattern (fillable/guarded)
 - Transaction support for data integrity
 - Multiple database connection support
+- **Subquery support** - whereInSub, whereExists, selectSub
+- **Union queries** - union, unionAll
+- **Chunking** - Memory-efficient processing of large datasets
+- **Eager loading** - Prevent N+1 queries with with()
 
-**Location**: `core/Database/`, `core/Model/Model.php`
+**Location**: `core/Database/`, `core/Model/Model.php`, `core/Model/ModelQueryBuilder.php`
 
 ```php
 DB::transaction(function() {
@@ -74,6 +88,14 @@ $users = DB::table('users')
     ->where('status', 'active')
     ->orderBy('created_at', 'DESC')
     ->get();
+
+// Subqueries
+$usersWithOrders = DB::table('users')
+    ->whereInSub('id', fn($q) => $q->select('user_id')->from('orders'))
+    ->get();
+
+// Eager loading (prevents N+1 queries)
+$posts = Post::with('author', 'comments')->get();
 ```
 
 ---
@@ -631,5 +653,22 @@ The SO Backend Framework now includes **5 production-ready Laravel framework tab
 ---
 
 **Version**: {{APP_VERSION}}
-**Last Updated**: 2026-01-29
+**Last Updated**: 2026-02-01
 **Status**: Production Ready [x]
+
+---
+
+## Recent Updates (2026-02-01)
+
+### New Features Added
+
+- **Str Utility Class** - 40+ string manipulation methods (`core/Support/Str.php`)
+- **Array Helpers** - 18 array helper functions with dot notation support
+- **Advanced Validation** - 35+ new rules (file, regex, uuid, json, conditional)
+- **QueryBuilder Subqueries** - whereInSub, whereExists, selectSub, unions
+- **Model Eager Loading** - with(), load(), timestamps support
+- **Container Contextual Bindings** - when()->needs()->give() pattern
+- **Middleware Terminate** - Post-response processing phase
+- **Session Hijacking Detection** - IP/User-Agent validation
+- **2FA TOTP Authentication** - Google Authenticator compatible
+- **Refresh Token Manager** - Stateless API token rotation

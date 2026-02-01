@@ -20,6 +20,8 @@ class QueryBuilder
     protected array $havings = [];
     protected array $havingBindings = [];
     protected bool $distinct = false;
+    protected array $unions = [];
+    protected array $unionBindings = [];
 
     public function __construct(Connection $connection)
     {
@@ -35,6 +37,51 @@ class QueryBuilder
     public function select(...$columns): self
     {
         $this->columns = array_map(fn($col) => $this->sanitizeColumn($col), $columns);
+        return $this;
+    }
+
+    /**
+     * Add a raw expression to the SELECT clause
+     *
+     * Usage: selectRaw('COUNT(*) as total, SUM(amount) as sum')
+     */
+    public function selectRaw(string $expression, array $bindings = []): self
+    {
+        $this->columns[] = $expression;
+        $this->bindings = array_merge($this->bindings, $bindings);
+        return $this;
+    }
+
+    /**
+     * Add a subquery as a SELECT column
+     *
+     * Usage: selectSub(fn($q) => $q->select('COUNT(*)')->from('orders')->whereRaw('orders.user_id = users.id'), 'order_count')
+     */
+    public function selectSub(\Closure $callback, string $as): self
+    {
+        $subQuery = new static($this->connection);
+        $callback($subQuery);
+
+        $this->columns[] = '(' . $subQuery->toSql() . ') AS ' . $this->sanitizeColumn($as);
+        $this->bindings = array_merge($this->bindings, $subQuery->getBindings());
+
+        return $this;
+    }
+
+    /**
+     * Add columns to existing select
+     */
+    public function addSelect(...$columns): self
+    {
+        // If columns was just ['*'], replace it
+        if ($this->columns === ['*']) {
+            $this->columns = [];
+        }
+
+        foreach ($columns as $column) {
+            $this->columns[] = $this->sanitizeColumn($column);
+        }
+
         return $this;
     }
 
@@ -118,6 +165,143 @@ class QueryBuilder
         return $this;
     }
 
+    /**
+     * Add a WHERE IN subquery clause
+     *
+     * Usage: whereInSub('id', fn($q) => $q->select('user_id')->from('orders'))
+     */
+    public function whereInSub(string $column, \Closure $callback, string $boolean = 'and', bool $not = false): self
+    {
+        $column = $this->sanitizeColumn($column);
+
+        $subQuery = new static($this->connection);
+        $callback($subQuery);
+
+        $operator = $not ? 'NOT IN' : 'IN';
+        $sql = "{$column} {$operator} (" . $subQuery->toSql() . ")";
+
+        $this->wheres[] = ['type' => 'raw', 'sql' => $sql, 'boolean' => $boolean];
+        $this->bindings = array_merge($this->bindings, $subQuery->getBindings());
+
+        return $this;
+    }
+
+    /**
+     * Add a WHERE NOT IN subquery clause
+     */
+    public function whereNotInSub(string $column, \Closure $callback, string $boolean = 'and'): self
+    {
+        return $this->whereInSub($column, $callback, $boolean, true);
+    }
+
+    /**
+     * Add a WHERE EXISTS clause
+     *
+     * Usage: whereExists(fn($q) => $q->select('1')->from('orders')->whereRaw('orders.user_id = users.id'))
+     */
+    public function whereExists(\Closure $callback, string $boolean = 'and', bool $not = false): self
+    {
+        $subQuery = new static($this->connection);
+        $callback($subQuery);
+
+        $operator = $not ? 'NOT EXISTS' : 'EXISTS';
+        $sql = "{$operator} (" . $subQuery->toSql() . ")";
+
+        $this->wheres[] = ['type' => 'raw', 'sql' => $sql, 'boolean' => $boolean];
+        $this->bindings = array_merge($this->bindings, $subQuery->getBindings());
+
+        return $this;
+    }
+
+    /**
+     * Add a WHERE NOT EXISTS clause
+     */
+    public function whereNotExists(\Closure $callback, string $boolean = 'and'): self
+    {
+        return $this->whereExists($callback, $boolean, true);
+    }
+
+    /**
+     * Add an OR WHERE EXISTS clause
+     */
+    public function orWhereExists(\Closure $callback): self
+    {
+        return $this->whereExists($callback, 'or');
+    }
+
+    /**
+     * Add an OR WHERE NOT EXISTS clause
+     */
+    public function orWhereNotExists(\Closure $callback): self
+    {
+        return $this->whereExists($callback, 'or', true);
+    }
+
+    /**
+     * Add a WHERE column subquery (column = (subquery))
+     *
+     * Usage: whereColumn('price', '=', fn($q) => $q->selectRaw('AVG(price)')->from('products'))
+     */
+    public function whereSub(string $column, string $operator, \Closure $callback, string $boolean = 'and'): self
+    {
+        $column = $this->sanitizeColumn($column);
+        $this->validateOperator($operator);
+
+        $subQuery = new static($this->connection);
+        $callback($subQuery);
+
+        $sql = "{$column} {$operator} (" . $subQuery->toSql() . ")";
+
+        $this->wheres[] = ['type' => 'raw', 'sql' => $sql, 'boolean' => $boolean];
+        $this->bindings = array_merge($this->bindings, $subQuery->getBindings());
+
+        return $this;
+    }
+
+    /**
+     * Add a LIKE where clause
+     */
+    public function whereLike(string $column, string $value, string $boolean = 'and'): self
+    {
+        return $this->where($column, 'LIKE', $value);
+    }
+
+    /**
+     * Add an OR LIKE where clause
+     */
+    public function orWhereLike(string $column, string $value): self
+    {
+        return $this->orWhere($column, 'LIKE', $value);
+    }
+
+    /**
+     * Add a conditional where clause
+     *
+     * Usage: when($hasFilter, fn($q) => $q->where('status', '=', $filter))
+     */
+    public function when(bool $condition, \Closure $callback, ?\Closure $default = null): self
+    {
+        if ($condition) {
+            $callback($this);
+        } elseif ($default !== null) {
+            $default($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Add a where clause only if value is not null
+     */
+    public function whereIfNotNull(string $column, string $operator, $value): self
+    {
+        if ($value !== null) {
+            $this->where($column, $operator, $value);
+        }
+
+        return $this;
+    }
+
     public function join(string $table, string $first, string $operator, string $second, string $type = 'inner'): self
     {
         $this->sanitizeColumn($table);
@@ -186,13 +370,13 @@ class QueryBuilder
     public function get(): array
     {
         $sql = $this->buildSelectSql();
-        return $this->connection->fetchAll($sql, $this->bindings);
+        return $this->connection->fetchAll($sql, $this->getAllBindings());
     }
 
     public function first(): ?array
     {
         $sql = $this->buildSelectSql();
-        return $this->connection->fetchOne($sql, $this->bindings);
+        return $this->connection->fetchOne($sql, $this->getAllBindings());
     }
 
     public function find(int $id, string $column = 'id'): ?array
@@ -339,6 +523,372 @@ class QueryBuilder
         ];
     }
 
+    /**
+     * Process large datasets in chunks to avoid memory issues
+     *
+     * Usage: chunk(100, function($rows) { foreach ($rows as $row) { ... } })
+     *
+     * @param int $count Number of records per chunk
+     * @param callable $callback Function to process each chunk, return false to stop
+     * @return bool True if all chunks processed, false if stopped early
+     */
+    public function chunk(int $count, callable $callback): bool
+    {
+        $page = 1;
+
+        do {
+            // Clone state for each iteration
+            $clonedQuery = clone $this;
+            $clonedQuery->limit($count)->offset(($page - 1) * $count);
+
+            $results = $clonedQuery->get();
+
+            if (empty($results)) {
+                break;
+            }
+
+            // Call the callback with the chunk of results
+            if ($callback($results, $page) === false) {
+                return false;
+            }
+
+            $page++;
+
+            // Continue while we have full chunks
+        } while (count($results) === $count);
+
+        return true;
+    }
+
+    /**
+     * Process records one by one using a generator
+     *
+     * Usage: foreach ($query->cursor() as $row) { ... }
+     *
+     * @param int $chunkSize Internal chunk size for fetching
+     * @return \Generator
+     */
+    public function cursor(int $chunkSize = 100): \Generator
+    {
+        $page = 1;
+
+        do {
+            $clonedQuery = clone $this;
+            $clonedQuery->limit($chunkSize)->offset(($page - 1) * $chunkSize);
+
+            $results = $clonedQuery->get();
+
+            foreach ($results as $result) {
+                yield $result;
+            }
+
+            $page++;
+        } while (count($results) === $chunkSize);
+    }
+
+    /**
+     * Get the values of a single column
+     *
+     * Usage: pluck('name') returns ['John', 'Jane', ...]
+     * Usage: pluck('name', 'id') returns [1 => 'John', 2 => 'Jane', ...]
+     */
+    public function pluck(string $column, ?string $key = null): array
+    {
+        $results = $this->get();
+
+        $values = [];
+        foreach ($results as $row) {
+            if ($key !== null && isset($row[$key])) {
+                $values[$row[$key]] = $row[$column] ?? null;
+            } else {
+                $values[] = $row[$column] ?? null;
+            }
+        }
+
+        return $values;
+    }
+
+    /**
+     * Get the value of a single column from the first row
+     */
+    public function value(string $column)
+    {
+        $result = $this->first();
+        return $result[$column] ?? null;
+    }
+
+    /**
+     * Add a UNION clause
+     */
+    public function union(self $query, bool $all = false): self
+    {
+        $type = $all ? 'UNION ALL' : 'UNION';
+
+        $this->unions[] = [
+            'type' => $type,
+            'query' => $query,
+        ];
+
+        $this->unionBindings = array_merge($this->unionBindings, $query->getBindings());
+
+        return $this;
+    }
+
+    /**
+     * Add a UNION ALL clause
+     */
+    public function unionAll(self $query): self
+    {
+        return $this->union($query, true);
+    }
+
+    /**
+     * Order by latest (created_at DESC)
+     */
+    public function latest(string $column = 'created_at'): self
+    {
+        return $this->orderBy($column, 'DESC');
+    }
+
+    /**
+     * Order by oldest (created_at ASC)
+     */
+    public function oldest(string $column = 'created_at'): self
+    {
+        return $this->orderBy($column, 'ASC');
+    }
+
+    /**
+     * Add random ordering
+     */
+    public function inRandomOrder(): self
+    {
+        $this->orders[] = ['column' => 'RAND()', 'direction' => ''];
+        return $this;
+    }
+
+    /**
+     * Take N records (alias for limit)
+     */
+    public function take(int $count): self
+    {
+        return $this->limit($count);
+    }
+
+    /**
+     * Skip N records (alias for offset)
+     */
+    public function skip(int $count): self
+    {
+        return $this->offset($count);
+    }
+
+    /**
+     * For pagination - get current page results with total count
+     */
+    public function forPage(int $page, int $perPage = 15): self
+    {
+        return $this->skip(($page - 1) * $perPage)->take($perPage);
+    }
+
+    /**
+     * Get generated SQL query
+     */
+    public function toSql(): string
+    {
+        return $this->buildSelectSql();
+    }
+
+    /**
+     * Get query bindings
+     */
+    public function getBindings(): array
+    {
+        return $this->bindings;
+    }
+
+    /**
+     * Get all bindings including union bindings
+     */
+    public function getAllBindings(): array
+    {
+        return array_merge($this->bindings, $this->unionBindings);
+    }
+
+    /**
+     * Dump the query and bindings for debugging
+     */
+    public function dd(): void
+    {
+        echo "SQL: " . $this->toSql() . PHP_EOL;
+        echo "Bindings: " . print_r($this->getAllBindings(), true);
+        exit;
+    }
+
+    /**
+     * Dump the query and bindings for debugging (without exiting)
+     */
+    public function dump(): self
+    {
+        echo "SQL: " . $this->toSql() . PHP_EOL;
+        echo "Bindings: " . print_r($this->getAllBindings(), true);
+        return $this;
+    }
+
+    /**
+     * Create a new query builder with same connection
+     */
+    public function newQuery(): self
+    {
+        return new static($this->connection);
+    }
+
+    /**
+     * Clone the query builder
+     */
+    public function clone(): self
+    {
+        return clone $this;
+    }
+
+    /**
+     * Set the table using from() (alias for table())
+     */
+    public function from(string $table): self
+    {
+        return $this->table($table);
+    }
+
+    /**
+     * Increment a column value
+     */
+    public function increment(string $column, int $amount = 1, array $extra = []): bool
+    {
+        $column = $this->sanitizeColumn($column);
+        $data = array_merge([$column => new RawExpression("{$column} + {$amount}")], $extra);
+
+        return $this->updateRaw($data);
+    }
+
+    /**
+     * Decrement a column value
+     */
+    public function decrement(string $column, int $amount = 1, array $extra = []): bool
+    {
+        $column = $this->sanitizeColumn($column);
+        $data = array_merge([$column => new RawExpression("{$column} - {$amount}")], $extra);
+
+        return $this->updateRaw($data);
+    }
+
+    /**
+     * Update with raw expressions
+     */
+    protected function updateRaw(array $data): bool
+    {
+        $sets = [];
+        $bindings = [];
+
+        foreach ($data as $column => $value) {
+            $column = $this->sanitizeColumn($column);
+
+            if ($value instanceof RawExpression) {
+                $sets[] = "{$column} = {$value->getValue()}";
+            } else {
+                $sets[] = "{$column} = ?";
+                $bindings[] = $value;
+            }
+        }
+
+        $sets = implode(', ', $sets);
+        $sql = "UPDATE {$this->table} SET {$sets}";
+
+        if (!empty($this->wheres)) {
+            $sql .= ' WHERE ' . $this->buildWheres();
+            $bindings = array_merge($bindings, $this->bindings);
+        }
+
+        return $this->connection->execute($sql, $bindings);
+    }
+
+    /**
+     * Insert and get the last insert ID
+     */
+    public function insertGetId(array $data, string $sequence = 'id'): int|string|false
+    {
+        $sanitizedKeys = array_map(fn($col) => $this->sanitizeColumn($col), array_keys($data));
+        $columns = implode(', ', $sanitizedKeys);
+        $placeholders = implode(', ', array_fill(0, count($data), '?'));
+
+        $sql = "INSERT INTO {$this->table} ({$columns}) VALUES ({$placeholders})";
+
+        if ($this->connection->execute($sql, array_values($data))) {
+            return $this->connection->lastInsertId();
+        }
+
+        return false;
+    }
+
+    /**
+     * Insert multiple rows at once
+     */
+    public function insertBatch(array $rows): bool
+    {
+        if (empty($rows)) {
+            return true;
+        }
+
+        // Get columns from first row
+        $columns = array_keys($rows[0]);
+        $sanitizedColumns = array_map(fn($col) => $this->sanitizeColumn($col), $columns);
+        $columnsSql = implode(', ', $sanitizedColumns);
+
+        // Build placeholders for each row
+        $rowPlaceholders = '(' . implode(', ', array_fill(0, count($columns), '?')) . ')';
+        $allPlaceholders = implode(', ', array_fill(0, count($rows), $rowPlaceholders));
+
+        // Flatten values
+        $bindings = [];
+        foreach ($rows as $row) {
+            foreach ($columns as $col) {
+                $bindings[] = $row[$col] ?? null;
+            }
+        }
+
+        $sql = "INSERT INTO {$this->table} ({$columnsSql}) VALUES {$allPlaceholders}";
+
+        return $this->connection->execute($sql, $bindings);
+    }
+
+    /**
+     * Insert or update (upsert) - MySQL specific
+     */
+    public function upsert(array $data, array $uniqueColumns, array $updateColumns): bool
+    {
+        $sanitizedKeys = array_map(fn($col) => $this->sanitizeColumn($col), array_keys($data));
+        $columns = implode(', ', $sanitizedKeys);
+        $placeholders = implode(', ', array_fill(0, count($data), '?'));
+
+        $updates = [];
+        foreach ($updateColumns as $col) {
+            $col = $this->sanitizeColumn($col);
+            $updates[] = "{$col} = VALUES({$col})";
+        }
+        $updatesSql = implode(', ', $updates);
+
+        $sql = "INSERT INTO {$this->table} ({$columns}) VALUES ({$placeholders}) ON DUPLICATE KEY UPDATE {$updatesSql}";
+
+        return $this->connection->execute($sql, array_values($data));
+    }
+
+    /**
+     * Truncate the table
+     */
+    public function truncate(): bool
+    {
+        return $this->connection->execute("TRUNCATE TABLE {$this->table}");
+    }
+
     public function insert(array $data): bool
     {
         $sanitizedKeys = array_map(fn($col) => $this->sanitizeColumn($col), array_keys($data));
@@ -404,6 +954,13 @@ class QueryBuilder
         if (!empty($this->havings)) {
             $sql .= ' HAVING ' . $this->buildHavings();
             $this->bindings = array_merge($this->bindings, $this->havingBindings);
+        }
+
+        // Handle unions
+        if (!empty($this->unions)) {
+            foreach ($this->unions as $union) {
+                $sql .= " {$union['type']} " . $union['query']->toSql();
+            }
         }
 
         if (!empty($this->orders)) {
@@ -480,7 +1037,12 @@ class QueryBuilder
         $sql = [];
 
         foreach ($this->orders as $order) {
-            $sql[] = "{$order['column']} {$order['direction']}";
+            // Handle raw expressions like RAND()
+            if ($order['direction'] === '') {
+                $sql[] = $order['column'];
+            } else {
+                $sql[] = "{$order['column']} {$order['direction']}";
+            }
         }
 
         return implode(', ', $sql);

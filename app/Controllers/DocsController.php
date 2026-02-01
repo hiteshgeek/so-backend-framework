@@ -154,6 +154,10 @@ class DocsController
 
             // Internationalization
             'localization' => 'LOCALIZATION.md',
+
+            // Phase 6 Core Enhancements
+            'core-enhancements' => 'CORE-ENHANCEMENTS.md',
+            'dev-core-enhancements' => 'DEV-CORE-ENHANCEMENTS.md',
         ];
 
         if (!isset($allowedFiles[$file])) {

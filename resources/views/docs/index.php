@@ -85,13 +85,21 @@ function renderSection($icon, $title, $cards, $gridClass = 'docs-grid') {
     </div>
 
     <div class="docs-container">
-        <div class="docs-tabs">
+        <div class="docs-tabs" id="docs-tabs">
             <button class="docs-tab-button active" data-tab="docs-panel" onclick="switchDocsTab(this)">
                 <span class="mdi mdi-book-open-page-variant"></span> Docs
             </button>
             <button class="docs-tab-button" data-tab="dev-panel" onclick="switchDocsTab(this)">
                 <span class="mdi mdi-code-braces"></span> Development
             </button>
+            <div class="docs-search-wrapper">
+                <div class="docs-search-box">
+                    <span class="mdi mdi-magnify"></span>
+                    <input type="text" id="docs-search-input" placeholder="Search documentation..." autocomplete="off">
+                    <span class="docs-search-hint"><kbd>/</kbd></span>
+                </div>
+                <div class="docs-search-results" id="docs-search-results"></div>
+            </div>
         </div>
 
         <!-- ==================== DOCS TAB ==================== -->
@@ -109,6 +117,7 @@ function renderSection($icon, $title, $cards, $gridClass = 'docs-grid') {
             <?= renderSection('cube-outline', 'Core Architecture', [
                 renderCard('/docs/request-flow', 'transit-connection-variant', 'Request Flow Diagram', 'Visual walkthrough of the HTTP request lifecycle.', 'new'),
                 renderCard('/docs/framework-features', 'office-building', 'Framework Features', 'Overview of all systems and capabilities.', 'default'),
+                renderCard('/docs/core-enhancements', 'rocket-launch-outline', 'Core Enhancements', 'Phase 6 features: Str class, validation, subqueries, eager loading, 2FA, and more.', ['new', 'production']),
                 renderCard('/docs/view-templates', 'image-multiple', 'View Templates', 'PHP native view templating and layouts.', 'default'),
                 renderCard('/docs/asset-management', 'package-variant-closed', 'Asset Management', 'CSS/JS loading, cache busting, CDN support.', 'default'),
                 renderCard('/docs/auth-system', 'shield-lock', 'Authentication System', 'Session auth, JWT, remember me.', ['default', 'security', 'production']),
@@ -240,6 +249,7 @@ function renderSection($icon, $title, $cards, $gridClass = 'docs-grid') {
             ]) ?>
 
             <?= renderSection('hammer-wrench', 'Utilities & Reference', [
+                renderCard('/docs/dev-core-enhancements', 'code-braces', 'Core Enhancements Guide', 'Implementation guide for Phase 6: Str class, array helpers, validation, subqueries, eager loading, 2FA.', ['new', 'guide']),
                 renderCard('/docs/dev-helpers', 'function-variant', 'Helper Functions', 'Complete reference of available helper functions and utilities.', 'guide'),
                 renderCard('/docs/dev-localization', 'earth', 'Localization Implementation', 'Step-by-step guide to implementing multi-language, multi-currency, and multi-timezone support.', ['guide', 'enterprise']),
                 renderCard('/docs/dev-locale-validation', 'check-circle', 'Locale Validation Rules', 'Country-specific validation: phone numbers, postal codes, and tax IDs for 40+ countries.', ['new', 'guide', 'enterprise']),
@@ -329,6 +339,263 @@ function renderSection($icon, $title, $cards, $gridClass = 'docs-grid') {
                     inline: 'nearest'
                 });
             }, 300);
+        }
+
+        // ===== STICKY TABS (below header) =====
+        var docsTabs = document.getElementById('docs-tabs');
+        var docsHeader = document.querySelector('.docs-header');
+
+        function updateHeaderHeight() {
+            if (docsHeader) {
+                var headerHeight = docsHeader.offsetHeight;
+                document.documentElement.style.setProperty('--header-height', headerHeight + 'px');
+            }
+        }
+
+        if (docsTabs && docsHeader) {
+            // Set initial header height
+            updateHeaderHeight();
+
+            // Update on resize
+            window.addEventListener('resize', updateHeaderHeight);
+
+            // Observe when tabs become stuck
+            var observer = new IntersectionObserver(function(entries) {
+                entries.forEach(function(entry) {
+                    if (!entry.isIntersecting) {
+                        docsTabs.classList.add('is-stuck');
+                    } else {
+                        docsTabs.classList.remove('is-stuck');
+                    }
+                });
+            }, { threshold: [1], rootMargin: '-' + (docsHeader.offsetHeight + 1) + 'px 0px 0px 0px' });
+
+            observer.observe(docsTabs);
+        }
+
+        // ===== DOCUMENTATION SEARCH =====
+        var searchInput = document.getElementById('docs-search-input');
+        var searchResults = document.getElementById('docs-search-results');
+        var searchIndex = [];
+
+        // Build search index from all doc cards
+        function buildSearchIndex() {
+            searchIndex = [];
+
+            document.querySelectorAll('.docs-tab-panel').forEach(function(panel) {
+                var tabId = panel.id;
+                var tabName = tabId === 'docs-panel' ? 'Docs' : 'Development';
+
+                panel.querySelectorAll('.docs-section').forEach(function(section) {
+                    var sectionTitle = section.querySelector('.docs-section-title');
+                    var sectionName = sectionTitle ? sectionTitle.textContent.trim() : '';
+
+                    section.querySelectorAll('.doc-card').forEach(function(card) {
+                        var title = card.querySelector('h3');
+                        var desc = card.querySelector('p');
+                        var icon = card.querySelector('h3 .mdi');
+
+                        searchIndex.push({
+                            url: card.getAttribute('href'),
+                            title: title ? title.textContent.trim() : '',
+                            description: desc ? desc.textContent.trim() : '',
+                            icon: icon ? icon.className.replace('mdi mdi-', '') : 'file-document',
+                            tab: tabName,
+                            tabId: tabId,
+                            section: sectionName
+                        });
+                    });
+                });
+            });
+        }
+
+        // Search function
+        function searchDocs(query) {
+            if (!query || query.length < 2) return [];
+
+            var lowerQuery = query.toLowerCase();
+            var results = [];
+
+            searchIndex.forEach(function(item) {
+                var titleMatch = item.title.toLowerCase().indexOf(lowerQuery) !== -1;
+                var descMatch = item.description.toLowerCase().indexOf(lowerQuery) !== -1;
+                var sectionMatch = item.section.toLowerCase().indexOf(lowerQuery) !== -1;
+
+                if (titleMatch || descMatch || sectionMatch) {
+                    // Calculate relevance score
+                    var score = 0;
+                    if (item.title.toLowerCase().indexOf(lowerQuery) === 0) score += 100;
+                    else if (titleMatch) score += 50;
+                    if (descMatch) score += 20;
+                    if (sectionMatch) score += 10;
+
+                    results.push({
+                        item: item,
+                        score: score
+                    });
+                }
+            });
+
+            // Sort by score descending
+            results.sort(function(a, b) { return b.score - a.score; });
+
+            return results.slice(0, 10).map(function(r) { return r.item; });
+        }
+
+        // Highlight matching text
+        function highlightText(text, query) {
+            if (!query) return text;
+            var regex = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return text.replace(regex, '<mark>$1</mark>');
+        }
+
+        // Render search results
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                searchResults.innerHTML =
+                    '<div class="docs-search-no-results">' +
+                    '<span class="mdi mdi-file-search-outline"></span>' +
+                    'No results found for "' + query + '"' +
+                    '</div>';
+                searchResults.classList.add('active');
+                return;
+            }
+
+            var html = '<div class="docs-search-results-header">' + results.length + ' result' + (results.length !== 1 ? 's' : '') + ' found</div>';
+
+            results.forEach(function(item) {
+                html +=
+                    '<a href="' + item.url + '" class="docs-search-result" data-tab="' + item.tabId + '">' +
+                    '<div class="docs-search-result-title">' +
+                    '<span class="mdi mdi-' + item.icon + '"></span>' +
+                    highlightText(item.title, query) +
+                    '</div>' +
+                    '<div class="docs-search-result-desc">' + highlightText(item.description, query) + '</div>' +
+                    '<div class="docs-search-result-meta">' +
+                    '<span class="docs-search-result-tab">' + item.tab + '</span>' +
+                    '<span class="docs-search-result-section">' + item.section + '</span>' +
+                    '</div>' +
+                    '</a>';
+            });
+
+            searchResults.innerHTML = html;
+            searchResults.classList.add('active');
+
+            // Add click handlers and keyboard support to results
+            searchResults.querySelectorAll('.docs-search-result').forEach(function(result, idx) {
+                result.setAttribute('tabindex', '0');
+                result.setAttribute('data-index', idx);
+
+                result.addEventListener('click', function(e) {
+                    var tabId = this.getAttribute('data-tab');
+                    var btn = document.querySelector('.docs-tab-button[data-tab="' + tabId + '"]');
+                    if (btn && !btn.classList.contains('active')) {
+                        switchDocsTab(btn);
+                    }
+                    trackCardVisit(this.getAttribute('href'));
+                });
+
+                // Keyboard navigation within results
+                result.addEventListener('keydown', function(e) {
+                    var items = searchResults.querySelectorAll('.docs-search-result');
+                    var currentIndex = parseInt(this.getAttribute('data-index'));
+
+                    if (e.key === 'ArrowDown') {
+                        e.preventDefault();
+                        var nextIndex = (currentIndex + 1) % items.length;
+                        items[nextIndex].focus();
+                    } else if (e.key === 'ArrowUp') {
+                        e.preventDefault();
+                        var prevIndex = currentIndex === 0 ? items.length - 1 : currentIndex - 1;
+                        items[prevIndex].focus();
+                    } else if (e.key === 'Enter') {
+                        e.preventDefault();
+                        this.click();
+                    } else if (e.key === 'Escape') {
+                        e.preventDefault();
+                        hideResults();
+                        searchInput.focus();
+                    }
+                });
+            });
+
+            // Set initial focus indicator
+            if (searchResults.querySelector('.docs-search-result')) {
+                searchResults.querySelector('.docs-search-result').classList.add('keyboard-focus');
+            }
+        }
+
+        // Hide results
+        function hideResults() {
+            searchResults.classList.remove('active');
+        }
+
+        // Event listeners
+        if (searchInput) {
+            buildSearchIndex();
+
+            var debounceTimer;
+            searchInput.addEventListener('input', function() {
+                clearTimeout(debounceTimer);
+                var query = this.value.trim();
+
+                if (query.length < 2) {
+                    hideResults();
+                    return;
+                }
+
+                debounceTimer = setTimeout(function() {
+                    var results = searchDocs(query);
+                    renderResults(results, query);
+                }, 150);
+            });
+
+            // Hide on click outside
+            document.addEventListener('click', function(e) {
+                if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+                    hideResults();
+                }
+            });
+
+            // Show results on focus if there's a query
+            searchInput.addEventListener('focus', function() {
+                if (this.value.trim().length >= 2) {
+                    var results = searchDocs(this.value.trim());
+                    renderResults(results, this.value.trim());
+                }
+            });
+
+            // Keyboard shortcuts
+            document.addEventListener('keydown', function(e) {
+                // "/" to focus search
+                if (e.key === '/' && document.activeElement !== searchInput) {
+                    e.preventDefault();
+                    searchInput.focus();
+                }
+
+                // Escape to close results and blur
+                if (e.key === 'Escape' && document.activeElement === searchInput) {
+                    hideResults();
+                    searchInput.blur();
+                }
+            });
+
+            // Arrow navigation from search input to results
+            searchInput.addEventListener('keydown', function(e) {
+                var items = searchResults.querySelectorAll('.docs-search-result');
+                if (items.length === 0) return;
+
+                if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    items[0].focus();
+                } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    items[items.length - 1].focus();
+                } else if (e.key === 'Enter' && items.length > 0) {
+                    e.preventDefault();
+                    items[0].click();
+                }
+            });
         }
     })();
     </script>

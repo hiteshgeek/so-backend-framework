@@ -61,6 +61,36 @@ abstract class Model
     protected static array $observers = [];
     protected static array $booted = [];
 
+    /**
+     * Indicates if the model should be timestamped.
+     */
+    protected bool $timestamps = true;
+
+    /**
+     * The name of the "created at" column.
+     */
+    const CREATED_AT = 'created_at';
+
+    /**
+     * The name of the "updated at" column.
+     */
+    const UPDATED_AT = 'updated_at';
+
+    /**
+     * The storage format of the model's date columns.
+     */
+    protected string $dateFormat = 'Y-m-d H:i:s';
+
+    /**
+     * Relations to eager load on every query.
+     */
+    protected array $with = [];
+
+    /**
+     * Relations to eager load for current query (instance level).
+     */
+    protected array $eagerLoad = [];
+
     public function __construct(array $attributes = [])
     {
         $this->bootIfNotBooted();
@@ -219,7 +249,100 @@ abstract class Model
     public static function all(): array
     {
         $results = static::query()->get();
-        return array_map(fn($row) => new static($row), $results);
+        return static::hydrateModels($results);
+    }
+
+    /**
+     * Eager load relations for a new query
+     *
+     * Usage: User::with('posts', 'profile')->get()
+     * Usage: User::with(['posts', 'profile'])->get()
+     * Usage: User::with(['posts' => fn($q) => $q->where('active', '=', 1)])->get()
+     *
+     * @param array|string $relations Relations to eager load
+     * @return ModelQueryBuilder
+     */
+    public static function with(array|string $relations): ModelQueryBuilder
+    {
+        $relations = is_array($relations) ? $relations : func_get_args();
+
+        $builder = new ModelQueryBuilder(static::class);
+        return $builder->with($relations);
+    }
+
+    /**
+     * Load relations on existing model instance
+     *
+     * Usage: $user->load('posts', 'profile')
+     * Usage: $user->load(['posts', 'profile'])
+     *
+     * @param array|string $relations Relations to load
+     * @return self
+     */
+    public function load(array|string $relations): self
+    {
+        $relations = is_array($relations) ? $relations : func_get_args();
+
+        foreach ($relations as $key => $relation) {
+            // Handle constraint closures
+            $relationName = is_string($key) ? $key : $relation;
+            $constraint = is_callable($relation) ? $relation : null;
+
+            if (method_exists($this, $relationName)) {
+                $relationInstance = $this->$relationName();
+
+                if ($relationInstance instanceof Relation) {
+                    if ($constraint) {
+                        $constraint($relationInstance->getQuery());
+                    }
+                    $this->relationsCache[$relationName] = $relationInstance->get();
+                }
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Load relation only if not already loaded
+     *
+     * @param array|string $relations
+     * @return self
+     */
+    public function loadMissing(array|string $relations): self
+    {
+        $relations = is_array($relations) ? $relations : func_get_args();
+
+        $toLoad = [];
+        foreach ($relations as $key => $relation) {
+            $relationName = is_string($key) ? $key : $relation;
+
+            if (!$this->relationLoaded($relationName)) {
+                $toLoad[$key] = $relation;
+            }
+        }
+
+        if (!empty($toLoad)) {
+            $this->load($toLoad);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Hydrate raw database results into model instances
+     *
+     * @param array $results Raw database results
+     * @return array Array of model instances
+     */
+    protected static function hydrateModels(array $results): array
+    {
+        return array_map(function ($row) {
+            $instance = new static($row);
+            $instance->exists = true;
+            $instance->original = $row;
+            return $instance;
+        }, $results);
     }
 
     public static function find(int $id): ?static
@@ -259,6 +382,14 @@ abstract class Model
 
     protected function performInsert(): bool
     {
+        // Update timestamps
+        if ($this->timestamps) {
+            $this->updateTimestamps();
+        }
+
+        // Fire creating event
+        $this->fireModelEvent('creating');
+
         // Filter out null values before insert (let database use defaults)
         $attributes = array_filter($this->attributes, fn($value) => $value !== null);
 
@@ -281,6 +412,14 @@ abstract class Model
 
     protected function performUpdate(): bool
     {
+        // Update timestamps
+        if ($this->timestamps) {
+            $this->freshTimestamp();
+        }
+
+        // Fire updating event
+        $this->fireModelEvent('updating');
+
         $id = $this->getAttribute(static::$primaryKey);
 
         $result = static::query()
@@ -294,6 +433,94 @@ abstract class Model
         }
 
         return $result;
+    }
+
+    /**
+     * Update timestamps on create
+     */
+    protected function updateTimestamps(): void
+    {
+        $time = $this->freshTimestampString();
+
+        if (!$this->exists) {
+            $this->setAttribute(static::CREATED_AT, $time);
+        }
+
+        $this->setAttribute(static::UPDATED_AT, $time);
+    }
+
+    /**
+     * Update only the updated_at timestamp
+     */
+    protected function freshTimestamp(): void
+    {
+        $this->setAttribute(static::UPDATED_AT, $this->freshTimestampString());
+    }
+
+    /**
+     * Get a fresh timestamp string
+     */
+    public function freshTimestampString(): string
+    {
+        return date($this->dateFormat);
+    }
+
+    /**
+     * Touch the model's updated_at timestamp
+     *
+     * @return bool
+     */
+    public function touch(): bool
+    {
+        if (!$this->exists) {
+            return false;
+        }
+
+        $this->freshTimestamp();
+        return $this->save();
+    }
+
+    /**
+     * Update the model without touching timestamps
+     *
+     * @param array $attributes
+     * @return bool
+     */
+    public function updateQuietly(array $attributes = []): bool
+    {
+        $originalTimestamps = $this->timestamps;
+        $this->timestamps = false;
+
+        $this->fill($attributes);
+        $result = $this->save();
+
+        $this->timestamps = $originalTimestamps;
+
+        return $result;
+    }
+
+    /**
+     * Check if timestamps are enabled
+     */
+    public function usesTimestamps(): bool
+    {
+        return $this->timestamps;
+    }
+
+    /**
+     * Get the created at column name
+     */
+    public function getCreatedAtColumn(): string
+    {
+        return static::CREATED_AT;
+    }
+
+    /**
+     * Get the updated at column name
+     */
+    public function getUpdatedAtColumn(): string
+    {
+        return static::UPDATED_AT;
     }
 
     public function delete(): bool

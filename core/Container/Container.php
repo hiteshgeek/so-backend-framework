@@ -37,6 +37,22 @@ class Container
     protected array $aliases = [];
 
     /**
+     * Contextual bindings
+     *
+     * Structure: [concrete => [abstract => implementation]]
+     *
+     * @var array
+     */
+    protected array $contextual = [];
+
+    /**
+     * The stack of concrete classes being built (for tracking context)
+     *
+     * @var array
+     */
+    protected array $buildStack = [];
+
+    /**
      * Bind a service to the container
      *
      * @param string $abstract
@@ -96,6 +112,57 @@ class Container
     public function alias(string $abstract, string $alias): void
     {
         $this->aliases[$alias] = $abstract;
+    }
+
+    /**
+     * Define a contextual binding
+     *
+     * Usage:
+     *   $container->when(ReportGenerator::class)
+     *       ->needs(LoggerInterface::class)
+     *       ->give(FileLogger::class);
+     *
+     * @param string|array $concrete The class(es) that need the contextual binding
+     * @return ContextualBindingBuilder
+     */
+    public function when(string|array $concrete): ContextualBindingBuilder
+    {
+        $concretes = is_array($concrete) ? $concrete : [$concrete];
+
+        return new ContextualBindingBuilder($this, $concretes);
+    }
+
+    /**
+     * Add a contextual binding to the container
+     *
+     * @param string $concrete The class receiving the binding
+     * @param string $abstract The abstract type being resolved
+     * @param Closure|string $implementation The implementation to use
+     * @return void
+     */
+    public function addContextualBinding(string $concrete, string $abstract, Closure|string $implementation): void
+    {
+        $this->contextual[$concrete][$this->getAlias($abstract)] = $implementation;
+    }
+
+    /**
+     * Get contextual concrete binding for an abstract
+     *
+     * @param string $abstract
+     * @return Closure|string|null
+     */
+    protected function getContextualConcrete(string $abstract): Closure|string|null
+    {
+        // Check if there's a contextual binding for the current build context
+        if (!empty($this->buildStack)) {
+            $currentBuild = end($this->buildStack);
+
+            if (isset($this->contextual[$currentBuild][$abstract])) {
+                return $this->contextual[$currentBuild][$abstract];
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -187,14 +254,22 @@ class Container
             return new $concrete();
         }
 
-        // Get constructor parameters
-        $dependencies = $constructor->getParameters();
+        // Push onto build stack for contextual binding resolution
+        $this->buildStack[] = $concrete;
 
-        // Resolve dependencies
-        $instances = $this->resolveDependencies($dependencies, $parameters);
+        try {
+            // Get constructor parameters
+            $dependencies = $constructor->getParameters();
 
-        // Create instance
-        return $reflector->newInstanceArgs($instances);
+            // Resolve dependencies
+            $instances = $this->resolveDependencies($dependencies, $parameters);
+
+            // Create instance
+            return $reflector->newInstanceArgs($instances);
+        } finally {
+            // Always pop from build stack
+            array_pop($this->buildStack);
+        }
     }
 
     /**
@@ -232,8 +307,22 @@ class Container
                 continue;
             }
 
-            // Resolve class dependency
-            $results[] = $this->make($type->getName());
+            // Check for contextual binding first
+            $typeName = $type->getName();
+            $contextualConcrete = $this->getContextualConcrete($typeName);
+
+            if ($contextualConcrete !== null) {
+                // Resolve using contextual binding
+                if ($contextualConcrete instanceof Closure) {
+                    $results[] = $contextualConcrete($this);
+                } else {
+                    $results[] = $this->make($contextualConcrete);
+                }
+                continue;
+            }
+
+            // Resolve class dependency normally
+            $results[] = $this->make($typeName);
         }
 
         return $results;
@@ -295,5 +384,45 @@ class Container
         $this->bindings = [];
         $this->instances = [];
         $this->aliases = [];
+        $this->contextual = [];
+        $this->buildStack = [];
+    }
+
+    /**
+     * Get all contextual bindings
+     *
+     * @return array
+     */
+    public function getContextualBindings(): array
+    {
+        return $this->contextual;
+    }
+
+    /**
+     * Check if a contextual binding exists
+     *
+     * @param string $concrete
+     * @param string $abstract
+     * @return bool
+     */
+    public function hasContextualBinding(string $concrete, string $abstract): bool
+    {
+        return isset($this->contextual[$concrete][$abstract]);
+    }
+
+    /**
+     * Remove a contextual binding
+     *
+     * @param string $concrete
+     * @param string|null $abstract If null, removes all bindings for concrete
+     * @return void
+     */
+    public function forgetContextualBinding(string $concrete, ?string $abstract = null): void
+    {
+        if ($abstract === null) {
+            unset($this->contextual[$concrete]);
+        } else {
+            unset($this->contextual[$concrete][$abstract]);
+        }
     }
 }

@@ -184,4 +184,34 @@ abstract class Relation
     {
         return $this->localKey;
     }
+
+    /**
+     * Get the owner key name (alias for localKey, used in BelongsTo context).
+     *
+     * @return string
+     */
+    public function getOwnerKey(): string
+    {
+        return $this->localKey;
+    }
+
+    /**
+     * Get the related model class name.
+     *
+     * @return string
+     */
+    public function getRelatedClass(): string
+    {
+        return $this->related;
+    }
+
+    /**
+     * Get the query builder for the relation.
+     *
+     * @return QueryBuilder
+     */
+    public function getQuery(): QueryBuilder
+    {
+        return $this->newQuery();
+    }
 }
