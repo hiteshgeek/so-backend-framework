@@ -117,10 +117,15 @@ class User extends Model
     protected static string $primaryKey = 'uid';
     protected static string $connection = 'db';
 
-    // Status field configuration
-    protected string $statusField = 'ustatusid';
-    protected array $activeStatusValues = [1];
-    protected array $inactiveStatusValues = [2, 3];
+    // Status field configuration in constructor
+    public function __construct(array $attributes = [])
+    {
+        $this->statusField = 'ustatusid';
+        $this->activeStatusValues = [1];
+        $this->inactiveStatusValues = [2, 3];
+
+        parent::__construct($attributes);
+    }
 
     protected array $fillable = [
         'uid', 'name', 'email', 'password', 'empid',

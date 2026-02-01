@@ -1532,17 +1532,23 @@ class Product extends Model
 
     protected static string $table = 'products';
 
-    // Configure status field (defaults to 'status')
-    protected string $statusField = 'product_status_id';
+    // Configure status field in constructor
+    public function __construct(array $attributes = [])
+    {
+        // Configure status field (defaults to 'status')
+        $this->statusField = 'product_status_id';
 
-    // Define which values mean "active" (defaults to [1])
-    protected array $activeStatusValues = [1, 2, 3];
+        // Define which values mean "active" (defaults to [1])
+        $this->activeStatusValues = [1, 2, 3];
 
-    // Define which values mean "inactive" (defaults to [0])
-    protected array $inactiveStatusValues = [4, 5];
+        // Define which values mean "inactive" (defaults to [0])
+        $this->inactiveStatusValues = [4, 5];
 
-    // Auto-filter inactive from queries (defaults to false)
-    protected bool $autoFilterInactive = false;
+        // Auto-filter inactive from queries (defaults to false)
+        $this->autoFilterInactive = false;
+
+        parent::__construct($attributes);
+    }
 }
 
 // Query by status using scopes
@@ -1612,10 +1618,15 @@ class Product extends Model
 
     protected static string $table = 'products';
 
-    // Status field configuration
-    protected string $statusField = 'product_status_id';
-    protected array $activeStatusValues = [1, 2, 3];
-    protected array $inactiveStatusValues = [4, 5];
+    // Status field configuration in constructor
+    public function __construct(array $attributes = [])
+    {
+        $this->statusField = 'product_status_id';
+        $this->activeStatusValues = [1, 2, 3];
+        $this->inactiveStatusValues = [4, 5];
+
+        parent::__construct($attributes);
+    }
 }
 
 // All three features enabled:

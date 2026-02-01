@@ -53,6 +53,8 @@ class Product extends Model
 
 ### Step 2: Configure Status Field Settings
 
+**Important:** Due to PHP 8.2+ restrictions, you must configure status field settings in the constructor, not as property declarations.
+
 ```php
 class Product extends Model
 {
@@ -60,10 +62,16 @@ class Product extends Model
 
     protected static string $table = 'products';
 
-    // Configure the status field
-    protected string $statusField = 'psid';            // Your status column name
-    protected array $activeStatusValues = [1];         // What values mean "active"
-    protected array $inactiveStatusValues = [2, 3];    // What values mean "inactive"
+    // Configure status field in constructor
+    public function __construct(array $attributes = [])
+    {
+        // Set status field configuration before calling parent
+        $this->statusField = 'psid';            // Your status column name
+        $this->activeStatusValues = [1];         // What values mean "active"
+        $this->inactiveStatusValues = [2, 3];    // What values mean "inactive"
+
+        parent::__construct($attributes);
+    }
 }
 ```
 
@@ -96,10 +104,11 @@ The name of your status column in the database.
 
 - **Examples:**
 ```php
-protected string $statusField = 'psid';              // Product status ID
-protected string $statusField = 'ustatusid';         // User status ID
-protected string $statusField = 'order_status_id';   // Order status ID
-protected string $statusField = 'status';            // Generic status
+// In __construct():
+$this->statusField = 'psid';              // Product status ID
+$this->statusField = 'ustatusid';         // User status ID
+$this->statusField = 'order_status_id';   // Order status ID
+$this->statusField = 'status';            // Generic status
 ```
 
 ---
@@ -112,14 +121,16 @@ An array of values that represent "active" status.
 
 - **Examples:**
 ```php
+// In __construct():
+
 // Single active value
-protected array $activeStatusValues = [1];
+$this->activeStatusValues = [1];
 
 // Multiple active values (e.g., orders in progress)
-protected array $activeStatusValues = [1, 2, 3, 4];  // Pending, Processing, Shipped, Delivered
+$this->activeStatusValues = [1, 2, 3, 4];  // Pending, Processing, Shipped, Delivered
 
 // Only one specific value
-protected array $activeStatusValues = [10];
+$this->activeStatusValues = [10];
 ```
 
 ---
@@ -132,14 +143,16 @@ An array of values that represent "inactive" status.
 
 - **Examples:**
 ```php
+// In __construct():
+
 // Single inactive value
-protected array $inactiveStatusValues = [0];
+$this->inactiveStatusValues = [0];
 
 // Multiple inactive values (e.g., deleted or suspended)
-protected array $inactiveStatusValues = [2, 3];  // Suspended, Deleted
+$this->inactiveStatusValues = [2, 3];  // Suspended, Deleted
 
 // Cancelled/Refunded orders
-protected array $inactiveStatusValues = [5, 6];
+$this->inactiveStatusValues = [5, 6];
 ```
 
 ---
@@ -403,10 +416,15 @@ class User extends Model
     protected static string $table = 'auser';
     protected static string $primaryKey = 'uid';
 
-    // Status configuration
-    protected string $statusField = 'ustatusid';
-    protected array $activeStatusValues = [1];         // Active
-    protected array $inactiveStatusValues = [2, 3];    // Suspended, Deleted
+    // Status configuration in constructor
+    public function __construct(array $attributes = [])
+    {
+        $this->statusField = 'ustatusid';
+        $this->activeStatusValues = [1];         // Active
+        $this->inactiveStatusValues = [2, 3];    // Suspended, Deleted
+
+        parent::__construct($attributes);
+    }
 
     // Usage examples:
     // User::active()->get()              → WHERE ustatusid = 1
@@ -460,10 +478,15 @@ class Product extends Model
     protected static string $table = 'products';
     protected static string $primaryKey = 'pid';
 
-    // Status configuration
-    protected string $statusField = 'psid';
-    protected array $activeStatusValues = [1];         // Active/Available
-    protected array $inactiveStatusValues = [2, 3];    // Out of stock, Discontinued
+    // Status configuration in constructor
+    public function __construct(array $attributes = [])
+    {
+        $this->statusField = 'psid';
+        $this->activeStatusValues = [1];         // Active/Available
+        $this->inactiveStatusValues = [2, 3];    // Out of stock, Discontinued
+
+        parent::__construct($attributes);
+    }
 
     /**
      * Custom status names
@@ -524,10 +547,15 @@ class Order extends Model
     protected static string $table = 'orders';
     protected static string $primaryKey = 'order_id';
 
-    // Status configuration
-    protected string $statusField = 'order_status_id';
-    protected array $activeStatusValues = [1, 2, 3, 4];  // In progress
-    protected array $inactiveStatusValues = [5, 6];      // Cancelled/Refunded
+    // Status configuration in constructor
+    public function __construct(array $attributes = [])
+    {
+        $this->statusField = 'order_status_id';
+        $this->activeStatusValues = [1, 2, 3, 4];  // In progress
+        $this->inactiveStatusValues = [5, 6];      // Cancelled/Refunded
+
+        parent::__construct($attributes);
+    }
 
     /**
      * Custom status names
@@ -618,9 +646,9 @@ $ordersInTransit = Order::withStatus([2, 3])  // Processing or Shipped
 
 ```php
 // **GOOD - Explicit configuration
-protected string $statusField = 'ustatusid';
-protected array $activeStatusValues = [1];
-protected array $inactiveStatusValues = [2, 3];
+// In __construct(): $this->statusField = 'ustatusid';
+// In __construct(): $this->activeStatusValues = [1];
+// In __construct(): $this->inactiveStatusValues = [2, 3];
 
 // **BAD - Relying on defaults (may not match your table)
 // (no configuration - uses 'status' field with values [1] and [0])
@@ -722,7 +750,7 @@ RuntimeException: No active status values defined for App\Models\User
 Define `$activeStatusValues` in your model:
 
 ```php
-protected array $activeStatusValues = [1];
+// In __construct(): $this->activeStatusValues = [1];
 ```
 
 ---
@@ -748,7 +776,7 @@ class User extends Model
 ```
   - Is `$statusField` configured correctly?
 ```php
-protected string $statusField = 'ustatusid';  // Match your database column
+// In __construct(): $this->statusField = 'ustatusid';  // Match your database column
 ```
 
 ---
@@ -868,15 +896,15 @@ Deciding whether to use `HasStatusField` depends on your database structure and 
 class User extends Model
 {
     use HasStatusField;
-    protected string $statusField = 'ustatusid';       // User table: ustatusid
-    protected array $activeStatusValues = [1];
+    // In __construct(): $this->statusField = 'ustatusid';       // User table: ustatusid
+    // In __construct(): $this->activeStatusValues = [1];
 }
 
 class Product extends Model
 {
     use HasStatusField;
-    protected string $statusField = 'psid';            // Product table: psid
-    protected array $activeStatusValues = [1, 2, 3];   // Active has multiple values
+    // In __construct(): $this->statusField = 'psid';            // Product table: psid
+    // In __construct(): $this->activeStatusValues = [1, 2, 3];   // Active has multiple values
 }
 
 // Now both work the same way
@@ -973,9 +1001,9 @@ class Order extends Model
 class Product extends Model
 {
     use HasStatusField;
-    protected string $statusField = 'psid';
-    protected array $activeStatusValues = [1, 2, 3];  // active, featured, sale
-    protected array $inactiveStatusValues = [4, 5];    // out_of_stock, discontinued
+    // In __construct(): $this->statusField = 'psid';
+    // In __construct(): $this->activeStatusValues = [1, 2, 3];  // active, featured, sale
+    // In __construct(): $this->inactiveStatusValues = [4, 5];    // out_of_stock, discontinued
 }
 ```
 

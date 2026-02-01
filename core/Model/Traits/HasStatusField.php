@@ -10,11 +10,11 @@ use Core\Database\QueryBuilder;
  * Provides flexible status field handling for models with non-standardized
  * status columns and values.
  *
- * Configuration Properties (define in your model):
- * - $statusField: The name of the status column (default: 'status')
- * - $activeStatusValues: Array of values that mean "active" (default: [1])
- * - $inactiveStatusValues: Array of values that mean "inactive" (default: [0])
- * - $autoFilterInactive: Automatically exclude inactive records (default: false)
+ * Configuration Properties (set in your model's __construct):
+ * - $this->statusField: The name of the status column (default: 'status')
+ * - $this->activeStatusValues: Array of values that mean "active" (default: [1])
+ * - $this->inactiveStatusValues: Array of values that mean "inactive" (default: [0])
+ * - $this->autoFilterInactive: Automatically exclude inactive records (default: false)
  *
  * Query Scopes Provided:
  * - ::active() - Get only active records
@@ -39,9 +39,15 @@ use Core\Database\QueryBuilder;
  *     use HasStatusField;
  *
  *     protected static string $table = 'products';
- *     protected string $statusField = 'psid';
- *     protected array $activeStatusValues = [1];
- *     protected array $inactiveStatusValues = [2, 3];
+ *
+ *     public function __construct(array $attributes = [])
+ *     {
+ *         $this->statusField = 'psid';
+ *         $this->activeStatusValues = [1];
+ *         $this->inactiveStatusValues = [2, 3];
+ *
+ *         parent::__construct($attributes);
+ *     }
  * }
  *
  * // Query scopes
