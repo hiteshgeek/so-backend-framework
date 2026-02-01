@@ -156,6 +156,9 @@ class DocsController
             'api-versioning' => 'API-VERSIONING.md',
             'service-layer' => 'SERVICE-LAYER.md',
 
+            // Model Features
+            'status-field-trait' => 'STATUS-FIELD-TRAIT.md',
+
             // Test Documentation (from tests/ folder)
             'middleware' => '../../tests/MIDDLEWARE_IMPLEMENTATION_SUMMARY.md',
             'internal-api' => '../../tests/INTERNAL_API_LAYER_SUMMARY.md',

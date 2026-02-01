@@ -62,6 +62,13 @@
                         </div>
                         <span class="badge badge-essential">Essential</span>
                     </a>
+                    <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/project-structure" class="doc-card">
+                        <div class="doc-card-body">
+                            <h3><span class="mdi mdi-folder-open"></span> Project Structure</h3>
+                            <p>Detailed explanation of folders and files.</p>
+                        </div>
+                        <span class="badge badge-essential">Essential</span>
+                    </a>
                 </div>
             </div>
 
@@ -101,21 +108,55 @@
                             <h3><span class="mdi mdi-shield-lock"></span> Authentication System</h3>
                             <p>Session auth, JWT, remember me.</p>
                         </div>
-                        <span class="badge badge-default">Core</span>
+                        <div class="doc-card-badges">
+                            <span class="badge badge-default">Core</span>
+                            <span class="badge badge-security">Security</span>
+                            <span class="badge badge-production">Production</span>
+                        </div>
+                    </a>
+                    <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/password-reset" class="doc-card">
+                        <div class="doc-card-body">
+                            <h3><span class="mdi mdi-key-variant"></span> Password Reset</h3>
+                            <p>Secure password recovery with tokens and email.</p>
+                        </div>
+                        <div class="doc-card-badges">
+                            <span class="badge badge-new">New</span>
+                            <span class="badge badge-security">Security</span>
+                            <span class="badge badge-owasp">OWASP</span>
+                        </div>
                     </a>
                     <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/security-layer" class="doc-card">
                         <div class="doc-card-body">
                             <h3><span class="mdi mdi-lock"></span> Security Layer</h3>
                             <p>CSRF, JWT, Rate Limiting, XSS Prevention.</p>
                         </div>
-                        <span class="badge badge-essential">Essential</span>
+                        <div class="doc-card-badges">
+                            <span class="badge badge-essential">Essential</span>
+                            <span class="badge badge-security">Security</span>
+                            <span class="badge badge-production">Production</span>
+                        </div>
+                    </a>
+                    <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/encrypter" class="doc-card">
+                        <div class="doc-card-body">
+                            <h3><span class="mdi mdi-lock-outline"></span> Encrypter (AES-256)</h3>
+                            <p>AES-256-CBC encryption for sensitive data.</p>
+                        </div>
+                        <div class="doc-card-badges">
+                            <span class="badge badge-new">New</span>
+                            <span class="badge badge-security">Security</span>
+                            <span class="badge badge-compliance">Compliance</span>
+                        </div>
                     </a>
                     <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/auth-lockout" class="doc-card">
                         <div class="doc-card-body">
                             <h3><span class="mdi mdi-shield-alert"></span> Auth Account Lockout</h3>
                             <p>Brute force protection and account lockout.</p>
                         </div>
-                        <span class="badge badge-new">New</span>
+                        <div class="doc-card-badges">
+                            <span class="badge badge-new">New</span>
+                            <span class="badge badge-security">Security</span>
+                            <span class="badge badge-production">Production</span>
+                        </div>
                     </a>
                     <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/validation-system" class="doc-card">
                         <div class="doc-card-body">
@@ -129,14 +170,68 @@
                             <h3><span class="mdi mdi-code-tags"></span> API Versioning</h3>
                             <p>URL/header-based API version management.</p>
                         </div>
-                        <span class="badge badge-new">New</span>
+                        <div class="doc-card-badges">
+                            <span class="badge badge-new">New</span>
+                            <span class="badge badge-api">API</span>
+                            <span class="badge badge-production">Production</span>
+                        </div>
+                    </a>
+                    <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/context-permissions" class="doc-card">
+                        <div class="doc-card-body">
+                            <h3><span class="mdi mdi-account-multiple-check"></span> Context-Based Permissions</h3>
+                            <p>Multi-tenant access control: web, mobile, cron, external.</p>
+                        </div>
+                        <div class="doc-card-badges">
+                            <span class="badge badge-new">New</span>
+                            <span class="badge badge-enterprise">Enterprise</span>
+                            <span class="badge badge-unique">Unique</span>
+                        </div>
                     </a>
                     <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/service-layer" class="doc-card">
                         <div class="doc-card-body">
                             <h3><span class="mdi mdi-layers"></span> Service Layer</h3>
                             <p>Business logic separation, eliminating code duplication.</p>
                         </div>
+                        <div class="doc-card-badges">
+                            <span class="badge badge-new">New</span>
+                            <span class="badge badge-architecture">Architecture</span>
+                            <span class="badge badge-production">Production</span>
+                        </div>
+                    </a>
+                    <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/status-field-trait" class="doc-card">
+                        <div class="doc-card-body">
+                            <h3><span class="mdi mdi-table-cog"></span> HasStatusField Trait</h3>
+                            <p>Flexible status field handling for non-standard tables.</p>
+                        </div>
                         <span class="badge badge-new">New</span>
+                    </a>
+                    <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/routing-system" class="doc-card">
+                        <div class="doc-card-body">
+                            <h3><span class="mdi mdi-routes"></span> Routing System</h3>
+                            <p>URL routing, route parameters, and middleware.</p>
+                        </div>
+                        <span class="badge badge-default">Core</span>
+                    </a>
+                    <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/middleware" class="doc-card">
+                        <div class="doc-card-body">
+                            <h3><span class="mdi mdi-filter"></span> Middleware Guide</h3>
+                            <p>Auth, CORS, Logging, Global middleware.</p>
+                        </div>
+                        <span class="badge badge-default">Core</span>
+                    </a>
+                    <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/internal-api" class="doc-card">
+                        <div class="doc-card-body">
+                            <h3><span class="mdi mdi-api"></span> Internal API Layer</h3>
+                            <p>Context detection, permissions, API client.</p>
+                        </div>
+                        <span class="badge badge-default">Core</span>
+                    </a>
+                    <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/model-enhancements" class="doc-card">
+                        <div class="doc-card-body">
+                            <h3><span class="mdi mdi-database-cog"></span> Model Enhancements</h3>
+                            <p>Soft Deletes, Query Scopes.</p>
+                        </div>
+                        <span class="badge badge-default">Core</span>
                     </a>
                 </div>
             </div>
@@ -149,49 +244,77 @@
                             <h3><span class="mdi mdi-key"></span> Session System</h3>
                             <p>Database-driven sessions for horizontal scaling.</p>
                         </div>
-                        <span class="badge badge-enterprise">Enterprise</span>
+                        <div class="doc-card-badges">
+                            <span class="badge badge-enterprise">Enterprise</span>
+                            <span class="badge badge-production">Production</span>
+                            <span class="badge badge-scaling">Scaling</span>
+                        </div>
                     </a>
                     <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/session-encryption" class="doc-card">
                         <div class="doc-card-body">
                             <h3><span class="mdi mdi-lock-outline"></span> Session Encryption</h3>
                             <p>AES-256-CBC encryption with HMAC tamper detection.</p>
                         </div>
-                        <span class="badge badge-new">New</span>
+                        <div class="doc-card-badges">
+                            <span class="badge badge-new">New</span>
+                            <span class="badge badge-security">Security</span>
+                            <span class="badge badge-compliance">Compliance</span>
+                        </div>
                     </a>
                     <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/cache-system" class="doc-card">
                         <div class="doc-card-body">
                             <h3><span class="mdi mdi-database"></span> Cache System</h3>
                             <p>Database and in-memory caching.</p>
                         </div>
-                        <span class="badge badge-enterprise">Enterprise</span>
+                        <div class="doc-card-badges">
+                            <span class="badge badge-enterprise">Enterprise</span>
+                            <span class="badge badge-performance">Performance</span>
+                            <span class="badge badge-production">Production</span>
+                        </div>
                     </a>
                     <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/file-cache" class="doc-card">
                         <div class="doc-card-body">
                             <h3><span class="mdi mdi-file-multiple"></span> File Cache Driver</h3>
                             <p>Filesystem-based cache with subdirectory sharding.</p>
                         </div>
-                        <span class="badge badge-new">New</span>
+                        <div class="doc-card-badges">
+                            <span class="badge badge-new">New</span>
+                            <span class="badge badge-performance">Performance</span>
+                            <span class="badge badge-production">Production</span>
+                        </div>
                     </a>
                     <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/queue-system" class="doc-card">
                         <div class="doc-card-body">
                             <h3><span class="mdi mdi-tray-full"></span> Queue System</h3>
                             <p>Background job processing.</p>
                         </div>
-                        <span class="badge badge-enterprise">Enterprise</span>
+                        <div class="doc-card-badges">
+                            <span class="badge badge-enterprise">Enterprise</span>
+                            <span class="badge badge-async">Async</span>
+                            <span class="badge badge-production">Production</span>
+                        </div>
                     </a>
                     <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/notification-system" class="doc-card">
                         <div class="doc-card-body">
                             <h3><span class="mdi mdi-bell"></span> Notification System</h3>
                             <p>Multi-channel notifications.</p>
                         </div>
-                        <span class="badge badge-enterprise">Enterprise</span>
+                        <div class="doc-card-badges">
+                            <span class="badge badge-enterprise">Enterprise</span>
+                            <span class="badge badge-multi-channel">Multi-Channel</span>
+                            <span class="badge badge-production">Production</span>
+                        </div>
                     </a>
                     <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/activity-logging" class="doc-card">
                         <div class="doc-card-body">
                             <h3><span class="mdi mdi-clipboard-text-clock"></span> Activity Logging</h3>
                             <p>Audit trail and compliance.</p>
                         </div>
-                        <span class="badge badge-enterprise">Enterprise</span>
+                        <div class="doc-card-badges">
+                            <span class="badge badge-enterprise">Enterprise</span>
+                            <span class="badge badge-compliance">Compliance</span>
+                            <span class="badge badge-erp">ERP-Ready</span>
+                        </div>
                     </a>
                 </div>
             </div>
@@ -251,6 +374,13 @@
                         <div class="doc-card-body">
                             <h3><span class="mdi mdi-clipboard-check"></span> Documentation Review</h3>
                             <p>Coverage analysis of all modules.</p>
+                        </div>
+                        <span class="badge badge-featured">Meta</span>
+                    </a>
+                    <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/documentation-structure" class="doc-card featured">
+                        <div class="doc-card-body">
+                            <h3><span class="mdi mdi-file-tree"></span> Documentation Structure</h3>
+                            <p>Organization and structure of documentation.</p>
                         </div>
                         <span class="badge badge-featured">Meta</span>
                     </a>
@@ -398,26 +528,71 @@
             <div class="docs-section">
                 <div class="docs-section-title"><span class="mdi mdi-database"></span> Database & Models</div>
                 <div class="docs-grid">
+                    <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/schema-builder" class="doc-card">
+                        <div class="doc-card-body">
+                            <h3><span class="mdi mdi-table-cog"></span> Schema Builder</h3>
+                            <p>Fluent API for creating database tables with migrations.</p>
+                        </div>
+                        <div class="doc-card-badges">
+                            <span class="badge badge-new">New</span>
+                            <span class="badge badge-database">Database</span>
+                            <span class="badge badge-production">Production</span>
+                        </div>
+                    </a>
                     <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/dev-models" class="doc-card">
                         <div class="doc-card-body">
                             <h3><span class="mdi mdi-database-plus"></span> Creating Models & Queries</h3>
                             <p>Model class, table mapping, CRUD, and query builder.</p>
                         </div>
-                        <span class="badge badge-guide">Guide</span>
+                        <div class="doc-card-badges">
+                            <span class="badge badge-guide">Guide</span>
+                            <span class="badge badge-database">Database</span>
+                            <span class="badge badge-core">Core</span>
+                        </div>
                     </a>
                     <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/dev-model-advanced" class="doc-card">
                         <div class="doc-card-body">
                             <h3><span class="mdi mdi-filter-variant"></span> Scopes, Relations & Soft Deletes</h3>
                             <p>Query scopes, relationships, and soft delete trait.</p>
                         </div>
-                        <span class="badge badge-guide">Guide</span>
+                        <div class="doc-card-badges">
+                            <span class="badge badge-guide">Guide</span>
+                            <span class="badge badge-database">Database</span>
+                            <span class="badge badge-advanced">Advanced</span>
+                        </div>
+                    </a>
+                    <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/model-observers" class="doc-card">
+                        <div class="doc-card-body">
+                            <h3><span class="mdi mdi-eye-outline"></span> Model Observers</h3>
+                            <p>Lifecycle event hooks: creating, created, updating, updated, deleting, deleted.</p>
+                        </div>
+                        <div class="doc-card-badges">
+                            <span class="badge badge-new">New</span>
+                            <span class="badge badge-architecture">Architecture</span>
+                            <span class="badge badge-patterns">Patterns</span>
+                        </div>
+                    </a>
+                    <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/multi-database" class="doc-card">
+                        <div class="doc-card-body">
+                            <h3><span class="mdi mdi-database-sync"></span> Multi-Database Support</h3>
+                            <p>Dual database architecture for ERP: Main + Essentials pattern.</p>
+                        </div>
+                        <div class="doc-card-badges">
+                            <span class="badge badge-new">New</span>
+                            <span class="badge badge-enterprise">Enterprise</span>
+                            <span class="badge badge-erp">ERP-Ready</span>
+                        </div>
                     </a>
                     <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/dev-migrations" class="doc-card">
                         <div class="doc-card-body">
                             <h3><span class="mdi mdi-database-arrow-right"></span> Database Migrations</h3>
                             <p>Schema builder, creating tables, and migration strategies.</p>
                         </div>
-                        <span class="badge badge-guide">Guide</span>
+                        <div class="doc-card-badges">
+                            <span class="badge badge-guide">Guide</span>
+                            <span class="badge badge-database">Database</span>
+                            <span class="badge badge-core">Core</span>
+                        </div>
                     </a>
                     <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/dev-seeders" class="doc-card">
                         <div class="doc-card-body">

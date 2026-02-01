@@ -293,6 +293,7 @@ Production-ready features for enterprise ERP applications:
 | [Internal API Layer](/docs/internal-api) | Context detection, permissions, API client | 18 min | 86.7% (13/15) |
 | [API Versioning](/docs/api-versioning) | URL/header-based version management, Router::version() | 12 min | 100% (9/9) |
 | [Model Enhancements](/docs/model-enhancements) | Soft Deletes, Query Scopes | 12 min | 100% (10/10) |
+| [HasStatusField Trait](/docs/status-field-trait) | Flexible status field handling for non-standard tables | 15 min | Production |
 | [Comprehensive Guide](/docs/comprehensive) | Complete framework reference (90%+ features) | 45 min | - |
 
 All features are **production-tested** and **enterprise-ready**. Includes OWASP-compliant security, comprehensive validation, flexible middleware system, internal API layer with context detection, and advanced model features.
@@ -590,12 +591,13 @@ If you can't find what you need:
 | **Testing Guide** | [x] | **TESTING-GUIDE.md** |
 | **Session Encryption** | [x] | **SESSION-ENCRYPTION.md** |
 | **Auth Account Lockout** | [x] | **AUTH-LOCKOUT.md** |
+| **HasStatusField Trait** | [x] | **STATUS-FIELD-TRAIT.md** |
 
 ---
 
 ## [Date] Last Updated
 
-This index was last updated: 2026-01-31
+This index was last updated: 2026-02-01
 
 For the latest documentation, check the source files in this directory.
 

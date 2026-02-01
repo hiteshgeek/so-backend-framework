@@ -17,6 +17,16 @@ A step-by-step guide to building your own middleware in the SO Backend Framework
    - [RoleMiddleware](#rolemiddleware)
    - [MaintenanceMiddleware](#maintenancemiddleware)
    - [JsonResponseMiddleware](#jsonresponsemiddleware)
+9. [Built-in Middleware Reference](#built-in-middleware-reference)
+   - [AuthMiddleware](#1-authmiddleware)
+   - [JwtMiddleware](#2-jwtmiddleware)
+   - [CorsMiddleware](#3-corsmiddleware)
+   - [CsrfMiddleware](#4-csrfmiddleware)
+   - [GuestMiddleware](#5-guestmiddleware)
+   - [ThrottleMiddleware](#6-throttlemiddleware)
+   - [LogRequestMiddleware](#7-logrequestmiddleware)
+   - [ApiVersionMiddleware](#8-apiversionmiddleware)
+10. [Quick Reference](#quick-reference)
 
 ---
 
@@ -711,6 +721,471 @@ Router::group([
 
 ---
 
+## Built-in Middleware Reference
+
+The SO Framework includes 8 production-ready middleware classes for common tasks. Each is fully implemented and ready to use in your routes.
+
+### 1. AuthMiddleware
+
+**Purpose:** Ensure user is authenticated via session or JWT before accessing a route.
+
+**File:** `app/Middleware/AuthMiddleware.php`
+
+**Features:**
+- Supports session-based authentication (web)
+- Supports JWT authentication (API)
+- Remembers users via "remember me" token
+- Returns appropriate error based on request type (JSON for APIs, redirect for web)
+
+**Usage:**
+```php
+Router::get('/dashboard', [DashboardController::class, 'index'])
+    ->middleware([AuthMiddleware::class]);
+
+// Protect an entire group
+Router::group(['middleware' => [AuthMiddleware::class]], function () {
+    Router::get('/profile', [ProfileController::class, 'show']);
+    Router::put('/profile', [ProfileController::class, 'update']);
+});
+```
+
+**Behavior:**
+- Checks `auth()->check()` for session authentication
+- Falls back to `auth()->loginViaRememberToken()` if session expired
+- Falls back to JWT token in `Authorization: Bearer <token>` header
+- Redirects to `/login` if unauthenticated (web requests)
+- Returns `401 Unauthorized` if unauthenticated (API requests)
+- Attaches `$request->user` and `$request->user_id` on success
+
+**Configuration:**
+```php
+// config/auth.php
+return [
+    'login_url' => '/login',  // Redirect destination
+];
+```
+
+---
+
+### 2. JwtMiddleware
+
+**Purpose:** Validate JWT token in `Authorization` header (JWT-only, no session fallback).
+
+**File:** `app/Middleware/JwtMiddleware.php`
+
+**Features:**
+- Strict JWT-only authentication
+- Decodes and verifies JWT signature
+- Checks token expiration
+- Loads user model if `user_id` is in payload
+
+**Usage:**
+```php
+Router::get('/api/v1/profile', [ApiProfileController::class, 'show'])
+    ->middleware([JwtMiddleware::class]);
+```
+
+**Behavior:**
+- Extracts token from `Authorization: Bearer <token>` header
+- Returns `401` with error code if token missing
+- Validates signature and expiration using `Core\Security\JWT`
+- Returns `401` with error code if token invalid/expired
+- Attaches `$request->jwt` (full payload), `$request->user_id`, and `$request->user`
+
+**Configuration:**
+```php
+// config/security.php
+return [
+    'jwt' => [
+        'secret' => env('JWT_SECRET'),
+        'expiration' => 3600,  // 1 hour in seconds
+        'algorithm' => 'HS256',
+    ],
+];
+```
+
+**When to Use:**
+- API endpoints that require strict JWT auth
+- Use `AuthMiddleware` instead if you want session + JWT fallback
+
+---
+
+### 3. CorsMiddleware
+
+**Purpose:** Add CORS headers to allow cross-origin API requests from browsers.
+
+**File:** `app/Middleware/CorsMiddleware.php`
+
+**Features:**
+- Configurable allowed origins (exact match or wildcard)
+- Handles preflight `OPTIONS` requests
+- Supports credentials (cookies/auth headers)
+- Adds standard CORS headers to all responses
+
+**Usage:**
+```php
+Router::group(['prefix' => 'api', 'middleware' => [CorsMiddleware::class]], function() {
+    Router::get('/users', [UserController::class, 'index']);
+    Router::post('/users', [UserController::class, 'store']);
+});
+```
+
+**Headers Added:**
+- `Access-Control-Allow-Origin` - Allowed origins
+- `Access-Control-Allow-Methods` - Allowed HTTP methods
+- `Access-Control-Allow-Headers` - Allowed request headers
+- `Access-Control-Allow-Credentials` - Allow cookies
+- `Access-Control-Max-Age` - Preflight cache duration
+- `Access-Control-Expose-Headers` - Exposed response headers
+
+**Configuration:**
+```php
+// config/cors.php
+return [
+    'allowed_origins' => ['*'],  // or ['https://example.com', '*.myapp.com']
+    'allowed_methods' => 'GET,POST,PUT,DELETE,PATCH,OPTIONS',
+    'allowed_headers' => 'Content-Type,Authorization,X-CSRF-TOKEN,X-Requested-With',
+    'exposed_headers' => null,
+    'allow_credentials' => false,
+    'max_age' => 86400,  // 24 hours
+];
+```
+
+**When to Use:**
+- Public APIs accessed from browser frontends
+- Single-Page Applications (SPAs) on different domains
+- Mobile web apps making API calls
+
+---
+
+### 4. CsrfMiddleware
+
+**Purpose:** Protect against CSRF attacks by validating tokens on state-changing requests.
+
+**File:** `app/Middleware/CsrfMiddleware.php`
+
+**Features:**
+- Validates tokens on `POST`, `PUT`, `DELETE`, `PATCH` requests
+- Skips `GET`, `HEAD`, `OPTIONS` requests
+- Accepts token from `_token` POST field or `X-CSRF-TOKEN` header
+- Supports excluded routes via config
+
+**Usage:**
+```php
+Router::post('/profile', [ProfileController::class, 'update'])
+    ->middleware([CsrfMiddleware::class]);
+
+// Apply to entire web group
+Router::group(['middleware' => [CsrfMiddleware::class]], function () {
+    Router::post('/posts', [PostController::class, 'store']);
+    Router::put('/posts/{id}', [PostController::class, 'update']);
+});
+```
+
+**Behavior:**
+- Skips check if CSRF is disabled in config
+- Skips check for excluded routes
+- Checks for token in `_token` field or `X-CSRF-TOKEN` header
+- Returns `419 CSRF Token Mismatch` if validation fails (API)
+- Redirects back with error if validation fails (web)
+
+**Configuration:**
+```php
+// config/security.php
+return [
+    'csrf' => [
+        'enabled' => true,
+        'excluded_routes' => [
+            'api/*',  // Exclude all API routes
+            'webhooks/*',
+        ],
+    ],
+];
+```
+
+**In Forms:**
+```php
+<form method="POST" action="/profile">
+    <?= csrf_field() ?>
+    <!-- form fields -->
+</form>
+```
+
+**When to Use:**
+- All web forms (`POST`, `PUT`, `DELETE`)
+- **Do NOT use** on API routes (use JwtMiddleware instead)
+
+---
+
+### 5. GuestMiddleware
+
+**Purpose:** Redirect authenticated users away from guest-only pages (opposite of Auth).
+
+**File:** `app/Middleware/GuestMiddleware.php`
+
+**Features:**
+- Simple inverse check of authentication
+- Prevents logged-in users from seeing login/register pages
+
+**Usage:**
+```php
+Router::get('/login', [AuthController::class, 'showLogin'])
+    ->middleware([GuestMiddleware::class]);
+
+Router::get('/register', [AuthController::class, 'showRegister'])
+    ->middleware([GuestMiddleware::class]);
+```
+
+**Behavior:**
+- Checks if `auth()->check()` returns `true`
+- Redirects to `/dashboard` if user is authenticated
+- Allows request to continue if user is a guest
+
+**When to Use:**
+- Login pages
+- Registration pages
+- Password reset request pages
+- Any page that only guests should see
+
+---
+
+### 6. ThrottleMiddleware
+
+**Purpose:** Rate limit requests to prevent abuse and brute-force attacks.
+
+**File:** `app/Middleware/ThrottleMiddleware.php`
+
+**Features:**
+- Per-user throttling (if authenticated)
+- Per-IP throttling (if guest)
+- Configurable max attempts and decay time
+- Adds `X-RateLimit-*` headers to responses
+- Returns `429 Too Many Requests` when limit exceeded
+
+**Usage:**
+```php
+// Limit to 60 requests per 1 minute
+Router::post('/api/login', [AuthController::class, 'login'])
+    ->middleware([ThrottleMiddleware::class . ':60,1']);
+
+// Limit to 5 requests per 5 minutes (strict)
+Router::post('/api/password/reset', [PasswordController::class, 'reset'])
+    ->middleware([ThrottleMiddleware::class . ':5,5']);
+
+// Use default from config (no parameters)
+Router::get('/api/data', [DataController::class, 'index'])
+    ->middleware([ThrottleMiddleware::class]);
+```
+
+**Parameters:**
+- **First parameter:** `maxAttempts` - Maximum requests allowed (default from config)
+- **Second parameter:** `decayMinutes` - Time window in minutes (default: 1)
+
+**Headers Added:**
+- `X-RateLimit-Limit` - Maximum attempts allowed
+- `X-RateLimit-Remaining` - Remaining attempts
+- `Retry-After` - Seconds until rate limit resets (when exceeded)
+- `X-RateLimit-Reset` - Unix timestamp when limit resets
+
+**Configuration:**
+```php
+// config/security.php
+return [
+    'rate_limit' => [
+        'default' => '60,1',  // 60 requests per 1 minute
+    ],
+];
+```
+
+**When to Use:**
+- Login endpoints (prevent brute force)
+- Password reset endpoints
+- API endpoints (prevent abuse)
+- Registration endpoints (prevent spam)
+
+---
+
+### 7. LogRequestMiddleware
+
+**Purpose:** Log all HTTP requests and responses for debugging and monitoring.
+
+**File:** `app/Middleware/LogRequestMiddleware.php`
+
+**Features:**
+- Logs request method, URI, IP, user agent, input data
+- Logs response status code and duration
+- Filters sensitive fields (passwords, tokens, credit cards)
+- Logs to activity logger or error_log
+- Different log levels based on status code (error for 5xx, warning for 4xx)
+
+**Usage:**
+```php
+// Log all API requests
+Router::group(['prefix' => 'api', 'middleware' => [LogRequestMiddleware::class]], function() {
+    Router::get('/users', [UserController::class, 'index']);
+});
+
+// Or apply globally
+Router::globalMiddleware([
+    LogRequestMiddleware::class,
+]);
+```
+
+**Behavior:**
+- Skips logging if disabled in config
+- Logs incoming request with filtered input
+- Executes controller and measures duration
+- Logs response with status code and timing
+- Sensitive fields are replaced with `[FILTERED]`
+
+**Sensitive Fields (Auto-Filtered):**
+- `password`, `password_confirmation`
+- `token`, `secret`, `api_key`
+- `authorization`
+- `card_number`, `cvv`, `ssn`
+
+**Configuration:**
+```php
+// config/logging.php
+return [
+    'log_requests' => env('LOG_REQUESTS', false),
+];
+
+// .env
+LOG_REQUESTS=true  // Enable in development/debugging
+```
+
+**Output Example:**
+```
+[INFO] Incoming Request: {"method":"POST","uri":"/api/login","ip":"192.168.1.100","input":{"email":"user@example.com","password":"[FILTERED]"}}
+[INFO] Response: {"method":"POST","uri":"/api/login","status":200,"duration":"142.5ms"}
+```
+
+**When to Use:**
+- Development/debugging
+- Monitoring API usage
+- Troubleshooting production issues
+- **Warning:** Can generate large log files in high-traffic apps
+
+---
+
+### 8. ApiVersionMiddleware
+
+**Purpose:** Detect API version from URL or headers and attach it to the request.
+
+**File:** `app/Middleware/ApiVersionMiddleware.php`
+
+**Features:**
+- Detects version from URL path (`/api/v1/users`)
+- Falls back to `Accept` header (`application/vnd.api.v1+json`)
+- Falls back to default version from config
+- Validates version against supported versions
+- Adds deprecation warnings for old versions
+- Attaches `$request->api_version` and `$request->api_version_number`
+
+**Usage:**
+```php
+Router::group(['middleware' => [ApiVersionMiddleware::class]], function() {
+    Router::version('v1', function() {
+        Router::get('/users', [UserControllerV1::class, 'index']);
+    });
+
+    Router::version('v2', function() {
+        Router::get('/users', [UserControllerV2::class, 'index']);
+    });
+});
+```
+
+**Detection Order:**
+1. URL path: `/api/v2/users` → `$request->api_version = "v2"`
+2. Accept header: `Accept: application/vnd.api.v1+json` → `$request->api_version = "v1"`
+3. Default: config value → `$request->api_version = "v1"`
+
+**Request Properties Set:**
+- `$request->api_version` - Version string (`"v1"`, `"v2"`)
+- `$request->api_version_number` - Version number (`1`, `2`)
+
+**Deprecation Warnings:**
+If version is in `config('api.deprecated_versions')`, adds headers:
+- `X-API-Version-Deprecated: true`
+- `X-API-Deprecation-Info: API version v1 is deprecated. Please migrate to a newer version.`
+
+**Configuration:**
+```php
+// config/api.php
+return [
+    'default_version' => 'v1',
+    'supported_versions' => ['v1', 'v2', 'v3'],
+    'deprecated_versions' => ['v1'],  // Add deprecation warnings
+];
+```
+
+**When to Use:**
+- Versioned APIs
+- APIs with breaking changes between versions
+- Migration from old to new API endpoints
+
+**See Also:** [API Versioning Guide](API-VERSIONING.md)
+
+---
+
+## When to Use Each Middleware
+
+| Middleware | Use Case | Priority | Apply To |
+|------------|----------|----------|----------|
+| **AuthMiddleware** | Protected web/API routes (session + JWT) | High | Dashboard, profile, protected pages |
+| **JwtMiddleware** | Protected API routes (JWT only) | High | `/api/*` routes |
+| **CsrfMiddleware** | Forms and state-changing web requests | Critical | All `POST`/`PUT`/`DELETE` web routes |
+| **CorsMiddleware** | Public APIs accessed from browsers | Medium | `/api/*` routes |
+| **GuestMiddleware** | Login/register pages | Low | `/login`, `/register` |
+| **ThrottleMiddleware** | Login, API endpoints, prevent abuse | High | `/login`, `/api/*` |
+| **LogRequestMiddleware** | Development/debugging | Low | Development only |
+| **ApiVersionMiddleware** | Versioned APIs | Medium | `/api/*` routes with versions |
+
+### Typical Web Route Setup
+
+```php
+// Web routes (routes/web.php)
+Router::group(['middleware' => [CsrfMiddleware::class]], function () {
+    // Guest routes
+    Router::group(['middleware' => [GuestMiddleware::class]], function () {
+        Router::get('/login', [AuthController::class, 'showLogin']);
+        Router::post('/login', [AuthController::class, 'login'])
+            ->middleware([ThrottleMiddleware::class . ':5,1']);
+    });
+
+    // Protected routes
+    Router::group(['middleware' => [AuthMiddleware::class]], function () {
+        Router::get('/dashboard', [DashboardController::class, 'index']);
+        Router::get('/profile', [ProfileController::class, 'show']);
+        Router::put('/profile', [ProfileController::class, 'update']);
+    });
+});
+```
+
+### Typical API Route Setup
+
+```php
+// API routes (routes/api.php)
+Router::group([
+    'prefix' => 'api',
+    'middleware' => [CorsMiddleware::class, ApiVersionMiddleware::class]
+], function () {
+    // Public endpoints
+    Router::post('/login', [ApiAuthController::class, 'login'])
+        ->middleware([ThrottleMiddleware::class . ':5,1']);
+
+    // Protected endpoints
+    Router::group(['middleware' => [JwtMiddleware::class]], function () {
+        Router::get('/users', [ApiUserController::class, 'index'])
+            ->middleware([ThrottleMiddleware::class . ':60,1']);
+        Router::post('/users', [ApiUserController::class, 'store']);
+    });
+});
+```
+
+---
+
 ## Quick Reference
 
 | Task | How |
@@ -724,3 +1199,19 @@ Router::group([
 | Single route | `->middleware([MyMiddleware::class])` |
 | Route group | `Router::group(['middleware' => [MyMiddleware::class]], fn() => ...)` |
 | Global | `Router::globalMiddleware([MyMiddleware::class])` |
+
+---
+
+## See Also
+
+- **[Routing System](ROUTING-SYSTEM.md)** - Learn how to define routes and route groups
+- **[Auth System](AUTH-SYSTEM.md)** - Session and JWT authentication
+- **[API Versioning](API-VERSIONING.md)** - Implement versioned APIs
+- **[Security Layer](SECURITY-LAYER.md)** - CSRF protection and security features
+- **[Rate Limiting](SECURITY-LAYER.md#rate-limiting)** - Throttle middleware deep dive
+- **[Request Flow](REQUEST-FLOW.md)** - How middleware fits in the request pipeline
+
+---
+
+**Last Updated**: 2026-02-01
+**Framework Version**: 1.0

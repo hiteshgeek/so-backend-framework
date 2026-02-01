@@ -1158,6 +1158,508 @@ $children = $cat->children();    // array of child category rows
 $parent   = $cat->parent();      // parent category array or null
 ```
 
+---
+
+## Model Relationships
+
+The SO Framework provides built-in support for defining relationships between models, making it easy to work with related data across tables.
+
+### One-to-One (hasOne)
+
+Define a one-to-one relationship where one model has exactly one related model.
+
+**Example:** User has one Profile
+
+```php
+<?php
+
+namespace App\Models;
+
+use Core\Model\Model;
+
+class User extends Model
+{
+    protected static string $table = 'users';
+
+    /**
+     * Get the user's profile
+     */
+    public function profile()
+    {
+        return $this->hasOne(Profile::class, 'user_id', 'id');
+    }
+}
+
+class Profile extends Model
+{
+    protected static string $table = 'profiles';
+
+    /**
+     * Get the profile's user (inverse)
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+}
+
+// Usage
+$user = User::find(1);
+$profile = $user->profile(); // Returns Profile instance or null
+echo $profile->bio;
+```
+
+### One-to-Many (hasMany)
+
+Define a one-to-many relationship where one model has multiple related models.
+
+**Example:** User has many Posts
+
+```php
+<?php
+
+class User extends Model
+{
+    public function posts()
+    {
+        return $this->hasMany(Post::class, 'user_id', 'id');
+    }
+}
+
+class Post extends Model
+{
+    public function author()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+}
+
+// Usage
+$user = User::find(1);
+$posts = $user->posts(); // Returns array of Post instances
+
+foreach ($posts as $post) {
+    echo $post->title;
+}
+
+// Access inverse relationship
+$post = Post::find(1);
+$author = $post->author(); // Returns User instance
+```
+
+### Belongs To (belongsTo)
+
+Define the inverse of a one-to-one or one-to-many relationship.
+
+**Example:** Post belongs to User
+
+```php
+<?php
+
+class Post extends Model
+{
+    public function author()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class, 'category_id', 'id');
+    }
+}
+
+// Usage
+$post = Post::find(1);
+$author = $post->author();      // Returns User instance
+$category = $post->category();  // Returns Category instance
+```
+
+### Many-to-Many (belongsToMany)
+
+Define a many-to-many relationship using a pivot table.
+
+**Example:** User has many Roles, Role has many Users
+
+```php
+<?php
+
+class User extends Model
+{
+    public function roles()
+    {
+        return $this->belongsToMany(
+            Role::class,
+            'user_roles',    // Pivot table name
+            'user_id',       // Foreign key on pivot for this model
+            'role_id'        // Foreign key on pivot for related model
+        );
+    }
+}
+
+class Role extends Model
+{
+    public function users()
+    {
+        return $this->belongsToMany(
+            User::class,
+            'user_roles',
+            'role_id',
+            'user_id'
+        );
+    }
+}
+
+// Usage
+$user = User::find(1);
+$roles = $user->roles(); // Returns array of Role instances
+
+foreach ($roles as $role) {
+    echo $role->name;
+}
+
+// Check if user has role
+$hasAdmin = false;
+foreach ($user->roles() as $role) {
+    if ($role->name === 'admin') {
+        $hasAdmin = true;
+        break;
+    }
+}
+```
+
+### Relationship Parameters
+
+All relationship methods accept similar parameters:
+
+```php
+$this->hasOne(RelatedModel::class, $foreignKey, $localKey);
+$this->hasMany(RelatedModel::class, $foreignKey, $localKey);
+$this->belongsTo(RelatedModel::class, $foreignKey, $ownerKey);
+$this->belongsToMany(RelatedModel::class, $pivotTable, $foreignKey, $relatedKey);
+```
+
+**Parameters:**
+- `RelatedModel::class` - The class name of the related model
+- `$foreignKey` - The foreign key column in the related/pivot table
+- `$localKey` / `$ownerKey` - The primary key in this model's table
+- `$pivotTable` - The name of the pivot table (many-to-many only)
+- `$relatedKey` - The foreign key in the pivot for the related model (many-to-many only)
+
+### When to Use Relationships vs Manual Queries
+
+**Use Relationships When:**
+- ✓ Data is frequently loaded together
+- ✓ You want clean, readable code
+- ✓ Building a standard ORM-based application
+- ✓ Related data follows standard foreign key patterns
+
+**Use Manual Queries When:**
+- ✓ Performance is critical (relationships load all columns)
+- ✓ You only need specific columns from related tables
+- ✓ Complex joins that don't fit relationship patterns
+- ✓ Working with legacy schemas where foreign keys are non-standard
+
+### Performance Considerations
+
+**Relationships load all columns** from related tables:
+```php
+// This loads ALL columns from profiles table
+$profile = $user->profile();
+```
+
+**Manual queries can select specific columns** for better performance:
+```php
+// This loads only 'bio' column from profiles table
+$profile = Profile::query()
+    ->select('bio')
+    ->where('user_id', '=', $user->id)
+    ->first();
+```
+
+**For high-traffic applications:** Use manual queries with explicit column selection.
+**For standard applications:** Use relationships for cleaner code.
+
+### See Also
+- [DEV-MODEL-ADVANCED.md](/docs/dev-model-advanced) - Advanced relationship patterns
+- [SERVICE-LAYER.md](/docs/service-layer) - Using relationships in services
+- [DEV-QUEUES.md](/docs/dev-queues) - Eager loading to avoid N+1 queries
+
+---
+
+## Model Traits
+
+The SO Framework provides powerful traits that add advanced functionality to your models. Traits are reusable pieces of code that can be added to any model using the `use` keyword.
+
+### LogsActivity Trait
+
+Automatically logs create, update, and delete actions for audit trails and compliance.
+
+**Purpose:** Track who did what and when for security and compliance requirements.
+
+**Usage:**
+
+```php
+<?php
+
+namespace App\Models;
+
+use Core\Model\Model;
+use Core\ActivityLog\LogsActivity;
+
+class Product extends Model
+{
+    use LogsActivity;
+
+    protected static string $table = 'products';
+}
+
+// Automatic logging on create/update/delete
+$product = Product::create(['name' => 'Widget', 'price' => 29.99]);
+// Logged: "Created Product #1"
+
+$product->update(['price' => 34.99]);
+// Logged: "Updated Product #1 - Changed price from 29.99 to 34.99"
+
+$product->delete();
+// Logged: "Deleted Product #1"
+
+// View activity logs
+$logs = activity()->getModelActivity(Product::class, 1);
+foreach ($logs as $log) {
+    echo "{$log->action} by {$log->user_id} at {$log->created_at}";
+}
+```
+
+**When to Use:**
+- ✓ E-commerce platforms (track inventory changes)
+- ✓ Financial systems (audit trail required)
+- ✓ Healthcare applications (HIPAA compliance)
+- ✓ Admin panels (track who modified what)
+
+**See:** [ACTIVITY-LOGGING.md](/docs/activity-logging) for complete guide including filtering, user tracking, and custom events.
+
+---
+
+### SoftDeletes Trait
+
+Marks records as deleted instead of removing them from the database, allowing recovery.
+
+**Purpose:** Prevent accidental data loss and maintain referential integrity.
+
+**Usage:**
+
+```php
+<?php
+
+namespace App\Models;
+
+use Core\Model\Model;
+use Core\Model\SoftDeletes;
+
+class Post extends Model
+{
+    use SoftDeletes;
+
+    protected static string $table = 'posts';
+
+    // Requires 'deleted_at' TIMESTAMP column in database
+}
+
+// Soft delete (sets deleted_at timestamp)
+$post = Post::find(1);
+$post->delete();  // Sets deleted_at = '2026-02-01 10:30:00'
+
+// Query only non-deleted records (default)
+$posts = Post::all();  // Auto-excludes soft deleted
+
+// Include soft deleted records in query
+$allPosts = Post::withTrashed()->get();
+
+// Get only soft deleted records
+$trashedPosts = Post::onlyTrashed()->get();
+
+// Restore a soft deleted record
+$post = Post::onlyTrashed()->where('id', '=', 1)->first();
+$post->restore();  // Clears deleted_at
+
+// Permanently delete (bypass soft delete)
+$post->forceDelete();  // Actually removes from database
+```
+
+**Database Migration:**
+
+```php
+Schema::table('posts', function ($table) {
+    $table->timestamp('deleted_at')->nullable();
+});
+```
+
+**When to Use:**
+- ✓ User-generated content that shouldn't be permanently lost
+- ✓ Records that have foreign key relationships
+- ✓ Data that may need to be recovered
+- ✓ Implementing "recycle bin" functionality
+
+**When NOT to Use:**
+- ✗ High-volume tables (increases query complexity)
+- ✗ Temporary data that should be purged
+- ✗ Performance-critical queries
+
+**See:** [DEV-MODEL-ADVANCED.md](/docs/dev-model-advanced) for advanced soft delete patterns including force delete and cascading.
+
+---
+
+### HasStatusField Trait
+
+Flexible status field handling for tables with non-standard status column names and values.
+
+**Purpose:** Work with legacy tables that use various status field conventions.
+
+**Usage:**
+
+```php
+<?php
+
+namespace App\Models;
+
+use Core\Model\Model;
+use Core\Model\Traits\HasStatusField;
+
+class Product extends Model
+{
+    use HasStatusField;
+
+    protected static string $table = 'products';
+
+    // Configure status field (defaults to 'status')
+    protected string $statusField = 'product_status_id';
+
+    // Define which values mean "active" (defaults to [1])
+    protected array $activeStatusValues = [1, 2, 3];
+
+    // Define which values mean "inactive" (defaults to [0])
+    protected array $inactiveStatusValues = [4, 5];
+
+    // Auto-filter inactive from queries (defaults to false)
+    protected bool $autoFilterInactive = false;
+}
+
+// Query by status using scopes
+$activeProducts = Product::active()->get();
+$inactiveProducts = Product::inactive()->get();
+$pendingProducts = Product::withStatus(2)->get();
+
+// Check status on model instance
+if ($product->isActive()) {
+    echo "Product is available";
+}
+
+if ($product->isInactive()) {
+    echo "Product is discontinued";
+}
+
+// Change status
+$product->markAsActive();   // Sets to first active value (1)
+$product->markAsInactive(); // Sets to first inactive value (4)
+$product->setStatus(3);     // Sets to specific value
+$product->save();           // Must save to persist
+
+// Get human-readable status name
+echo $product->getStatusName(); // "Active", "Inactive", or "Unknown"
+
+// Override status names
+public function getStatusName(): string
+{
+    return match ($this->getStatusValue()) {
+        1 => 'Available',
+        2 => 'Low Stock',
+        3 => 'Backordered',
+        4 => 'Discontinued',
+        5 => 'Out of Stock',
+        default => 'Unknown',
+    };
+}
+```
+
+**When to Use:**
+- ✓ Working with legacy databases with non-standard naming
+- ✓ Tables with status columns named: `psid`, `order_status_id`, `ustatusid`, etc.
+- ✓ Status values that aren't simple 0/1 (e.g., 1=pending, 2=approved, 3=rejected)
+- ✓ Need query scopes for filtering by status
+
+**See:** [STATUS-FIELD-TRAIT.md](/docs/status-field-trait) for complete guide including configuration options, query scopes, and real-world examples.
+
+---
+
+### Combining Traits
+
+Models can use multiple traits simultaneously to combine functionality:
+
+```php
+<?php
+
+namespace App\Models;
+
+use Core\Model\Model;
+use Core\ActivityLog\LogsActivity;
+use Core\Model\SoftDeletes;
+use Core\Model\Traits\HasStatusField;
+
+class Product extends Model
+{
+    use LogsActivity, SoftDeletes, HasStatusField;
+
+    protected static string $table = 'products';
+
+    // Status field configuration
+    protected string $statusField = 'product_status_id';
+    protected array $activeStatusValues = [1, 2, 3];
+    protected array $inactiveStatusValues = [4, 5];
+}
+
+// All three features enabled:
+$product = Product::create(['name' => 'Widget']);  // Activity logged
+
+$product->markAsInactive();  // Status changed
+$product->save();            // Update logged
+
+$product->delete();          // Soft deleted + activity logged
+
+Product::withTrashed()       // Include soft deleted
+    ->onlyTrashed()          // Only soft deleted
+    ->inactive()             // Only inactive
+    ->get();
+```
+
+**Trait Compatibility:**
+
+| Trait | LogsActivity | SoftDeletes | HasStatusField |
+|-------|--------------|-------------|----------------|
+| **LogsActivity** | - | ✓ Compatible | ✓ Compatible |
+| **SoftDeletes** | ✓ Compatible | - | ✓ Compatible |
+| **HasStatusField** | ✓ Compatible | ✓ Compatible | - |
+
+All three traits can be used together without conflicts.
+
+---
+
+### Available Traits Summary
+
+| Trait | Purpose | Required Column | Performance Impact |
+|-------|---------|----------------|-------------------|
+| **LogsActivity** | Audit trail | None | Low (async logging) |
+| **SoftDeletes** | Prevent data loss | `deleted_at` | Low-Medium (adds WHERE clause) |
+| **HasStatusField** | Status management | Custom field | None (just scopes) |
+
+### See Also
+- [ACTIVITY-LOGGING.md](/docs/activity-logging) - Complete activity logging guide
+- [STATUS-FIELD-TRAIT.md](/docs/status-field-trait) - Complete status field guide
+- [DEV-MODEL-ADVANCED.md](/docs/dev-model-advanced) - Advanced model patterns
+- [SERVICE-LAYER.md](/docs/service-layer) - Using traits in services
+
+---
+
 ### Quick Reference
 
 | Operation | Code |

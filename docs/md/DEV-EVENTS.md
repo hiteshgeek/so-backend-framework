@@ -9,11 +9,26 @@ A comprehensive guide to using events and listeners to decouple application logi
 ## Table of Contents
 
 1. [Overview](#overview)
-2. [Creating Events](#creating-events)
-3. [Creating Listeners](#creating-listeners)
-4. [Registering Events](#registering-events)
-5. [Dispatching Events](#dispatching-events)
-6. [Best Practices](#best-practices)
+2. [Roadmap](#roadmap)
+3. [Creating Events](#creating-events)
+4. [Creating Listeners](#creating-listeners)
+5. [Registering Events](#registering-events)
+6. [Dispatching Events](#dispatching-events)
+7. [Best Practices](#best-practices)
+8. [Common Event Patterns](#common-event-patterns)
+9. [Complete Example](#complete-example)
+
+---
+
+> **⚠️ Implementation Status**
+>
+> The event system is **partially implemented**. Core functionality (creating events, listeners, and dispatching) works perfectly. However, some advanced features documented below are **planned but not yet available**:
+>
+> - **EventServiceProvider** - Centralized event registration (currently manual)
+> - **ShouldQueue Interface** - Queued event listeners (use Queue system directly)
+> - **Auto-discovery** - Automatic event/listener registration
+>
+> See the [Roadmap](#roadmap) section for planned features and current workarounds.
 
 ---
 
@@ -45,6 +60,70 @@ Controller                Event System              Listeners
      |                          |                         |
      | Continue                 |                         |
      |<---------------------    |                         |
+```
+
+---
+
+## Roadmap
+
+### Current Implementation (Available Now)
+
+✅ **Event Classes** - Create custom events extending `Core\Events\Event`
+✅ **Listener Classes** - Create listeners implementing `Core\Events\Listener`
+✅ **Manual Registration** - Register listeners using `EventDispatcher`
+✅ **Event Dispatching** - Fire events with `event()` helper
+✅ **Wildcard Listeners** - Listen to multiple events with patterns like `user.*`
+✅ **Event Subscribers** - Group related listeners in subscriber classes
+✅ **Propagation Control** - Stop event propagation from listeners
+
+### Planned Features (Not Yet Implemented)
+
+🔄 **EventServiceProvider** - Centralized event registration via provider class
+🔄 **ShouldQueue Interface** - Automatic queuing of listeners with interface
+🔄 **Auto-discovery** - Automatically find and register events/listeners
+🔄 **Event Broadcasting** - Broadcast events to WebSockets/Pusher
+
+### Current Workarounds
+
+Until EventServiceProvider is implemented, register events manually in `bootstrap/app.php` or a custom service provider:
+
+```php
+<?php
+// bootstrap/app.php or custom provider
+
+use Core\Events\EventDispatcher;
+use App\Events\UserRegistered;
+use App\Listeners\SendWelcomeEmail;
+
+$dispatcher = app('events');
+
+// Register individual listeners
+$dispatcher->listen(UserRegistered::class, SendWelcomeEmail::class);
+
+// Or use closures
+$dispatcher->listen('user.registered', function($event) {
+    logger()->info('User registered', ['user_id' => $event->userId]);
+});
+
+// Or use wildcard patterns
+$dispatcher->listen('user.*', [AuditLogger::class, 'handle']);
+```
+
+For queued listeners, manually queue the work inside the listener:
+
+```php
+<?php
+class SendWelcomeEmail implements Listener
+{
+    public function handle(UserRegistered $event): void
+    {
+        // Queue the email manually
+        queue(function() use ($event) {
+            $user = User::find($event->userId);
+            Mail::to($user->email)->send(new WelcomeEmail($user->toArray()));
+        });
+    }
+}
 ```
 
 ---
@@ -197,47 +276,98 @@ All three listeners execute when `UserRegistered` fires.
 
 ## Registering Events
 
-### Register in Event Service Provider
+### Current Implementation: Manual Registration
 
-Edit `app/Providers/EventServiceProvider.php`:
+Since EventServiceProvider is not yet implemented, register event listeners manually using the `EventDispatcher`. You can do this in `bootstrap/app.php` or create a custom service provider.
+
+**Option 1: Register in bootstrap/app.php**
 
 ```php
 <?php
+// bootstrap/app.php
+
+use Core\Events\EventDispatcher;
+use App\Events\UserRegistered;
+use App\Events\OrderPlaced;
+use App\Events\PaymentFailed;
+use App\Listeners\SendWelcomeEmail;
+use App\Listeners\LogUserRegistration;
+use App\Listeners\UpdateAnalytics;
+
+$dispatcher = app('events');
+
+// UserRegistered event
+$dispatcher->listen(UserRegistered::class, SendWelcomeEmail::class);
+$dispatcher->listen(UserRegistered::class, LogUserRegistration::class);
+$dispatcher->listen(UserRegistered::class, UpdateAnalytics::class);
+
+// OrderPlaced event
+$dispatcher->listen(OrderPlaced::class, SendOrderConfirmation::class);
+$dispatcher->listen(OrderPlaced::class, UpdateInventory::class);
+$dispatcher->listen(OrderPlaced::class, NotifyWarehouse::class);
+
+// PaymentFailed event
+$dispatcher->listen(PaymentFailed::class, NotifyAdmin::class);
+$dispatcher->listen(PaymentFailed::class, LogPaymentFailure::class);
+```
+
+**Option 2: Create a Custom Service Provider**
+
+For better organization, create your own provider:
+
+```php
+<?php
+// app/Providers/AppEventProvider.php
 
 namespace App\Providers;
 
-use Core\Events\EventServiceProvider as ServiceProvider;
+use Core\Events\EventDispatcher;
+use App\Events\UserRegistered;
+use App\Listeners\SendWelcomeEmail;
 
-class EventServiceProvider extends ServiceProvider
+class AppEventProvider
 {
-    protected array $listen = [
-        \App\Events\UserRegistered::class => [
-            \App\Listeners\SendWelcomeEmail::class,
-            \App\Listeners\LogUserRegistration::class,
-            \App\Listeners\UpdateAnalytics::class,
-        ],
-
-        \App\Events\OrderPlaced::class => [
-            \App\Listeners\SendOrderConfirmation::class,
-            \App\Listeners\UpdateInventory::class,
-            \App\Listeners\NotifyWarehouse::class,
-        ],
-
-        \App\Events\PaymentFailed::class => [
-            \App\Listeners\NotifyAdmin::class,
-            \App\Listeners\LogPaymentFailure::class,
-        ],
-    ];
+    public function register(EventDispatcher $dispatcher): void
+    {
+        $dispatcher->listen(UserRegistered::class, SendWelcomeEmail::class);
+        $dispatcher->listen(UserRegistered::class, LogUserRegistration::class);
+        // ... register more events
+    }
 }
 ```
 
-### Register Provider in bootstrap/app.php
-
-Ensure the provider is registered:
+Then call it in `bootstrap/app.php`:
 
 ```php
-$app->register(\App\Providers\EventServiceProvider::class);
+$provider = new \App\Providers\AppEventProvider();
+$provider->register(app('events'));
 ```
+
+### Register with Closures
+
+You can also register listeners as closures for simple use cases:
+
+```php
+$dispatcher->listen(UserRegistered::class, function($event) {
+    logger()->info('User registered', ['user_id' => $event->userId]);
+});
+```
+
+### Wildcard Event Listeners
+
+Listen to multiple events using wildcard patterns:
+
+```php
+// Listen to all user-related events
+$dispatcher->listen('user.*', function($event) {
+    logger()->info('User event fired', ['event' => get_class($event)]);
+});
+
+// Listen to all events
+$dispatcher->listen('*', [AuditLogger::class, 'handle']);
+```
+
+> **Future:** When EventServiceProvider is implemented, you'll be able to register events in a centralized array like Laravel. This manual approach will still work for custom registration logic.
 
 ---
 
@@ -340,7 +470,11 @@ class ListenerB
 
 ### 2. Queue Long-Running Listeners
 
-Listeners execute synchronously by default. Queue slow operations:
+Listeners execute synchronously by default. For slow operations (sending emails, API calls, file processing), manually queue the work to avoid blocking the request.
+
+> **Note:** The `ShouldQueue` interface is planned but not yet implemented. Use manual queuing as shown below.
+
+**Current Approach: Manual Queuing**
 
 ```php
 <?php
@@ -348,17 +482,42 @@ Listeners execute synchronously by default. Queue slow operations:
 namespace App\Listeners;
 
 use Core\Events\Listener;
-use Core\Queue\ShouldQueue;
+use App\Events\UserRegistered;
+use App\Models\User;
+use App\Mail\WelcomeEmail;
+use Core\Mail\Mail;
 
-class SendWelcomeEmail implements Listener, ShouldQueue
+class SendWelcomeEmail implements Listener
 {
-    public function handle($event): void
+    public function handle(UserRegistered $event): void
     {
-        // This runs in a background queue
-        Mail::to($event->user['email'])->send(new WelcomeEmail($event->user));
+        // Queue the email manually using queue() helper
+        queue(function() use ($event) {
+            $user = User::find($event->userId);
+            Mail::to($user->email)->send(new WelcomeEmail($user->toArray()));
+        });
     }
 }
 ```
+
+**Alternative: Queue via Mail System**
+
+The Mail system has built-in queuing:
+
+```php
+class SendWelcomeEmail implements Listener
+{
+    public function handle(UserRegistered $event): void
+    {
+        $user = User::find($event->userId);
+
+        // queue() method handles queueing automatically
+        Mail::to($user->email)->queue(new WelcomeEmail($user->toArray()));
+    }
+}
+```
+
+> **Future:** When `ShouldQueue` interface is implemented, you'll simply add `implements ShouldQueue` to automatically queue the entire listener.
 
 ### 3. Use Events for Side Effects, Not Core Logic
 
@@ -511,12 +670,14 @@ class UserRegistered extends Event
 **Listeners:**
 ```php
 // app/Listeners/SendWelcomeEmail.php
-class SendWelcomeEmail implements Listener, ShouldQueue
+class SendWelcomeEmail implements Listener
 {
     public function handle(UserRegistered $event): void
     {
         $user = User::find($event->userId);
-        Mail::to($user->email)->send(new WelcomeEmail($user->toArray()));
+
+        // Queue email to avoid blocking
+        Mail::to($user->email)->queue(new WelcomeEmail($user->toArray()));
     }
 }
 
@@ -546,14 +707,18 @@ class TrackRegistration implements Listener
 
 **Registration:**
 ```php
-// app/Providers/EventServiceProvider.php
-protected array $listen = [
-    UserRegistered::class => [
-        SendWelcomeEmail::class,
-        CreateDefaultSettings::class,
-        TrackRegistration::class,
-    ],
-];
+// bootstrap/app.php or custom provider
+use Core\Events\EventDispatcher;
+use App\Events\UserRegistered;
+use App\Listeners\SendWelcomeEmail;
+use App\Listeners\CreateDefaultSettings;
+use App\Listeners\TrackRegistration;
+
+$dispatcher = app('events');
+
+$dispatcher->listen(UserRegistered::class, SendWelcomeEmail::class);
+$dispatcher->listen(UserRegistered::class, CreateDefaultSettings::class);
+$dispatcher->listen(UserRegistered::class, TrackRegistration::class);
 ```
 
 **Dispatch:**
@@ -571,12 +736,16 @@ public function register(Request $request): Response
 
 ---
 
-**Related Documentation:**
-- [Queue System](/docs/dev/queues) - Queueing listeners
-- [Mail System](/docs/dev/mail) - Sending emails from listeners
-- [CLI Commands](/docs/dev/cli-commands) - Event command reference
+## See Also
+
+- **[Queue System](DEV-QUEUES.md)** - Queue long-running tasks from listeners
+- **[Mail System](DEV-MAIL.md)** - Send emails from event listeners
+- **[Activity Logging](ACTIVITY-LOGGING.md)** - Track events automatically with LogsActivity trait
+- **[Service Layer](SERVICE-LAYER.md)** - Fire events from service methods
+- **[CLI Commands](CONSOLE-COMMANDS.md)** - `make:event` and `make:listener` commands
+- **[Model Events](DEV-MODELS.md)** - Fire events on model create/update/delete
 
 ---
 
-**Last Updated**: 2026-01-31
+**Last Updated**: 2026-02-01
 **Framework Version**: 1.0

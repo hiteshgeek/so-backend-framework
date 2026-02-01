@@ -100,7 +100,10 @@
   align-items: center;
   gap: 8px;
   border-radius: var(--radius-sm) var(--radius-sm) 0 0;
-  transition: color 0.2s, background 0.2s, border-color 0.2s;
+  transition:
+    color 0.2s,
+    background 0.2s,
+    border-color 0.2s;
 }
 
 .docs-tab-button .mdi {
@@ -209,17 +212,27 @@
 }
 
 .doc-card.visited {
-  background: linear-gradient(135deg, var(--surface) 0%, rgba(37, 99, 235, 0.12) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--surface) 0%,
+    rgba(37, 99, 235, 0.12) 100%
+  );
   border: 2px solid var(--primary);
   animation: pulse-glow 2s ease-in-out infinite;
 }
 
 @keyframes pulse-glow {
-  0%, 100% {
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15), var(--shadow-md);
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 3px rgba(37, 99, 235, 0.15),
+      var(--shadow-md);
   }
   50% {
-    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.25), 0 0 20px rgba(37, 99, 235, 0.2), var(--shadow-lg);
+    box-shadow:
+      0 0 0 4px rgba(37, 99, 235, 0.25),
+      0 0 20px rgba(37, 99, 235, 0.2),
+      var(--shadow-lg);
   }
 }
 
@@ -248,8 +261,23 @@
   line-height: 1.4;
 }
 
-.doc-card .badge {
+/* Badge container - wrap multiple badges inline as chips */
+.doc-card-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
   margin-top: 8px;
+}
+
+/* Individual badges within container */
+.doc-card-badges .badge {
+  display: inline-flex;
+}
+
+/* Single badges (not in container) - legacy support */
+.doc-card > .badge {
+  margin-top: 8px;
+  display: inline-flex;
   align-self: flex-start;
 }
 
@@ -305,6 +333,87 @@
 .badge-guide {
   background: #fefce8;
   color: #a16207;
+}
+
+/* New Badges - Multiple Contextual Tags */
+.badge-security {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.badge-owasp {
+  background: #fef2f2;
+  color: #b91c1c;
+}
+
+.badge-compliance {
+  background: #f3e8ff;
+  color: #7c3aed;
+}
+
+.badge-production {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.badge-api {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.badge-unique {
+  background: #fef3c7;
+  color: #d97706;
+}
+
+.badge-architecture {
+  background: #e0e7ff;
+  color: #4f46e5;
+}
+
+.badge-database {
+  background: #cffafe;
+  color: #0e7490;
+}
+
+.badge-core {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.badge-advanced {
+  background: #f3e8ff;
+  color: #6b21a8;
+}
+
+.badge-patterns {
+  background: #fce7f3;
+  color: #be185d;
+}
+
+.badge-erp {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+.badge-scaling {
+  background: #e0f2fe;
+  color: #075985;
+}
+
+.badge-performance {
+  background: #ffedd5;
+  color: #c2410c;
+}
+
+.badge-async {
+  background: #ddd6fe;
+  color: #5b21b6;
+}
+
+.badge-multi-channel {
+  background: #fce7f3;
+  color: #a21caf;
 }
 
 /* Footer */
@@ -377,23 +486,54 @@
   background: linear-gradient(135deg, var(--primary-bg) 0%, #1e293b 100%);
 }
 [data-theme="dark"] .doc-card.visited {
-  background: linear-gradient(135deg, var(--surface) 0%, rgba(59, 130, 246, 0.15) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--surface) 0%,
+    rgba(59, 130, 246, 0.15) 100%
+  );
   border-color: var(--primary-light);
-  animation: pulse-glow-dark 2s ease-in-out infinite;
+  /* animation: pulse-glow-dark 2s ease-in-out infinite; */
 }
 
 @keyframes pulse-glow-dark {
-  0%, 100% {
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2), var(--shadow-md);
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 3px rgba(59, 130, 246, 0.2),
+      var(--shadow-md);
   }
   50% {
-    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.3), 0 0 20px rgba(59, 130, 246, 0.25), var(--shadow-lg);
+    box-shadow:
+      0 0 0 4px rgba(59, 130, 246, 0.3),
+      0 0 20px rgba(59, 130, 246, 0.25),
+      var(--shadow-lg);
   }
 }
-[data-theme="dark"] .badge-essential { background: #450a0a; color: #fca5a5; }
-[data-theme="dark"] .badge-new { background: #052e16; color: #86efac; }
-[data-theme="dark"] .badge-enterprise { background: #3b0764; color: #e9d5ff; }
-[data-theme="dark"] .badge-technical { background: var(--surface); color: var(--text-secondary); }
-[data-theme="dark"] .badge-guide { background: #422006; color: #fcd34d; }
-[data-theme="dark"] .docs-tab-button:hover { color: var(--text); background: var(--border); }
-[data-theme="dark"] .docs-tab-button.active { color: var(--primary-light); border-bottom-color: var(--primary-light); }
+[data-theme="dark"] .badge-essential {
+  background: #450a0a;
+  color: #fca5a5;
+}
+[data-theme="dark"] .badge-new {
+  background: #052e16;
+  color: #86efac;
+}
+[data-theme="dark"] .badge-enterprise {
+  background: #3b0764;
+  color: #e9d5ff;
+}
+[data-theme="dark"] .badge-technical {
+  background: var(--surface);
+  color: var(--text-secondary);
+}
+[data-theme="dark"] .badge-guide {
+  background: #422006;
+  color: #fcd34d;
+}
+[data-theme="dark"] .docs-tab-button:hover {
+  color: var(--text);
+  background: var(--border);
+}
+[data-theme="dark"] .docs-tab-button.active {
+  color: var(--primary-light);
+  border-bottom-color: var(--primary-light);
+}

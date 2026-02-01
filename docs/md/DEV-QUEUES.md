@@ -14,6 +14,7 @@ A comprehensive guide to processing background jobs, handling asynchronous tasks
 4. [Running Queue Workers](#running-queue-workers)
 5. [Job Lifecycle](#job-lifecycle)
 6. [Best Practices](#best-practices)
+7. [When to Use Queues vs Synchronous Processing](#when-to-use-queues-vs-synchronous-processing)
 
 ---
 
@@ -477,12 +478,291 @@ Run jobs on a schedule:
 
 ---
 
-**Related Documentation:**
-- [CLI Commands](/docs/dev/cli-commands) - Queue command reference
-- [Mail System](/docs/dev/mail) - Sending emails asynchronously
-- [Events](/docs/dev/events) - Event-driven job dispatching
+## When to Use Queues vs Synchronous Processing
+
+Choosing between queued (async) and synchronous processing affects user experience, system reliability, and application complexity.
+
+### Decision Matrix
+
+| Factor | Synchronous | Queued (Async) |
+|--------|-------------|----------------|
+| **Response Time** | Slower (waits for completion) | Faster (returns immediately) |
+| **User Feedback** | ✅ Immediate success/failure | ⚠️ Delayed feedback |
+| **Reliability** | ⚠️ Fails if process crashes | ✅ Retries on failure |
+| **Resource Usage** | ⚠️ Blocks web workers | ✅ Dedicated queue workers |
+| **Complexity** | Simple (single process) | Complex (multi-process) |
+| **Error Handling** | Direct exception handling | Job failure tracking |
+| **Scalability** | Limited by web workers | ✅ Add more queue workers |
+| **Setup Required** | None | Queue worker + supervisor |
+
+### Use Queues (Async) When:
+
+✅ **Long-Running Operations (>2 seconds)**
+- Image processing/resizing
+- Video encoding
+- PDF generation
+- Large file uploads
+- Data imports/exports
+
+✅ **External API Calls**
+- Third-party API requests (can be slow/unreliable)
+- Payment processing
+- Email sending (SMTP delays)
+- SMS notifications
+- Webhook calls
+
+✅ **Non-Critical to User Flow**
+- Analytics tracking
+- Logging to external services
+- Cache warming
+- Generating thumbnails
+- Sending newsletters
+
+✅ **High Volume Tasks**
+- Bulk email sending
+- Mass notifications
+- Batch data processing
+- Report generation
+
+**Example:**
+```php
+// User uploads profile picture
+public function uploadAvatar(Request $request)
+{
+    $file = $request->file('avatar');
+    $path = $file->store('avatars');
+
+    // Queue image processing (resize, optimize)
+    dispatch(new ProcessAvatar($path, auth()->id()));
+
+    // Return immediately - don't make user wait
+    return redirect('/profile')->with('success', 'Avatar uploaded! Processing...');
+}
+```
+
+### Use Synchronous When:
+
+✅ **Critical Business Logic**
+- Payment validation
+- Inventory checks
+- Order creation
+- User authentication
+- Database transactions
+
+✅ **User Needs Immediate Feedback**
+- Form validation errors
+- Login/logout
+- Creating/updating records
+- Search results
+
+✅ **Fast Operations (<500ms)**
+- Database queries
+- Simple calculations
+- Cache reads
+- File reads
+
+✅ **Atomic Operations**
+- Must complete in single transaction
+- Rollback required on failure
+- Dependency on immediate result
+
+**Example:**
+```php
+// User places order
+public function placeOrder(Request $request)
+{
+    // SYNCHRONOUS: Check inventory (critical)
+    if (!$this->hasStock($request->product_id, $request->quantity)) {
+        return back()->with('error', 'Out of stock');
+    }
+
+    // SYNCHRONOUS: Create order (transactional)
+    $order = Order::create([
+        'user_id' => auth()->id(),
+        'product_id' => $request->product_id,
+        'quantity' => $request->quantity,
+        'total' => $this->calculateTotal($request),
+    ]);
+
+    // QUEUED: Send confirmation email (non-critical)
+    dispatch(new SendOrderConfirmation($order->id));
+
+    // QUEUED: Update analytics (non-critical)
+    dispatch(new TrackOrderPlaced($order->id));
+
+    return redirect("/orders/{$order->id}")->with('success', 'Order placed!');
+}
+```
+
+### Hybrid Approach: Best of Both Worlds
+
+Combine sync and async for optimal UX:
+
+```php
+public function processPayment(Request $request)
+{
+    // SYNC: Validate payment (user needs immediate feedback)
+    $payment = $this->paymentGateway->validate($request->all());
+
+    if (!$payment->isValid()) {
+        return back()->with('error', 'Payment failed');
+    }
+
+    // SYNC: Create transaction record (critical business logic)
+    $transaction = Transaction::create([
+        'user_id' => auth()->id(),
+        'amount' => $payment->amount,
+        'status' => 'completed',
+    ]);
+
+    // ASYNC: Send receipt email (slow, non-critical)
+    dispatch(new SendPaymentReceipt($transaction->id));
+
+    // ASYNC: Update accounting system (slow, can retry)
+    dispatch(new SyncToAccounting($transaction->id));
+
+    // ASYNC: Fraud detection analysis (slow, non-blocking)
+    dispatch(new AnalyzeFraud($transaction->id));
+
+    return redirect('/success')->with('message', 'Payment successful!');
+}
+```
+
+### Common Pitfalls to Avoid
+
+**❌ Don't Queue Critical User-Facing Operations**
+```php
+// BAD: User won't know if registration succeeded
+dispatch(new RegisterUser($email, $password));
+return redirect('/login');
+
+// GOOD: Register synchronously, queue welcome email
+$user = User::create(['email' => $email, 'password' => $password]);
+dispatch(new SendWelcomeEmail($user->id));
+return redirect('/dashboard');
+```
+
+**❌ Don't Queue When You Need Immediate Results**
+```php
+// BAD: Search results won't be available immediately
+dispatch(new PerformSearch($query));
+return view('search/loading');
+
+// GOOD: Search synchronously (should be fast anyway)
+$results = $this->searchService->search($query);
+return view('search/results', ['results' => $results]);
+```
+
+**❌ Don't Use Sync for Long-Running Operations**
+```php
+// BAD: User waits 30+ seconds for video to encode
+$this->videoEncoder->encode($file);
+return redirect('/videos');
+
+// GOOD: Queue video encoding, show "processing" status
+dispatch(new EncodeVideo($file->id));
+return redirect('/videos')->with('info', 'Video processing started');
+```
+
+### Queue Infrastructure Requirements
+
+Before using queues, ensure you have:
+
+**Required:**
+- [ ] Queue worker process (`./sixorbit queue:work`)
+- [ ] Process supervisor (systemd, supervisord, PM2)
+- [ ] Database table for jobs (`jobs` table migration)
+
+**Recommended:**
+- [ ] Failed jobs table for debugging
+- [ ] Queue monitoring/alerting
+- [ ] Log rotation for worker logs
+- [ ] Retry strategy configured
+
+**Startup Script:**
+```bash
+# Start queue worker with supervisor (systemd example)
+[Unit]
+Description=SO Framework Queue Worker
+After=network.target
+
+[Service]
+Type=simple
+User=www-data
+WorkingDirectory=/var/www/html/so-backend-framework
+ExecStart=/usr/bin/php /var/www/html/so-backend-framework/sixorbit queue:work
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+```
+
+### Testing Strategy
+
+**Synchronous Code:**
+```php
+// Easy to test - direct assertion
+$result = $service->processPayment($data);
+$this->assertEquals('success', $result->status);
+```
+
+**Queued Code:**
+```php
+// Test job dispatch
+dispatch(new ProcessPayment($data));
+$this->assertDatabaseHas('jobs', ['queue' => 'default']);
+
+// Test job execution separately
+$job = new ProcessPayment($data);
+$job->handle();
+$this->assertEquals('success', $payment->status);
+```
+
+### Migration Path
+
+**Start Synchronous:**
+1. Build feature synchronously first
+2. Measure response times
+3. Identify slow operations (>2s)
+4. Move slow parts to queues
+
+**Example Migration:**
+```php
+// Version 1: All synchronous
+public function uploadDocument(Request $request)
+{
+    $file = $request->file('document');
+    $parsed = $this->pdfParser->parse($file);  // Slow!
+    $indexed = $this->searchIndex->index($parsed);  // Slow!
+
+    return redirect('/documents');
+}
+
+// Version 2: Queue slow operations
+public function uploadDocument(Request $request)
+{
+    $file = $request->file('document');
+    $path = $file->store('documents');
+
+    // Queue slow operations
+    dispatch(new ParseAndIndexDocument($path));
+
+    return redirect('/documents')->with('success', 'Document uploaded!');
+}
+```
 
 ---
 
-**Last Updated**: 2026-01-31
+## See Also
+
+- **[CLI Commands](CONSOLE-COMMANDS.md)** - `queue:work`, `queue:failed`, `queue:retry`
+- **[Mail System](DEV-MAIL.md)** - Queuing email delivery
+- **[Events](DEV-EVENTS.md)** - Dispatching jobs from events
+- **[Helper Functions](DEV-HELPERS.md)** - `dispatch()`, `queue()` helpers
+- **[Service Layer](SERVICE-LAYER.md)** - Queuing service operations
+- **[Queue System](QUEUE-SYSTEM.md)** - Technical queue architecture
+
+---
+
+**Last Updated**: 2026-02-01
 **Framework Version**: 1.0

@@ -11,7 +11,8 @@ This guide walks through building API controllers in the SO Backend Framework. E
 5. [Filtering & Search](#filtering--search)
 6. [Sorting](#sorting)
 7. [Pagination](#pagination)
-8. [Complete Example](#complete-example)
+8. [Using Services in API Controllers](#using-services-in-api-controllers)
+9. [Complete Example](#complete-example)
 
 ---
 
@@ -506,6 +507,300 @@ $perPage = min(100, max(1, (int) $request->input('per_page', 15)));
 
 ---
 
+## Using Services in API Controllers
+
+The SO Framework follows the **Service Layer pattern** to separate business logic from HTTP handling. Instead of placing all logic directly in controllers, extract complex operations into dedicated service classes.
+
+### Why Use Services?
+
+**Benefits:**
+- **Thin Controllers** - Controllers focus purely on HTTP concerns (validation, request/response)
+- **Reusable Logic** - Share business logic across web controllers, API controllers, CLI commands, and jobs
+- **Easier Testing** - Test services independently without HTTP mocking
+- **Separation of Concerns** - Business rules live in services, not controllers
+- **Domain Organization** - Group related operations together
+
+### Service Structure
+
+Services live in `app/Services/` and are organized by domain:
+
+```
+app/Services/
+├── User/
+│   ├── UserService.php
+│   ├── PasswordResetService.php
+│   └── UserTransformer.php
+├── Product/
+│   ├── ProductService.php
+│   └── ProductTransformer.php
+└── Order/
+    ├── OrderService.php
+    └── OrderFulfillmentService.php
+```
+
+### Basic Service Example
+
+```php
+<?php
+
+namespace App\Services\Product;
+
+use App\Models\Product;
+
+class ProductService
+{
+    /**
+     * Get all products with optional filtering
+     */
+    public function getAllProducts(array $filters = []): array
+    {
+        $query = Product::query();
+
+        if (isset($filters['status'])) {
+            $query->where('status', '=', $filters['status']);
+        }
+
+        if (isset($filters['category_id'])) {
+            $query->where('category_id', '=', $filters['category_id']);
+        }
+
+        if (isset($filters['search'])) {
+            $query->where('name', 'LIKE', "%{$filters['search']}%");
+        }
+
+        $products = $query->get();
+
+        return array_map(fn($p) => $this->transform($p), $products);
+    }
+
+    /**
+     * Create a new product
+     */
+    public function createProduct(array $data): array
+    {
+        // Business logic: validate SKU uniqueness
+        if ($this->skuExists($data['sku'])) {
+            throw new \Exception('SKU already exists');
+        }
+
+        // Business logic: auto-generate slug
+        $data['slug'] = $this->generateSlug($data['name']);
+
+        $product = Product::create($data);
+
+        return $this->transform($product);
+    }
+
+    /**
+     * Update an existing product
+     */
+    public function updateProduct(int $id, array $data): array
+    {
+        $product = Product::find($id);
+
+        if (!$product) {
+            throw new \Exception('Product not found');
+        }
+
+        // Business logic: SKU uniqueness check (excluding current product)
+        if (isset($data['sku']) && $this->skuExists($data['sku'], $id)) {
+            throw new \Exception('SKU already exists');
+        }
+
+        $product->update($data);
+
+        return $this->transform($product);
+    }
+
+    /**
+     * Delete a product
+     */
+    public function deleteProduct(int $id): bool
+    {
+        $product = Product::find($id);
+
+        if (!$product) {
+            throw new \Exception('Product not found');
+        }
+
+        return $product->delete();
+    }
+
+    /**
+     * Transform product model to API format
+     */
+    private function transform($product): array
+    {
+        return [
+            'id' => $product->id,
+            'name' => $product->name,
+            'slug' => $product->slug,
+            'sku' => $product->sku,
+            'price' => (float) $product->price,
+            'stock' => (int) $product->stock,
+            'status' => $product->status,
+            'category_id' => $product->category_id,
+            'created_at' => $product->created_at,
+        ];
+    }
+
+    /**
+     * Check if SKU exists
+     */
+    private function skuExists(string $sku, ?int $excludeId = null): bool
+    {
+        $query = Product::query()->where('sku', '=', $sku);
+
+        if ($excludeId) {
+            $query->where('id', '!=', $excludeId);
+        }
+
+        return count($query->get()) > 0;
+    }
+
+    /**
+     * Generate URL-friendly slug
+     */
+    private function generateSlug(string $name): string
+    {
+        return strtolower(str_replace(' ', '-', $name));
+    }
+}
+```
+
+### Using Services in Controllers
+
+Controllers become thin wrappers that validate input and return responses:
+
+```php
+<?php
+
+namespace App\Controllers\Api\V1;
+
+use Core\Http\Request;
+use Core\Http\JsonResponse;
+use Core\Validation\Validator;
+use App\Services\Product\ProductService;
+
+class ProductController
+{
+    private ProductService $productService;
+
+    public function __construct()
+    {
+        $this->productService = new ProductService();
+    }
+
+    public function index(Request $request): JsonResponse
+    {
+        // Controller handles HTTP concerns only
+        $filters = [
+            'status' => $request->input('status'),
+            'category_id' => $request->input('category_id'),
+            'search' => $request->input('search'),
+        ];
+
+        // Service handles business logic
+        $products = $this->productService->getAllProducts($filters);
+
+        return JsonResponse::success($products, 'Products retrieved');
+    }
+
+    public function store(Request $request): JsonResponse
+    {
+        // Validate input (HTTP concern)
+        $validator = new Validator($request->all(), [
+            'name' => 'required|string|max:255',
+            'sku' => 'required|string|max:50',
+            'price' => 'required|numeric|min:0',
+            'stock' => 'required|integer|min:0',
+            'status' => 'required|in:active,inactive,draft',
+        ]);
+
+        if (!$validator->passes()) {
+            return JsonResponse::error('Validation failed', 422, $validator->errors());
+        }
+
+        try {
+            // Delegate to service (business logic)
+            $product = $this->productService->createProduct($validator->validated());
+
+            return JsonResponse::created($product, 'Product created');
+        } catch (\Exception $e) {
+            return JsonResponse::error($e->getMessage(), 400);
+        }
+    }
+
+    public function show(Request $request, int $id): JsonResponse
+    {
+        try {
+            $product = $this->productService->getProduct($id);
+            return JsonResponse::success($product, 'Product retrieved');
+        } catch (\Exception $e) {
+            return JsonResponse::error($e->getMessage(), 404);
+        }
+    }
+
+    public function update(Request $request, int $id): JsonResponse
+    {
+        $validator = new Validator($request->all(), [
+            'name' => 'sometimes|string|max:255',
+            'sku' => 'sometimes|string|max:50',
+            'price' => 'sometimes|numeric|min:0',
+            'stock' => 'sometimes|integer|min:0',
+            'status' => 'sometimes|in:active,inactive,draft',
+        ]);
+
+        if (!$validator->passes()) {
+            return JsonResponse::error('Validation failed', 422, $validator->errors());
+        }
+
+        try {
+            $product = $this->productService->updateProduct($id, $validator->validated());
+            return JsonResponse::success($product, 'Product updated');
+        } catch (\Exception $e) {
+            return JsonResponse::error($e->getMessage(), 400);
+        }
+    }
+
+    public function destroy(Request $request, int $id): JsonResponse
+    {
+        try {
+            $this->productService->deleteProduct($id);
+            return JsonResponse::noContent();
+        } catch (\Exception $e) {
+            return JsonResponse::error($e->getMessage(), 404);
+        }
+    }
+}
+```
+
+### When to Use Services vs Direct Models
+
+**Use Services When:**
+- [ ] Business logic involves multiple models
+- [ ] Complex calculations or transformations
+- [ ] External API calls or third-party integrations
+- [ ] Logic needs to be reused across controllers, jobs, or commands
+- [ ] Domain rules that shouldn't live in controllers
+
+**Use Direct Models When:**
+- [ ] Simple CRUD with no business logic
+- [ ] Straightforward queries with no transformation
+- [ ] Prototyping or building MVPs quickly
+
+### Built-in Services
+
+The framework includes production-ready services:
+
+- **UserService** (`app/Services/User/UserService.php`) - User CRUD, profile updates
+- **AuthService** (`app/Services/Auth/AuthService.php`) - Login, logout, registration
+- **PasswordResetService** (`app/Services/Auth/PasswordResetService.php`) - Password reset flow
+
+**See Also:** [Service Layer Guide](SERVICE-LAYER.md) for complete documentation
+
+---
+
 ## Complete Example
 
 Below is a full `ProductController` that combines filtering, search, sorting, pagination, validation, and all five CRUD actions.
@@ -802,3 +1097,21 @@ Authorization: Bearer <token>
 | Paginate | `->paginate($perPage, $page)` |
 | Simple paginate | `->simplePaginate($perPage, $page)` |
 | Validate input | `Validator::make($data, $rules)` |
+
+---
+
+## See Also
+
+- **[Service Layer](SERVICE-LAYER.md)** - Complete guide to service pattern, transformers, and repositories
+- **[Web Controllers](DEV-WEB-CONTROLLERS.md)** - Building web controllers with views
+- **[Validation System](VALIDATION-SYSTEM.md)** - Validation rules and custom validators
+- **[API Authentication](DEV-API-AUTH.md)** - JWT and token-based authentication
+- **[API Versioning](API-VERSIONING.md)** - Version your API endpoints
+- **[Pagination](DEV-PAGINATION.md)** - Advanced pagination techniques
+- **[Models](DEV-MODELS.md)** - Working with models and query builder
+- **[Helper Functions](DEV-HELPERS.md)** - `json()`, `request()`, `validate()` helpers
+
+---
+
+**Last Updated**: 2026-02-01
+**Framework Version**: 1.0

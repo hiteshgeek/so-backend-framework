@@ -12,13 +12,14 @@ The SO Framework provides a powerful and expressive routing system similar to La
 6. [Middleware](#middleware)
 7. [Resource Routes](#resource-routes)
 8. [API Resources](#api-resources)
-9. [Route Model Binding](#route-model-binding)
-10. [Fallback Routes](#fallback-routes)
-11. [Redirect Routes](#redirect-routes)
-12. [View Routes](#view-routes)
-13. [Current Route Helpers](#current-route-helpers)
-14. [URL Generation](#url-generation)
-15. [Best Practices](#best-practices)
+9. [Versioned Routes (API Versioning)](#versioned-routes-api-versioning)
+10. [Route Model Binding](#route-model-binding)
+11. [Fallback Routes](#fallback-routes)
+12. [Redirect Routes](#redirect-routes)
+13. [View Routes](#view-routes)
+14. [Current Route Helpers](#current-route-helpers)
+15. [URL Generation](#url-generation)
+16. [Best Practices](#best-practices)
 
 ---
 
@@ -307,6 +308,153 @@ This generates:
 | GET | /posts/{id} | show | Show single post |
 | PUT | /posts/{id} | update | Update post |
 | DELETE | /posts/{id} | destroy | Delete post |
+
+---
+
+## Versioned Routes (API Versioning)
+
+Create versioned API endpoints to maintain backwards compatibility when making breaking changes.
+
+### Using Router::version()
+
+Group routes by version using the `version()` method:
+
+```php
+use Core\Routing\Router;
+use App\Controllers\Api\V1\UserController as UserControllerV1;
+use App\Controllers\Api\V2\UserController as UserControllerV2;
+
+// Version 1 routes
+Router::version('v1', function() {
+    Router::get('/users', [UserControllerV1::class, 'index']);
+    Router::post('/users', [UserControllerV1::class, 'store']);
+    Router::get('/users/{id}', [UserControllerV1::class, 'show']);
+});
+
+// Version 2 routes
+Router::version('v2', function() {
+    Router::get('/users', [UserControllerV2::class, 'index']);
+    Router::post('/users', [UserControllerV2::class, 'store']);
+    Router::get('/users/{id}', [UserControllerV2::class, 'show']);
+});
+```
+
+This generates:
+- `/api/v1/users` → UserControllerV1@index
+- `/api/v2/users` → UserControllerV2@index
+
+### Version Detection
+
+The framework automatically detects API versions from:
+
+1. **URL path** (primary): `/api/v2/users`
+2. **Accept header** (fallback): `Accept: application/vnd.api.v2+json`
+3. **Default version** (config): `config/api.php`
+
+Use `ApiVersionMiddleware` to detect and attach version to request:
+
+```php
+use App\Middleware\ApiVersionMiddleware;
+
+Router::group(['middleware' => [ApiVersionMiddleware::class]], function() {
+    Router::version('v1', function() {
+        // Version is detected and stored in $request->api_version
+    });
+});
+```
+
+### Organizing Versioned Controllers
+
+```
+app/Controllers/Api/
+├── V1/
+│   ├── UserController.php
+│   ├── PostController.php
+│   └── ProductController.php
+├── V2/
+│   ├── UserController.php  (breaking changes from V1)
+│   ├── PostController.php
+│   └── ProductController.php
+```
+
+### Complete Versioning Example
+
+```php
+<?php
+// routes/api.php
+
+use Core\Routing\Router;
+use App\Middleware\ApiVersionMiddleware;
+use App\Middleware\JwtMiddleware;
+use App\Controllers\Api\V1\UserController as UserV1;
+use App\Controllers\Api\V2\UserController as UserV2;
+
+// Apply version detection and auth to all API routes
+Router::group([
+    'prefix' => 'api',
+    'middleware' => [ApiVersionMiddleware::class, JwtMiddleware::class]
+], function() {
+
+    // Version 1 (original API)
+    Router::version('v1', function() {
+        Router::get('/users', [UserV1::class, 'index']);
+        // Returns: { users: [...] }
+    });
+
+    // Version 2 (new response format)
+    Router::version('v2', function() {
+        Router::get('/users', [UserV2::class, 'index']);
+        // Returns: { data: [...], meta: {...} }
+    });
+});
+```
+
+### Deprecation Warnings
+
+Mark versions as deprecated in `config/api.php`:
+
+```php
+return [
+    'default_version' => 'v2',
+    'supported_versions' => ['v1', 'v2', 'v3'],
+    'deprecated_versions' => ['v1'],  // Add deprecation warnings
+];
+```
+
+When a deprecated version is used, the response includes headers:
+```
+X-API-Version-Deprecated: true
+X-API-Deprecation-Info: API version v1 is deprecated. Please migrate to a newer version.
+```
+
+### Best Practices
+
+**When to Create a New Version:**
+- [ ] Breaking changes to response structure
+- [ ] Removing fields from responses
+- [ ] Changing field types (string → integer)
+- [ ] Changing authentication mechanisms
+
+**When NOT to Create a New Version:**
+- [ ] Adding new optional fields
+- [ ] Adding new endpoints
+- [ ] Bug fixes
+- [ ] Performance improvements
+
+**Versioning Strategy:**
+```php
+// GOOD: Separate controllers per version
+Router::version('v1', fn() => Router::get('/users', [UserV1::class, 'index']));
+Router::version('v2', fn() => Router::get('/users', [UserV2::class, 'index']));
+
+// BAD: Same controller with version conditionals
+Router::get('/api/{version}/users', function($version) {
+    if ($version === 'v1') { /* ... */ }
+    else if ($version === 'v2') { /* ... */ }
+});
+```
+
+**See Also:** [API Versioning Guide](API-VERSIONING.md) for complete documentation
 
 ---
 
@@ -715,3 +863,20 @@ Router::fallback(function () {
 | Current route | `Router::current()` |
 | Route name | `Router::currentRouteName()` |
 | Check route | `Router::is('admin.*')` |
+| Versioned routes | `Router::version('v1', fn() => ...)` |
+
+---
+
+## See Also
+
+- **[API Versioning](API-VERSIONING.md)** - Complete guide to versioning strategies and migration
+- **[Middleware](DEV-CUSTOM-MIDDLEWARE.md)** - Creating and using middleware
+- **[Web Controllers](DEV-WEB-CONTROLLERS.md)** - Building web controllers
+- **[API Controllers](DEV-API-CONTROLLERS.md)** - Building API controllers
+- **[Helper Functions](DEV-HELPERS.md)** - `route()`, `url()`, `router()`, `route_is()` helpers
+- **[Route Parameters Guide](DEV-ROUTE-PARAMS.md)** - Working with route parameters
+
+---
+
+**Last Updated**: 2026-02-01
+**Framework Version**: 1.0

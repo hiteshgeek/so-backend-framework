@@ -42,6 +42,36 @@ cache()->put('key', 'value', 3600);
 
 ## Configuration & Environment
 
+### app()
+
+Get the application instance or resolve a binding from the container.
+
+```php
+app(?string $abstract = null): mixed
+```
+
+**Examples:**
+
+```php
+// Get application instance
+$app = app();
+
+// Resolve from container
+$router = app('router');
+$cache = app('cache');
+$auth = app('auth');
+
+// Make instance
+$validator = app(\Core\Validation\Validator::class);
+
+// Check if bound
+if ($app->has('custom.service')) {
+    $service = app('custom.service');
+}
+```
+
+---
+
 ### env()
 
 Get environment variable value.
@@ -290,6 +320,145 @@ return back()->withErrors(['email' => 'Email is required']);
 
 // Go back with input
 return back()->withInput();
+```
+
+---
+
+### router()
+
+Get the router instance.
+
+```php
+router(): Router
+```
+
+**Examples:**
+
+```php
+// Get router
+$router = router();
+
+// Add route dynamically
+router()->get('/custom', function() {
+    return 'Custom route';
+});
+
+// Get all routes
+$routes = router()->getRoutes();
+
+// Get current route
+$current = router()->current();
+```
+
+---
+
+### current_route()
+
+Get the currently matched route object.
+
+```php
+current_route(): ?Route
+```
+
+**Examples:**
+
+```php
+// Get current route
+$route = current_route();
+
+// Get route information
+if ($route) {
+    $name = $route->name;
+    $uri = $route->uri;
+    $methods = $route->methods;
+    $middleware = $route->middleware;
+}
+```
+
+---
+
+### route_is()
+
+Check if the current route matches the given name(s). Supports wildcard patterns.
+
+```php
+route_is(string ...$names): bool
+```
+
+**Examples:**
+
+```php
+// Exact match
+if (route_is('home')) {
+    // Current route is 'home'
+}
+
+// Multiple names
+if (route_is('user.show', 'user.edit')) {
+    // Current route is either user.show or user.edit
+}
+
+// Wildcard patterns
+if (route_is('admin.*')) {
+    // Any admin route
+}
+
+if (route_is('user.*', 'profile.*')) {
+    // Any user or profile route
+}
+
+// In views
+<nav>
+    <a href="/dashboard" class="<?= route_is('dashboard') ? 'active' : '' ?>">Dashboard</a>
+    <a href="/profile" class="<?= route_is('profile.*') ? 'active' : '' ?>">Profile</a>
+</nav>
+```
+
+---
+
+### current_route_name()
+
+Get the name of the currently matched route.
+
+```php
+current_route_name(): ?string
+```
+
+**Examples:**
+
+```php
+// Get current route name
+$name = current_route_name(); // 'user.show'
+
+// Use in conditionals
+if (current_route_name() === 'dashboard') {
+    // Dashboard-specific logic
+}
+
+// In views
+<body class="page-<?= current_route_name() ?>">
+```
+
+---
+
+### current_route_action()
+
+Get the action (controller method) of the currently matched route.
+
+```php
+current_route_action(): ?string
+```
+
+**Examples:**
+
+```php
+// Get current action
+$action = current_route_action(); // 'App\Controllers\UserController@show'
+
+// Check controller
+if (str_contains(current_route_action(), 'AdminController')) {
+    // Admin controller
+}
 ```
 
 ---
@@ -801,6 +970,146 @@ asset(string $path): string
 
 ---
 
+### assets()
+
+Get the AssetManager instance for advanced asset management.
+
+```php
+assets(): AssetManager
+```
+
+**Examples:**
+
+```php
+// Get asset manager
+$manager = assets();
+
+// Register CSS
+assets()->css('app.css');
+assets()->css('custom.css', ['position' => 'head', 'priority' => 10]);
+
+// Register JavaScript
+assets()->js('app.js');
+assets()->js('analytics.js', ['position' => 'body_end']);
+
+// Inline styles/scripts
+assets()->inlineStyle('.custom { color: red; }');
+assets()->inlineScript('console.log("loaded");');
+
+// Check if registered
+if (assets()->has('app.css')) {
+    // Asset already registered
+}
+```
+
+---
+
+### push_stack()
+
+Push content onto a named asset stack (for custom assets).
+
+```php
+push_stack(string $name, string $content, int $priority = 50): void
+```
+
+**Examples:**
+
+```php
+// Push to styles stack
+push_stack('styles', '<link rel="stylesheet" href="/custom.css">');
+
+// Push to scripts stack
+push_stack('scripts', '<script src="/analytics.js"></script>');
+
+// With priority (lower = rendered first)
+push_stack('scripts', '<script src="/vendor.js"></script>', 10);
+push_stack('scripts', '<script src="/app.js"></script>', 20);
+
+// Custom stacks
+push_stack('meta-tags', '<meta name="description" content="...">');
+push_stack('social-meta', '<meta property="og:title" content="...">');
+
+// In child views
+push_stack('head', '<style>.page-specific { color: blue; }</style>');
+```
+
+---
+
+### render_stack()
+
+Render a named asset stack.
+
+```php
+render_stack(string $name): string
+```
+
+**Examples:**
+
+```php
+// In layout template
+<head>
+    <?= render_stack('styles') ?>
+    <?= render_stack('meta-tags') ?>
+</head>
+
+// In body
+<body>
+    <?= $content ?>
+    <?= render_stack('scripts') ?>
+    <?= render_stack('body_end') ?>
+</body>
+
+// Check if stack has content
+<?php if (!empty(render_stack('social-meta'))): ?>
+    <?= render_stack('social-meta') ?>
+<?php endif; ?>
+```
+
+---
+
+### render_assets()
+
+Render all registered assets for a specific position.
+
+```php
+render_assets(string $position): string
+```
+
+**Examples:**
+
+```php
+// In layout head
+<head>
+    <meta charset="UTF-8">
+    <title><?= $title ?></title>
+    <?= render_assets('head') ?>
+</head>
+
+// Before closing body tag
+<body>
+    <?= $content ?>
+    <?= render_assets('body_end') ?>
+</body>
+
+// Typical usage in layout
+<!DOCTYPE html>
+<html>
+<head>
+    <?= render_assets('head') ?>
+    <!-- All CSS and head scripts render here -->
+</head>
+<body>
+    <?= $content ?>
+    <?= render_assets('body_end') ?>
+    <!-- All body_end scripts render here -->
+</body>
+</html>
+```
+
+**See Also:** [Asset Management Guide](ASSET-MANAGEMENT.md)
+
+---
+
 ## String Helpers
 
 ### str_contains()
@@ -983,6 +1292,29 @@ $default = value(fn() => expensive_operation());
 
 ---
 
+### with()
+
+Return the given value (useful for chaining or one-liners).
+
+```php
+with(mixed $value): mixed
+```
+
+**Examples:**
+
+```php
+// Simple return
+$user = with($user);
+
+// Useful for compact expressions
+return with(User::find($id))->update(['active' => true]);
+
+// Transform and return
+$data = with(['a' => 1, 'b' => 2]);
+```
+
+---
+
 ## Logging & Debugging
 
 ### logger()
@@ -1037,6 +1369,38 @@ public function debug() {
     $data = ['key' => 'value'];
     dd($data); // Dumps and stops execution
 }
+```
+
+---
+
+### now()
+
+Get current DateTime object.
+
+```php
+now(): DateTime
+```
+
+**Examples:**
+
+```php
+// Get current datetime
+$now = now();
+
+// Format
+$formatted = now()->format('Y-m-d H:i:s');
+
+// Comparison
+$expires = now()->modify('+1 hour');
+
+// Store in database
+$data = [
+    'created_at' => now()->format('Y-m-d H:i:s'),
+    'expires_at' => now()->modify('+24 hours')->format('Y-m-d H:i:s'),
+];
+
+// Use in timestamps
+cache()->put('key', 'value', now()->modify('+1 hour')->getTimestamp());
 ```
 
 ---
@@ -1229,13 +1593,40 @@ class PostController
 
 ---
 
-**Related Documentation:**
-- [API Controllers](/docs/dev/api-controllers) - Using helpers in APIs
-- [Web Controllers](/docs/dev/web-controllers) - Using helpers in web controllers
-- [Views](/docs/view-templates) - Using helpers in templates
-- [Caching](/docs/dev/caching) - Cache helper usage
+## Helper Functions Summary
+
+The SO Framework provides **52 global helper functions** organized into these categories:
+
+| Category | Count | Key Functions |
+|----------|-------|---------------|
+| Configuration & Environment | 3 | `app()`, `env()`, `config()` |
+| Path Helpers | 4 | `base_path()`, `storage_path()`, `public_path()`, `config_path()` |
+| HTTP & Routing | 13 | `route()`, `redirect()`, `request()`, `response()`, `route_is()` |
+| Authentication & Security | 6 | `auth()`, `jwt()`, `csrf_token()`, `e()`, `sanitize()` |
+| Session & Cache | 3 | `session()`, `cache()`, `old()` |
+| Database & Models | 1 | `validate()` |
+| View & Output | 7 | `view()`, `asset()`, `assets()`, `push_stack()`, `render_assets()` |
+| String Helpers | 4 | `str_contains()`, `str_starts_with()`, `str_ends_with()`, `class_basename()` |
+| Array & Collection | 5 | `collect()`, `blank()`, `filled()`, `value()`, `with()` |
+| Logging & Debugging | 4 | `logger()`, `dd()`, `now()`, `abort()` |
+| Queue & Events | 4 | `queue()`, `dispatch()`, `event()`, `activity()` |
+
+**Total: 54 helper functions**
 
 ---
 
-**Last Updated**: 2026-01-31
+## See Also
+
+- **[API Controllers](DEV-API-CONTROLLERS.md)** - Using helpers in API controllers
+- **[Web Controllers](DEV-WEB-CONTROLLERS.md)** - Using helpers in web controllers
+- **[View Templates](VIEW-TEMPLATES.md)** - Using helpers in templates
+- **[Asset Management](ASSET-MANAGEMENT.md)** - Asset helper functions
+- **[Caching System](DEV-CACHING.md)** - Cache helper deep dive
+- **[Validation System](VALIDATION-SYSTEM.md)** - Validation helper usage
+- **[Routing System](ROUTING-SYSTEM.md)** - Routing helper functions
+- **[Authentication System](AUTH-SYSTEM.md)** - Auth helper functions
+
+---
+
+**Last Updated**: 2026-02-01
 **Framework Version**: 1.0

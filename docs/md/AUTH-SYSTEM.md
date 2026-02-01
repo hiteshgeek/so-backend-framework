@@ -84,6 +84,98 @@ The SO Framework provides a comprehensive authentication system with multiple au
 
 ---
 
+## Working with the AUSER Table
+
+The SO Framework User model is designed to work with an existing `auser` table from a legacy system. This is important to understand when working with user authentication and data.
+
+### Table Structure
+
+- **Table name:** `auser` (not the typical `users`)
+- **Primary key:** `uid` (not the standard `id`)
+- **Timestamps:** `created_ts`, `updated_ts` (not `created_at`, `updated_at`)
+- **Connection:** `db` (application database, not essentials)
+- **Status field:** `ustatusid` (uses HasStatusField trait)
+
+### User Model Configuration
+
+```php
+<?php
+
+namespace App\Models;
+
+use Core\Model\Model;
+use Core\ActivityLog\LogsActivity;
+use Core\Notifications\Notifiable;
+use Core\Model\Traits\HasStatusField;
+
+class User extends Model
+{
+    use LogsActivity, Notifiable, HasStatusField;
+
+    // Legacy table configuration
+    protected static string $table = 'auser';
+    protected static string $primaryKey = 'uid';
+    protected static string $connection = 'db';
+
+    // Status field configuration
+    protected string $statusField = 'ustatusid';
+    protected array $activeStatusValues = [1];
+    protected array $inactiveStatusValues = [2, 3];
+
+    protected array $fillable = [
+        'uid', 'name', 'email', 'password', 'empid',
+        'designation', 'report_to', 'ustatusid',
+        'email_signature', 'mail_box_full_name',
+        // ... other fields
+    ];
+
+    // Custom timestamp column names
+    protected static array $timestamps = ['created_ts', 'updated_ts'];
+}
+```
+
+### Key Differences from Standard Setup
+
+**Finding Users:**
+```php
+// Use uid instead of id
+$user = User::find($uid);  // NOT User::find($id)
+
+// Get authenticated user's uid
+$userId = auth()->user()->uid;  // NOT auth()->user()->id
+```
+
+**Timestamps:**
+```php
+// Access timestamps with custom names
+$createdAt = $user->created_ts;  // NOT $user->created_at
+$updatedAt = $user->updated_ts;  // NOT $user->updated_at
+```
+
+**Status Checking:**
+```php
+// Uses HasStatusField trait
+if ($user->isActive()) {
+    // User status is active (ustatusid = 1)
+}
+
+// Query active users
+$activeUsers = User::active()->get();
+```
+
+### Why This Matters
+
+When following authentication examples in this guide, remember:
+- Examples may show generic `users` table - adapt to `auser`
+- Examples may show `id` primary key - adapt to `uid`
+- Examples may show standard timestamps - adapt to `created_ts`/`updated_ts`
+
+**See Also:**
+- [DEV-MODELS.md](/docs/dev-models) - Model basics
+- [STATUS-FIELD-TRAIT.md](/docs/status-field-trait) - Status field handling
+
+---
+
 ## Quick Start
 
 ### 1. Basic Login Example

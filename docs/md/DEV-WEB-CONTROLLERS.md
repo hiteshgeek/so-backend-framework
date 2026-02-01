@@ -11,7 +11,8 @@ A step-by-step guide to building web controllers in the SO Backend Framework. We
 5. [Redirects & Flash Messages](#redirects--flash-messages)
 6. [Reading Flash Data in Views](#reading-flash-data-in-views)
 7. [Working with the Authenticated User](#working-with-the-authenticated-user)
-8. [Complete Example](#complete-example)
+8. [Using Services in Web Controllers](#using-services-in-web-controllers)
+9. [Complete Example](#complete-example)
 
 ---
 
@@ -572,6 +573,228 @@ public function destroy(Request $request, int $id): Response
 
 ---
 
+## Using Services in Web Controllers
+
+The SO Framework uses the **Service Layer pattern** to keep controllers thin and focused on HTTP concerns. Business logic, data transformations, and complex operations live in service classes instead of controllers.
+
+### Why Use Services?
+
+**Benefits:**
+- **Thin Controllers** - Controllers only handle HTTP (validation, views, redirects)
+- **Reusable Logic** - Share code between web controllers, API controllers, CLI commands
+- **Easier Testing** - Test business logic without HTTP mocking
+- **Better Organization** - Group related operations by domain
+- **Separation of Concerns** - Business rules don't leak into controllers
+
+### Service-Based Controller Example
+
+**Service:**
+```php
+<?php
+
+namespace App\Services\User;
+
+use App\Models\User;
+
+class UserService
+{
+    /**
+     * Get user by ID
+     */
+    public function getUser(int $id): ?array
+    {
+        $user = User::find($id);
+
+        if (!$user) {
+            return null;
+        }
+
+        return $user->toArray();
+    }
+
+    /**
+     * Update user profile
+     */
+    public function updateProfile(int $id, array $data): array
+    {
+        $user = User::find($id);
+
+        if (!$user) {
+            throw new \Exception('User not found');
+        }
+
+        // Business logic: normalize email
+        if (isset($data['email'])) {
+            $data['email'] = strtolower(trim($data['email']));
+        }
+
+        // Business logic: check email uniqueness
+        if (isset($data['email']) && $this->emailExists($data['email'], $id)) {
+            throw new \Exception('Email already in use');
+        }
+
+        $user->update($data);
+
+        return $user->toArray();
+    }
+
+    /**
+     * Delete user
+     */
+    public function deleteUser(int $id): bool
+    {
+        $user = User::find($id);
+
+        if (!$user) {
+            throw new \Exception('User not found');
+        }
+
+        return $user->delete();
+    }
+
+    /**
+     * Check if email exists (excluding current user)
+     */
+    private function emailExists(string $email, ?int $excludeId = null): bool
+    {
+        $query = User::query()->where('email', '=', $email);
+
+        if ($excludeId) {
+            $query->where('id', '!=', $excludeId);
+        }
+
+        return count($query->get()) > 0;
+    }
+}
+```
+
+**Controller:**
+```php
+<?php
+
+namespace App\Controllers;
+
+use Core\Http\Request;
+use Core\Http\Response;
+use Core\Validation\Validator;
+use App\Services\User\UserService;
+
+class ProfileController
+{
+    private UserService $userService;
+
+    public function __construct()
+    {
+        $this->userService = new UserService();
+    }
+
+    /**
+     * Show user profile
+     */
+    public function show(Request $request): Response
+    {
+        try {
+            $user = $this->userService->getUser(auth()->id());
+
+            return Response::view('profile/show', [
+                'title' => 'My Profile',
+                'user' => $user,
+            ]);
+        } catch (\Exception $e) {
+            return redirect(url('/dashboard'))
+                ->with('error', 'Unable to load profile');
+        }
+    }
+
+    /**
+     * Update user profile
+     */
+    public function update(Request $request): Response
+    {
+        // Validate (HTTP concern - stays in controller)
+        $validator = new Validator($request->all(), [
+            'name' => 'required|string|max:255',
+            'email' => 'required|email',
+            'phone' => 'nullable|string|max:20',
+        ]);
+
+        if (!$validator->passes()) {
+            return redirect(url('/profile'))
+                ->withErrors($validator->errors())
+                ->withInput();
+        }
+
+        try {
+            // Delegate to service (business logic)
+            $this->userService->updateProfile(
+                auth()->id(),
+                $validator->validated()
+            );
+
+            return redirect(url('/profile'))
+                ->with('success', 'Profile updated successfully');
+        } catch (\Exception $e) {
+            return redirect(url('/profile'))
+                ->with('error', $e->getMessage())
+                ->withInput();
+        }
+    }
+}
+```
+
+### Benefits in Action
+
+**Without Services (Fat Controller):**
+```php
+public function update(Request $request): Response
+{
+    // Validation
+    // Email normalization logic
+    // Email uniqueness check
+    // Update user
+    // Handle errors
+    // Return response
+    // All in one method!
+}
+```
+
+**With Services (Thin Controller):**
+```php
+public function update(Request $request): Response
+{
+    // Validate
+    // Call service
+    // Return response
+    // Clean and focused!
+}
+```
+
+### When to Use Services
+
+**Use Services When:**
+- [ ] Business logic involves multiple models
+- [ ] Complex calculations or data transformations
+- [ ] Logic needs to be shared (web + API + CLI)
+- [ ] External API calls or integrations
+- [ ] Domain rules that don't belong in controllers
+
+**Use Direct Models When:**
+- [ ] Simple CRUD with no business logic
+- [ ] Prototyping quickly
+- [ ] Display-only pages (no mutations)
+
+### Built-in Services
+
+The framework includes production-ready services:
+
+- **UserService** - User management and profile updates
+- **AuthService** - Login, logout, registration
+- **PasswordResetService** - Password reset flow
+
+**See Also:** [Service Layer Guide](SERVICE-LAYER.md)
+
+---
+
 ## Complete Example
 
 Below is a full `ProfileController` with two actions: showing the profile page and handling a profile update form.
@@ -774,3 +997,21 @@ class ProfileController
 | Escape output in views | `e($value)` |
 | CSRF hidden field | `csrf_field()` |
 | Generate URL | `url('/path')` |
+
+---
+
+## See Also
+
+- **[Service Layer](SERVICE-LAYER.md)** - Complete guide to service pattern and domain organization
+- **[API Controllers](DEV-API-CONTROLLERS.md)** - Building RESTful API controllers
+- **[View Templates](VIEW-TEMPLATES.md)** - Template syntax and helpers
+- **[Validation System](VALIDATION-SYSTEM.md)** - Validation rules and error handling
+- **[Forms & Validation](DEV-FORMS-VALIDATION.md)** - Building and validating forms
+- **[Authentication](DEV-AUTH.md)** - Login, logout, and user authentication
+- **[Routing System](ROUTING-SYSTEM.md)** - Defining routes and route groups
+- **[Helper Functions](DEV-HELPERS.md)** - `redirect()`, `session()`, `old()` helpers
+
+---
+
+**Last Updated**: 2026-02-01
+**Framework Version**: 1.0

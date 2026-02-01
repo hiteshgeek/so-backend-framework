@@ -5,6 +5,7 @@ namespace App\Models;
 use Core\Model\Model;
 use Core\ActivityLog\LogsActivity;
 use Core\Notifications\Notifiable;
+use Core\Model\Traits\HasStatusField;
 use App\Constants\DatabaseTables;
 
 /**
@@ -17,6 +18,7 @@ class User extends Model
 {
     use LogsActivity;
     use Notifiable;
+    use HasStatusField;
 
     // ============================================
     // TABLE CONFIGURATION
@@ -101,6 +103,34 @@ class User extends Model
     protected static array $logAttributes = ['name', 'email', 'mobile']; // Don't log password
     protected static bool $logOnlyDirty = true;
     protected static string $logName = 'user';
+
+    // ============================================
+    // STATUS FIELD CONFIGURATION (HasStatusField trait)
+    // ============================================
+
+    /**
+     * The status field column name in the auser table
+     */
+    protected string $statusField = 'ustatusid';
+
+    /**
+     * Active status values
+     * 1 = Active user
+     */
+    protected array $activeStatusValues = [1];
+
+    /**
+     * Inactive status values
+     * 2 = Suspended
+     * 3 = Deleted
+     */
+    protected array $inactiveStatusValues = [2, 3];
+
+    /**
+     * Don't auto-filter inactive users by default
+     * Set to true if you want to automatically exclude suspended/deleted users
+     */
+    protected bool $autoFilterInactive = false;
 
     // ============================================
     // ATTRIBUTE ACCESSORS & MUTATORS

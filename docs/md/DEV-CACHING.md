@@ -14,6 +14,7 @@ A practical guide to using caching to improve application performance by storing
 4. [Caching Strategies](#caching-strategies)
 5. [Common Patterns](#common-patterns)
 6. [Best Practices](#best-practices)
+7. [When to Use Each Cache Driver](#when-to-use-each-cache-driver)
 
 ---
 
@@ -666,13 +667,207 @@ class BlogController
 
 ---
 
-**Related Documentation:**
-- [Cache System](/docs/cache-system) - Technical cache documentation
-- [File Cache](/docs/file-cache) - File-based caching
-- [Models](/docs/dev/models) - Database models
-- [CLI Commands](/docs/dev/cli-commands) - Cache commands
+## When to Use Each Cache Driver
+
+Choosing the right cache driver depends on your application's requirements, infrastructure, and performance needs.
+
+### Decision Matrix
+
+| Factor | Database | File | Array |
+|--------|----------|------|-------|
+| **Performance** | Moderate (SQL overhead) | Fast (file I/O) | Fastest (RAM only) |
+| **Persistence** | ✅ Survives restarts | ✅ Survives restarts | ❌ Request-scoped only |
+| **Multi-Server** | ✅ Shared cache | ⚠️ Server-specific | ❌ Not shared |
+| **Setup Required** | Database + migration | File permissions | None |
+| **Best For** | Shared hosting, clusters | Single server apps | Testing, request-scoped |
+| **Scalability** | ✅ Scales with DB | ⚠️ Limited by disk I/O | ❌ Not scalable |
+| **Cache Size** | Large (depends on DB) | Large (depends on disk) | Small (RAM limited) |
+
+### Use Database Cache When:
+
+✅ **Running on multiple servers** - Database cache is shared across all servers
+✅ **Using shared hosting** - Most shared hosts don't allow file writes outside certain dirs
+✅ **Need transactional consistency** - Cache updates can be part of DB transactions
+✅ **Don't have Redis/Memcached** - Database is universally available
+
+❌ **Avoid When:**
+- Performance is critical (sub-10ms response times)
+- Caching high-frequency data (1000s of reads/sec)
+- Limited database connections
+
+**Example Use Cases:**
+- User session data in load-balanced environments
+- Application settings shared across servers
+- API rate limiting counters
+
+**Configuration:**
+```php
+// config/cache.php
+return [
+    'default' => 'database',
+    'stores' => [
+        'database' => [
+            'driver' => 'database',
+            'table' => 'cache',
+            'connection' => 'mysql',  // Use specific DB connection
+        ],
+    ],
+];
+```
+
+### Use File Cache When:
+
+✅ **Single server deployment** - No need for shared cache
+✅ **Better performance than database** - Faster file I/O vs SQL queries
+✅ **Large cache sizes** - Disk space cheaper than RAM
+✅ **Simple setup** - No database migrations needed
+
+❌ **Avoid When:**
+- Multiple web servers (cache not shared)
+- Containerized deployments (ephemeral filesystems)
+- Limited disk I/O (slow disks, high traffic)
+
+**Example Use Cases:**
+- Rendered HTML fragments
+- Compiled view templates
+- API response caching on single server
+- Development/staging environments
+
+**Configuration:**
+```php
+// config/cache.php
+return [
+    'default' => 'file',
+    'stores' => [
+        'file' => [
+            'driver' => 'file',
+            'path' => storage_path('cache'),
+            'permissions' => 0755,  // Directory permissions
+        ],
+    ],
+];
+```
+
+**File Structure:**
+```
+storage/cache/
+├── 1a/2b/1a2b3c4d5e6f... (hashed keys)
+├── 5f/8a/5f8a9b0c1d2e...
+└── cache.index (optional index file)
+```
+
+### Use Array Cache When:
+
+✅ **Testing** - Fast, isolated cache per test
+✅ **Request-scoped data** - Data only needed within single request
+✅ **Development** - No persistence needed
+✅ **Temporary calculations** - Avoid recalculating within same request
+
+❌ **Avoid When:**
+- Need persistence beyond request
+- Sharing data between requests
+- Production caching
+
+**Example Use Cases:**
+- Caching computed values during single request
+- Memoization within request lifecycle
+- Unit/integration testing
+- Avoiding duplicate API calls in same request
+
+**Configuration:**
+```php
+// config/cache.php
+return [
+    'default' => 'array',
+    'stores' => [
+        'array' => [
+            'driver' => 'array',
+            'serialize' => false,  // Skip serialization for speed
+        ],
+    ],
+];
+```
+
+**Usage Example:**
+```php
+// Avoid duplicate API calls in same request
+public function getUserProfile(int $userId)
+{
+    return cache()->store('array')->remember("user.{$userId}", 3600, function() use ($userId) {
+        return $this->apiClient->fetchUser($userId);
+    });
+}
+
+// First call: hits API
+// Second call in same request: returns from array cache
+// Next request: fresh API call
+```
+
+### Hybrid Approach: Multiple Stores
+
+Use different stores for different purposes:
+
+```php
+// config/cache.php
+return [
+    'default' => 'file',  // General caching
+    'stores' => [
+        'file' => ['driver' => 'file', 'path' => storage_path('cache')],
+        'database' => ['driver' => 'database', 'table' => 'cache'],
+        'array' => ['driver' => 'array'],
+    ],
+];
+```
+
+```php
+// Use file cache for view rendering
+cache()->store('file')->remember('homepage.rendered', 3600, function() {
+    return view('home/index');
+});
+
+// Use database cache for rate limiting (shared across servers)
+cache()->store('database')->remember('rate_limit:' . $ip, 60, function() {
+    return ['count' => 0, 'expires' => time() + 60];
+});
+
+// Use array cache for request-scoped memoization
+cache()->store('array')->remember('expensive_calc:' . $id, 3600, function() use ($id) {
+    return $this->performExpensiveCalculation($id);
+});
+```
+
+### Migration Path
+
+**Starting Small:**
+1. Start with `file` cache (simple, fast setup)
+2. Monitor performance and cache hit rates
+3. Migrate to `database` when scaling to multiple servers
+4. Consider Redis/Memcached for high-traffic production
+
+**Switching Drivers:**
+```bash
+# Flush old cache before switching
+php sixorbit cache:clear
+
+# Update config/cache.php
+# Change 'default' => 'database'
+
+# Run migration if using database driver
+php sixorbit migrate
+```
 
 ---
 
-**Last Updated**: 2026-01-31
+## See Also
+
+- **[Cache System](CACHE-SYSTEM.md)** - Technical cache architecture
+- **[File Cache](FILE-CACHE.md)** - File-based caching deep dive
+- **[Models](DEV-MODELS.md)** - Caching query results
+- **[CLI Commands](CONSOLE-COMMANDS.md)** - `cache:clear`, `cache:forget` commands
+- **[Helper Functions](DEV-HELPERS.md)** - `cache()` helper usage
+- **[Session System](SESSION-SYSTEM.md)** - Session caching strategies
+
+---
+
+**Last Updated**: 2026-02-01
 **Framework Version**: 1.0

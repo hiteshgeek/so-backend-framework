@@ -617,6 +617,248 @@ var_dump(config('session.driver')); // Should be 'database'
 
 ---
 
+## When to Use Database vs File Sessions
+
+Choosing the right session driver depends on your deployment architecture and scale requirements.
+
+### Decision Matrix
+
+| Factor | File Sessions | Database Sessions |
+|--------|--------------|-------------------|
+| **Performance** | ✅ Faster (no DB queries) | ⚠️ Moderate (DB overhead) |
+| **Multi-Server** | ❌ Requires sticky sessions | ✅ Shared across servers |
+| **Setup** | ✅ Zero setup | ⚠️ Requires migration + cleanup |
+| **Scalability** | ❌ Limited to single server | ✅ Scales horizontally |
+| **Session Tracking** | ❌ No visibility | ✅ Track users, IPs, activity |
+| **Force Logout** | ❌ Can't invalidate remotely | ✅ Delete from database |
+| **High Availability** | ⚠️ Server restart = lost sessions | ✅ Persist through restarts |
+| **Storage** | File system | Database table |
+
+### Use Database Sessions When:
+
+✅ **Multi-Server Deployment (Load Balanced)**
+- Running 2+ web servers behind a load balancer
+- Need session sharing across all servers
+- Want to avoid sticky sessions / session affinity
+- Horizontal scaling is required
+
+✅ **Security & Compliance Requirements**
+- Need to track active users and their activity
+- Regulatory compliance (audit who accessed when)
+- Ability to force logout users from admin panel
+- Monitor suspicious activity (multiple IPs for one user)
+
+✅ **High Availability Production**
+- Can't afford to lose sessions on server restart
+- Need session persistence through deployments
+- Running in containerized/ephemeral environments (Docker, K8s)
+- Blue-green deployments
+
+✅ **Session Analytics**
+- Track concurrent users
+- Monitor session duration
+- Analyze user activity patterns
+- Generate usage reports
+
+**Example Production Setup:**
+```env
+# .env for production
+SESSION_DRIVER=database
+SESSION_LIFETIME=120
+SESSION_COOKIE=app_session
+SESSION_SECURE_COOKIE=true
+SESSION_HTTP_ONLY=true
+SESSION_SAME_SITE=lax
+```
+
+**Infrastructure:**
+```
+                  Load Balancer
+                  /           \
+           Web Server 1    Web Server 2
+                  \           /
+                  MySQL Database
+                  (sessions table)
+```
+
+### Use File Sessions When:
+
+✅ **Single Server Deployment**
+- Running on single server (no load balancing)
+- Simple VPS or shared hosting
+- Development/staging environments
+- Internal tools with limited users
+
+✅ **Maximum Performance**
+- Sub-millisecond session access required
+- High-traffic single-server applications
+- Want to avoid database load
+- Sessions contain large amounts of data
+
+✅ **Simple Setup**
+- Don't want to manage session cleanup
+- No need for session tracking/monitoring
+- Minimal infrastructure complexity
+
+✅ **Development & Testing**
+- Local development (no database needed for sessions)
+- Quick prototyping
+- Testing without database dependencies
+
+**Example Development Setup:**
+```env
+# .env for local development
+SESSION_DRIVER=file
+SESSION_LIFETIME=120
+SESSION_COOKIE=app_session_dev
+```
+
+### Performance Comparison
+
+**File Sessions:**
+```
+Session Read:  0.1ms - 0.5ms (direct file I/O)
+Session Write: 0.2ms - 1ms   (file write)
+Overhead: Minimal
+```
+
+**Database Sessions:**
+```
+Session Read:  1ms - 5ms   (SELECT query)
+Session Write: 2ms - 10ms  (INSERT/UPDATE query)
+Overhead: Database connection + query execution
+```
+
+**Impact on Response Time:**
+- File: Negligible (~0.5ms per request)
+- Database: Noticeable in high-traffic scenarios (~5-10ms per request)
+
+**When Performance Matters:**
+- API endpoints (1000+ req/sec) → Consider file sessions on single server
+- Regular web app (<100 req/sec) → Database sessions overhead is acceptable
+- Multi-server → Must use database sessions regardless of performance cost
+
+### Migration Path
+
+**Starting Small:**
+```bash
+# Phase 1: Single server with file sessions
+SESSION_DRIVER=file
+
+# Phase 2: Growing traffic, still single server
+# Keep file sessions for performance
+
+# Phase 3: Need second server for redundancy
+# MUST switch to database sessions
+SESSION_DRIVER=database
+php sixorbit migrate  # Run session table migration
+```
+
+**Switching Drivers:**
+```bash
+# 1. Run migration if switching to database
+php sixorbit migrate
+
+# 2. Update .env
+SESSION_DRIVER=database  # or 'file'
+
+# 3. Clear existing sessions
+php sixorbit session:clear
+
+# 4. Restart web server
+sudo systemctl restart php-fpm  # or your web server
+```
+
+**⚠️ Warning:** Switching drivers will log out all users. Schedule during maintenance window.
+
+### Hybrid Approach: Redis/Memcached (Future)
+
+For the best of both worlds, consider Redis/Memcached (when available):
+
+```
+Performance:  ✅✅ Fastest (in-memory)
+Multi-Server: ✅ Shared across servers
+Persistence:  ✅ Optional (Redis RDB/AOF)
+Setup:        ⚠️ Requires Redis/Memcached server
+```
+
+**Example:**
+```env
+SESSION_DRIVER=redis
+REDIS_HOST=127.0.0.1
+REDIS_PORT=6379
+```
+
+### Best Practices by Environment
+
+**Development:**
+```env
+SESSION_DRIVER=file  # Fast, simple
+SESSION_LIFETIME=120
+```
+
+**Staging:**
+```env
+SESSION_DRIVER=database  # Match production
+SESSION_LIFETIME=120
+```
+
+**Production (Single Server):**
+```env
+SESSION_DRIVER=file      # Maximum performance
+SESSION_LIFETIME=60      # Shorter for security
+SESSION_SECURE_COOKIE=true
+SESSION_HTTP_ONLY=true
+```
+
+**Production (Multi-Server):**
+```env
+SESSION_DRIVER=database  # Required for load balancing
+SESSION_LIFETIME=60
+SESSION_SECURE_COOKIE=true
+SESSION_HTTP_ONLY=true
+SESSION_SAME_SITE=lax
+```
+
+### Common Misconceptions
+
+**❌ "Database sessions are always slower"**
+- True: File I/O is faster than SQL queries
+- Reality: 5-10ms overhead is negligible for most applications
+- Trade-off: Horizontal scaling is more valuable than microseconds
+
+**❌ "File sessions can't scale"**
+- Partially true: Can't share across servers without NFS (not recommended)
+- Reality: Single server can handle 1000s of concurrent sessions with files
+- When to worry: Only when adding second server
+
+**❌ "Database sessions require more maintenance"**
+- True: Need periodic cleanup (`session:cleanup` cron job)
+- Reality: 1 line in crontab, runs automatically
+- File sessions: OS handles cleanup (also needs monitoring)
+
+**❌ "Must use database sessions for security"**
+- False: File sessions are equally secure when configured properly
+- Reality: Database sessions provide **tracking**, not inherently more security
+- Security comes from: HTTPS, secure cookies, CSRF protection (not driver choice)
+
+### Checklist: Choosing Your Driver
+
+**Choose FILE if:**
+- [ ] Single server deployment
+- [ ] Performance is critical (<1ms session access)
+- [ ] No need for session tracking/analytics
+- [ ] Simple infrastructure preferred
+
+**Choose DATABASE if:**
+- [ ] 2+ servers (load balanced)
+- [ ] Need session tracking & monitoring
+- [ ] Require force logout capability
+- [ ] Containerized/ephemeral infrastructure
+- [ ] Compliance requires session auditing
+
+---
+
 ## Summary
 
 The Session System provides:

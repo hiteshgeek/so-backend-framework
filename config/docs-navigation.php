@@ -25,10 +25,13 @@ return [
 
     // Security & Authentication
     ['key' => 'auth-system', 'title' => 'Authentication System', 'url' => '/docs/auth-system'],
+    ['key' => 'password-reset', 'title' => 'Password Reset', 'url' => '/docs/password-reset'],
     ['key' => 'security-layer', 'title' => 'Security Layer', 'url' => '/docs/security-layer'],
+    ['key' => 'encrypter', 'title' => 'Encrypter (AES-256)', 'url' => '/docs/encrypter'],
     ['key' => 'auth-lockout', 'title' => 'Auth Account Lockout', 'url' => '/docs/auth-lockout'],
     ['key' => 'validation-system', 'title' => 'Validation System', 'url' => '/docs/validation-system'],
     ['key' => 'api-versioning', 'title' => 'API Versioning', 'url' => '/docs/api-versioning'],
+    ['key' => 'context-permissions', 'title' => 'Context-Based Permissions', 'url' => '/docs/context-permissions'],
     ['key' => 'service-layer', 'title' => 'Service Layer', 'url' => '/docs/service-layer'],
 
     // Enterprise Features
@@ -75,8 +78,11 @@ return [
     ['key' => 'dev-custom-middleware', 'title' => 'Custom Middleware', 'url' => '/docs/dev-custom-middleware'],
 
     // Database & Models
+    ['key' => 'schema-builder', 'title' => 'Schema Builder', 'url' => '/docs/schema-builder'],
     ['key' => 'dev-models', 'title' => 'Models', 'url' => '/docs/dev-models'],
     ['key' => 'dev-model-advanced', 'title' => 'Advanced Models', 'url' => '/docs/dev-model-advanced'],
+    ['key' => 'model-observers', 'title' => 'Model Observers', 'url' => '/docs/model-observers'],
+    ['key' => 'multi-database', 'title' => 'Multi-Database Support', 'url' => '/docs/multi-database'],
     ['key' => 'dev-migrations', 'title' => 'Migrations', 'url' => '/docs/dev-migrations'],
     ['key' => 'dev-seeders', 'title' => 'Database Seeders', 'url' => '/docs/dev-seeders'],
 
