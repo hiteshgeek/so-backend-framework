@@ -26,6 +26,17 @@ NC='\033[0m' # No Color
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SOURCE_DIR="$(dirname "$SCRIPT_DIR")"
 
+# Validate source directory
+if [ ! -d "$SOURCE_DIR" ]; then
+    echo -e "${RED}Error: Source directory not found: $SOURCE_DIR${NC}"
+    exit 1
+fi
+
+if [ ! -f "$SOURCE_DIR/core/Application.php" ]; then
+    echo -e "${RED}Error: Not a valid framework directory (core/Application.php not found)${NC}"
+    exit 1
+fi
+
 # Parse arguments
 KEEP_DOCS=false
 DEST_DIR=""
@@ -83,10 +94,13 @@ echo -e "${BLUE}[2/10]${NC} Copying framework files..."
 
 # Build rsync exclude list
 RSYNC_EXCLUDES=(
+    # Version control & dependencies
     '.git'
     'node_modules'
-    '.env'
     'vendor'
+    '.env'
+
+    # Development files
     'tests'
     'todo'
     'setup'
@@ -95,12 +109,59 @@ RSYNC_EXCLUDES=(
     'storage/sessions/*'
     'storage/cache/*'
     'storage/logs/*'
-)
 
-# Add docs to excludes if not keeping
-if [ "$KEEP_DOCS" = false ]; then
-    RSYNC_EXCLUDES+=('docs')
-fi
+    # Demo documentation system
+    'docs'
+    'config/docs-navigation.php'
+
+    # Demo controllers (keep Auth API controllers)
+    'app/Controllers/DocsController.php'
+    'app/Controllers/DashboardController.php'
+    'app/Controllers/Auth/AuthController.php'
+    'app/Controllers/Auth/PasswordController.php'
+    'app/Controllers/Api/Demo'
+
+    # Demo services & repositories
+    'app/Services/Payment'
+    'app/Repositories/Product'
+
+    # Demo models (keep User.php)
+    'app/Models/Category.php'
+    'app/Models/Order.php'
+    'app/Models/Product.php'
+    'app/Models/Review.php'
+    'app/Models/Tag.php'
+
+    # Demo jobs & notifications
+    'app/Jobs/TestJob.php'
+    'app/Notifications/OrderApprovalNotification.php'
+    'app/Notifications/WelcomeNotification.php'
+
+    # Demo routes
+    'routes/web/auth.php'
+    'routes/web/dashboard.php'
+    'routes/web/docs.php'
+    'routes/api/demo.php'
+    'routes/api/products.php'
+    'routes/api/orders.php'
+
+    # Demo views (will create new minimal welcome.php)
+    'resources/views/welcome.php'
+    'resources/views/auth'
+    'resources/views/dashboard'
+    'resources/views/docs'
+    'resources/views/api/test.php'
+
+    # Demo assets
+    'public/assets/css/docs'
+    'public/assets/css/auth'
+    'public/assets/css/dashboard'
+    'public/assets/css/pages/welcome.css'
+    'public/assets/css/tools'
+    'public/assets/js/docs'
+    'public/assets/js/dashboard'
+    'public/assets/js/tools'
+)
 
 # Build rsync command with excludes
 RSYNC_CMD="rsync -a --quiet"
@@ -113,142 +174,223 @@ eval $RSYNC_CMD
 
 echo -e "${GREEN}✓${NC} Framework files copied"
 
-# Remove demo and development files
-echo -e "${BLUE}[3/10]${NC} Removing demo and development files..."
+# Create minimal welcome page
+echo -e "${BLUE}[3/10]${NC} Creating minimal welcome page..."
 
-# Clean app directories - remove all contents, recreate empty with .gitkeep
-# Controllers
-rm -rf "$DEST_DIR/app/Controllers"
-mkdir -p "$DEST_DIR/app/Controllers/Auth"
-mkdir -p "$DEST_DIR/app/Controllers/User"
+cat > "$DEST_DIR/resources/views/welcome.php" << 'WELCOME_EOF'
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?= htmlspecialchars(config('app.name', 'My Application')) ?></title>
+    <?php
+    assets()->cdn('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap', 'css', 'head', 5);
+    assets()->css('css/base.css', 'head', 8);
+    assets()->css('css/pages/welcome.css', 'head', 10);
+    assets()->js('js/theme.js', 'body_end', 10);
+    ?>
+    <script>(function(){var t=localStorage.getItem("theme");if(!t&&window.matchMedia("(prefers-color-scheme:dark)").matches)t="dark";if(t)document.documentElement.setAttribute("data-theme",t);})()</script>
+    <?= render_assets('head') ?>
+</head>
+<body>
+    <div class="welcome-container">
+        <h1><?= htmlspecialchars(config('app.name', 'My Application')) ?></h1>
+        <p class="welcome-subtitle">Your new application is ready to build.</p>
+
+        <div class="next-steps">
+            <h2>Next Steps</h2>
+            <ul>
+                <li>Configure your database in <code>.env</code></li>
+                <li>Create your models in <code>app/Models/</code></li>
+                <li>Build your controllers in <code>app/Controllers/</code></li>
+                <li>Define your routes in <code>routes/</code></li>
+                <li>Design your views in <code>resources/views/</code></li>
+            </ul>
+        </div>
+
+        <div class="info">
+            <p>Framework v<?= htmlspecialchars(config('app.version', '2.0.0')) ?> | PHP <?= PHP_VERSION ?></p>
+        </div>
+    </div>
+    <?= render_assets('body_end') ?>
+</body>
+</html>
+WELCOME_EOF
+
+mkdir -p "$DEST_DIR/public/assets/css/pages"
+
+cat > "$DEST_DIR/public/assets/css/pages/welcome.css" << 'CSS_EOF'
+/**
+ * Minimal Welcome Page CSS
+ */
+
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: var(--background);
+}
+
+.welcome-container {
+  max-width: 600px;
+  width: 100%;
+  margin: var(--space-3);
+  padding: var(--space-5) var(--space-4);
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border);
+}
+
+h1 {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: var(--space-1);
+  text-align: center;
+}
+
+.welcome-subtitle {
+  font-size: 16px;
+  color: var(--text-secondary);
+  text-align: center;
+  margin-bottom: var(--space-4);
+}
+
+.next-steps {
+  margin-bottom: var(--space-4);
+}
+
+.next-steps h2 {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: var(--space-2);
+}
+
+.next-steps ul {
+  list-style: none;
+  padding: 0;
+}
+
+.next-steps li {
+  padding: var(--space-1) 0;
+  color: var(--text-secondary);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.next-steps li::before {
+  content: "→ ";
+  color: var(--primary);
+  font-weight: 600;
+  margin-right: 8px;
+}
+
+.next-steps code {
+  background: var(--code-bg);
+  color: var(--code-text);
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+  font-family: 'Consolas', 'Monaco', monospace;
+  font-size: 13px;
+}
+
+.info {
+  text-align: center;
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--border);
+}
+
+.info p {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+@media (max-width: 480px) {
+  .welcome-container {
+    padding: var(--space-3) var(--space-2);
+    margin: var(--space-2);
+  }
+
+  h1 {
+    font-size: 24px;
+  }
+
+  .welcome-subtitle {
+    font-size: 14px;
+  }
+}
+CSS_EOF
+
+echo -e "${GREEN}✓${NC} Minimal welcome page created"
+
+# Create empty directories for new project
+echo -e "${BLUE}[4/10]${NC} Creating empty directories..."
+
+# Create empty controller directories (auth controllers already copied by rsync)
 mkdir -p "$DEST_DIR/app/Controllers/Api/V1"
 mkdir -p "$DEST_DIR/app/Controllers/Api/V2"
 mkdir -p "$DEST_DIR/app/Controllers/Web"
 mkdir -p "$DEST_DIR/app/Controllers/Internal"
-find "$DEST_DIR/app/Controllers" -type d -empty -exec touch {}/.gitkeep \;
+find "$DEST_DIR/app/Controllers/Api/V1" -type d -empty -exec touch {}/.gitkeep \;
+find "$DEST_DIR/app/Controllers/Api/V2" -type d -empty -exec touch {}/.gitkeep \;
+find "$DEST_DIR/app/Controllers/Web" -type d -empty -exec touch {}/.gitkeep \;
+find "$DEST_DIR/app/Controllers/Internal" -type d -empty -exec touch {}/.gitkeep \;
 
-# Services
-rm -rf "$DEST_DIR/app/Services"
-mkdir -p "$DEST_DIR/app/Services/Auth"
-mkdir -p "$DEST_DIR/app/Services/User"
-find "$DEST_DIR/app/Services" -type d -empty -exec touch {}/.gitkeep \;
-
-# Models
-rm -rf "$DEST_DIR/app/Models"
-mkdir -p "$DEST_DIR/app/Models"
-touch "$DEST_DIR/app/Models/.gitkeep"
-
-# Validation
-rm -rf "$DEST_DIR/app/Validation"
+# Create empty directories with .gitkeep (services/models already copied by rsync)
 mkdir -p "$DEST_DIR/app/Validation"
-touch "$DEST_DIR/app/Validation/.gitkeep"
-
-# Validators
-rm -rf "$DEST_DIR/app/Validators"
 mkdir -p "$DEST_DIR/app/Validators"
-touch "$DEST_DIR/app/Validators/.gitkeep"
-
-# Repositories
-rm -rf "$DEST_DIR/app/Repositories"
-mkdir -p "$DEST_DIR/app/Repositories"
-touch "$DEST_DIR/app/Repositories/.gitkeep"
-
-# Jobs
-rm -rf "$DEST_DIR/app/Jobs"
 mkdir -p "$DEST_DIR/app/Jobs"
-touch "$DEST_DIR/app/Jobs/.gitkeep"
-
-# Notifications
-rm -rf "$DEST_DIR/app/Notifications"
 mkdir -p "$DEST_DIR/app/Notifications"
-touch "$DEST_DIR/app/Notifications/.gitkeep"
-
-# Console Commands
-rm -rf "$DEST_DIR/app/Console/Commands"
 mkdir -p "$DEST_DIR/app/Console/Commands"
+touch "$DEST_DIR/app/Validation/.gitkeep"
+touch "$DEST_DIR/app/Validators/.gitkeep"
+touch "$DEST_DIR/app/Jobs/.gitkeep"
+touch "$DEST_DIR/app/Notifications/.gitkeep"
 touch "$DEST_DIR/app/Console/Commands/.gitkeep"
 
-# Clean views - remove all, keep only layouts (empty), errors, welcome
-# Save welcome.php and errors if they exist
-cp "$DEST_DIR/resources/views/welcome.php" /tmp/welcome.php 2>/dev/null || true
-cp -r "$DEST_DIR/resources/views/errors" /tmp/errors 2>/dev/null || true
-if [ "$KEEP_DOCS" = true ]; then
-    cp -r "$DEST_DIR/resources/views/docs" /tmp/docs 2>/dev/null || true
-fi
-
-rm -rf "$DEST_DIR/resources/views"
+# Create empty view directories (errors folder already copied by rsync)
 mkdir -p "$DEST_DIR/resources/views/layouts"
-mkdir -p "$DEST_DIR/resources/views/errors"
+mkdir -p "$DEST_DIR/resources/views/components"
+mkdir -p "$DEST_DIR/resources/views/emails"
 touch "$DEST_DIR/resources/views/layouts/.gitkeep"
+touch "$DEST_DIR/resources/views/components/.gitkeep"
+touch "$DEST_DIR/resources/views/emails/.gitkeep"
 
-# Restore welcome.php and errors
-cp /tmp/welcome.php "$DEST_DIR/resources/views/welcome.php" 2>/dev/null || true
-cp -r /tmp/errors/* "$DEST_DIR/resources/views/errors/" 2>/dev/null || true
-if [ "$KEEP_DOCS" = true ]; then
-    cp -r /tmp/docs "$DEST_DIR/resources/views/" 2>/dev/null || true
-fi
-rm -f /tmp/welcome.php 2>/dev/null || true
-rm -rf /tmp/errors 2>/dev/null || true
-rm -rf /tmp/docs 2>/dev/null || true
-
-# Clean routes - remove sub-route folders entirely
-rm -rf "$DEST_DIR/routes/web"
-rm -rf "$DEST_DIR/routes/api"
-mkdir -p "$DEST_DIR/routes/web"
-mkdir -p "$DEST_DIR/routes/api"
+# Create .gitkeep for routes
 touch "$DEST_DIR/routes/web/.gitkeep"
-touch "$DEST_DIR/routes/api/.gitkeep"
 
-# Clean assets - remove all CSS/JS subfolders, keep only essential files
-# Save essential files
-cp "$DEST_DIR/public/assets/css/base.css" /tmp/base.css 2>/dev/null || true
-cp "$DEST_DIR/public/assets/css/pages/welcome.css" /tmp/welcome.css 2>/dev/null || true
-cp "$DEST_DIR/public/assets/js/theme.js" /tmp/theme.js 2>/dev/null || true
-if [ "$KEEP_DOCS" = true ]; then
-    cp -r "$DEST_DIR/public/assets/css/docs" /tmp/css-docs 2>/dev/null || true
-    cp -r "$DEST_DIR/public/assets/js/docs" /tmp/js-docs 2>/dev/null || true
-fi
+echo -e "${GREEN}✓${NC} Empty directories created"
 
-rm -rf "$DEST_DIR/public/assets/css"
-rm -rf "$DEST_DIR/public/assets/js"
-mkdir -p "$DEST_DIR/public/assets/css/pages"
-mkdir -p "$DEST_DIR/public/assets/js"
+# Clean route files
+echo -e "${BLUE}[5/10]${NC} Cleaning route files..."
 
-# Restore essential files
-cp /tmp/base.css "$DEST_DIR/public/assets/css/base.css" 2>/dev/null || true
-cp /tmp/welcome.css "$DEST_DIR/public/assets/css/pages/welcome.css" 2>/dev/null || true
-cp /tmp/theme.js "$DEST_DIR/public/assets/js/theme.js" 2>/dev/null || true
-if [ "$KEEP_DOCS" = true ]; then
-    cp -r /tmp/css-docs "$DEST_DIR/public/assets/css/docs" 2>/dev/null || true
-    cp -r /tmp/js-docs "$DEST_DIR/public/assets/js/docs" 2>/dev/null || true
-fi
-rm -f /tmp/base.css /tmp/welcome.css /tmp/theme.js 2>/dev/null || true
-rm -rf /tmp/css-docs /tmp/js-docs 2>/dev/null || true
-
-# Remove docs config (unless keeping docs)
-if [ "$KEEP_DOCS" = false ]; then
-    rm -f "$DEST_DIR/config/docs-navigation.php" 2>/dev/null || true
-fi
-
-echo -e "${GREEN}✓${NC} Demo files removed"
-
-# Clean main route files - remove all require statements
-echo -e "${BLUE}[4/10]${NC} Cleaning route files..."
-
-# Clean web.php - remove all require statements for sub-routes
+# Clean web.php - remove demo requires
 if [ -f "$DEST_DIR/routes/web.php" ]; then
-    sed -i '/require.*\.php/d' "$DEST_DIR/routes/web.php" 2>/dev/null || true
+    sed -i '/require.*\/web\/auth\.php/d' "$DEST_DIR/routes/web.php"
+    sed -i '/require.*\/web\/dashboard\.php/d' "$DEST_DIR/routes/web.php"
+    sed -i '/require.*\/web\/docs\.php/d' "$DEST_DIR/routes/web.php"
+    sed -i '/Example route with parameters/,/whereNumber/d' "$DEST_DIR/routes/web.php"
+    sed -i '/^$/N;/^\n$/D' "$DEST_DIR/routes/web.php"
 fi
 
-# Clean api.php - remove all require statements for sub-routes
+# Clean api.php - remove demo requires, keep auth routes
 if [ -f "$DEST_DIR/routes/api.php" ]; then
-    sed -i '/require.*\.php/d' "$DEST_DIR/routes/api.php" 2>/dev/null || true
+    sed -i '/require.*\/api\/demo\.php/d' "$DEST_DIR/routes/api.php"
+    sed -i '/require.*\/api\/products\.php/d' "$DEST_DIR/routes/api.php"
+    sed -i '/require.*\/api\/orders\.php/d' "$DEST_DIR/routes/api.php"
+    sed -i '/API route tester/,/name.*api\.test/d' "$DEST_DIR/routes/api.php"
+    sed -i '/API v2 Routes/,/});/d' "$DEST_DIR/routes/api.php"
+    sed -i '/^$/N;/^\n$/D' "$DEST_DIR/routes/api.php"
 fi
 
 echo -e "${GREEN}✓${NC} Route files cleaned"
 
 # Clean database seeders - remove all and create empty folder
-echo -e "${BLUE}[5/10]${NC} Cleaning database seeders..."
+echo -e "${BLUE}[6/10]${NC} Cleaning database seeders..."
 
 # Clean database folder - remove all, recreate empty
 rm -rf "$DEST_DIR/database/seeders"
@@ -262,7 +404,7 @@ touch "$DEST_DIR/database/migrations/.gitkeep"
 echo -e "${GREEN}✓${NC} Database folders cleaned"
 
 # Create storage directories
-echo -e "${BLUE}[6/10]${NC} Creating storage directories..."
+echo -e "${BLUE}[7/10]${NC} Creating storage directories..."
 mkdir -p "$DEST_DIR/storage/sessions"
 mkdir -p "$DEST_DIR/storage/cache"
 mkdir -p "$DEST_DIR/storage/logs"
@@ -277,7 +419,7 @@ touch "$DEST_DIR/storage/uploads/.gitkeep"
 echo -e "${GREEN}✓${NC} Storage directories created"
 
 # Set permissions
-echo -e "${BLUE}[7/9]${NC} Setting permissions..."
+echo -e "${BLUE}[8/10]${NC} Setting permissions..."
 chmod -R 755 "$DEST_DIR"
 chmod -R 775 "$DEST_DIR/storage"
 
@@ -503,29 +645,34 @@ echo -e "${YELLOW}Next steps:${NC}"
 echo ""
 echo -e "  1. ${BLUE}cd $DEST_DIR${NC}"
 echo -e "  2. ${BLUE}composer install${NC}"
-echo -e "  3. ${BLUE}Configure your .env file${NC}"
-echo -e "  4. ${BLUE}Import database/schema.sql${NC}"
-echo -e "  5. ${BLUE}Configure web server → public/${NC}"
+echo -e "  3. ${BLUE}Edit .env file (database, JWT secret)${NC}"
+echo -e "  4. ${BLUE}Import database schema${NC}"
+echo -e "  5. ${BLUE}php -S localhost:8000 -t public${NC}"
 echo ""
-echo -e "${BLUE}Excluded from copy:${NC}"
-echo -e "  • Documentation (docs/) $(if [ "$KEEP_DOCS" = true ]; then echo -e "${YELLOW}[KEPT]${NC}"; fi)"
-echo -e "  • Tests (tests/)"
-echo -e "  • Development notes (todo/)"
-echo -e "  • Setup scripts (setup/)"
-echo -e "  • Git history"
-echo -e "  • node_modules/ and vendor/"
+echo -e "${BLUE}What was excluded:${NC}"
+echo -e "  • Documentation system (docs/, routes, controllers, assets)"
+echo -e "  • Demo dashboard (views, routes, controller, assets)"
+echo -e "  • Demo web auth UI (login/register pages, views)"
+echo -e "  • Demo models (Category, Order, Product, Review, Tag)"
+echo -e "  • Demo API endpoints (/api/demo, /api/products, /api/orders)"
+echo -e "  • Test files, development files (tests/, todo/, setup/)"
 echo ""
-echo -e "${BLUE}Cleaned (empty folders with .gitkeep):${NC}"
-echo -e "  • app/Controllers/Auth/, app/Controllers/User/"
-echo -e "  • app/Services/Auth/, app/Services/User/"
-echo -e "  • app/Validation/, app/Models/"
-echo -e "  • database/migrations/, database/seeders/"
-echo -e "  • routes/web/, routes/api/"
-echo -e "  • resources/views/auth/, resources/views/dashboard/"
-echo -e "  • Demo controllers, assets, and views"
+echo -e "${GREEN}What was included:${NC}"
+echo -e "  ✓ Complete auth system (JWT-based API authentication)"
+echo -e "  ✓ Auth controllers: AuthApiController, PasswordApiController, UserApiController"
+echo -e "  ✓ Auth services: AuthenticationService, PasswordResetService, UserService"
+echo -e "  ✓ User model with authentication methods"
+echo -e "  ✓ Auth routes: /api/auth/*, /api/users/*"
+echo -e "  ✓ All middleware (8 files): Auth, JWT, CORS, CSRF, Throttle, etc."
+echo -e "  ✓ All providers (5 files): Session, Cache, Queue, Notifications, Activity"
+echo -e "  ✓ Clean minimal welcome page"
+echo -e "  ✓ Theme toggle (dark/light mode)"
+echo ""
+echo -e "${BLUE}Empty directories (ready for your code):${NC}"
+echo -e "  • app/Controllers/Api/V1/, V2/, Web/, Internal/"
+echo -e "  • app/Validation/, Validators/, Repositories/, Jobs/, Notifications/"
+echo -e "  • resources/views/layouts/, components/, emails/"
 echo ""
 echo -e "${GREEN}Your clean framework is ready at:${NC}"
 echo -e "${GREEN}$DEST_DIR${NC}"
-echo ""
-echo -e "${YELLOW}Pro tip:${NC} Use ${BLUE}--keep-docs${NC} flag to include framework documentation"
 echo ""

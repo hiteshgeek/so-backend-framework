@@ -109,28 +109,18 @@ class User extends Model
     // ============================================
 
     /**
-     * The status field column name in the auser table
+     * Constructor - Set status field configuration
      */
-    protected string $statusField = 'ustatusid';
+    public function __construct(array $attributes = [])
+    {
+        // Configure status field before calling parent constructor
+        $this->statusField = 'ustatusid';
+        $this->activeStatusValues = [1];
+        $this->inactiveStatusValues = [2, 3];
+        $this->autoFilterInactive = false;
 
-    /**
-     * Active status values
-     * 1 = Active user
-     */
-    protected array $activeStatusValues = [1];
-
-    /**
-     * Inactive status values
-     * 2 = Suspended
-     * 3 = Deleted
-     */
-    protected array $inactiveStatusValues = [2, 3];
-
-    /**
-     * Don't auto-filter inactive users by default
-     * Set to true if you want to automatically exclude suspended/deleted users
-     */
-    protected bool $autoFilterInactive = false;
+        parent::__construct($attributes);
+    }
 
     // ============================================
     // ATTRIBUTE ACCESSORS & MUTATORS

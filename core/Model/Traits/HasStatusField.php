@@ -66,7 +66,7 @@ trait HasStatusField
      *
      * @var string
      */
-    protected string $statusField = 'status';
+    protected $statusField = 'status';
 
     /**
      * Values that represent "active" status
@@ -74,7 +74,7 @@ trait HasStatusField
      *
      * @var array
      */
-    protected array $activeStatusValues = [1];
+    protected $activeStatusValues = [1];
 
     /**
      * Values that represent "inactive" status
@@ -82,7 +82,7 @@ trait HasStatusField
      *
      * @var array
      */
-    protected array $inactiveStatusValues = [0];
+    protected $inactiveStatusValues = [0];
 
     /**
      * Whether to automatically filter out inactive records on all queries
@@ -90,7 +90,7 @@ trait HasStatusField
      *
      * @var bool
      */
-    protected bool $autoFilterInactive = false;
+    protected $autoFilterInactive = false;
 
     /**
      * Track if we've applied the global scope
