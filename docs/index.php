@@ -629,50 +629,23 @@ $baseUrl = getenv('APP_URL') ?: 'http://sixorbit.local';
                     </div>
                     <span class="badge badge-technical"><span class="mdi mdi-cogs"></span> Technical</span>
                 </a>
-                <!-- 19. Documentation Review -->
-                <a href="/docs/documentation-review" class="card">
-                    <span class="card-number">19</span>
-                    <div class="card-body">
-                        <h3><span class="mdi mdi-clipboard-check"></span> Documentation Review</h3>
-                        <p>Coverage analysis of all modules</p>
-                    </div>
-                    <span class="badge badge-technical"><span class="mdi mdi-information"></span> Meta</span>
-                </a>
-                <!-- 20. Documentation Structure -->
-                <a href="/docs/documentation-structure" class="card">
-                    <span class="card-number">20</span>
-                    <div class="card-body">
-                        <h3><span class="mdi mdi-sitemap"></span> Documentation Structure</h3>
-                        <p>How documentation is organized</p>
-                    </div>
-                    <span class="badge badge-technical"><span class="mdi mdi-information"></span> Meta</span>
-                </a>
-                <!-- 21. Rename Process -->
+                <!-- 19. Rename Process -->
                 <a href="/docs/rename" class="card">
-                    <span class="card-number">21</span>
+                    <span class="card-number">19</span>
                     <div class="card-body">
                         <h3><span class="mdi mdi-pencil"></span> Rename Process</h3>
                         <p>Step-by-step rename guide</p>
                     </div>
                     <span class="badge badge-default"><span class="mdi mdi-book-outline"></span> Guide</span>
                 </a>
-                <!-- 22. Framework Branding -->
+                <!-- 20. Framework Branding -->
                 <a href="/docs/branding" class="card">
-                    <span class="card-number">22</span>
+                    <span class="card-number">20</span>
                     <div class="card-body">
                         <h3><span class="mdi mdi-brush"></span> Framework Branding</h3>
                         <p>File reference for renaming</p>
                     </div>
                     <span class="badge badge-default"><span class="mdi mdi-bookmark"></span> Reference</span>
-                </a>
-                <!-- 23. Comprehensive Guide -->
-                <a href="/docs/comprehensive" class="card featured">
-                    <span class="card-number">23</span>
-                    <div class="card-body">
-                        <h3><span class="mdi mdi-book-open-variant"></span> Comprehensive Guide</h3>
-                        <p>Complete framework reference with all features and examples</p>
-                    </div>
-                    <span class="badge badge-featured"><span class="mdi mdi-check"></span> Complete</span>
                 </a>
             </div>
         </div>
@@ -698,7 +671,7 @@ $baseUrl = getenv('APP_URL') ?: 'http://sixorbit.local';
         <p style="margin-top: 12px;">
             <a href="/docs/readme"><span class="mdi mdi-play-circle"></span> Start Here</a> |
             <a href="/docs/index"><span class="mdi mdi-view-list"></span> Full Index</a> |
-            <a href="/docs/comprehensive"><span class="mdi mdi-book-open-variant"></span> Complete Guide</a>
+            <a href="/docs/comprehensive-security"><span class="mdi mdi-shield-lock-outline"></span> Security Guide</a>
         </p>
     </footer>
 </body>

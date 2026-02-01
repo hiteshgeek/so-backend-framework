@@ -723,10 +723,10 @@ include base_path('resources/views/layouts/app.php');
 ---
 
 **Related Documentation:**
-- [Validation System](/docs/md/VALIDATION-SYSTEM.md) - Full validation rule reference and custom rules
-- [Security Layer](/docs/md/SECURITY-LAYER.md) - CSRF, JWT, rate limiting, and XSS prevention
-- [View Templates](/docs/md/VIEW-TEMPLATES.md) - Template layouts, partials, and helpers
-- [Routing System](/docs/md/ROUTING-SYSTEM.md) - Route definitions and middleware
+- [Validation System](/docs/validation-system) - Full validation rule reference and custom rules
+- [Security Layer](/docs/security-layer) - CSRF, JWT, rate limiting, and XSS prevention
+- [View Templates](/docs/view-templates) - Template layouts, partials, and helpers
+- [Routing System](/docs/routing-system) - Route definitions and middleware
 
 ---
 

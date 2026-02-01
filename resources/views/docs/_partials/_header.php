@@ -36,7 +36,7 @@ $badgeType = $badgeType ?? 'new';
                 </span>
             <?php endif; ?>
         </h1>
-        <a href="<?= htmlspecialchars(config('app.url')) ?>/docs" class="docs-nav-link">
+        <a href="/docs" class="docs-nav-link">
             <span class="mdi mdi-arrow-left"></span> Back to Docs
         </a>
     </div>
@@ -45,7 +45,7 @@ $badgeType = $badgeType ?? 'new';
 <?php if (!empty($breadcrumbs)): ?>
     <div class="breadcrumb-bar">
         <nav class="breadcrumbs">
-            <a href="<?= htmlspecialchars(config('app.url')) ?>/docs" class="breadcrumb-item">
+            <a href="/docs" class="breadcrumb-item">
                 <span class="mdi mdi-home"></span> Docs
             </a>
             <?php foreach ($breadcrumbs as $crumb): ?>

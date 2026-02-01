@@ -28,7 +28,7 @@ $editUrl = $editUrl ?? null;
             </a>
         <?php endif; ?>
 
-        <a href="<?= htmlspecialchars(config('app.url')) ?>/docs" class="link" style="display: flex; align-items: center; gap: 4px;">
+        <a href="/docs" class="link" style="display: flex; align-items: center; gap: 4px;">
             <span class="mdi mdi-book-open-variant"></span> All Docs
         </a>
     </div>

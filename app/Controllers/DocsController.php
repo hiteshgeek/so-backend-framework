@@ -23,20 +23,6 @@ class DocsController
     }
 
     /**
-     * Show comprehensive guide
-     */
-    public function comprehensive(Request $request): Response
-    {
-        $markdown = file_get_contents(__DIR__ . '/../../docs/md/COMPREHENSIVE-GUIDE.md');
-        $markdown = str_replace('{{APP_VERSION}}', config('app.version'), $markdown);
-
-        return Response::view('docs/comprehensive', [
-            'title' => 'Comprehensive Guide - ' . config('app.name'),
-            'markdown' => $markdown
-        ]);
-    }
-
-    /**
      * Get navigation data for a specific page
      *
      * @param string $currentKey Current page key
@@ -119,10 +105,6 @@ class DocsController
 
             // Visual Guides
             'request-flow' => 'REQUEST-FLOW.md',
-
-            // Meta Documentation
-            'documentation-review' => 'DOCUMENTATION-REVIEW.md',
-            'documentation-structure' => 'DOCUMENTATION-STRUCTURE.md',
 
             // Development Guides
             'dev-first-page' => 'DEV-FIRST-PAGE.md',

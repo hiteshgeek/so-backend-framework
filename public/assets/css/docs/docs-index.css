@@ -303,117 +303,140 @@
 .badge-essential {
   background: #fef2f2;
   color: #dc2626;
+  box-shadow: 0 1px 4px rgba(220, 38, 38, 0.3);
 }
 
 .badge-new {
   background: #ecfdf5;
   color: #059669;
+  box-shadow: 0 1px 4px rgba(5, 150, 105, 0.3);
 }
 
 .badge-default {
   background: var(--primary-bg);
   color: var(--primary);
+  box-shadow: 0 1px 4px rgba(59, 130, 246, 0.3);
 }
 
 .badge-enterprise {
   background: #faf5ff;
   color: #7c3aed;
+  box-shadow: 0 1px 4px rgba(124, 58, 237, 0.3);
 }
 
 .badge-technical {
   background: #f1f5f9;
   color: #475569;
+  box-shadow: 0 1px 4px rgba(71, 85, 105, 0.3);
 }
 
 .badge-featured {
   background: var(--primary);
   color: white;
+  box-shadow: 0 1px 4px rgba(59, 130, 246, 0.3);
 }
 
 .badge-guide {
   background: #fefce8;
   color: #a16207;
+  box-shadow: 0 1px 4px rgba(161, 98, 7, 0.3);
 }
 
 /* New Badges - Multiple Contextual Tags */
 .badge-security {
   background: #fee2e2;
   color: #dc2626;
+  box-shadow: 0 1px 4px rgba(220, 38, 38, 0.3);
 }
 
 .badge-owasp {
   background: #fef2f2;
   color: #b91c1c;
+  box-shadow: 0 1px 4px rgba(185, 28, 28, 0.3);
 }
 
 .badge-compliance {
   background: #f3e8ff;
   color: #7c3aed;
+  box-shadow: 0 1px 4px rgba(124, 58, 237, 0.3);
 }
 
 .badge-production {
   background: #d1fae5;
   color: #065f46;
+  box-shadow: 0 1px 4px rgba(6, 95, 70, 0.3);
 }
 
 .badge-api {
   background: #dbeafe;
   color: #1e40af;
+  box-shadow: 0 1px 4px rgba(30, 64, 175, 0.3);
 }
 
 .badge-unique {
   background: #fef3c7;
   color: #d97706;
+  box-shadow: 0 1px 4px rgba(217, 119, 6, 0.3);
 }
 
 .badge-architecture {
   background: #e0e7ff;
   color: #4f46e5;
+  box-shadow: 0 1px 4px rgba(79, 70, 229, 0.3);
 }
 
 .badge-database {
   background: #cffafe;
   color: #0e7490;
+  box-shadow: 0 1px 4px rgba(14, 116, 144, 0.3);
 }
 
 .badge-core {
   background: #dbeafe;
   color: #1d4ed8;
+  box-shadow: 0 1px 4px rgba(29, 78, 216, 0.3);
 }
 
 .badge-advanced {
   background: #f3e8ff;
   color: #6b21a8;
+  box-shadow: 0 1px 4px rgba(107, 33, 168, 0.3);
 }
 
 .badge-patterns {
   background: #fce7f3;
   color: #be185d;
+  box-shadow: 0 1px 4px rgba(190, 24, 93, 0.3);
 }
 
 .badge-erp {
   background: #fef3c7;
   color: #b45309;
+  box-shadow: 0 1px 4px rgba(180, 83, 9, 0.3);
 }
 
 .badge-scaling {
   background: #e0f2fe;
   color: #075985;
+  box-shadow: 0 1px 4px rgba(7, 89, 133, 0.3);
 }
 
 .badge-performance {
   background: #ffedd5;
   color: #c2410c;
+  box-shadow: 0 1px 4px rgba(194, 65, 12, 0.3);
 }
 
 .badge-async {
   background: #ddd6fe;
   color: #5b21b6;
+  box-shadow: 0 1px 4px rgba(91, 33, 182, 0.3);
 }
 
 .badge-multi-channel {
   background: #fce7f3;
   color: #a21caf;
+  box-shadow: 0 1px 4px rgba(162, 28, 175, 0.3);
 }
 
 /* Footer */

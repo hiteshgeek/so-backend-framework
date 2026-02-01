@@ -86,15 +86,15 @@ Client Request
 
 ### Related Documentation
 
-- [DEV-SECURITY.md](/docs/md/DEV-SECURITY.md) - CSRF, Rate Limiting, CORS
-- [SECURITY-LAYER.md](/docs/md/SECURITY-LAYER.md) - Security layer overview
-- [AUTH-SYSTEM.md](/docs/md/AUTH-SYSTEM.md) - Authentication system
-- [SESSION-SYSTEM.md](/docs/md/SESSION-SYSTEM.md) - Session management
-- [SESSION-ENCRYPTION.md](/docs/md/SESSION-ENCRYPTION.md) - Session payload encryption
-- [AUTH-LOCKOUT.md](/docs/md/AUTH-LOCKOUT.md) - Account lockout system
-- [DEV-API-AUTH.md](/docs/md/DEV-API-AUTH.md) - API authentication
-- [ENCRYPTER.md](/docs/md/ENCRYPTER.md) - Encryption utilities
-- [PASSWORD-RESET.md](/docs/md/PASSWORD-RESET.md) - Password reset flow
+- [DEV-SECURITY.md](/docs/dev-security) - CSRF, Rate Limiting, CORS
+- [SECURITY-LAYER.md](/docs/security-layer) - Security layer overview
+- [AUTH-SYSTEM.md](/docs/auth-system) - Authentication system
+- [SESSION-SYSTEM.md](/docs/session-system) - Session management
+- [SESSION-ENCRYPTION.md](/docs/session-encryption) - Session payload encryption
+- [AUTH-LOCKOUT.md](/docs/auth-lockout) - Account lockout system
+- [DEV-API-AUTH.md](/docs/dev-api-auth) - API authentication
+- [ENCRYPTER.md](/docs/encrypter) - Encryption utilities
+- [PASSWORD-RESET.md](/docs/password-reset) - Password reset flow
 
 ---
 
@@ -346,7 +346,7 @@ Prevents brute force attacks by temporarily locking accounts after failed login 
 - Automatic expiry
 - Successful login clears lockout
 
-**Implementation**: See [AUTH-LOCKOUT.md](/docs/md/AUTH-LOCKOUT.md)
+**Implementation**: See [AUTH-LOCKOUT.md](/docs/auth-lockout)
 
 **Configuration**:
 
@@ -453,7 +453,7 @@ Session Data (plaintext)
   Store in Database
 ```
 
-**Implementation**: See [SESSION-ENCRYPTION.md](/docs/md/SESSION-ENCRYPTION.md)
+**Implementation**: See [SESSION-ENCRYPTION.md](/docs/session-encryption)
 
 **Configuration**:
 
@@ -1315,7 +1315,7 @@ $user = User::find($request->input('id'));
 - Encrypting sensitive user data (SSN, credit cards)
 - File encryption at rest
 
-**Implementation**: See [ENCRYPTER.md](/docs/md/ENCRYPTER.md)
+**Implementation**: See [ENCRYPTER.md](/docs/encrypter)
 
 #### Encryption Process
 
@@ -1611,7 +1611,7 @@ class SecurityHeadersMiddleware implements MiddlewareInterface
 - Response headers (X-RateLimit-*)
 - 429 status code with Retry-After header
 
-**Implementation**: See [DEV-SECURITY.md](/docs/md/DEV-SECURITY.md)
+**Implementation**: See [DEV-SECURITY.md](/docs/dev-security)
 
 #### RateLimiter Class
 
@@ -1789,7 +1789,7 @@ if ($rateLimiter->tooManyAttempts($key, 10)) {
 
 ### Login Throttle System
 
-**Implementation**: See [AUTH-LOCKOUT.md](/docs/md/AUTH-LOCKOUT.md)
+**Implementation**: See [AUTH-LOCKOUT.md](/docs/auth-lockout)
 
 **Features**:
 - IP + Email combination tracking
@@ -2408,15 +2408,15 @@ logger()->channel('security')->info('User logged in', [
 
 ### Framework Documentation
 
-- [DEV-SECURITY.md](/docs/md/DEV-SECURITY.md) - CSRF, Rate Limiting, CORS
-- [SECURITY-LAYER.md](/docs/md/SECURITY-LAYER.md) - Security overview
-- [AUTH-SYSTEM.md](/docs/md/AUTH-SYSTEM.md) - Authentication
-- [SESSION-SYSTEM.md](/docs/md/SESSION-SYSTEM.md) - Session management
-- [SESSION-ENCRYPTION.md](/docs/md/SESSION-ENCRYPTION.md) - Session encryption
-- [AUTH-LOCKOUT.md](/docs/md/AUTH-LOCKOUT.md) - Account lockout
-- [DEV-API-AUTH.md](/docs/md/DEV-API-AUTH.md) - API authentication
-- [ENCRYPTER.md](/docs/md/ENCRYPTER.md) - Encryption utilities
-- [PASSWORD-RESET.md](/docs/md/PASSWORD-RESET.md) - Password reset
+- [DEV-SECURITY.md](/docs/dev-security) - CSRF, Rate Limiting, CORS
+- [SECURITY-LAYER.md](/docs/security-layer) - Security overview
+- [AUTH-SYSTEM.md](/docs/auth-system) - Authentication
+- [SESSION-SYSTEM.md](/docs/session-system) - Session management
+- [SESSION-ENCRYPTION.md](/docs/session-encryption) - Session encryption
+- [AUTH-LOCKOUT.md](/docs/auth-lockout) - Account lockout
+- [DEV-API-AUTH.md](/docs/dev-api-auth) - API authentication
+- [ENCRYPTER.md](/docs/encrypter) - Encryption utilities
+- [PASSWORD-RESET.md](/docs/password-reset) - Password reset
 
 ### External Resources
 
