@@ -774,3 +774,211 @@ if (!function_exists('profiler')) {
         return \Core\Debug\Profiler::getInstance();
     }
 }
+
+// ============================================
+// Localization Helpers
+// ============================================
+
+if (!function_exists('trans')) {
+    /**
+     * Translate the given message
+     *
+     * @param string $key Translation key (e.g., 'validation.required')
+     * @param array $replace Replacement parameters
+     * @param string|null $locale Override locale
+     * @return string
+     */
+    function trans(string $key, array $replace = [], ?string $locale = null): string
+    {
+        return app('translator')->get($key, $replace, $locale);
+    }
+}
+
+if (!function_exists('__')) {
+    /**
+     * Translate the given message (alias for trans)
+     *
+     * @param string $key Translation key
+     * @param array $replace Replacement parameters
+     * @param string|null $locale Override locale
+     * @return string
+     */
+    function __(string $key, array $replace = [], ?string $locale = null): string
+    {
+        return trans($key, $replace, $locale);
+    }
+}
+
+if (!function_exists('trans_choice')) {
+    /**
+     * Translate with pluralization
+     *
+     * @param string $key Translation key
+     * @param int $count Count for pluralization
+     * @param array $replace Replacement parameters
+     * @param string|null $locale Override locale
+     * @return string
+     */
+    function trans_choice(string $key, int $count, array $replace = [], ?string $locale = null): string
+    {
+        return app('translator')->choice($key, $count, array_merge($replace, ['count' => $count]), $locale);
+    }
+}
+
+if (!function_exists('locale')) {
+    /**
+     * Get or set current locale
+     *
+     * @param string|null $locale Locale to set (optional)
+     * @return string
+     */
+    function locale(?string $locale = null): string
+    {
+        $manager = app('locale');
+
+        if ($locale !== null) {
+            $manager->setLocale($locale);
+        }
+
+        return $manager->getCurrentLocale();
+    }
+}
+
+if (!function_exists('setLocale')) {
+    /**
+     * Set the current locale
+     *
+     * @param string $locale Locale code
+     * @return void
+     */
+    function setLocale(string $locale): void
+    {
+        app('locale')->setLocale($locale);
+    }
+}
+
+if (!function_exists('getLocale')) {
+    /**
+     * Get the current locale
+     *
+     * @return string
+     */
+    function getLocale(): string
+    {
+        return app('locale')->getCurrentLocale();
+    }
+}
+
+// ============================================
+// Formatting Helpers (Phase 2)
+// ============================================
+
+if (!function_exists('format_currency')) {
+    /**
+     * Format currency with locale
+     *
+     * @param float $amount Amount to format
+     * @param string $currency Currency code (USD, EUR, etc.)
+     * @param string|null $locale Override locale
+     * @return string
+     */
+    function format_currency(float $amount, string $currency = 'USD', ?string $locale = null): string
+    {
+        $formatter = app('currency.formatter');
+
+        if ($formatter === null) {
+            // Fallback if formatter not available yet
+            return $currency . ' ' . number_format($amount, 2);
+        }
+
+        return $formatter->format($amount, $currency, $locale);
+    }
+}
+
+if (!function_exists('format_number')) {
+    /**
+     * Format number with locale
+     *
+     * @param float $number Number to format
+     * @param int $decimals Decimal places
+     * @param string|null $locale Override locale
+     * @return string
+     */
+    function format_number(float $number, int $decimals = 2, ?string $locale = null): string
+    {
+        $formatter = app('number.formatter');
+
+        if ($formatter === null) {
+            // Fallback if formatter not available yet
+            return number_format($number, $decimals);
+        }
+
+        return $formatter->format($number, $decimals, $locale);
+    }
+}
+
+if (!function_exists('format_date')) {
+    /**
+     * Format date with locale
+     *
+     * @param \DateTime|string $date Date to format
+     * @param string $format Format preset (short, medium, long, full) or custom
+     * @param string|null $locale Override locale
+     * @return string
+     */
+    function format_date(\DateTime|string $date, string $format = 'medium', ?string $locale = null): string
+    {
+        $formatter = app('datetime.formatter');
+
+        if ($formatter === null) {
+            // Fallback if formatter not available yet
+            $dateObj = is_string($date) ? new \DateTime($date) : $date;
+            return $dateObj->format('Y-m-d');
+        }
+
+        return $formatter->formatDate($date, $format, $locale);
+    }
+}
+
+if (!function_exists('format_datetime')) {
+    /**
+     * Format datetime with locale and timezone
+     *
+     * @param \DateTime|string $datetime DateTime to format
+     * @param string $format Format preset or custom
+     * @param string|null $locale Override locale
+     * @param string|null $timezone Override timezone
+     * @return string
+     */
+    function format_datetime(\DateTime|string $datetime, string $format = 'medium', ?string $locale = null, ?string $timezone = null): string
+    {
+        $formatter = app('datetime.formatter');
+
+        if ($formatter === null) {
+            // Fallback if formatter not available yet
+            $dateObj = is_string($datetime) ? new \DateTime($datetime) : $datetime;
+            return $dateObj->format('Y-m-d H:i:s');
+        }
+
+        return $formatter->format($datetime, $format, $locale, $timezone);
+    }
+}
+
+if (!function_exists('timezone')) {
+    /**
+     * Get or set current timezone
+     *
+     * @param string|null $timezone Timezone to set (optional)
+     * @return string
+     */
+    function timezone(?string $timezone = null): string
+    {
+        $manager = app('locale');
+
+        if ($timezone !== null) {
+            $manager->setTimezone($timezone);
+        }
+
+        return $manager->getTimezone();
+    }
+}

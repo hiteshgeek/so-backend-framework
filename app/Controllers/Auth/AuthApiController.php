@@ -37,7 +37,7 @@ class AuthApiController
         $validator = Validator::make($request->all(), UserValidationRules::registration());
 
         if ($validator->fails()) {
-            return JsonResponse::error('Validation failed', 422, [
+            return JsonResponse::error(trans('validation.failed'), 422, [
                 'errors' => $validator->errors()
             ]);
         }
@@ -53,7 +53,7 @@ class AuthApiController
         auth()->login($user);
 
         return JsonResponse::success([
-            'message' => 'Account created successfully!',
+            'message' => trans('auth.registration_success'),
             'user' => $this->authService->userToArray($user),
             'demo_token' => 'demo_token_' . time(), // For demo purposes
         ], 201);
@@ -70,7 +70,7 @@ class AuthApiController
         $validator = Validator::make($request->all(), UserValidationRules::login());
 
         if ($validator->fails()) {
-            return JsonResponse::error('Validation failed', 422, [
+            return JsonResponse::error(trans('validation.failed'), 422, [
                 'errors' => $validator->errors()
             ]);
         }
@@ -86,14 +86,14 @@ class AuthApiController
             $user = $this->authService->getCurrentUser();
 
             return JsonResponse::success([
-                'message' => 'Login successful!',
+                'message' => trans('auth.login_success'),
                 'user' => $this->authService->userToArray($user),
                 'demo_token' => 'demo_token_' . time(), // For demo purposes
                 'remember' => $remember,
             ]);
         }
 
-        return JsonResponse::error('Invalid email or password', 401);
+        return JsonResponse::error(trans('auth.login_failed'), 401);
     }
 
     /**
@@ -106,7 +106,7 @@ class AuthApiController
         $this->authService->logout();
 
         return JsonResponse::success([
-            'message' => 'Logged out successfully',
+            'message' => trans('auth.logout_success'),
         ]);
     }
 }

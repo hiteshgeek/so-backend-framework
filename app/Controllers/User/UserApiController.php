@@ -47,7 +47,7 @@ class UserApiController
         $validator = Validator::make($request->all(), UserValidationRules::registration());
 
         if ($validator->fails()) {
-            return JsonResponse::error('Validation failed', 422, [
+            return JsonResponse::error(trans('validation.failed'), 422, [
                 'errors' => $validator->errors()
             ]);
         }
@@ -60,7 +60,7 @@ class UserApiController
         ]);
 
         return JsonResponse::success([
-            'message' => 'User created successfully!',
+            'message' => trans('messages.user_created'),
             'user' => $this->userService->toArray($user),
         ], 201);
     }
@@ -74,7 +74,7 @@ class UserApiController
     {
         // Authorization check - prevent IDOR vulnerability
         if (!$this->userService->canAccessUser($id, auth()->id(), true)) {
-            return JsonResponse::error('Forbidden - you can only view your own user data', 403);
+            return JsonResponse::error(trans('messages.forbidden_view_user'), 403);
         }
 
         // Find user
@@ -98,7 +98,7 @@ class UserApiController
     {
         // Authorization check - prevent IDOR vulnerability
         if (!$this->userService->canModifyUser($id, auth()->id())) {
-            return JsonResponse::error('Forbidden - you can only update your own user data', 403);
+            return JsonResponse::error(trans('messages.forbidden_update_user'), 403);
         }
 
         // Find user
@@ -119,7 +119,7 @@ class UserApiController
         $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
-            return JsonResponse::error('Validation failed', 422, [
+            return JsonResponse::error(trans('validation.failed'), 422, [
                 'errors' => $validator->errors()
             ]);
         }
@@ -132,7 +132,7 @@ class UserApiController
         ]);
 
         return JsonResponse::success([
-            'message' => 'User updated successfully!',
+            'message' => trans('messages.user_updated'),
             'user' => $this->userService->toArray($updatedUser),
         ]);
     }
@@ -146,7 +146,7 @@ class UserApiController
     {
         // Authorization check - prevent IDOR and self-deletion
         if (!$this->userService->canDeleteUser($id, auth()->id())) {
-            return JsonResponse::error('Forbidden - you cannot delete this user', 403);
+            return JsonResponse::error(trans('messages.forbidden_delete_user'), 403);
         }
 
         // Find user
@@ -162,7 +162,7 @@ class UserApiController
         $this->userService->deleteUser($id);
 
         return JsonResponse::success([
-            'message' => 'User "' . $userName . '" deleted successfully.',
+            'message' => trans('messages.user_deleted', ['name' => $userName]),
         ]);
     }
 }

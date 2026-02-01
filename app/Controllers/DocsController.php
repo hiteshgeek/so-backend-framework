@@ -150,6 +150,9 @@ class DocsController
 
             // Comprehensive References
             'comprehensive-security' => 'COMPREHENSIVE-SECURITY.md',
+
+            // Internationalization
+            'localization' => 'LOCALIZATION.md',
         ];
 
         if (!isset($allowedFiles[$file])) {

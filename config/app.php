@@ -7,14 +7,19 @@ return [
     'debug' => env('APP_DEBUG', false),
     'url' => env('APP_URL', 'http://localhost'),
     'key' => env('APP_KEY'),
-    'timezone' => 'UTC',
-    'locale' => 'en',
+    'timezone' => env('APP_TIMEZONE', 'UTC'),
+    'locale' => env('APP_LOCALE', 'en'),
+    'fallback_locale' => env('APP_FALLBACK_LOCALE', 'en'),
+    'available_locales' => ['en', 'fr', 'de', 'es', 'ar', 'zh'],
 
     // Asset management
     'asset_url' => env('ASSET_URL', ''),              // Empty = use app.url. Set CDN: 'https://cdn.example.com'
     'asset_versioning' => env('ASSET_VERSIONING', true), // Cache busting via file modification time
 
     'providers' => [
+        // Localization system for multi-country ERP support
+        \Core\Localization\LocaleServiceProvider::class,
+
         // Activity logging for audit trails (ERP compliance)
         \App\Providers\ActivityLogServiceProvider::class,
 

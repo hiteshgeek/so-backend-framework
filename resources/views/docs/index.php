@@ -326,6 +326,17 @@
                             <span class="badge badge-erp">ERP-Ready</span>
                         </div>
                     </a>
+                    <a href="/docs/localization" class="doc-card">
+                        <div class="doc-card-body">
+                            <h3><span class="mdi mdi-earth"></span> Internationalization (i18n)</h3>
+                            <p>Multi-language, multi-currency, multi-timezone support for global ERP deployments.</p>
+                        </div>
+                        <div class="doc-card-badges">
+                            <span class="badge badge-new">New</span>
+                            <span class="badge badge-enterprise">Enterprise</span>
+                            <span class="badge badge-erp">ERP-Ready</span>
+                        </div>
+                    </a>
                 </div>
             </div>
 

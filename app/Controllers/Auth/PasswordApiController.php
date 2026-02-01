@@ -37,7 +37,7 @@ class PasswordApiController
         $validator = Validator::make($request->all(), PasswordValidationRules::forgotPassword());
 
         if ($validator->fails()) {
-            return JsonResponse::error('Validation failed', 422, [
+            return JsonResponse::error(trans('validation.failed'), 422, [
                 'errors' => $validator->errors()
             ]);
         }
@@ -47,7 +47,7 @@ class PasswordApiController
         // Always return success to prevent user enumeration (even if user doesn't exist)
         if (!$this->passwordResetService->userExists($email)) {
             return JsonResponse::success([
-                'message' => 'If that email exists in our system, a password reset link has been sent.',
+                'message' => trans('auth.password_reset_sent'),
             ]);
         }
 
@@ -59,7 +59,7 @@ class PasswordApiController
         $resetUrl = $this->passwordResetService->buildResetUrl($token);
 
         return JsonResponse::success([
-            'message' => 'Password reset link generated successfully',
+            'message' => trans('auth.password_reset_sent'),
             'demo_reset_url' => $resetUrl,
             'demo_token' => $token,
             'expires_in' => '1 hour',
@@ -77,7 +77,7 @@ class PasswordApiController
         $validator = Validator::make($request->all(), PasswordValidationRules::resetPassword());
 
         if ($validator->fails()) {
-            return JsonResponse::error('Validation failed', 422, [
+            return JsonResponse::error(trans('validation.failed'), 422, [
                 'errors' => $validator->errors()
             ]);
         }
@@ -90,11 +90,11 @@ class PasswordApiController
         );
 
         if (!$success) {
-            return JsonResponse::error('Invalid or expired reset token', 400);
+            return JsonResponse::error(trans('auth.password_reset_token_invalid'), 400);
         }
 
         return JsonResponse::success([
-            'message' => 'Password reset successfully! You can now login with your new password.',
+            'message' => trans('auth.password_reset_success'),
         ]);
     }
 }

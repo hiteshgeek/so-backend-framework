@@ -14,8 +14,13 @@ class JsonResponse extends Response
         parent::__construct($content, $statusCode, $headers);
     }
 
-    public static function success(mixed $data, string $message = 'Success', int $code = 200): self
+    public static function success(mixed $data, ?string $message = null, int $code = 200): self
     {
+        // Use translation if no message provided
+        if ($message === null) {
+            $message = function_exists('trans') ? trans('messages.success') : 'Success';
+        }
+
         return new self([
             'success' => true,
             'message' => $message,
@@ -23,8 +28,13 @@ class JsonResponse extends Response
         ], $code);
     }
 
-    public static function error(string $message, int $code = 400, array $errors = []): self
+    public static function error(?string $message = null, int $code = 400, array $errors = []): self
     {
+        // Use translation if no message provided
+        if ($message === null) {
+            $message = function_exists('trans') ? trans('messages.error') : 'An error occurred.';
+        }
+
         return new self([
             'success' => false,
             'message' => $message,
@@ -32,8 +42,13 @@ class JsonResponse extends Response
         ], $code);
     }
 
-    public static function created(mixed $data, string $message = 'Created'): self
+    public static function created(mixed $data, ?string $message = null): self
     {
+        // Use translation if no message provided
+        if ($message === null) {
+            $message = function_exists('trans') ? trans('messages.created') : 'Created successfully.';
+        }
+
         return self::success($data, $message, 201);
     }
 

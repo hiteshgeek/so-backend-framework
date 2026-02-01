@@ -49,37 +49,12 @@ class Validator
     protected array $expandedRules = [];
 
     /**
-     * Default error messages
+     * Default error messages (loaded from translation files)
+     *
+     * Note: Messages are now loaded from resources/lang/{locale}/validation.php
+     * This array is kept for backward compatibility and fallback support.
      */
-    protected array $messages = [
-        'required' => 'The :attribute field is required.',
-        'required_if' => 'The :attribute field is required when :other is :value.',
-        'required_with' => 'The :attribute field is required when :values is present.',
-        'email' => 'The :attribute must be a valid email address.',
-        'url' => 'The :attribute must be a valid URL.',
-        'ip' => 'The :attribute must be a valid IP address.',
-        'alpha' => 'The :attribute may only contain letters.',
-        'alpha_num' => 'The :attribute may only contain letters and numbers.',
-        'alpha_dash' => 'The :attribute may only contain letters, numbers, dashes and underscores.',
-        'numeric' => 'The :attribute must be a number.',
-        'integer' => 'The :attribute must be an integer.',
-        'string' => 'The :attribute must be a string.',
-        'array' => 'The :attribute must be an array.',
-        'boolean' => 'The :attribute must be true or false.',
-        'min' => 'The :attribute must be at least :min.',
-        'max' => 'The :attribute may not be greater than :max.',
-        'between' => 'The :attribute must be between :min and :max.',
-        'in' => 'The selected :attribute is invalid.',
-        'not_in' => 'The selected :attribute is invalid.',
-        'same' => 'The :attribute and :other must match.',
-        'different' => 'The :attribute and :other must be different.',
-        'confirmed' => 'The :attribute confirmation does not match.',
-        'date' => 'The :attribute is not a valid date.',
-        'before' => 'The :attribute must be a date before :date.',
-        'after' => 'The :attribute must be a date after :date.',
-        'unique' => 'The :attribute has already been taken.',
-        'exists' => 'The selected :attribute is invalid.',
-    ];
+    protected array $messages = [];
 
     /**
      * Constructor
@@ -314,10 +289,76 @@ class Validator
             return $this->replacePlaceholders($this->customMessages[$key], $field, $parameters);
         }
 
-        // Use default message
-        $message = $this->messages[$rule] ?? "The $field field is invalid.";
+        // Check for custom attribute-level messages in validation.custom
+        $customKey = "validation.custom.$field.$rule";
+        if (function_exists('trans') && trans($customKey) !== $customKey) {
+            return $this->replacePlaceholders(trans($customKey), $field, $parameters);
+        }
 
-        return $this->replacePlaceholders($message, $field, $parameters);
+        // Get message from translation files
+        $message = $this->getTranslatedMessage($rule);
+
+        // Translate attribute name
+        $translatedField = $this->getTranslatedAttribute($field);
+
+        return $this->replacePlaceholders($message, $translatedField, $parameters);
+    }
+
+    /**
+     * Get translated validation message
+     *
+     * @param string $rule Validation rule
+     * @return string Translated message
+     */
+    protected function getTranslatedMessage(string $rule): string
+    {
+        // Try to get from translation files
+        if (function_exists('trans')) {
+            $key = "validation.$rule";
+            $translated = trans($key);
+
+            // If translation exists, use it
+            if ($translated !== $key) {
+                return $translated;
+            }
+        }
+
+        // Fallback to hardcoded message if translation not available
+        $fallbackMessages = [
+            'required' => 'The :attribute field is required.',
+            'email' => 'The :attribute must be a valid email address.',
+            'min' => 'The :attribute must be at least :min.',
+            'max' => 'The :attribute may not be greater than :max.',
+            'unique' => 'The :attribute has already been taken.',
+        ];
+
+        return $fallbackMessages[$rule] ?? "The :attribute field is invalid.";
+    }
+
+    /**
+     * Get translated attribute name
+     *
+     * @param string $field Field name
+     * @return string Translated attribute name
+     */
+    protected function getTranslatedAttribute(string $field): string
+    {
+        // Try to get from translation files
+        if (function_exists('trans')) {
+            $key = "validation.attributes.$field";
+            $translated = trans($key);
+
+            // If translation exists, use it
+            if ($translated !== $key) {
+                return $translated;
+            }
+        }
+
+        // Convert snake_case or camelCase to readable format
+        $readable = str_replace('_', ' ', $field);
+        $readable = preg_replace('/([a-z])([A-Z])/', '$1 $2', $readable);
+
+        return strtolower($readable);
     }
 
     /**

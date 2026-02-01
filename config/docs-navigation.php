@@ -51,6 +51,7 @@ return [
     ['key' => 'testing-guide', 'title' => 'Testing Guide', 'url' => '/docs/testing-guide'],
     ['key' => 'rename', 'title' => 'Rename Process', 'url' => '/docs/rename'],
     ['key' => 'branding', 'title' => 'Framework Branding', 'url' => '/docs/branding'],
+    ['key' => 'localization', 'title' => 'Internationalization (i18n)', 'url' => '/docs/localization'],
 
     // ===== DEVELOPER DOCS TAB =====
 

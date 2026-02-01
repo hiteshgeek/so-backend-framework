@@ -85,6 +85,9 @@ class User extends Model
         'hard_limit',
         'soft_limit',
         'is_multipler',
+        // Localization fields
+        'locale',
+        'timezone',
     ];
 
     protected array $guarded = [
@@ -281,5 +284,53 @@ class User extends Model
         }
 
         return parent::__get($key);
+    }
+
+    // ============================================
+    // LOCALIZATION METHODS
+    // ============================================
+
+    /**
+     * Get user's preferred locale
+     *
+     * @return string Locale code (e.g., 'en', 'fr', 'de')
+     */
+    public function getLocale(): string
+    {
+        return $this->attributes['locale'] ?? config('app.locale', 'en');
+    }
+
+    /**
+     * Set user's preferred locale
+     *
+     * @param string $locale Locale code
+     * @return bool True if saved successfully
+     */
+    public function setLocale(string $locale): bool
+    {
+        $this->attributes['locale'] = $locale;
+        return $this->save();
+    }
+
+    /**
+     * Get user's preferred timezone
+     *
+     * @return string Timezone identifier (e.g., 'UTC', 'America/New_York')
+     */
+    public function getTimezone(): string
+    {
+        return $this->attributes['timezone'] ?? config('app.timezone', 'UTC');
+    }
+
+    /**
+     * Set user's preferred timezone
+     *
+     * @param string $timezone Timezone identifier
+     * @return bool True if saved successfully
+     */
+    public function setTimezone(string $timezone): bool
+    {
+        $this->attributes['timezone'] = $timezone;
+        return $this->save();
     }
 }
