@@ -16,12 +16,14 @@ use Core\Validation\Validator;
  */
 class AuthController
 {
-    private AuthenticationService $authService;
-
-    public function __construct()
-    {
-        $this->authService = new AuthenticationService();
-    }
+    /**
+     * Constructor with dependency injection
+     *
+     * @param AuthenticationService $authService
+     */
+    public function __construct(
+        private AuthenticationService $authService
+    ) {}
 
     /**
      * Show registration form

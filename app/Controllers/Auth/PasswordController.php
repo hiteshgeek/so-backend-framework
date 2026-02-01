@@ -16,12 +16,14 @@ use Core\Validation\Validator;
  */
 class PasswordController
 {
-    private PasswordResetService $passwordResetService;
-
-    public function __construct()
-    {
-        $this->passwordResetService = new PasswordResetService();
-    }
+    /**
+     * Constructor with dependency injection
+     *
+     * @param PasswordResetService $passwordResetService
+     */
+    public function __construct(
+        private PasswordResetService $passwordResetService
+    ) {}
 
     /**
      * Show forgot password form

@@ -97,7 +97,8 @@ try {
 
     // Test 10: Query notifications table directly
     echo "Test 10: Querying notifications table...\n";
-    $db = app('db');
+    // Use essentials database for framework notifications table
+    $db = app('db-essentials');
     $allNotifications = $db->table('notifications')->get();
     echo "✓ Found " . count($allNotifications) . " total notifications in database\n";
     foreach ($allNotifications as $notification) {

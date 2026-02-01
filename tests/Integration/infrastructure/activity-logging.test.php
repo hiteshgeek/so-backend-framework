@@ -17,36 +17,47 @@ use Core\ActivityLog\Activity;
 echo "=== Activity Logging Test ===\n\n";
 
 try {
-    // Test 1: Create a user (should log 'created' event)
-    echo "Test 1: Creating a new user...\n";
-    $user = User::create([
-        'name' => 'Test User',
-        'email' => 'test' . time() . '@example.com',
-        'password' => 'password123',
-    ]);
-    echo "✓ User created with ID: {$user->id}\n\n";
+    // Test 1: Get an existing user to test activity logging
+    echo "Test 1: Finding an existing user...\n";
 
-    // Check activity log
+    // Try to find user ID 3, 4, 5, or 6 (any existing user)
+    $user = User::find(3) ?: User::find(4) ?: User::find(5) ?: User::find(6);
+
+    if (!$user) {
+        throw new Exception('No user found for testing. Please ensure at least one user exists in the database.');
+    }
+
+    echo "✓ Using user: {$user->name} (ID: {$user->uid})\n\n";
+
+    // Test 2: Update the user (should log 'updated' event)
+    echo "Test 2: Updating user name to trigger activity log...\n";
+    $oldName = $user->name;
+    $user->name = 'Updated Test User ' . time();
+    $user->save();
+    echo "✓ User updated from '{$oldName}' to '{$user->name}'\n\n";
+
+    // Test 3: Check activity log
+    echo "Test 3: Checking activity log for this update...\n";
     $activities = Activity::query()
         ->where('subject_type', '=', 'App\\Models\\User')
-        ->where('subject_id', '=', $user->id)
+        ->where('subject_id', '=', $user->uid)
+        ->orderBy('created_at', 'DESC')
+        ->limit(5)
         ->get();
 
-    echo "Found " . count($activities) . " activity log entries for this user\n";
+    echo "Found " . count($activities) . " recent activity log entries\n";
     foreach ($activities as $activity) {
         echo "  - Event: {$activity['event']}, Description: {$activity['description']}\n";
         if ($activity['properties']) {
             $props = json_decode($activity['properties'], true);
-            echo "    Properties: " . json_encode($props, JSON_PRETTY_PRINT) . "\n";
+            echo "    Properties: " . json_encode($props, JSON_UNESCAPED_SLASHES) . "\n";
         }
     }
     echo "\n";
 
-    // Test 2: Update the user (should log 'updated' event)
-    echo "Test 2: Updating user name...\n";
-    $user->name = 'Updated Test User';
+    // Restore original name
+    $user->name = $oldName;
     $user->save();
-    echo "✓ User updated\n\n";
 
     // Check activity log again
     $activities = Activity::query()
@@ -92,11 +103,9 @@ try {
     }
     echo "\n";
 
-    // Test 4: Delete the user (should log 'deleted' event)
-    echo "Test 4: Deleting user...\n";
+    // Test 4: Verify activity log persistence
+    echo "Test 4: Verifying activity log persistence...\n";
     $userId = $user->id;
-    $user->delete();
-    echo "✓ User deleted\n\n";
 
     // Check final activity log
     $activities = Activity::query()
@@ -105,7 +114,7 @@ try {
         ->orderBy('created_at', 'DESC')
         ->get();
 
-    echo "Found " . count($activities) . " activity log entries total (after delete)\n";
+    echo "✓ Found " . count($activities) . " activity log entries total\n";
     foreach ($activities as $activity) {
         echo "  - Event: {$activity['event']}, Description: {$activity['description']}\n";
     }

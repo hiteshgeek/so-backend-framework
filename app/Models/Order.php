@@ -53,30 +53,29 @@ class Order extends Model
     // ============================================
 
     /**
-     * The status field column name (non-standard naming)
+     * Constructor - Configure status field settings
+     *
+     * Note: Due to PHP 8.2+ restrictions, status field configuration
+     * must be done in constructor, not as property declarations.
      */
-    protected string $statusField = 'order_status_id';
+    public function __construct(array $attributes = [])
+    {
+        // Configure status field (non-standard naming)
+        $this->statusField = 'order_status_id';
 
-    /**
-     * Active status values (orders in progress)
-     * 1 = Pending
-     * 2 = Processing
-     * 3 = Shipped
-     * 4 = Delivered
-     */
-    protected array $activeStatusValues = [1, 2, 3, 4];
+        // Active status values (orders in progress)
+        // 1 = Pending, 2 = Processing, 3 = Shipped, 4 = Delivered
+        $this->activeStatusValues = [1, 2, 3, 4];
 
-    /**
-     * Inactive status values (completed/cancelled orders)
-     * 5 = Cancelled
-     * 6 = Refunded
-     */
-    protected array $inactiveStatusValues = [5, 6];
+        // Inactive status values (completed/cancelled orders)
+        // 5 = Cancelled, 6 = Refunded
+        $this->inactiveStatusValues = [5, 6];
 
-    /**
-     * Don't auto-filter inactive orders (we want to see all orders by default)
-     */
-    protected bool $autoFilterInactive = false;
+        // Don't auto-filter inactive orders (we want to see all orders by default)
+        $this->autoFilterInactive = false;
+
+        parent::__construct($attributes);
+    }
 
     // ============================================
     // CUSTOM STATUS NAMES

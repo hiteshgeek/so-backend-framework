@@ -435,7 +435,7 @@ try {
         'category_id' => 1,
         'name' => 'Test Product via Routing Test',
         'slug' => 'test-product-routing-' . time(),
-        'sku' => 'TEST-' . time(),
+        'sku' => 'TEST' . time(), // No hyphens - validation only allows alphanumeric
         'price' => 99.99,
         'stock' => 50,
         'status' => 'draft'
@@ -464,7 +464,9 @@ try {
     curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
     curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
         'name' => 'Updated Product Name',
-        'price' => 149.99
+        'price' => 149.99,
+        'stock' => 100,
+        'status' => 'active'
     ]));
     $response = curl_exec($ch);
     $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);

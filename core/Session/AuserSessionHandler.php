@@ -219,9 +219,47 @@ class AuserSessionHandler implements \SessionHandlerInterface
 
         if (@session_decode($data)) {
             $result = $_SESSION;
+        } else {
+            // Fallback: manual parsing for testing/when session not available
+            // Format: key|type:value; where type can be i: (int), s:length:"value" (string), etc.
+            $result = $this->manualSessionParse($data);
         }
 
         $_SESSION = $oldSession;
+
+        return $result;
+    }
+
+    /**
+     * Manual session data parser (fallback when session_decode not available)
+     */
+    protected function manualSessionParse(string $data): array
+    {
+        $result = [];
+
+        // Split by semicolons to get individual entries
+        $entries = explode(';', $data);
+
+        foreach ($entries as $entry) {
+            if (empty(trim($entry))) {
+                continue;
+            }
+
+            // Format: key|type:value
+            if (preg_match('/^([^|]+)\|([^:]+):(.+)$/', $entry, $matches)) {
+                $key = $matches[1];
+                $type = $matches[2];
+                $value = $matches[3];
+
+                if ($type === 'i') {
+                    // Integer
+                    $result[$key] = (int)$value;
+                } elseif (preg_match('/^s:(\d+):"(.+)"$/', $type . ':' . $value, $strMatch)) {
+                    // String with length
+                    $result[$key] = $strMatch[2];
+                }
+            }
+        }
 
         return $result;
     }

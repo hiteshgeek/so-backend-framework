@@ -139,4 +139,177 @@ class TestHelper
     {
         echo "\n" . self::colorize("=== {$testName} Complete ===", 'header') . "\n\n";
     }
+
+    // ==========================================
+    // HTTP Request Helpers
+    // ==========================================
+
+    /**
+     * Make HTTP GET request
+     *
+     * @param string $url URL to request
+     * @param array $headers Optional headers
+     * @return array ['status' => int, 'body' => string, 'data' => array|null]
+     */
+    public static function get(string $url, array $headers = []): array
+    {
+        return self::request('GET', $url, null, $headers);
+    }
+
+    /**
+     * Make HTTP POST request
+     *
+     * @param string $url URL to request
+     * @param array|null $data Data to send
+     * @param array $headers Optional headers
+     * @return array ['status' => int, 'body' => string, 'data' => array|null]
+     */
+    public static function post(string $url, ?array $data = null, array $headers = []): array
+    {
+        return self::request('POST', $url, $data, $headers);
+    }
+
+    /**
+     * Make HTTP PUT request
+     *
+     * @param string $url URL to request
+     * @param array|null $data Data to send
+     * @param array $headers Optional headers
+     * @return array ['status' => int, 'body' => string, 'data' => array|null]
+     */
+    public static function put(string $url, ?array $data = null, array $headers = []): array
+    {
+        return self::request('PUT', $url, $data, $headers);
+    }
+
+    /**
+     * Make HTTP PATCH request
+     *
+     * @param string $url URL to request
+     * @param array|null $data Data to send
+     * @param array $headers Optional headers
+     * @return array ['status' => int, 'body' => string, 'data' => array|null]
+     */
+    public static function patch(string $url, ?array $data = null, array $headers = []): array
+    {
+        return self::request('PATCH', $url, $data, $headers);
+    }
+
+    /**
+     * Make HTTP DELETE request
+     *
+     * @param string $url URL to request
+     * @param array $headers Optional headers
+     * @return array ['status' => int, 'body' => string, 'data' => array|null]
+     */
+    public static function delete(string $url, array $headers = []): array
+    {
+        return self::request('DELETE', $url, null, $headers);
+    }
+
+    /**
+     * Make HTTP request (generic method)
+     *
+     * @param string $method HTTP method
+     * @param string $url URL to request
+     * @param array|null $data Optional data to send
+     * @param array $headers Optional headers
+     * @return array ['status' => int, 'body' => string, 'data' => array|null]
+     */
+    public static function request(string $method, string $url, ?array $data = null, array $headers = []): array
+    {
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
+
+        // Add JSON content type if data is provided
+        if ($data !== null) {
+            $jsonData = json_encode($data);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonData);
+            $headers[] = 'Content-Type: application/json';
+        }
+
+        // Set headers
+        if (!empty($headers)) {
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        }
+
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        // Try to decode JSON response
+        $jsonData = json_decode($response, true);
+
+        return [
+            'status' => $httpCode,
+            'body' => $response,
+            'data' => $jsonData,
+        ];
+    }
+
+    /**
+     * Assert HTTP status code
+     *
+     * @param int $expected Expected status code
+     * @param int $actual Actual status code
+     * @param string|null $message Optional custom message
+     * @return bool True if matches
+     */
+    public static function assertStatus(int $expected, int $actual, ?string $message = null): bool
+    {
+        if ($expected === $actual) {
+            $msg = $message ?? "Status code {$actual} matches expected";
+            self::success($msg);
+            return true;
+        } else {
+            $msg = $message ?? "Expected status {$expected}, got {$actual}";
+            self::error($msg);
+            return false;
+        }
+    }
+
+    /**
+     * Assert JSON response has key
+     *
+     * @param array|null $data JSON data
+     * @param string $key Key to check
+     * @param string|null $message Optional custom message
+     * @return bool True if key exists
+     */
+    public static function assertHasKey(?array $data, string $key, ?string $message = null): bool
+    {
+        if ($data !== null && isset($data[$key])) {
+            $msg = $message ?? "Response has key '{$key}'";
+            self::success($msg);
+            return true;
+        } else {
+            $msg = $message ?? "Response missing key '{$key}'";
+            self::error($msg);
+            return false;
+        }
+    }
+
+    /**
+     * Assert values are equal
+     *
+     * @param mixed $expected Expected value
+     * @param mixed $actual Actual value
+     * @param string|null $message Optional custom message
+     * @return bool True if equal
+     */
+    public static function assertEquals($expected, $actual, ?string $message = null): bool
+    {
+        if ($expected === $actual) {
+            $msg = $message ?? "Values match";
+            self::success($msg);
+            return true;
+        } else {
+            $expectedStr = is_array($expected) ? json_encode($expected) : $expected;
+            $actualStr = is_array($actual) ? json_encode($actual) : $actual;
+            $msg = $message ?? "Expected {$expectedStr}, got {$actualStr}";
+            self::error($msg);
+            return false;
+        }
+    }
 }

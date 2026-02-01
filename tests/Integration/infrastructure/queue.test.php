@@ -43,7 +43,8 @@ try {
 
     // Test 5: Query jobs table
     echo "Test 5: Querying jobs table...\n";
-    $db = app('db');
+    // Use essentials database for framework jobs table
+    $db = app('db-essentials');
     $jobs = $db->table('jobs')->get();
     echo "✓ Found " . count($jobs) . " jobs in database\n";
     foreach ($jobs as $job) {

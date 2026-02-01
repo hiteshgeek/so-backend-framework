@@ -25,7 +25,8 @@ class CacheServiceProvider
     public function register(): void
     {
         $this->app->singleton('cache', function ($app) {
-            $db = $app->make('db');
+            // Use essentials database for framework cache tables
+            $db = $app->make('db-essentials');
             $config = $app->make('config')->get('cache');
 
             return new CacheManager($db->connection, $config);

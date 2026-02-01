@@ -17,12 +17,14 @@ use Core\Validation\Validator;
  */
 class PasswordApiController
 {
-    private PasswordResetService $passwordResetService;
-
-    public function __construct()
-    {
-        $this->passwordResetService = new PasswordResetService();
-    }
+    /**
+     * Constructor with dependency injection
+     *
+     * @param PasswordResetService $passwordResetService
+     */
+    public function __construct(
+        private PasswordResetService $passwordResetService
+    ) {}
 
     /**
      * API Forgot Password - Request reset token

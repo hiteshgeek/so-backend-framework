@@ -16,12 +16,14 @@ use Core\Validation\Validator;
  */
 class UserApiController
 {
-    private UserService $userService;
-
-    public function __construct()
-    {
-        $this->userService = new UserService();
-    }
+    /**
+     * Constructor with dependency injection
+     *
+     * @param UserService $userService
+     */
+    public function __construct(
+        private UserService $userService
+    ) {}
 
     /**
      * Get all users

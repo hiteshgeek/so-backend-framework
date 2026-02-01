@@ -26,7 +26,8 @@ class QueueServiceProvider
     public function register(): void
     {
         $this->app->singleton('queue', function ($app) {
-            $db = $app->make('db');
+            // Use essentials database for framework queue tables
+            $db = $app->make('db-essentials');
             $config = $app->make('config')->get('queue');
 
             return new QueueManager($db->connection, $config);

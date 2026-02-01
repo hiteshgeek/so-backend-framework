@@ -28,8 +28,8 @@ class NotificationServiceProvider
         $this->app->singleton('notification', function ($app) {
             $manager = new NotificationManager();
 
-            // Register database channel
-            $db = $app->make('db');
+            // Register database channel - use essentials database for framework notifications table
+            $db = $app->make('db-essentials');
             $databaseChannel = new DatabaseChannel($db->connection);
             $manager->registerChannel('database', $databaseChannel);
 

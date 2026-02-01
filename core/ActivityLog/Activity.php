@@ -32,6 +32,14 @@ class Activity extends Model
     ];
 
     /**
+     * Override query to use essentials database for activity_log table
+     */
+    public static function query(): \Core\Database\QueryBuilder
+    {
+        return app('db-essentials')->table(static::$table);
+    }
+
+    /**
      * Get the properties as an array
      */
     public function getProperties(): array

@@ -17,12 +17,14 @@ use Core\Validation\Validator;
  */
 class AuthApiController
 {
-    private AuthenticationService $authService;
-
-    public function __construct()
-    {
-        $this->authService = new AuthenticationService();
-    }
+    /**
+     * Constructor with dependency injection
+     *
+     * @param AuthenticationService $authService
+     */
+    public function __construct(
+        private AuthenticationService $authService
+    ) {}
 
     /**
      * API Register - Create new user account

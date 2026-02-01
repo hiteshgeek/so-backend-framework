@@ -25,7 +25,8 @@ class ActivityLogServiceProvider
     public function register(): void
     {
         $this->app->singleton('activity.logger', function ($app) {
-            $db = $app->make('db');
+            // Use essentials database for framework activity_log table
+            $db = $app->make('db-essentials');
             return new ActivityLogger($db->connection);
         });
     }

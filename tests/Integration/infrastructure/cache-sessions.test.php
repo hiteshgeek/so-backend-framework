@@ -66,7 +66,8 @@ try {
 
     // Test 7: Query cache table
     echo "Test 7: Querying cache table...\n";
-    $db = app('db');
+    // Use essentials database for framework cache table
+    $db = app('db-essentials');
     $cacheEntries = $db->table('cache')->get();
     echo "✓ Found " . count($cacheEntries) . " entries in cache table\n";
     foreach ($cacheEntries as $entry) {
@@ -104,12 +105,15 @@ try {
     // Test 10: Query sessions table
     echo "Test 10: Querying sessions table...\n";
     $sessionId = session_id();
-    $sessions = $db->table('sessions')->get();
+    // Use application database for auser_session table
+    $dbApp = app('db');
+    $sessions = $dbApp->table('auser_session')->get();
     echo "✓ Found " . count($sessions) . " active sessions\n";
     foreach ($sessions as $sess) {
-        $userId = $sess['user_id'] ?? 'NULL';
-        $lastActivity = date('Y-m-d H:i:s', $sess['last_activity']);
-        echo "  - Session ID: {$sess['id']}, User: {$userId}, Last Activity: {$lastActivity}\n";
+        $userId = $sess['uid'] ?? 'NULL';
+        $sessionId = $sess['sid'] ?? 'UNKNOWN';
+        $lastActivity = $sess['last_logged_in'] ?? 'N/A';
+        echo "  - Session ID: {$sessionId}, User: {$userId}, Last Activity: {$lastActivity}\n";
     }
     echo "\n";
 
@@ -121,8 +125,8 @@ try {
         echo "⚠ Skipping in CLI mode (sessions don't persist to DB when headers sent)\n";
         echo "✓ Session functionality works in web context\n\n";
     } else {
-        $stmt = $db->connection->query(
-            "SELECT * FROM sessions WHERE id = ?",
+        $stmt = $dbApp->connection->query(
+            "SELECT * FROM auser_session WHERE session_id = ?",
             [$sessionId]
         );
         $result = ($stmt instanceof \PDOStatement)
@@ -131,8 +135,8 @@ try {
 
         if (!empty($result)) {
             echo "✓ Session data persisted to database\n";
-            echo "  Session ID in DB: {$result[0]['id']}\n";
-            echo "  User ID in DB: " . ($result[0]['user_id'] ?? 'NULL') . "\n\n";
+            echo "  Session ID in DB: {$result[0]['sid']}\n";
+            echo "  User ID in DB: " . ($result[0]['uid'] ?? 'NULL') . "\n\n";
         } else {
             echo "✗ Session not found in database\n\n";
         }
