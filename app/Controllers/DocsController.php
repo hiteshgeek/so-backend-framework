@@ -165,6 +165,9 @@ class DocsController
             'middleware' => '../../tests/MIDDLEWARE_IMPLEMENTATION_SUMMARY.md',
             'internal-api' => '../../tests/INTERNAL_API_LAYER_SUMMARY.md',
             'model-enhancements' => '../../tests/MODEL_ENHANCEMENTS_SUMMARY.md',
+
+            // Comprehensive References
+            'comprehensive-security' => 'COMPREHENSIVE-SECURITY.md',
         ];
 
         if (!isset($allowedFiles[$file])) {

@@ -111,4 +111,9 @@ return [
 
     // Utilities & Reference
     ['key' => 'dev-helpers', 'title' => 'Helper Functions', 'url' => '/docs/dev-helpers'],
+
+    // ===== COMPREHENSIVE REFERENCES =====
+
+    // Complete Guides
+    ['key' => 'comprehensive-security', 'title' => 'Comprehensive Security Guide', 'url' => '/docs/comprehensive-security'],
 ];

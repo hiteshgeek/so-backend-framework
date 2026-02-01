@@ -391,6 +391,17 @@
                         </div>
                         <span class="badge badge-featured">Complete</span>
                     </a>
+                    <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/comprehensive-security" class="doc-card featured">
+                        <div class="doc-card-body">
+                            <h3><span class="mdi mdi-shield-lock-outline"></span> Comprehensive Security Guide</h3>
+                            <p>Master security documentation covering authentication, sessions, JWT, CSRF, encryption, and OWASP Top 10 protection.</p>
+                        </div>
+                        <div class="doc-card-badges">
+                            <span class="badge badge-featured">Complete</span>
+                            <span class="badge badge-security">Security</span>
+                            <span class="badge badge-owasp">OWASP</span>
+                        </div>
+                    </a>
                     <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/documentation-review" class="doc-card featured">
                         <div class="doc-card-body">
                             <h3><span class="mdi mdi-clipboard-check"></span> Documentation Review</h3>
