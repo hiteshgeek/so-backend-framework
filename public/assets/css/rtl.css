@@ -1,0 +1,429 @@
+/**
+ * RTL (Right-to-Left) Layout Overrides
+ *
+ * Include this stylesheet for RTL languages (Arabic, Hebrew, Persian, Urdu, etc.)
+ * Apply the 'dir="rtl"' attribute to the <html> or <body> element.
+ *
+ * Usage in views:
+ * <html lang="<?= locale() ?>" dir="<?= text_direction() ?>">
+ * <?php if (is_rtl()): ?>
+ * <link rel="stylesheet" href="/assets/css/rtl.css">
+ * <?php endif; ?>
+ */
+
+/* ==========================================================================
+   Base RTL Styles
+   ========================================================================== */
+
+[dir="rtl"] {
+    text-align: right;
+}
+
+[dir="rtl"] body {
+    direction: rtl;
+}
+
+/* ==========================================================================
+   Text Alignment Overrides
+   ========================================================================== */
+
+[dir="rtl"] .text-left {
+    text-align: right;
+}
+
+[dir="rtl"] .text-right {
+    text-align: left;
+}
+
+[dir="rtl"] .text-start {
+    text-align: right;
+}
+
+[dir="rtl"] .text-end {
+    text-align: left;
+}
+
+/* ==========================================================================
+   Margin Overrides
+   ========================================================================== */
+
+/* Margin Left -> Margin Right */
+[dir="rtl"] .ml-1 { margin-left: 0; margin-right: 0.25rem; }
+[dir="rtl"] .ml-2 { margin-left: 0; margin-right: 0.5rem; }
+[dir="rtl"] .ml-3 { margin-left: 0; margin-right: 0.75rem; }
+[dir="rtl"] .ml-4 { margin-left: 0; margin-right: 1rem; }
+[dir="rtl"] .ml-5 { margin-left: 0; margin-right: 1.25rem; }
+[dir="rtl"] .ml-6 { margin-left: 0; margin-right: 1.5rem; }
+[dir="rtl"] .ml-8 { margin-left: 0; margin-right: 2rem; }
+[dir="rtl"] .ml-auto { margin-left: 0; margin-right: auto; }
+
+/* Margin Right -> Margin Left */
+[dir="rtl"] .mr-1 { margin-right: 0; margin-left: 0.25rem; }
+[dir="rtl"] .mr-2 { margin-right: 0; margin-left: 0.5rem; }
+[dir="rtl"] .mr-3 { margin-right: 0; margin-left: 0.75rem; }
+[dir="rtl"] .mr-4 { margin-right: 0; margin-left: 1rem; }
+[dir="rtl"] .mr-5 { margin-right: 0; margin-left: 1.25rem; }
+[dir="rtl"] .mr-6 { margin-right: 0; margin-left: 1.5rem; }
+[dir="rtl"] .mr-8 { margin-right: 0; margin-left: 2rem; }
+[dir="rtl"] .mr-auto { margin-right: 0; margin-left: auto; }
+
+/* ==========================================================================
+   Padding Overrides
+   ========================================================================== */
+
+/* Padding Left -> Padding Right */
+[dir="rtl"] .pl-1 { padding-left: 0; padding-right: 0.25rem; }
+[dir="rtl"] .pl-2 { padding-left: 0; padding-right: 0.5rem; }
+[dir="rtl"] .pl-3 { padding-left: 0; padding-right: 0.75rem; }
+[dir="rtl"] .pl-4 { padding-left: 0; padding-right: 1rem; }
+[dir="rtl"] .pl-5 { padding-left: 0; padding-right: 1.25rem; }
+[dir="rtl"] .pl-6 { padding-left: 0; padding-right: 1.5rem; }
+[dir="rtl"] .pl-8 { padding-left: 0; padding-right: 2rem; }
+
+/* Padding Right -> Padding Left */
+[dir="rtl"] .pr-1 { padding-right: 0; padding-left: 0.25rem; }
+[dir="rtl"] .pr-2 { padding-right: 0; padding-left: 0.5rem; }
+[dir="rtl"] .pr-3 { padding-right: 0; padding-left: 0.75rem; }
+[dir="rtl"] .pr-4 { padding-right: 0; padding-left: 1rem; }
+[dir="rtl"] .pr-5 { padding-right: 0; padding-left: 1.25rem; }
+[dir="rtl"] .pr-6 { padding-right: 0; padding-left: 1.5rem; }
+[dir="rtl"] .pr-8 { padding-right: 0; padding-left: 2rem; }
+
+/* ==========================================================================
+   Flexbox Overrides
+   ========================================================================== */
+
+[dir="rtl"] .flex-row {
+    flex-direction: row-reverse;
+}
+
+[dir="rtl"] .flex-row-reverse {
+    flex-direction: row;
+}
+
+[dir="rtl"] .justify-start {
+    justify-content: flex-end;
+}
+
+[dir="rtl"] .justify-end {
+    justify-content: flex-start;
+}
+
+[dir="rtl"] .items-start {
+    align-items: flex-end;
+}
+
+[dir="rtl"] .items-end {
+    align-items: flex-start;
+}
+
+/* ==========================================================================
+   Float Overrides
+   ========================================================================== */
+
+[dir="rtl"] .float-left {
+    float: right;
+}
+
+[dir="rtl"] .float-right {
+    float: left;
+}
+
+[dir="rtl"] .float-start {
+    float: right;
+}
+
+[dir="rtl"] .float-end {
+    float: left;
+}
+
+/* ==========================================================================
+   Border Overrides
+   ========================================================================== */
+
+[dir="rtl"] .border-l {
+    border-left: none;
+    border-right: 1px solid;
+}
+
+[dir="rtl"] .border-r {
+    border-right: none;
+    border-left: 1px solid;
+}
+
+[dir="rtl"] .border-l-2 {
+    border-left: none;
+    border-right: 2px solid;
+}
+
+[dir="rtl"] .border-r-2 {
+    border-right: none;
+    border-left: 2px solid;
+}
+
+[dir="rtl"] .rounded-l {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-top-right-radius: 0.25rem;
+    border-bottom-right-radius: 0.25rem;
+}
+
+[dir="rtl"] .rounded-r {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-top-left-radius: 0.25rem;
+    border-bottom-left-radius: 0.25rem;
+}
+
+/* ==========================================================================
+   Position Overrides
+   ========================================================================== */
+
+[dir="rtl"] .left-0 {
+    left: auto;
+    right: 0;
+}
+
+[dir="rtl"] .right-0 {
+    right: auto;
+    left: 0;
+}
+
+[dir="rtl"] .left-1 {
+    left: auto;
+    right: 0.25rem;
+}
+
+[dir="rtl"] .right-1 {
+    right: auto;
+    left: 0.25rem;
+}
+
+[dir="rtl"] .left-2 {
+    left: auto;
+    right: 0.5rem;
+}
+
+[dir="rtl"] .right-2 {
+    right: auto;
+    left: 0.5rem;
+}
+
+[dir="rtl"] .left-4 {
+    left: auto;
+    right: 1rem;
+}
+
+[dir="rtl"] .right-4 {
+    right: auto;
+    left: 1rem;
+}
+
+/* ==========================================================================
+   Transform Overrides
+   ========================================================================== */
+
+[dir="rtl"] .translate-x-1 {
+    transform: translateX(-0.25rem);
+}
+
+[dir="rtl"] .-translate-x-1 {
+    transform: translateX(0.25rem);
+}
+
+[dir="rtl"] .translate-x-2 {
+    transform: translateX(-0.5rem);
+}
+
+[dir="rtl"] .-translate-x-2 {
+    transform: translateX(0.5rem);
+}
+
+/* ==========================================================================
+   Form Elements
+   ========================================================================== */
+
+[dir="rtl"] input,
+[dir="rtl"] textarea,
+[dir="rtl"] select {
+    text-align: right;
+}
+
+[dir="rtl"] input[type="checkbox"],
+[dir="rtl"] input[type="radio"] {
+    margin-left: 0.5rem;
+    margin-right: 0;
+}
+
+[dir="rtl"] .form-group label {
+    text-align: right;
+}
+
+[dir="rtl"] .input-group {
+    flex-direction: row-reverse;
+}
+
+[dir="rtl"] .input-group-prepend {
+    order: 1;
+}
+
+[dir="rtl"] .input-group-append {
+    order: -1;
+}
+
+/* ==========================================================================
+   Lists
+   ========================================================================== */
+
+[dir="rtl"] ul,
+[dir="rtl"] ol {
+    padding-left: 0;
+    padding-right: 1.5rem;
+}
+
+[dir="rtl"] .list-none {
+    padding-right: 0;
+}
+
+/* ==========================================================================
+   Tables
+   ========================================================================== */
+
+[dir="rtl"] table {
+    direction: rtl;
+}
+
+[dir="rtl"] th,
+[dir="rtl"] td {
+    text-align: right;
+}
+
+/* ==========================================================================
+   Navigation
+   ========================================================================== */
+
+[dir="rtl"] .nav {
+    flex-direction: row-reverse;
+}
+
+[dir="rtl"] .breadcrumb {
+    flex-direction: row-reverse;
+}
+
+[dir="rtl"] .breadcrumb-item + .breadcrumb-item::before {
+    content: "\\";
+    padding-left: 0.5rem;
+    padding-right: 0;
+}
+
+/* ==========================================================================
+   Icons
+   ========================================================================== */
+
+/* Flip directional icons */
+[dir="rtl"] .icon-arrow-left,
+[dir="rtl"] .icon-chevron-left,
+[dir="rtl"] .icon-caret-left {
+    transform: scaleX(-1);
+}
+
+[dir="rtl"] .icon-arrow-right,
+[dir="rtl"] .icon-chevron-right,
+[dir="rtl"] .icon-caret-right {
+    transform: scaleX(-1);
+}
+
+/* ==========================================================================
+   Utility Classes for RTL
+   ========================================================================== */
+
+/* Force LTR (for numbers, code, etc.) */
+.ltr {
+    direction: ltr;
+    unicode-bidi: isolate;
+}
+
+/* Force RTL */
+.rtl {
+    direction: rtl;
+    unicode-bidi: isolate;
+}
+
+/* Embedded content (like English in Arabic) */
+.bdi {
+    unicode-bidi: isolate;
+}
+
+/* Override for specific elements that should not flip */
+[dir="rtl"] .no-flip {
+    direction: ltr;
+}
+
+/* Keep numbers LTR */
+[dir="rtl"] .number,
+[dir="rtl"] .price,
+[dir="rtl"] .phone,
+[dir="rtl"] .date {
+    direction: ltr;
+    unicode-bidi: embed;
+}
+
+/* Code blocks should remain LTR */
+[dir="rtl"] code,
+[dir="rtl"] pre,
+[dir="rtl"] .code {
+    direction: ltr;
+    text-align: left;
+}
+
+/* ==========================================================================
+   Scrollbar Position
+   ========================================================================== */
+
+[dir="rtl"] ::-webkit-scrollbar {
+    /* Scrollbar on left side for RTL */
+}
+
+/* ==========================================================================
+   Animations
+   ========================================================================== */
+
+[dir="rtl"] .slide-in-left {
+    animation-name: slideInRight;
+}
+
+[dir="rtl"] .slide-in-right {
+    animation-name: slideInLeft;
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideInLeft {
+    from {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* ==========================================================================
+   Print Styles
+   ========================================================================== */
+
+@media print {
+    [dir="rtl"] {
+        direction: rtl;
+    }
+}

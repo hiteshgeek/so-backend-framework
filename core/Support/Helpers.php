@@ -982,3 +982,235 @@ if (!function_exists('timezone')) {
         return $manager->getTimezone();
     }
 }
+
+// ============================================
+// RTL & Text Direction Helpers
+// ============================================
+
+if (!function_exists('is_rtl')) {
+    /**
+     * Check if current or specified locale is RTL (Right-to-Left)
+     *
+     * @param string|null $locale Locale to check (null = current)
+     * @return bool
+     */
+    function is_rtl(?string $locale = null): bool
+    {
+        return app('locale')->isRtl($locale);
+    }
+}
+
+if (!function_exists('text_direction')) {
+    /**
+     * Get text direction for locale
+     *
+     * @param string|null $locale Locale (null = current)
+     * @return string 'ltr' or 'rtl'
+     */
+    function text_direction(?string $locale = null): string
+    {
+        return app('locale')->getDirection($locale);
+    }
+}
+
+if (!function_exists('html_dir')) {
+    /**
+     * Get HTML dir attribute value for locale
+     *
+     * @param string|null $locale Locale (null = current)
+     * @return string 'ltr' or 'rtl'
+     */
+    function html_dir(?string $locale = null): string
+    {
+        return app('locale')->getHtmlDir($locale);
+    }
+}
+
+if (!function_exists('dir_class')) {
+    /**
+     * Get CSS direction class for locale
+     *
+     * @param string|null $locale Locale (null = current)
+     * @return string 'dir-ltr' or 'dir-rtl'
+     */
+    function dir_class(?string $locale = null): string
+    {
+        return app('locale')->getDirectionClass($locale);
+    }
+}
+
+// ============================================
+// ICU MessageFormat Helpers
+// ============================================
+
+if (!function_exists('icu')) {
+    /**
+     * Format message using ICU MessageFormat
+     *
+     * Supports: select, plural, number, date, time patterns
+     *
+     * @param string $key Translation key containing ICU pattern
+     * @param array $args Arguments for the pattern
+     * @param string|null $locale Locale (null = current)
+     * @return string Formatted message
+     */
+    function icu(string $key, array $args = [], ?string $locale = null): string
+    {
+        $pattern = trans($key);
+        $formatter = new \Core\Localization\MessageFormatter();
+        return $formatter->format($pattern, $args, $locale);
+    }
+}
+
+if (!function_exists('icu_format')) {
+    /**
+     * Format a raw ICU pattern (not from translation files)
+     *
+     * @param string $pattern ICU message pattern
+     * @param array $args Arguments
+     * @param string|null $locale Locale
+     * @return string
+     */
+    function icu_format(string $pattern, array $args = [], ?string $locale = null): string
+    {
+        $formatter = new \Core\Localization\MessageFormatter();
+        return $formatter->format($pattern, $args, $locale);
+    }
+}
+
+// ============================================
+// CLDR Pluralization Helpers
+// ============================================
+
+if (!function_exists('plural_category')) {
+    /**
+     * Get CLDR plural category for a number in the current locale
+     *
+     * @param int|float $count Number
+     * @param string|null $locale Locale (null = current)
+     * @return string Category (zero, one, two, few, many, other)
+     */
+    function plural_category(int|float $count, ?string $locale = null): string
+    {
+        $locale = $locale ?? locale();
+        $rule = \Core\Localization\Pluralization\PluralRules::forLocale($locale);
+        return $rule->getCategory($count);
+    }
+}
+
+if (!function_exists('plural_forms')) {
+    /**
+     * Get number of plural forms for a locale
+     *
+     * @param string|null $locale Locale (null = current)
+     * @return int Number of forms
+     */
+    function plural_forms(?string $locale = null): int
+    {
+        $locale = $locale ?? locale();
+        $rule = \Core\Localization\Pluralization\PluralRules::forLocale($locale);
+        return $rule->getFormCount();
+    }
+}
+
+// ============================================
+// Locale Information Helpers
+// ============================================
+
+if (!function_exists('locale_name')) {
+    /**
+     * Get display name for a locale
+     *
+     * @param string|null $locale Locale to get name for (null = current)
+     * @param string|null $displayLocale Locale for display (null = current)
+     * @return string Locale name
+     */
+    function locale_name(?string $locale = null, ?string $displayLocale = null): string
+    {
+        return app('locale')->getLocaleName($locale, $displayLocale);
+    }
+}
+
+if (!function_exists('locale_native_name')) {
+    /**
+     * Get native name for a locale (in its own language)
+     *
+     * @param string|null $locale Locale (null = current)
+     * @return string Native locale name
+     */
+    function locale_native_name(?string $locale = null): string
+    {
+        return app('locale')->getNativeName($locale);
+    }
+}
+
+if (!function_exists('language_code')) {
+    /**
+     * Extract language code from locale
+     *
+     * @param string|null $locale Full locale (null = current)
+     * @return string Language code (e.g., 'en' from 'en_US')
+     */
+    function language_code(?string $locale = null): string
+    {
+        $locale = $locale ?? locale();
+        return app('locale')->getLanguageCode($locale);
+    }
+}
+
+if (!function_exists('region_code')) {
+    /**
+     * Extract region/country code from locale
+     *
+     * @param string|null $locale Full locale (null = current)
+     * @return string|null Region code (e.g., 'US' from 'en_US')
+     */
+    function region_code(?string $locale = null): ?string
+    {
+        $locale = $locale ?? locale();
+        return app('locale')->getRegionCode($locale);
+    }
+}
+
+// ============================================
+// Media/CDN Helpers
+// ============================================
+
+if (!function_exists('media_url')) {
+    /**
+     * Get URL for a media file (with CDN support if enabled)
+     *
+     * @param string $path Relative path
+     * @param string|null $disk Storage disk
+     * @return string URL
+     */
+    function media_url(string $path, ?string $disk = null): string
+    {
+        return (new \Core\Media\StorageManager())->getUrl($path, $disk);
+    }
+}
+
+if (!function_exists('cdn_url')) {
+    /**
+     * Get CDN URL for a path (if CDN enabled)
+     *
+     * @param string $path Relative path
+     * @return string CDN URL or original path
+     */
+    function cdn_url(string $path): string
+    {
+        return (new \Core\Media\CdnManager())->getUrl($path);
+    }
+}
+
+if (!function_exists('is_cdn_enabled')) {
+    /**
+     * Check if CDN is enabled
+     *
+     * @return bool
+     */
+    function is_cdn_enabled(): bool
+    {
+        return (new \Core\Media\CdnManager())->isEnabled();
+    }
+}

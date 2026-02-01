@@ -11,9 +11,10 @@ namespace Core\Media;
  * Features:
  * - Store files with optional folder organization
  * - Generate unique filenames or use custom names
- * - Get file URLs and paths
+ * - Get file URLs and paths (with CDN support)
  * - Delete files
  * - Extract file metadata (size, MIME type, dimensions for images)
+ * - CDN integration for optimized content delivery
  */
 class StorageManager
 {
@@ -33,6 +34,11 @@ class StorageManager
     protected string $mediaPath;
 
     /**
+     * CDN manager instance
+     */
+    protected ?CdnManager $cdnManager = null;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -40,6 +46,19 @@ class StorageManager
         $this->defaultDisk = config('media.default_disk', 'media');
         $this->disks = config('media.disks', []);
         $this->mediaPath = config('media.path', '/var/www/html/rpkfiles');
+    }
+
+    /**
+     * Get CDN manager instance (lazy loaded)
+     *
+     * @return CdnManager
+     */
+    protected function getCdnManager(): CdnManager
+    {
+        if ($this->cdnManager === null) {
+            $this->cdnManager = new CdnManager();
+        }
+        return $this->cdnManager;
     }
 
     /**
@@ -161,11 +180,35 @@ class StorageManager
     /**
      * Get public URL for file
      *
+     * Automatically uses CDN URL if CDN is enabled and the file type
+     * is eligible according to CDN rules.
+     *
      * @param string $path Relative path from media root
      * @param string|null $disk Storage disk
-     * @return string Public URL
+     * @param string|null $mimeType Optional MIME type for CDN rule checking
+     * @return string Public URL (CDN or local)
      */
-    public function getUrl(string $path, ?string $disk = null): string
+    public function getUrl(string $path, ?string $disk = null, ?string $mimeType = null): string
+    {
+        $cdn = $this->getCdnManager();
+
+        // Check if CDN should be used for this path
+        if ($cdn->shouldUseCdn($path, $mimeType)) {
+            return $cdn->getUrl($path);
+        }
+
+        // Fallback to local URL
+        return $this->getLocalUrl($path, $disk);
+    }
+
+    /**
+     * Get local (non-CDN) URL for file
+     *
+     * @param string $path Relative path from media root
+     * @param string|null $disk Storage disk
+     * @return string Local URL
+     */
+    public function getLocalUrl(string $path, ?string $disk = null): string
     {
         $disk = $disk ?? $this->defaultDisk;
         $diskConfig = $this->disks[$disk] ?? [];
@@ -175,6 +218,49 @@ class StorageManager
         $appUrl = config('app.url', 'http://localhost');
 
         return rtrim($appUrl, '/') . '/' . ltrim($baseUrl, '/') . '/' . ltrim($path, '/');
+    }
+
+    /**
+     * Get CDN URL for file (forces CDN usage)
+     *
+     * @param string $path Relative path from media root
+     * @return string CDN URL or local URL if CDN disabled
+     */
+    public function getCdnUrl(string $path): string
+    {
+        return $this->getCdnManager()->getUrl($path);
+    }
+
+    /**
+     * Check if CDN is enabled
+     *
+     * @return bool
+     */
+    public function isCdnEnabled(): bool
+    {
+        return $this->getCdnManager()->isEnabled();
+    }
+
+    /**
+     * Purge file from CDN cache
+     *
+     * @param string $path Relative path to purge
+     * @return bool True if successful
+     */
+    public function purgeCdnCache(string $path): bool
+    {
+        return $this->getCdnManager()->purge($path);
+    }
+
+    /**
+     * Purge multiple files from CDN cache
+     *
+     * @param array $paths Paths to purge
+     * @return array Results keyed by path
+     */
+    public function purgeCdnCacheMany(array $paths): array
+    {
+        return $this->getCdnManager()->purgeMany($paths);
     }
 
     /**

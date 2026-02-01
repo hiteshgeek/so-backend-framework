@@ -135,11 +135,18 @@ function renderSection($icon, $title, $cards, $gridClass = 'docs-grid') {
                 renderCard('/docs/queue-system', 'tray-full', 'Queue System', 'Background job processing.', ['enterprise', 'async', 'production']),
                 renderCard('/docs/notification-system', 'bell', 'Notification System', 'Multi-channel notifications.', ['enterprise', 'multi-channel', 'production']),
                 renderCard('/docs/activity-logging', 'clipboard-text-clock', 'Activity Logging', 'Audit trail and compliance.', ['enterprise', 'compliance', 'erp']),
-                renderCard('/docs/localization', 'earth', 'Internationalization (i18n)', 'Multi-language, multi-currency, multi-timezone support for global ERP deployments.', ['new', 'enterprise', 'erp']),
+                renderCard('/docs/localization', 'earth', 'Internationalization (i18n)', 'Multi-language, multi-currency, multi-timezone support for global ERP deployments.', ['enterprise', 'erp']),
+                renderCard('/docs/pluralization', 'format-list-numbered', 'CLDR Pluralization', 'Complex plural forms for 6 language families: Slavic, Arabic, Asian, and more.', ['new', 'i18n', 'enterprise']),
+                renderCard('/docs/rtl-support', 'format-textbox', 'RTL Language Support', 'Right-to-left text direction for Arabic, Hebrew, Persian, and Urdu.', ['new', 'i18n', 'accessibility']),
+                renderCard('/docs/icu-messageformat', 'translate', 'ICU MessageFormat', 'Advanced message formatting with select, plural, and number patterns.', ['new', 'i18n', 'enterprise']),
             ]) ?>
 
             <?= renderSection('file-image', 'Media & Files', [
-                renderCard('/docs/features/file-uploads', 'cloud-upload', 'File Uploads & Image Processing', 'Complete media system: uploads, thumbnails, variants, watermarks, and queue processing.', ['new', 'essential', 'production']),
+                renderCard('/docs/features/file-uploads', 'cloud-upload', 'File Uploads & Image Processing', 'Complete media system: uploads, thumbnails, variants, watermarks, and queue processing.', ['essential', 'production']),
+                renderCard('/docs/chunked-uploads', 'upload-multiple', 'Chunked Uploads', 'Resumable large file uploads with progress tracking and auto-cleanup.', ['new', 'enterprise', 'production']),
+                renderCard('/docs/webp-conversion', 'image-auto-adjust', 'WebP Auto-Conversion', 'Automatic WebP variant generation for optimized image delivery.', ['new', 'performance']),
+                renderCard('/docs/video-processing', 'video-image', 'Video Processing', 'FFmpeg-based thumbnail extraction, metadata, and preview generation.', ['new', 'media', 'production']),
+                renderCard('/docs/cdn-integration', 'cloud-sync', 'CDN Integration', 'CloudFront and Cloudflare support with automatic URL rewriting and cache purging.', ['new', 'performance', 'scaling']),
             ]) ?>
 
             <?= renderSection('wrench', 'Developer Tools', [
@@ -175,8 +182,10 @@ function renderSection($icon, $title, $cards, $gridClass = 'docs-grid') {
                 renderCard('/docs/dev-api-controllers', 'api', 'API Controllers & JSON', 'JSON responses, status codes, filtering, and pagination.', 'guide'),
                 renderCard('/docs/dev-forms-validation', 'form-textbox', 'Form Handling & Validation', 'Forms with CSRF, validation rules, and error display.', 'guide'),
                 renderCard('/docs/dev-file-uploads', 'file-upload', 'File Uploads (Basic)', 'Handle file uploads, validation, storage, and security.', 'guide'),
-                renderCard('/docs/features/file-uploads', 'cloud-upload', 'Media System (Complete)', 'File uploads, image processing, thumbnails, variants, and watermarks.', ['new', 'guide', 'production']),
-                renderCard('/docs/api/media-api', 'code-braces', 'Media API Reference', 'Complete API documentation for media services, image processing, and watermarks.', ['new', 'api', 'reference']),
+                renderCard('/docs/features/file-uploads', 'cloud-upload', 'Media System (Complete)', 'File uploads, image processing, thumbnails, variants, and watermarks.', ['guide', 'production']),
+                renderCard('/docs/dev-chunked-uploads', 'upload-multiple', 'Chunked Upload Implementation', 'Build resumable upload UI with progress bars and error recovery.', ['new', 'guide', 'production']),
+                renderCard('/docs/dev-video-processing', 'video-image', 'Video Processing Guide', 'Extract thumbnails, generate previews, and handle video metadata.', ['new', 'guide', 'media']),
+                renderCard('/docs/api/media-api', 'code-braces', 'Media API Reference', 'Complete API documentation for media services, image processing, and watermarks.', ['api', 'reference']),
                 renderCard('/docs/dev-pagination', 'page-layout-header', 'Pagination', 'Paginate database queries and display page links.', 'guide'),
             ]) ?>
 
@@ -214,6 +223,7 @@ function renderSection($icon, $title, $cards, $gridClass = 'docs-grid') {
 
             <?= renderSection('console-line', 'CLI Tools', [
                 renderCard('/docs/dev-cli-commands', 'console', 'CLI Commands', 'Code generation, migrations, seeders, and development workflows.', 'guide'),
+                renderCard('/docs/dev-translation-commands', 'translate', 'Translation Commands', 'make:translation, translations:missing, and translations:sync CLI tools.', ['new', 'guide', 'i18n']),
             ]) ?>
 
             <?= renderSection('speedometer', 'Performance & Caching', [
@@ -231,7 +241,10 @@ function renderSection($icon, $title, $cards, $gridClass = 'docs-grid') {
 
             <?= renderSection('hammer-wrench', 'Utilities & Reference', [
                 renderCard('/docs/dev-helpers', 'function-variant', 'Helper Functions', 'Complete reference of available helper functions and utilities.', 'guide'),
-                renderCard('/docs/dev-localization', 'earth', 'Localization Implementation', 'Step-by-step guide to implementing multi-language, multi-currency, and multi-timezone support.', ['new', 'guide', 'enterprise']),
+                renderCard('/docs/dev-localization', 'earth', 'Localization Implementation', 'Step-by-step guide to implementing multi-language, multi-currency, and multi-timezone support.', ['guide', 'enterprise']),
+                renderCard('/docs/dev-locale-validation', 'check-circle', 'Locale Validation Rules', 'Country-specific validation: phone numbers, postal codes, and tax IDs for 40+ countries.', ['new', 'guide', 'enterprise']),
+                renderCard('/docs/dev-translation-cli', 'console', 'Translation CLI Commands', 'Create, sync, and audit translations with make:translation, translations:missing, translations:sync.', ['new', 'guide', 'cli']),
+                renderCard('/docs/dev-rtl-layouts', 'format-textbox', 'RTL Layout Guide', 'Building layouts that support right-to-left languages with CSS and helpers.', ['new', 'guide', 'i18n']),
             ]) ?>
 
         </div>

@@ -48,7 +48,8 @@ class DateTimeFormatterTest extends TestCase
      */
     public function testShortFormatEnglish(): void
     {
-        $date = new DateTime('2026-01-15 15:30:25');
+        // Use explicit UTC timezone for consistent results
+        $date = new DateTime('2026-01-15 15:30:25', new \DateTimeZone('UTC'));
         $result = $this->formatter->format($date, 'short', 'en');
 
         // Short format: "1/15/26, 3:30 PM"
@@ -61,7 +62,8 @@ class DateTimeFormatterTest extends TestCase
      */
     public function testMediumFormatEnglish(): void
     {
-        $date = new DateTime('2026-01-15 15:30:25');
+        // Use explicit UTC timezone for consistent results
+        $date = new DateTime('2026-01-15 15:30:25', new \DateTimeZone('UTC'));
         $result = $this->formatter->format($date, 'medium', 'en');
 
         // Medium format: "Jan 15, 2026, 3:30:25 PM"
@@ -76,7 +78,8 @@ class DateTimeFormatterTest extends TestCase
      */
     public function testLongFormatEnglish(): void
     {
-        $date = new DateTime('2026-01-15 15:30:25');
+        // Use explicit UTC timezone for consistent results
+        $date = new DateTime('2026-01-15 15:30:25', new \DateTimeZone('UTC'));
         $result = $this->formatter->format($date, 'long', 'en');
 
         // Long format: "January 15, 2026 at 3:30:25 PM UTC"
@@ -200,7 +203,8 @@ class DateTimeFormatterTest extends TestCase
      */
     public function testFormatTimeOnly(): void
     {
-        $date = new DateTime('2026-01-15 15:30:25');
+        // Use explicit UTC timezone for consistent results
+        $date = new DateTime('2026-01-15 15:30:25', new \DateTimeZone('UTC'));
         $result = $this->formatter->formatTime($date, 'medium', 'en');
 
         // Should contain time but no date
@@ -214,7 +218,8 @@ class DateTimeFormatterTest extends TestCase
      */
     public function testFormatTimeShort(): void
     {
-        $date = new DateTime('2026-01-15 15:30:25');
+        // Use explicit UTC timezone for consistent results
+        $date = new DateTime('2026-01-15 15:30:25', new \DateTimeZone('UTC'));
         $result = $this->formatter->formatTime($date, 'short', 'en');
 
         // Short time: "3:30 PM" or similar
@@ -230,7 +235,8 @@ class DateTimeFormatterTest extends TestCase
      */
     public function testFormatTimeLong(): void
     {
-        $date = new DateTime('2026-01-15 15:30:25');
+        // Use explicit UTC timezone for consistent results
+        $date = new DateTime('2026-01-15 15:30:25', new \DateTimeZone('UTC'));
         $result = $this->formatter->formatTime($date, 'long', 'en', 'UTC');
 
         // Long time includes timezone
@@ -489,7 +495,8 @@ class DateTimeFormatterTest extends TestCase
      */
     public function testMidnightTime(): void
     {
-        $date = new DateTime('2026-01-15 00:00:00');
+        // Use explicit UTC timezone for consistent results
+        $date = new DateTime('2026-01-15 00:00:00', new \DateTimeZone('UTC'));
         $result = $this->formatter->formatTime($date, 'short', 'en');
 
         // Should show midnight (12:00 AM or similar)
@@ -505,7 +512,8 @@ class DateTimeFormatterTest extends TestCase
      */
     public function testNoonTime(): void
     {
-        $date = new DateTime('2026-01-15 12:00:00');
+        // Use explicit UTC timezone for consistent results
+        $date = new DateTime('2026-01-15 12:00:00', new \DateTimeZone('UTC'));
         $result = $this->formatter->formatTime($date, 'short', 'en');
 
         // Should show noon (12:00 PM or similar)

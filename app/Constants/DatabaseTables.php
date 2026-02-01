@@ -53,6 +53,13 @@ class DatabaseTables
     const ACTIVITY_LOG = 'activity_log';
 
     /**
+     * Media System
+     */
+    const MEDIA = 'media';
+    const ATTACHMENTS = 'attachments';
+    const UPLOAD_CHUNKS = 'upload_chunks';
+
+    /**
      * System Tables
      */
     const MIGRATIONS = 'migrations';
@@ -126,6 +133,11 @@ class DatabaseTables
             self::NOTIFICATIONS,
             self::ACTIVITY_LOG,
             self::MIGRATIONS,
+
+            // Media system tables
+            self::MEDIA,
+            self::ATTACHMENTS,
+            self::UPLOAD_CHUNKS,
         ];
     }
 

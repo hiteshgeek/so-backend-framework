@@ -200,9 +200,87 @@ CREATE TABLE IF NOT EXISTS migrations (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ============================================
+-- MEDIA SYSTEM TABLES
+-- ============================================
+
+-- 13. Media Table (File uploads tracking)
+-- Constant: DatabaseTables::MEDIA
+CREATE TABLE IF NOT EXISTS media (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    filename VARCHAR(255) NOT NULL,
+    original_name VARCHAR(255) NOT NULL,
+    path VARCHAR(500) NOT NULL COMMENT 'Relative path from storage root',
+    disk VARCHAR(50) DEFAULT 'media',
+    mime_type VARCHAR(100) NOT NULL,
+    size BIGINT UNSIGNED NOT NULL,
+    width INT UNSIGNED NULL COMMENT 'Image width in pixels',
+    height INT UNSIGNED NULL COMMENT 'Image height in pixels',
+    parent_id BIGINT UNSIGNED NULL COMMENT 'Parent media ID for variants',
+    metadata JSON NULL COMMENT 'EXIF, variants, watermark info, etc.',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    INDEX idx_filename (filename),
+    INDEX idx_path (path(191)),
+    INDEX idx_disk (disk),
+    INDEX idx_mime_type (mime_type),
+    INDEX idx_parent_id (parent_id),
+    INDEX idx_created_at (created_at),
+
+    FOREIGN KEY (parent_id) REFERENCES media(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- 14. Attachments Table (Polymorphic relationships)
+-- Constant: DatabaseTables::ATTACHMENTS
+CREATE TABLE IF NOT EXISTS attachments (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    media_id BIGINT UNSIGNED NOT NULL,
+    attachable_type VARCHAR(255) NOT NULL COMMENT 'Model class name',
+    attachable_id BIGINT UNSIGNED NOT NULL COMMENT 'Model ID',
+    collection VARCHAR(100) DEFAULT 'default' COMMENT 'Collection name: images, documents, etc.',
+    position INT UNSIGNED DEFAULT 0 COMMENT 'For ordering',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    INDEX idx_attachable (attachable_type, attachable_id),
+    INDEX idx_media (media_id),
+    INDEX idx_collection (collection),
+    INDEX idx_position (position),
+
+    FOREIGN KEY (media_id) REFERENCES media(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- 15. Upload Chunks Table (Chunked/resumable uploads)
+-- Constant: DatabaseTables::UPLOAD_CHUNKS
+CREATE TABLE IF NOT EXISTS upload_chunks (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    upload_id VARCHAR(64) NOT NULL UNIQUE COMMENT 'Unique upload session ID',
+    filename VARCHAR(255) NOT NULL,
+    total_chunks INT UNSIGNED NOT NULL,
+    uploaded_chunks INT UNSIGNED DEFAULT 0,
+    total_size BIGINT UNSIGNED NOT NULL COMMENT 'Total file size in bytes',
+    chunk_size INT UNSIGNED NOT NULL COMMENT 'Size of each chunk',
+    mime_type VARCHAR(100) NULL,
+    user_id BIGINT UNSIGNED NULL COMMENT 'User who initiated the upload',
+    metadata JSON NULL COMMENT 'Additional upload metadata',
+    temp_path VARCHAR(500) NULL COMMENT 'Path to temporary chunks directory',
+    status ENUM('pending', 'uploading', 'processing', 'completed', 'failed', 'expired') DEFAULT 'pending',
+    error_message TEXT NULL COMMENT 'Error message if failed',
+    expires_at TIMESTAMP NOT NULL COMMENT 'When upload session expires',
+    completed_at TIMESTAMP NULL COMMENT 'When upload was completed',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    INDEX idx_upload_id (upload_id),
+    INDEX idx_user_id (user_id),
+    INDEX idx_status (status),
+    INDEX idx_expires_at (expires_at),
+    INDEX idx_created_at (created_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ============================================
 -- END OF ESSENTIAL TABLES
 -- ============================================
--- Total Required Tables: 9 (queue, cache, notifications, activity_log, tokens, migrations)
+-- Total Required Tables: 12 (queue, cache, notifications, activity_log, tokens, migrations, media, attachments, upload_chunks)
 -- Total Optional Tables: 3 (users, password_resets, sessions)
 -- Database: so_essentials
 -- Access: app('db-essentials')->table(DatabaseTables::CONSTANT_NAME)

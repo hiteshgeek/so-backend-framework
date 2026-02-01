@@ -52,6 +52,10 @@ $kernel->registerCommands([
     // Security commands
     \Core\Console\Commands\KeyGenerateCommand::class,
     \Core\Console\Commands\JwtSecretCommand::class,
+    // Translation commands
+    \Core\Console\Commands\MakeTranslationCommand::class,
+    \Core\Console\Commands\TranslationsMissingCommand::class,
+    \Core\Console\Commands\TranslationsSyncCommand::class,
     // Test command
     \Core\Console\Commands\TestCommand::class,
 ]);

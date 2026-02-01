@@ -94,8 +94,8 @@ class FileValidator
             $errors[] = "File extension not allowed: {$extension}";
         }
 
-        // Additional validation for image files
-        if (str_starts_with($file['type'], 'image/')) {
+        // Additional validation for image files (only if file exists)
+        if (str_starts_with($file['type'], 'image/') && !empty($file['tmp_name']) && file_exists($file['tmp_name'])) {
             $imageErrors = $this->validateImage($file['tmp_name']);
             $errors = array_merge($errors, $imageErrors);
         }

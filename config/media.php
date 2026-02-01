@@ -296,4 +296,138 @@ return [
         // Cache store to use
         'store' => env('MEDIA_CACHE_STORE', 'file'),
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | WebP Auto-Conversion
+    |--------------------------------------------------------------------------
+    |
+    | Automatically generate WebP versions of images for better compression.
+    | WebP provides 25-35% smaller file sizes compared to JPEG/PNG.
+    |
+    */
+    'webp' => [
+        // Enable automatic WebP generation
+        'enabled' => env('MEDIA_AUTO_WEBP', true),
+
+        // Quality for WebP images (1-100)
+        'quality' => env('MEDIA_WEBP_QUALITY', 80),
+
+        // Generate WebP for these source types
+        'source_types' => ['image/jpeg', 'image/png'],
+
+        // Skip WebP for small images (bytes)
+        'min_size' => 1024, // 1KB minimum
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Chunked/Resumable Uploads
+    |--------------------------------------------------------------------------
+    |
+    | Support for large file uploads using chunked transfer.
+    | Files are uploaded in parts and assembled on completion.
+    |
+    */
+    'chunked' => [
+        // Enable chunked uploads
+        'enabled' => env('MEDIA_CHUNKED_ENABLED', true),
+
+        // Chunk size in bytes (default 2MB)
+        'chunk_size' => env('MEDIA_CHUNK_SIZE', 2 * 1024 * 1024),
+
+        // Maximum file size for chunked uploads (default 500MB)
+        'max_file_size' => env('MEDIA_CHUNKED_MAX_SIZE', 500 * 1024 * 1024),
+
+        // Temporary directory for chunks
+        'temp_directory' => storage_path('chunks'),
+
+        // Hours before incomplete uploads expire
+        'expiry_hours' => 24,
+
+        // Cleanup orphaned chunks on boot
+        'auto_cleanup' => true,
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Video Processing
+    |--------------------------------------------------------------------------
+    |
+    | Settings for video file handling and thumbnail extraction.
+    | Requires FFmpeg to be installed on the server.
+    |
+    */
+    'video' => [
+        // Enable video processing
+        'enabled' => env('MEDIA_VIDEO_ENABLED', true),
+
+        // Path to FFmpeg binary
+        'ffmpeg_path' => env('FFMPEG_PATH', '/usr/bin/ffmpeg'),
+
+        // Path to FFprobe binary
+        'ffprobe_path' => env('FFPROBE_PATH', '/usr/bin/ffprobe'),
+
+        // Extract thumbnail at this time (seconds)
+        'thumbnail_time' => 1.0,
+
+        // Number of thumbnails to extract for preview
+        'thumbnail_count' => 3,
+
+        // Thumbnail dimensions
+        'thumbnail_width' => 640,
+        'thumbnail_height' => 360,
+
+        // Allowed video MIME types
+        'allowed_types' => [
+            'video/mp4',
+            'video/webm',
+            'video/quicktime',
+            'video/x-msvideo',
+            'video/x-ms-wmv',
+            'video/x-matroska',
+        ],
+
+        // Maximum video duration in seconds (0 = unlimited)
+        'max_duration' => 3600, // 1 hour
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | CDN Configuration
+    |--------------------------------------------------------------------------
+    |
+    | Settings for serving media files through a CDN.
+    | Supports CloudFront, Cloudflare, and generic CDN providers.
+    |
+    */
+    'cdn' => [
+        // Enable CDN URL rewriting
+        'enabled' => env('MEDIA_CDN_ENABLED', false),
+
+        // CDN base URL
+        'url' => env('MEDIA_CDN_URL', ''),
+
+        // Rules for CDN usage
+        'rules' => [
+            // Only serve these MIME type patterns via CDN
+            'include_types' => ['image/*', 'video/*', 'application/pdf'],
+
+            // Exclude these path patterns from CDN
+            'exclude_patterns' => ['/private/', '/temp/', '/secure/'],
+        ],
+
+        // CloudFront configuration (optional)
+        'cloudfront' => [
+            'distribution_id' => env('CLOUDFRONT_DISTRIBUTION_ID'),
+            'key_pair_id' => env('CLOUDFRONT_KEY_PAIR_ID'),
+            'private_key_path' => env('CLOUDFRONT_PRIVATE_KEY'),
+        ],
+
+        // Cloudflare configuration (optional)
+        'cloudflare' => [
+            'zone_id' => env('CLOUDFLARE_ZONE_ID'),
+            'api_token' => env('CLOUDFLARE_API_TOKEN'),
+        ],
+    ],
 ];

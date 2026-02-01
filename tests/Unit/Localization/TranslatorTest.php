@@ -89,11 +89,11 @@ class TranslatorTest extends TestCase
         $enResult = $this->translator->get('auth.login_success');
         $this->assertStringContainsString('success', strtolower($enResult));
 
-        // French
+        // French - uses "réussie" (succeeded) not "succès" (success)
         $this->translator->setLocale('fr');
         $frResult = $this->translator->get('auth.login_success');
         $this->assertNotEquals($enResult, $frResult);
-        $this->assertStringContainsString('succès', strtolower($frResult));
+        $this->assertStringContainsString('réussie', strtolower($frResult));
 
         // German
         $this->translator->setLocale('de');

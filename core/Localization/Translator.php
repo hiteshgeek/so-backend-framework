@@ -141,6 +141,17 @@ class Translator
     }
 
     /**
+     * Set fallback locale
+     *
+     * @param string $fallback
+     * @return void
+     */
+    public function setFallback(string $fallback): void
+    {
+        $this->fallback = $fallback;
+    }
+
+    /**
      * Add namespace for translations
      *
      * @param string $namespace Namespace identifier
