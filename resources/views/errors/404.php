@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - Page Not Found</title>
+    <link rel="stylesheet" href="<?= htmlspecialchars(config('app.url')) ?>/assets/css/base.css">
+    <style>
+        body {
+            background: var(--background);
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: var(--space-4);
+        }
+        .error-container {
+            background: var(--surface);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
+            max-width: 600px;
+            width: 100%;
+            padding: var(--space-6) var(--space-5);
+            text-align: center;
+        }
+        .error-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto var(--space-4);
+            opacity: 0.9;
+        }
+        .error-code {
+            font-size: 120px;
+            font-weight: 800;
+            color: var(--primary);
+            line-height: 1;
+            margin-bottom: var(--space-3);
+        }
+        .error-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: var(--space-2);
+        }
+        .error-message {
+            font-size: 16px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: var(--space-5);
+        }
+        .error-actions {
+            display: flex;
+            gap: var(--space-2);
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: var(--space-2) var(--space-4);
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+            display: inline-block;
+        }
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+            opacity: 0.9;
+        }
+        .btn-secondary {
+            background: var(--border);
+            color: var(--text);
+        }
+        .btn-secondary:hover {
+            background: var(--text-secondary);
+            color: var(--surface);
+        }
+    </style>
+</head>
+<body>
+    <div class="error-container">
+        <svg class="error-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" style="color: var(--primary);"/>
+            <path d="M8 8L16 16M16 8L8 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="color: var(--primary);"/>
+        </svg>
+
+        <div class="error-code">404</div>
+        <h1 class="error-title">Page Not Found</h1>
+        <p class="error-message">
+            Sorry, we couldn't find the page you're looking for. It might have been moved, deleted, or never existed.
+        </p>
+
+        <div class="error-actions">
+            <a href="<?= htmlspecialchars(config('app.url')) ?>" class="btn btn-primary">Go to Homepage</a>
+            <a href="javascript:history.back()" class="btn btn-secondary">Go Back</a>
+        </div>
+    </div>
+</body>
+</html>

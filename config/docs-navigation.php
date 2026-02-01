@@ -13,6 +13,7 @@ return [
     ['key' => 'readme', 'title' => 'README', 'url' => '/docs/readme'],
     ['key' => 'setup', 'title' => 'Setup Guide', 'url' => '/docs/setup'],
     ['key' => 'configuration', 'title' => 'Configuration', 'url' => '/docs/configuration'],
+    ['key' => 'env-configuration', 'title' => 'Environment Variables', 'url' => '/docs/env-configuration'],
     ['key' => 'quick-start', 'title' => 'Quick Start', 'url' => '/docs/quick-start'],
 
     // Essential
@@ -45,6 +46,7 @@ return [
 
     // Technical Documentation
     ['key' => 'console-commands', 'title' => 'Console Commands', 'url' => '/docs/console-commands'],
+    ['key' => 'profiler', 'title' => 'Profiler & Debugging', 'url' => '/docs/profiler'],
     ['key' => 'test-documentation', 'title' => 'Test Documentation', 'url' => '/docs/test-documentation'],
     ['key' => 'testing-guide', 'title' => 'Testing Guide', 'url' => '/docs/testing-guide'],
     ['key' => 'rename', 'title' => 'Rename Process', 'url' => '/docs/rename'],
@@ -102,6 +104,7 @@ return [
 
     // Observability
     ['key' => 'dev-logging', 'title' => 'Logging', 'url' => '/docs/dev-logging'],
+    ['key' => 'profiler', 'title' => 'Profiler & Debugging', 'url' => '/docs/profiler'],
 
     // Testing
     ['key' => 'dev-testing', 'title' => 'Testing', 'url' => '/docs/dev-testing'],

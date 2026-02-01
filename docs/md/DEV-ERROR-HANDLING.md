@@ -585,7 +585,75 @@ Create user-friendly error pages for common HTTP errors.
 </html>
 ```
 
-### Rendering Error Pages
+### All Available Error Pages
+
+The framework includes professional error pages for common HTTP status codes:
+
+| Error Page | Status Code | Use Case |
+|------------|-------------|----------|
+| `errors/404.php` | 404 | Page not found |
+| `errors/500.php` | 500 | Internal server error |
+| `errors/403.php` | 403 | Access forbidden |
+| `errors/401.php` | 401 | Authentication required |
+| `errors/422.php` | 422 | Validation failed |
+
+**Location:** `/resources/views/errors/`
+
+All error pages are styled with:
+- Responsive design
+- Gradient backgrounds
+- Clear error messages
+- Action buttons (Go Home, Go Back, Login)
+- Debug information (when `APP_DEBUG=true`)
+
+### Automatic Error Handling
+
+The framework automatically renders appropriate error pages when exceptions are thrown:
+
+```php
+use Core\Exceptions\ErrorHandler;
+
+// This is automatically configured in the framework
+set_exception_handler([ErrorHandler::class, 'handle']);
+
+// Now any unhandled exception automatically renders the error page
+throw new NotFoundException('Product not found'); // Renders 404.php
+throw new AuthorizationException('No access'); // Renders 403.php
+abort(500, 'Database error'); // Renders 500.php
+```
+
+**How It Works:**
+
+1. Exception is thrown anywhere in your application
+2. `ErrorHandler::handle()` catches it
+3. Determines the HTTP status code (404, 500, etc.)
+4. Logs the exception for debugging
+5. Renders the appropriate error view
+6. Falls back to generic error page if custom view doesn't exist
+
+### Using abort() Helper
+
+The easiest way to trigger error pages:
+
+```php
+// Throw 404 error
+abort(404);
+abort(404, 'Product not found');
+
+// Throw 403 error
+abort(403);
+abort(403, 'You cannot access this resource');
+
+// Throw 500 error
+abort(500, 'Payment gateway unavailable');
+
+// Throw 401 error
+abort(401, 'Please login to continue');
+```
+
+### Rendering Error Pages Manually
+
+If you need manual control:
 
 ```php
 // In exception handler or controller
@@ -600,9 +668,82 @@ public function handleServerError(\Exception $e): Response
     logger()->error('Server error', ['exception' => $e]);
 
     // Show friendly error page
-    return Response::view('errors/500', [], 500);
+    return Response::view('errors/500', ['exception' => $e], 500);
+}
+
+// With custom data
+public function handleValidationError(ValidationException $e): Response
+{
+    return Response::view('errors/422', [
+        'errors' => $e->errors()
+    ], 422);
 }
 ```
+
+### Debug Mode vs Production
+
+**Debug Mode (`APP_DEBUG=true`):**
+- 500 error page shows exception details
+- Stack traces visible
+- File paths and line numbers displayed
+
+**Production Mode (`APP_DEBUG=false`):**
+- User-friendly error messages only
+- No technical details exposed
+- Errors logged for admin review
+
+```php
+// In .env
+APP_DEBUG=true   // Development - show detailed errors
+APP_DEBUG=false  // Production - hide technical details
+```
+
+### Creating Custom Error Pages
+
+To customize error pages, edit files in `/resources/views/errors/`:
+
+**Example - Custom 404 Page:**
+
+```php
+<!-- resources/views/errors/404.php -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Page Not Found - <?= config('app.name') ?></title>
+    <link rel="stylesheet" href="<?= asset('css/errors.css') ?>">
+</head>
+<body>
+    <div class="error-container">
+        <img src="<?= asset('images/404-illustration.svg') ?>" alt="404">
+        <h1>Oops! Page Not Found</h1>
+        <p>The page you're looking for seems to have wandered off.</p>
+
+        <!-- Custom search form -->
+        <form action="/search" method="GET">
+            <input type="text" name="q" placeholder="Search our site...">
+            <button type="submit">Search</button>
+        </form>
+
+        <!-- Helpful links -->
+        <div class="helpful-links">
+            <a href="/">Home</a>
+            <a href="/products">Products</a>
+            <a href="/contact">Contact Us</a>
+        </div>
+    </div>
+</body>
+</html>
+```
+
+### Error Page Best Practices
+
+1. **Keep It Simple** - Don't overwhelm users with technical jargon
+2. **Provide Actions** - Give users a way forward (home, back, login)
+3. **Match Your Brand** - Use your brand colors and style
+4. **Be Helpful** - Suggest what users can do next
+5. **Log Everything** - Even user-facing errors should be logged
+6. **Test Error Pages** - Don't wait for production to see them
+7. **Mobile Friendly** - Ensure error pages work on all devices
 
 ---
 

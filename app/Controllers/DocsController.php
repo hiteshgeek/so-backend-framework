@@ -80,6 +80,7 @@ class DocsController
             // Getting Started
             'setup' => 'SETUP.md',
             'configuration' => 'CONFIGURATION.md',
+            'env-configuration' => 'ENV-CONFIGURATION.md',
             'quick-start' => 'QUICK-START.md',
             'readme' => 'README.md',
             'index' => 'INDEX.md',
@@ -107,6 +108,7 @@ class DocsController
             'asset-management' => 'ASSET-MANAGEMENT.md',
             'auth-system' => 'AUTH-SYSTEM.md',
             'console-commands' => 'CONSOLE-COMMANDS.md',
+            'profiler' => 'PROFILER.md',
             'view-templates' => 'VIEW-TEMPLATES.md',
             'routing-system' => 'ROUTING-SYSTEM.md',
             'project-structure' => 'PROJECT-STRUCTURE.md',

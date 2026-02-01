@@ -817,29 +817,38 @@ Router::get('/api/demo/performance', function (Request $request) {
 })->name('demo.performance');
 
 // =============================================
-// U) Fallback Route (404 catch-all for demo prefix)
+// U) Fallback Route (404 catch-all for API routes only)
 // =============================================
-// Note: This is registered last to catch unmatched demo routes.
-// The global fallback applies to ALL unmatched routes.
+// Note: This is registered last to catch unmatched routes.
+// Only returns JSON for /api/* routes. Web routes will throw NotFoundException
+// so they can be handled by ErrorHandler with HTML error pages.
 
 Router::fallback(function (Request $request) {
-    $demoRoutes = Router::getNamedRoutes();
-    $available = [];
+    $uri = $request->uri();
 
-    foreach ($demoRoutes as $name => $route) {
-        if (str_starts_with($name, 'demo.')) {
-            $available[] = [
-                'name' => $name,
-                'methods' => $route->getMethods(),
-                'uri' => $route->getUri(),
-            ];
+    // Only handle API routes with JSON response
+    if (str_starts_with($uri, '/api/')) {
+        $demoRoutes = Router::getNamedRoutes();
+        $available = [];
+
+        foreach ($demoRoutes as $name => $route) {
+            if (str_starts_with($name, 'demo.')) {
+                $available[] = [
+                    'name' => $name,
+                    'methods' => $route->getMethods(),
+                    'uri' => $route->getUri(),
+                ];
+            }
         }
+
+        return JsonResponse::error('Route not found. Check /api/demo/routes for available endpoints.', 404, [
+            'requested_uri' => $uri,
+            'requested_method' => $request->method(),
+            'available_demo_routes' => count($available),
+            'help_url' => '/api/demo/routes',
+        ]);
     }
 
-    return JsonResponse::error('Route not found. Check /api/demo/routes for available endpoints.', 404, [
-        'requested_uri' => $request->uri(),
-        'requested_method' => $request->method(),
-        'available_demo_routes' => count($available),
-        'help_url' => '/api/demo/routes',
-    ]);
+    // For non-API routes, throw NotFoundException to trigger HTML error pages
+    throw new \Core\Exceptions\NotFoundException('Page not found: ' . $uri);
 });

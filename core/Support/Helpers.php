@@ -762,3 +762,15 @@ if (!function_exists('render_assets')) {
         return app('assets')->renderAssets($position);
     }
 }
+
+if (!function_exists('profiler')) {
+    /**
+     * Get the Profiler instance
+     *
+     * @return \Core\Debug\Profiler
+     */
+    function profiler(): \Core\Debug\Profiler
+    {
+        return \Core\Debug\Profiler::getInstance();
+    }
+}

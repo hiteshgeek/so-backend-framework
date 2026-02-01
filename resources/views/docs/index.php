@@ -55,6 +55,16 @@
                         </div>
                         <span class="badge badge-essential">Essential</span>
                     </a>
+                    <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/env-configuration" class="doc-card">
+                        <div class="doc-card-body">
+                            <h3><span class="mdi mdi-file-settings"></span> Environment Variables</h3>
+                            <p>Complete reference for all .env configuration keys.</p>
+                        </div>
+                        <div class="doc-card-badges">
+                            <span class="badge badge-new">New</span>
+                            <span class="badge badge-essential">Essential</span>
+                        </div>
+                    </a>
                     <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/quick-start" class="doc-card">
                         <div class="doc-card-body">
                             <h3><span class="mdi mdi-flash"></span> Quick Start</h3>
@@ -328,6 +338,17 @@
                             <p>CLI reference for scaffolding and tasks.</p>
                         </div>
                         <span class="badge badge-default">Tools</span>
+                    </a>
+                    <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/profiler" class="doc-card">
+                        <div class="doc-card-body">
+                            <h3><span class="mdi mdi-speedometer"></span> Profiler & Debugging</h3>
+                            <p>Performance profiling, database query tracking, execution timeline, and memory monitoring.</p>
+                        </div>
+                        <div class="doc-card-badges">
+                            <span class="badge badge-new">New</span>
+                            <span class="badge badge-core">Core</span>
+                            <span class="badge badge-performance">Performance</span>
+                        </div>
                     </a>
                     <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/test-documentation" class="doc-card">
                         <div class="doc-card-body">
@@ -679,6 +700,17 @@
                             <p>Application logging, log levels, channels, and debugging tips.</p>
                         </div>
                         <span class="badge badge-guide">Guide</span>
+                    </a>
+                    <a href="<?= htmlspecialchars(config('app.url')) ?>/docs/profiler" class="doc-card">
+                        <div class="doc-card-body">
+                            <h3><span class="mdi mdi-speedometer"></span> Profiler & Debugging</h3>
+                            <p>Performance profiling, query tracking, execution timeline, and optimization.</p>
+                        </div>
+                        <div class="doc-card-badges">
+                            <span class="badge badge-new">New</span>
+                            <span class="badge badge-guide">Guide</span>
+                            <span class="badge badge-performance">Performance</span>
+                        </div>
                     </a>
                 </div>
             </div>
