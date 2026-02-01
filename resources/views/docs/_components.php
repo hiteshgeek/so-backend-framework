@@ -25,3 +25,4 @@ require_once __DIR__ . '/_components/_file-path.php';
 require_once __DIR__ . '/_components/_table.php';
 require_once __DIR__ . '/_components/_badge.php';
 require_once __DIR__ . '/_components/_toc.php';
+require_once __DIR__ . '/_components/_diagram.php';

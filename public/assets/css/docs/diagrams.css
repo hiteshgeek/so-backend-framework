@@ -1,0 +1,352 @@
+/**
+ * Documentation Diagram Styles
+ *
+ * Centralized design system for flowcharts, architecture diagrams,
+ * and visual representations in documentation
+ */
+
+/* ==================== Diagram Container ==================== */
+
+.diagram-container,
+.layered-diagram-container,
+.flow-diagram-container {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: var(--space-5);
+    margin: var(--space-5) 0;
+    overflow-x: auto;
+}
+
+.diagram-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: var(--space-4);
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+}
+
+.diagram-title .mdi {
+    color: var(--primary);
+    font-size: 20px;
+}
+
+/* ==================== Layered Diagram ==================== */
+
+.layered-diagram {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.layer-item {
+    background: linear-gradient(135deg, var(--surface-hover) 0%, var(--surface) 100%);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: var(--space-4);
+    position: relative;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.layer-item:hover {
+    box-shadow: var(--shadow);
+    border-color: var(--primary);
+}
+
+.layer-item.security-layer {
+    border-left: 4px solid #ef4444;
+}
+
+.layer-item.transport-layer {
+    border-left: 4px solid #3b82f6;
+}
+
+.layer-item.access-layer {
+    border-left: 4px solid #8b5cf6;
+}
+
+.layer-item.validation-layer {
+    border-left: 4px solid #f59e0b;
+}
+
+.layer-item.auth-layer {
+    border-left: 4px solid #10b981;
+}
+
+.layer-item.data-layer {
+    border-left: 4px solid #6366f1;
+}
+
+.layer-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: var(--space-2);
+}
+
+.layer-header .mdi {
+    font-size: 20px;
+    color: var(--primary);
+}
+
+.layer-title {
+    font-size: 15px;
+}
+
+.layer-description {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-bottom: var(--space-2);
+    line-height: 1.5;
+}
+
+.layer-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin-top: var(--space-2);
+}
+
+.layer-tag {
+    background: var(--background);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 4px 8px;
+    font-size: 12px;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.layer-connector {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: var(--space-2) 0;
+    color: var(--text-secondary);
+}
+
+.layer-connector .mdi {
+    font-size: 24px;
+}
+
+/* ==================== Flow Diagram ==================== */
+
+.flow-diagram-container.vertical .flow-diagram {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.flow-diagram-container.horizontal .flow-diagram {
+    display: flex;
+    flex-direction: row;
+    gap: 0;
+    overflow-x: auto;
+    padding-bottom: var(--space-2);
+}
+
+.flow-step {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-3);
+    padding: var(--space-3);
+    background: var(--surface-hover);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.flow-step:hover {
+    box-shadow: var(--shadow-sm);
+    border-color: var(--primary);
+}
+
+.flow-step-number {
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    background: var(--primary);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 14px;
+}
+
+.flow-step-content {
+    flex: 1;
+}
+
+.flow-step-title {
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: var(--space-1);
+    font-size: 14px;
+}
+
+.flow-step-description {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+.flow-connector {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: var(--space-2) 0;
+    color: var(--primary);
+}
+
+.flow-diagram-container.horizontal .flow-connector {
+    padding: 0 var(--space-2);
+}
+
+.flow-connector .mdi {
+    font-size: 28px;
+    opacity: 0.7;
+}
+
+/* ==================== Generic Diagram Nodes ==================== */
+
+.diagram-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    align-items: center;
+}
+
+.diagram-node {
+    background: var(--surface-hover);
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    padding: var(--space-4);
+    min-width: 200px;
+    max-width: 400px;
+    text-align: center;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    position: relative;
+}
+
+.diagram-node:hover {
+    box-shadow: var(--shadow);
+    border-color: var(--primary);
+}
+
+.start-node {
+    border-color: #10b981;
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), var(--surface-hover));
+}
+
+.endpoint-node {
+    border-color: #ef4444;
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), var(--surface-hover));
+}
+
+.process-node {
+    border-color: var(--primary);
+}
+
+.decision-node {
+    border-color: #f59e0b;
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), var(--surface-hover));
+}
+
+.node-icon {
+    font-size: 32px;
+    color: var(--primary);
+    margin-bottom: var(--space-2);
+}
+
+.node-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+}
+
+.node-label {
+    font-weight: 600;
+    color: var(--text);
+    font-size: 14px;
+}
+
+.node-sublabel {
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.4;
+}
+
+.node-connector {
+    position: absolute;
+    bottom: -24px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 2px;
+    height: 24px;
+    background: var(--border);
+}
+
+.node-connector::after {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 8px solid var(--border);
+}
+
+/* ==================== Responsive ==================== */
+
+@media (max-width: 768px) {
+    .flow-diagram-container.horizontal .flow-diagram {
+        flex-direction: column;
+    }
+
+    .flow-diagram-container.horizontal .flow-connector {
+        padding: var(--space-2) 0;
+    }
+
+    .flow-diagram-container.horizontal .flow-connector .mdi {
+        transform: rotate(90deg);
+    }
+
+    .diagram-node {
+        min-width: 150px;
+    }
+}
+
+/* ==================== Dark Mode Adjustments ==================== */
+
+[data-theme="dark"] .layer-item {
+    background: linear-gradient(135deg, var(--surface) 0%, var(--background) 100%);
+}
+
+[data-theme="dark"] .flow-step {
+    background: var(--background);
+}
+
+[data-theme="dark"] .diagram-node {
+    background: var(--background);
+}
+
+[data-theme="dark"] .start-node {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), var(--background));
+}
+
+[data-theme="dark"] .endpoint-node {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), var(--background));
+}
+
+[data-theme="dark"] .decision-node {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), var(--background));
+}

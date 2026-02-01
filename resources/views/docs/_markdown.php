@@ -176,6 +176,11 @@ class MarkdownParser {
     }
 
     private function renderCodeBlock($lang, $code) {
+        // Check if this is a layered security diagram (REQUEST FLOW pattern)
+        if ($this->isLayeredDiagram($code)) {
+            return $this->renderLayeredDiagram($code);
+        }
+
         // Check if this is an ASCII flowchart diagram
         if ($this->isFlowchartDiagram($code)) {
             return $this->renderFlowchartDiagram($code);
@@ -187,12 +192,109 @@ class MarkdownParser {
     }
 
     /**
+     * Check if code block contains a layered diagram (REQUEST FLOW pattern)
+     */
+    private function isLayeredDiagram($code) {
+        // Look for REQUEST FLOW or security layer patterns
+        return (stripos($code, 'REQUEST FLOW') !== false ||
+                stripos($code, 'Client Request') !== false) &&
+               preg_match('/\+[-]+\+/', $code) &&
+               preg_match('/\|/', $code);
+    }
+
+    /**
      * Check if code block contains ASCII flowchart diagram
      */
     private function isFlowchartDiagram($code) {
         // Look for box-drawing characters or common flowchart patterns (Unicode flag required)
         return preg_match('/[┌┐└┘├┤│─┬┴▼▲→←]/u', $code) ||
                (preg_match('/\+[-]+\+/', $code) && preg_match('/\|/', $code));
+    }
+
+    /**
+     * Convert layered security diagram to visual HTML
+     */
+    private function renderLayeredDiagram($code) {
+        $lines = explode("\n", rtrim($code));
+        $layers = [];
+        $currentLayer = null;
+
+        foreach ($lines as $line) {
+            $line = trim($line);
+
+            // Skip box borders and arrows
+            if (preg_match('/^\+[-]+\+$/', $line) || empty($line) || $line === '|' || preg_match('/^\s*\|?\s*\|?\s*$/', $line)) {
+                continue;
+            }
+
+            // Remove leading/trailing pipes
+            $line = trim($line, '| ');
+
+            // Skip if empty after cleanup
+            if (empty($line)) {
+                continue;
+            }
+
+            // This is layer content
+            if ($currentLayer === null) {
+                $currentLayer = ['title' => $line, 'description' => '', 'items' => []];
+            } else {
+                // Additional description line
+                if (empty($currentLayer['description']) && !preg_match('/^[A-Z\/]/', $line)) {
+                    $currentLayer['description'] = $line;
+                } else {
+                    // Check if this starts a new layer (all caps or starts with category)
+                    if (preg_match('/^[A-Z].*[A-Z]/', $line) && strlen($line) > 15) {
+                        // Save current layer
+                        if ($currentLayer) {
+                            $layers[] = $currentLayer;
+                        }
+                        $currentLayer = ['title' => $line, 'description' => '', 'items' => []];
+                    }
+                }
+            }
+        }
+
+        // Save last layer
+        if ($currentLayer) {
+            $layers[] = $currentLayer;
+        }
+
+        // If no layers parsed, return original
+        if (empty($layers)) {
+            $escaped = htmlspecialchars(rtrim($code));
+            return "<div class=\"code-container\"><div class=\"code-header\"><span class=\"code-lang\">diagram</span></div><pre class=\"code-block\"><code>{$escaped}</code></pre></div>";
+        }
+
+        // Build visual layered diagram HTML
+        $html = '<div class="layered-diagram-container">';
+        $html .= '<div class="diagram-title"><span class="mdi mdi-layers"></span> Security Architecture</div>';
+        $html .= '<div class="layered-diagram">';
+
+        $layerColors = ['transport-layer', 'access-layer', 'validation-layer', 'auth-layer', 'auth-layer', 'validation-layer', 'data-layer'];
+        $icons = ['mdi-lock', 'mdi-speedometer', 'mdi-shield-check', 'mdi-account-lock', 'mdi-shield-account', 'mdi-filter-variant', 'mdi-database-lock'];
+
+        foreach ($layers as $index => $layer) {
+            $style = $layerColors[$index % count($layerColors)];
+            $icon = $icons[$index % count($icons)];
+
+            $html .= '<div class="layer-item ' . $style . '">';
+            $html .= '<div class="layer-header">';
+            $html .= '<span class="mdi ' . $icon . '"></span>';
+            $html .= '<span class="layer-title">' . htmlspecialchars($layer['title']) . '</span>';
+            $html .= '</div>';
+            if (!empty($layer['description'])) {
+                $html .= '<div class="layer-description">' . htmlspecialchars($layer['description']) . '</div>';
+            }
+            $html .= '</div>';
+
+            if ($index < count($layers) - 1) {
+                $html .= '<div class="layer-connector"><span class="mdi mdi-arrow-down"></span></div>';
+            }
+        }
+
+        $html .= '</div></div>';
+        return $html;
     }
 
     /**

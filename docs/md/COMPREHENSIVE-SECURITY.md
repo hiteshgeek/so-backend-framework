@@ -33,57 +33,42 @@ Complete technical reference covering all security layers, threat models, attack
 The SO Framework implements a defense-in-depth security architecture with multiple independent security layers:
 
 ```
-+----------------------------------------------------------------+
-|                        REQUEST FLOW                             |
-+----------------------------------------------------------------+
-|                                                                 |
-|  Client Request                                                 |
-|       |                                                          |
-|       v                                                          |
-|  +------------------+                                            |
-|  | HTTPS/TLS        |  Encryption in transit                      |
-|  | Security Headers |  CSP, HSTS, X-Frame-Options                |
-|  +--------+---------+                                            |
-|           |                                                      |
-|           v                                                      |
-|  +------------------+                                            |
-|  | Rate Limiting    |  IP/User-based throttling                  |
-|  | DoS Protection   |  Request quotas                            |
-|  +--------+---------+                                            |
-|           |                                                      |
-|           v                                                      |
-|  +------------------+                                            |
-|  | CSRF Validation  |  Token verification (web)                  |
-|  | OR               |                                            |
-|  | JWT Validation   |  Signature + expiry (API)                  |
-|  +--------+---------+                                            |
-|           |                                                      |
-|           v                                                      |
-|  +------------------+                                            |
-|  | Authentication   |  Session/JWT/API key verification          |
-|  | Account Lockout  |  Brute force prevention                    |
-|  +--------+---------+                                            |
-|           |                                                      |
-|           v                                                      |
-|  +------------------+                                            |
-|  | Authorization    |  Role/permission checks                    |
-|  | Context Aware    |  Web/Mobile/Cron/External                  |
-|  +--------+---------+                                            |
-|           |                                                      |
-|           v                                                      |
-|  +------------------+                                            |
-|  | Input Validation |  Type checking, sanitization               |
-|  | XSS Prevention   |  Output escaping                           |
-|  | SQL Injection    |  Parameterized queries                     |
-|  +--------+---------+                                            |
-|           |                                                      |
-|           v                                                      |
-|  +------------------+                                            |
-|  | Application      |  Business logic                            |
-|  | Database         |  Encrypted data at rest                    |
-|  +------------------+                                            |
-|                                                                 |
-+----------------------------------------------------------------+
+Client Request
+    │
+    ▼
+┌───────────────────────────┐
+│ HTTPS/TLS & Security Headers │  ← Encryption in transit
+└─────────┬─────────────────┘
+          │
+          ▼
+┌───────────────────────────┐
+│ Rate Limiting & DoS       │  ← IP/User-based throttling
+└─────────┬─────────────────┘
+          │
+          ▼
+┌───────────────────────────┐
+│ CSRF / JWT Validation     │  ← Token verification
+└─────────┬─────────────────┘
+          │
+          ▼
+┌───────────────────────────┐
+│ Authentication & Lockout  │  ← Session/JWT verification
+└─────────┬─────────────────┘
+          │
+          ▼
+┌───────────────────────────┐
+│ Authorization & Context   │  ← Role/permission checks
+└─────────┬─────────────────┘
+          │
+          ▼
+┌───────────────────────────┐
+│ Input Validation & XSS    │  ← Type checking, sanitization
+└─────────┬─────────────────┘
+          │
+          ▼
+┌───────────────────────────┐
+│ Application & Database    │  ← Business logic, encrypted data
+└───────────────────────────┘
 ```
 
 ### Security Components
@@ -217,41 +202,35 @@ public function verifyPassword(string $password): bool
 
 ```
 User Submits Credentials
-         |
-         v
-+------------------+
-| Rate Limit Check |  Check IP-based and email-based limits
-+--------+---------+
-         |
-         +---> Too Many Attempts? --> 429 Response (Retry-After: X seconds)
-         |
-         v
-+------------------+
-| Retrieve User    |  Query database by email
-+--------+---------+
-         |
-         +---> User Not Found? --> Generic "Invalid credentials" response
-         |
-         v
-+------------------+
-| Verify Password  |  password_verify() with timing-safe comparison
-+--------+---------+
-         |
-         +---> Invalid? --> Increment failed attempts --> Generic error
-         |
-         v
-+------------------+
-| Clear Rate Limit |  Reset failed attempt counters
-| Regenerate CSRF  |  New CSRF token (prevent session fixation)
-| Create Session   |  Store user ID in session
-+--------+---------+
-         |
-         v
-+------------------+
-| Remember Me?     |  Generate secure remember token (optional)
-+--------+---------+
-         |
-         v
+    │
+    ▼
+┌──────────────────────┐
+│ Rate Limit Check     │  ← IP/email-based limits
+└─────────┬────────────┘
+          │
+          ▼
+┌──────────────────────┐
+│ Retrieve User        │  ← Query database by email
+└─────────┬────────────┘
+          │
+          ▼
+┌──────────────────────┐
+│ Verify Password      │  ← Timing-safe comparison
+└─────────┬────────────┘
+          │
+          ▼
+┌──────────────────────┐
+│ Clear Rate Limit     │  ← Reset counters
+│ Regenerate CSRF      │  ← Prevent session fixation
+│ Create Session       │  ← Store user ID
+└─────────┬────────────┘
+          │
+          ▼
+┌──────────────────────┐
+│ Remember Me Token    │  ← Optional secure token
+└─────────┬────────────┘
+          │
+          ▼
     Login Success
 ```
 
@@ -382,24 +361,26 @@ AUTH_THROTTLE_DECAY_MINUTES=15
 
 ```
 Login Attempt
-     |
-     v
-Generate Key: sha1(ip_address|lowercase_email)
-     |
-     v
-Check Attempts: cache->get(key)
-     |
-     +---> >= 5 attempts? --> 429 Response + Retry-After header
-     |
-     v
-Invalid Credentials?
-     |
-     +---> Yes --> Increment: cache->put(key, attempts + 1, TTL)
-     |
-     v
-Valid Credentials?
-     |
-     +---> Yes --> Clear: cache->forget(key)
+    │
+    ▼
+┌──────────────────────┐
+│ Generate Key         │  ← sha1(ip|email)
+└─────────┬────────────┘
+          │
+          ▼
+┌──────────────────────┐
+│ Check Attempts       │  ← cache->get(key)
+└─────────┬────────────┘
+          │
+          ▼
+┌──────────────────────┐
+│ Verify Credentials   │  ← Check password
+└─────────┬────────────┘
+          │
+          ▼
+┌──────────────────────┐
+│ Clear/Increment      │  ← Success or fail
+└──────────────────────┘
 ```
 
 ---
@@ -437,26 +418,38 @@ CREATE TABLE sessions (
 
 ```
 Session Data (plaintext)
-         |
-         v
-  Serialize (PHP)
-         |
-         v
-  Generate Random IV (16 bytes)
-         |
-         v
-  AES-256-CBC Encrypt (key + IV)
-         |
-         v
-  Compute HMAC-SHA256 (key + IV + ciphertext)
-         |
-         v
-  JSON Envelope: {iv, value, mac}
-         |
-         v
-  Base64 Encode
-         |
-         v
+    │
+    ▼
+┌──────────────────────┐
+│ Serialize (PHP)      │  ← Convert to string
+└─────────┬────────────┘
+          │
+          ▼
+┌──────────────────────┐
+│ Generate Random IV   │  ← 16 bytes
+└─────────┬────────────┘
+          │
+          ▼
+┌──────────────────────┐
+│ AES-256-CBC Encrypt  │  ← key + IV
+└─────────┬────────────┘
+          │
+          ▼
+┌──────────────────────┐
+│ Compute HMAC-SHA256  │  ← Tamper detection
+└─────────┬────────────┘
+          │
+          ▼
+┌──────────────────────┐
+│ JSON Envelope        │  ← {iv, value, mac}
+└─────────┬────────────┘
+          │
+          ▼
+┌──────────────────────┐
+│ Base64 Encode        │  ← Safe for storage
+└─────────┬────────────┘
+          │
+          ▼
   Store in Database
 ```
 
@@ -1065,19 +1058,22 @@ return [
 **Types of XSS**:
 
 1. **Reflected XSS**: Malicious script in URL parameter
-   ```
-   https://example.com/search?q=<script>alert(document.cookie)</script>
-   ```
+
+```
+https://example.com/search?q=<script>alert(document.cookie)</script>
+```
 
 2. **Stored XSS**: Malicious script stored in database
-   ```php
-   $comment->body = '<script>steal_session()</script>';
-   ```
+
+```php
+$comment->body = '<script>steal_session()</script>';
+```
 
 3. **DOM-based XSS**: Client-side JavaScript manipulates DOM unsafely
-   ```javascript
-   element.innerHTML = location.hash;  // DANGEROUS
-   ```
+
+```javascript
+element.innerHTML = location.hash;  // DANGEROUS
+```
 
 #### Output Escaping
 
@@ -1325,26 +1321,33 @@ $user = User::find($request->input('id'));
 
 ```
 Plaintext
-    |
-    v
-Generate Random IV (16 bytes)
-    |
-    v
-AES-256-CBC Encrypt (key + IV)
-    |
-    v
-Ciphertext
-    |
-    v
-Compute HMAC-SHA256 (key + IV + ciphertext)
-    |
-    v
-JSON Envelope: {"iv": "...", "value": "...", "mac": "..."}
-    |
-    v
-Base64 Encode
-    |
-    v
+    │
+    ▼
+┌──────────────────────┐
+│ Generate Random IV   │  ← 16 bytes
+└─────────┬────────────┘
+          │
+          ▼
+┌──────────────────────┐
+│ AES-256-CBC Encrypt  │  ← key + IV
+└─────────┬────────────┘
+          │
+          ▼
+┌──────────────────────┐
+│ Compute HMAC-SHA256  │  ← Integrity check
+└─────────┬────────────┘
+          │
+          ▼
+┌──────────────────────┐
+│ JSON Envelope        │  ← {iv, value, mac}
+└─────────┬────────────┘
+          │
+          ▼
+┌──────────────────────┐
+│ Base64 Encode        │  ← Safe string
+└─────────┬────────────┘
+          │
+          ▼
 Encrypted String (safe for storage)
 ```
 

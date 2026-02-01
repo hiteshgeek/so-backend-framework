@@ -31,6 +31,9 @@ assets()->css('css/base.css', 'head', 8);
 // Content page CSS (priority 10 = after base)
 assets()->css('css/docs/docs.css', 'head', 10);
 
+// Diagram components CSS (priority 11 = after docs.css)
+assets()->css('css/docs/diagrams.css', 'head', 11);
+
 // Code copy functionality JS + highlight init
 assets()->js('js/docs/docs.js', 'body_end', 10);
 
