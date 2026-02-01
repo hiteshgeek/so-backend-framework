@@ -739,6 +739,17 @@
                         </div>
                         <span class="badge badge-guide">Guide</span>
                     </a>
+                    <a href="/docs/dev-localization" class="doc-card">
+                        <div class="doc-card-body">
+                            <h3><span class="mdi mdi-earth"></span> Localization Implementation</h3>
+                            <p>Step-by-step guide to implementing multi-language, multi-currency, and multi-timezone support.</p>
+                        </div>
+                        <div class="doc-card-badges">
+                            <span class="badge badge-new">New</span>
+                            <span class="badge badge-guide">Guide</span>
+                            <span class="badge badge-enterprise">Enterprise</span>
+                        </div>
+                    </a>
                 </div>
             </div>
         </div>

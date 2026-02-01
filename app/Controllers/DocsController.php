@@ -135,6 +135,7 @@ class DocsController
             'dev-testing' => 'DEV-TESTING.md',
             'dev-error-handling' => 'DEV-ERROR-HANDLING.md',
             'dev-helpers' => 'DEV-HELPERS.md',
+            'dev-localization' => 'DEV-LOCALIZATION.md',
 
             // API & Architecture
             'api-versioning' => 'API-VERSIONING.md',

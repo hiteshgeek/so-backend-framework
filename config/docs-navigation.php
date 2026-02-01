@@ -113,6 +113,9 @@ return [
     // Utilities & Reference
     ['key' => 'dev-helpers', 'title' => 'Helper Functions', 'url' => '/docs/dev-helpers'],
 
+    // Localization
+    ['key' => 'dev-localization', 'title' => 'Localization Implementation', 'url' => '/docs/dev-localization'],
+
     // ===== COMPREHENSIVE REFERENCES =====
 
     // Complete Guides
