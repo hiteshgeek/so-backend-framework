@@ -44,6 +44,9 @@ return [
     ['key' => 'notification-system', 'title' => 'Notification System', 'url' => '/docs/notification-system'],
     ['key' => 'activity-logging', 'title' => 'Activity Logging', 'url' => '/docs/activity-logging'],
 
+    // Media & Files
+    ['key' => 'features-file-uploads', 'title' => 'File Uploads & Image Processing', 'url' => '/docs/features/file-uploads'],
+
     // Technical Documentation
     ['key' => 'console-commands', 'title' => 'Console Commands', 'url' => '/docs/console-commands'],
     ['key' => 'profiler', 'title' => 'Profiler & Debugging', 'url' => '/docs/profiler'],
@@ -67,7 +70,9 @@ return [
     ['key' => 'dev-web-controllers', 'title' => 'Web Controllers', 'url' => '/docs/dev-web-controllers'],
     ['key' => 'dev-api-controllers', 'title' => 'API Controllers', 'url' => '/docs/dev-api-controllers'],
     ['key' => 'dev-forms-validation', 'title' => 'Forms & Validation', 'url' => '/docs/dev-forms-validation'],
-    ['key' => 'dev-file-uploads', 'title' => 'File Uploads', 'url' => '/docs/dev-file-uploads'],
+    ['key' => 'dev-file-uploads', 'title' => 'File Uploads (Basic)', 'url' => '/docs/dev-file-uploads'],
+    ['key' => 'features-file-uploads', 'title' => 'Media System (Complete)', 'url' => '/docs/features/file-uploads'],
+    ['key' => 'api-media-api', 'title' => 'Media API Reference', 'url' => '/docs/api/media-api'],
     ['key' => 'dev-pagination', 'title' => 'Pagination', 'url' => '/docs/dev-pagination'],
 
     // Frontend

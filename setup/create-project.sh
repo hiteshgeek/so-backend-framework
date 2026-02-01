@@ -86,7 +86,7 @@ echo -e "${YELLOW}Keep docs:${NC}   $KEEP_DOCS"
 echo ""
 
 # Check PHP version and required extensions
-echo -e "${BLUE}[0/10]${NC} Checking PHP requirements..."
+echo -e "${BLUE}[0/11]${NC} Checking PHP requirements..."
 
 # Check PHP version
 PHP_VERSION=$(php -r "echo PHP_VERSION;")
@@ -127,14 +127,30 @@ if [ ${#MISSING_EXTENSIONS[@]} -gt 0 ]; then
     exit 1
 fi
 echo -e "${GREEN}✓${NC} All required extensions installed: ${REQUIRED_EXTENSIONS[*]}"
+
+# Check image processing extensions (optional but recommended)
+IMAGE_EXTENSIONS=()
+if php -m | grep -qi "^imagick$"; then
+    IMAGE_EXTENSIONS+=("imagick")
+fi
+if php -m | grep -qi "^gd$"; then
+    IMAGE_EXTENSIONS+=("gd")
+fi
+
+if [ ${#IMAGE_EXTENSIONS[@]} -gt 0 ]; then
+    echo -e "${GREEN}✓${NC} Image processing extensions: ${IMAGE_EXTENSIONS[*]}"
+else
+    echo -e "${YELLOW}⚠${NC}  No image extensions found (imagick/gd). Image processing features will be limited."
+    echo -e "${YELLOW}  Install imagick or gd for image manipulation, watermarks, and variants.${NC}"
+fi
 echo ""
 
 # Create destination directory
-echo -e "${BLUE}[1/10]${NC} Creating destination directory..."
+echo -e "${BLUE}[1/11]${NC} Creating destination directory..."
 mkdir -p "$DEST_DIR"
 
 # Copy framework structure
-echo -e "${BLUE}[2/10]${NC} Copying framework files..."
+echo -e "${BLUE}[2/11]${NC} Copying framework files..."
 
 # Build rsync exclude list
 RSYNC_EXCLUDES=(
@@ -219,7 +235,7 @@ eval $RSYNC_CMD
 echo -e "${GREEN}✓${NC} Framework files copied"
 
 # Create minimal welcome page
-echo -e "${BLUE}[3/10]${NC} Creating minimal welcome page..."
+echo -e "${BLUE}[3/11]${NC} Creating minimal welcome page..."
 
 cat > "$DEST_DIR/resources/views/welcome.php" << 'WELCOME_EOF'
 <!DOCTYPE html>
@@ -372,7 +388,7 @@ CSS_EOF
 echo -e "${GREEN}✓${NC} Minimal welcome page created"
 
 # Create empty directories for new project
-echo -e "${BLUE}[4/10]${NC} Creating empty directories..."
+echo -e "${BLUE}[4/11]${NC} Creating empty directories..."
 
 # Create empty controller directories (auth controllers already copied by rsync)
 mkdir -p "$DEST_DIR/app/Controllers/Api/V1"
@@ -410,7 +426,7 @@ touch "$DEST_DIR/routes/web/.gitkeep"
 echo -e "${GREEN}✓${NC} Empty directories created"
 
 # Clean route files
-echo -e "${BLUE}[5/10]${NC} Cleaning route files..."
+echo -e "${BLUE}[5/11]${NC} Cleaning route files..."
 
 # Clean web.php - remove demo requires
 if [ -f "$DEST_DIR/routes/web.php" ]; then
@@ -434,7 +450,7 @@ fi
 echo -e "${GREEN}✓${NC} Route files cleaned"
 
 # Clean database seeders - remove all and create empty folder
-echo -e "${BLUE}[6/10]${NC} Cleaning database seeders..."
+echo -e "${BLUE}[6/11]${NC} Cleaning database seeders..."
 
 # Clean database folder - remove all, recreate empty
 rm -rf "$DEST_DIR/database/seeders"
@@ -448,7 +464,7 @@ touch "$DEST_DIR/database/migrations/.gitkeep"
 echo -e "${GREEN}✓${NC} Database folders cleaned"
 
 # Create storage directories
-echo -e "${BLUE}[7/10]${NC} Creating storage directories..."
+echo -e "${BLUE}[7/11]${NC} Creating storage directories..."
 mkdir -p "$DEST_DIR/storage/sessions"
 mkdir -p "$DEST_DIR/storage/cache"
 mkdir -p "$DEST_DIR/storage/logs"
@@ -463,7 +479,7 @@ touch "$DEST_DIR/storage/uploads/.gitkeep"
 echo -e "${GREEN}✓${NC} Storage directories created"
 
 # Set permissions
-echo -e "${BLUE}[8/10]${NC} Setting permissions..."
+echo -e "${BLUE}[8/11]${NC} Setting permissions..."
 chmod -R 755 "$DEST_DIR"
 chmod -R 775 "$DEST_DIR/storage"
 
@@ -474,7 +490,7 @@ fi
 echo -e "${GREEN}✓${NC} Permissions set"
 
 # Create .env file
-echo -e "${BLUE}[9/10]${NC} Creating environment file..."
+echo -e "${BLUE}[9/11]${NC} Creating environment file..."
 
 if [ -f "$DEST_DIR/.env.example" ]; then
     cp "$DEST_DIR/.env.example" "$DEST_DIR/.env"
@@ -490,8 +506,58 @@ else
     echo -e "${YELLOW}⚠${NC}  .env.example not found, skipping .env creation"
 fi
 
+# Setup media system (file uploads & image processing)
+echo -e "${BLUE}[10/11]${NC} Setting up media system..."
+
+# Create rpkfiles directory if it doesn't exist
+RPKFILES_PATH="/var/www/html/rpkfiles"
+if [ ! -d "$RPKFILES_PATH" ]; then
+    echo -e "${YELLOW}Creating shared media directory: $RPKFILES_PATH${NC}"
+    if mkdir -p "$RPKFILES_PATH" 2>/dev/null; then
+        chmod 755 "$RPKFILES_PATH"
+        echo -e "${GREEN}✓${NC} Created $RPKFILES_PATH"
+
+        # Try to set ownership to www-data if running as root
+        if [ "$EUID" -eq 0 ] || [ "$(id -u)" -eq 0 ]; then
+            if id -u www-data >/dev/null 2>&1; then
+                chown www-data:www-data "$RPKFILES_PATH" 2>/dev/null || true
+                echo -e "${GREEN}✓${NC} Set ownership to www-data:www-data"
+            fi
+        fi
+    else
+        echo -e "${YELLOW}⚠${NC}  Failed to create $RPKFILES_PATH (permission denied)"
+        echo -e "${YELLOW}  Run manually: sudo mkdir -p $RPKFILES_PATH && sudo chmod 755 $RPKFILES_PATH${NC}"
+    fi
+else
+    echo -e "${GREEN}✓${NC} Media directory already exists: $RPKFILES_PATH"
+fi
+
+# Add media configuration to .env if file exists
+if [ -f "$DEST_DIR/.env" ]; then
+    # Check if media config already exists
+    if ! grep -q "MEDIA_PATH" "$DEST_DIR/.env"; then
+        echo "" >> "$DEST_DIR/.env"
+        echo "# Media & File Uploads" >> "$DEST_DIR/.env"
+        echo "MEDIA_PATH=/var/www/html/rpkfiles" >> "$DEST_DIR/.env"
+        echo "MEDIA_URL=/media" >> "$DEST_DIR/.env"
+        echo "MEDIA_DISK=media" >> "$DEST_DIR/.env"
+        echo "MEDIA_MAX_SIZE=10240" >> "$DEST_DIR/.env"
+        echo "MEDIA_QUEUE_ENABLED=true" >> "$DEST_DIR/.env"
+        echo "MEDIA_QUEUE_CONNECTION=database" >> "$DEST_DIR/.env"
+        echo "" >> "$DEST_DIR/.env"
+        echo "# Image Processing" >> "$DEST_DIR/.env"
+        echo "IMAGE_DRIVER=imagick" >> "$DEST_DIR/.env"
+        echo "WATERMARK_ENABLED=false" >> "$DEST_DIR/.env"
+        echo -e "${GREEN}✓${NC} Added media configuration to .env"
+    else
+        echo -e "${GREEN}✓${NC} Media configuration already in .env"
+    fi
+fi
+
+echo -e "${GREEN}✓${NC} Media system setup complete"
+
 # Create minimal README
-echo -e "${BLUE}[10/10]${NC} Creating project README..."
+echo -e "${BLUE}[11/11]${NC} Creating project README..."
 
 PROJECT_NAME=$(basename "$DEST_DIR")
 
@@ -511,6 +577,9 @@ A PHP application built with the SO Framework.
   - \`ext-openssl\` - Encryption and security
   - \`ext-pdo\` - Database connectivity
   - \`ext-intl\` - Internationalization (required)
+- **Optional PHP Extensions (for media features):**
+  - \`ext-imagick\` - Advanced image processing (recommended)
+  - \`ext-gd\` - Basic image processing (fallback)
 
 ### Verify Requirements
 
@@ -566,11 +635,17 @@ cp .env.example .env
 # 3. Set up database
 mysql -u root -p < database/schema.sql
 
-# 4. Set permissions
+# 4. Run migrations (for media system)
+php artisan migrate
+
+# 5. Set permissions
 chmod -R 775 storage
 chmod -R 775 bootstrap/cache
 
-# 5. Configure web server to point to public/ directory
+# 6. Start queue worker (for async image processing)
+php artisan queue:work &
+
+# 7. Configure web server to point to public/ directory
 \`\`\`
 
 ## Directory Structure
@@ -619,6 +694,43 @@ Add your API routes in \`routes/api/\` and include them in \`routes/api.php\`.
 3. Create your controllers in \`app/Controllers/\`
 4. Add your routes in \`routes/\`
 5. Create your views in \`resources/views/\`
+
+## Media System (File Uploads & Image Processing)
+
+The framework includes a comprehensive media system with:
+- File uploads to shared directory (\`/var/www/html/rpkfiles\`)
+- Image processing (resize, crop, rotate, filters)
+- Automatic thumbnail & variant generation
+- Watermark support (text and image overlays)
+- Queue-based async processing
+
+### Basic Usage
+
+\`\`\`php
+// Upload and create database entry
+\$media = \$request->file('image')->storeAndCreate('products');
+echo \$media->url();  // Public URL
+
+// Upload with variants and watermark
+\$media = \$request->file('photo')->storeAndCreate('gallery', [
+    'variants' => true,
+    'watermark' => 'copyright'
+]);
+
+// Access variant URLs
+echo \$media->url('thumb');   // 150x150 thumbnail
+echo \$media->url('medium');  // 640x480 resized
+\`\`\`
+
+### Configuration
+
+Edit \`.env\` for media settings:
+- \`MEDIA_PATH\` - Storage directory (default: /var/www/html/rpkfiles)
+- \`MEDIA_MAX_SIZE\` - Max upload size in KB (default: 10240)
+- \`IMAGE_DRIVER\` - Image processor: imagick or gd
+- \`WATERMARK_ENABLED\` - Enable/disable watermarks
+
+See \`docs/features/file-uploads.md\` for complete documentation.
 
 ## Documentation
 
@@ -744,7 +856,21 @@ echo -e "  1. ${BLUE}cd $DEST_DIR${NC}"
 echo -e "  2. ${BLUE}composer install${NC}"
 echo -e "  3. ${BLUE}Edit .env file (database, JWT secret)${NC}"
 echo -e "  4. ${BLUE}Import database schema${NC}"
-echo -e "  5. ${BLUE}php -S localhost:8000 -t public${NC}"
+echo -e "  5. ${BLUE}Run media migrations: php artisan migrate${NC}"
+echo -e "  6. ${BLUE}Start queue worker: php artisan queue:work${NC} (for image processing)"
+echo -e "  7. ${BLUE}php -S localhost:8000 -t public${NC}"
+echo ""
+echo -e "${BLUE}Media System Notes:${NC}"
+echo -e "  • Shared directory: ${GREEN}/var/www/html/rpkfiles${NC}"
+echo -e "  • Upload size limit: ${GREEN}10MB${NC} (configurable in .env: MEDIA_MAX_SIZE)"
+if [ ${#IMAGE_EXTENSIONS[@]} -gt 0 ]; then
+    echo -e "  • Image processing: ${GREEN}Enabled${NC} (${IMAGE_EXTENSIONS[*]})"
+    echo -e "  • Features: Resize, crop, watermarks, variants, thumbnails"
+else
+    echo -e "  • Image processing: ${YELLOW}Limited${NC} (install imagick or gd for full features)"
+fi
+echo -e "  • Queue: ${GREEN}Enabled${NC} for async variant generation"
+echo -e "  • Documentation: See ${BLUE}docs/features/file-uploads.md${NC}"
 echo ""
 echo -e "${BLUE}What was excluded:${NC}"
 echo -e "  • Documentation system (docs/, routes, controllers, assets)"
@@ -760,8 +886,10 @@ echo -e "  ✓ Auth controllers: AuthApiController, PasswordApiController, UserA
 echo -e "  ✓ Auth services: AuthenticationService, PasswordResetService, UserService"
 echo -e "  ✓ User model with authentication methods"
 echo -e "  ✓ Auth routes: /api/auth/*, /api/users/*"
+echo -e "  ✓ Media system: File uploads, image processing, watermarks, variants"
+echo -e "  ✓ Media routes: /files/* (upload, view, download)"
 echo -e "  ✓ All middleware (8 files): Auth, JWT, CORS, CSRF, Throttle, etc."
-echo -e "  ✓ All providers (5 files): Session, Cache, Queue, Notifications, Activity"
+echo -e "  ✓ All providers (6 files): Session, Cache, Queue, Notifications, Activity, Media"
 echo -e "  ✓ Clean minimal welcome page"
 echo -e "  ✓ Theme toggle (dark/light mode)"
 echo ""

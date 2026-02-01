@@ -31,6 +31,9 @@ require __DIR__ . '/web/dashboard.php';
 // Documentation routes
 require __DIR__ . '/web/docs.php';
 
+// Media routes (file upload and access)
+require __DIR__ . '/web/media.php';
+
 // ==========================================
 // Add more route modules here:
 // ==========================================

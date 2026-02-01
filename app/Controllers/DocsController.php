@@ -193,4 +193,42 @@ class DocsController
             'filename' => $allowedFiles[$file]
         ], $navigation));
     }
+
+    /**
+     * Show nested documentation file (e.g., /docs/features/file-uploads)
+     */
+    public function showNested(Request $request, string $folder, string $file): Response
+    {
+        $allowedPaths = [
+            'features/file-uploads' => 'features/file-uploads.md',
+            'api/media-api' => 'api/media-api.md',
+        ];
+
+        $path = $folder . '/' . $file;
+
+        if (!isset($allowedPaths[$path])) {
+            return Response::view('errors/404', [], 404);
+        }
+
+        // Get navigation data using the combined path as key
+        $navigationKey = str_replace('/', '-', $path);
+        $navigation = $this->getNavigation($navigationKey);
+
+        // Build file path
+        $filePath = __DIR__ . '/../../docs/' . $allowedPaths[$path];
+        $filePath = realpath($filePath) ?: $filePath;
+
+        if (!file_exists($filePath)) {
+            return Response::view('errors/404', [], 404);
+        }
+
+        $markdown = file_get_contents($filePath);
+        $markdown = str_replace('{{APP_VERSION}}', config('app.version'), $markdown);
+
+        return Response::view('docs/show', array_merge([
+            'title' => ucwords(str_replace(['-', '/'], ' ', $path)) . ' - ' . config('app.name'),
+            'markdown' => $markdown,
+            'filename' => $allowedPaths[$path]
+        ], $navigation));
+    }
 }

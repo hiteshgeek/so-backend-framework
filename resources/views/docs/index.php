@@ -341,6 +341,23 @@
             </div>
 
             <div class="docs-section">
+                <div class="docs-section-title"><span class="mdi mdi-file-image"></span> Media & Files</div>
+                <div class="docs-grid">
+                    <a href="/docs/features/file-uploads" class="doc-card">
+                        <div class="doc-card-body">
+                            <h3><span class="mdi mdi-cloud-upload"></span> File Uploads & Image Processing</h3>
+                            <p>Complete media system: uploads, thumbnails, variants, watermarks, and queue processing.</p>
+                        </div>
+                        <div class="doc-card-badges">
+                            <span class="badge badge-new">New</span>
+                            <span class="badge badge-essential">Essential</span>
+                            <span class="badge badge-production">Production</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="docs-section">
                 <div class="docs-section-title"><span class="mdi mdi-wrench"></span> Developer Tools</div>
                 <div class="docs-grid">
                     <a href="/docs/console-commands" class="doc-card">
@@ -478,10 +495,32 @@
                     </a>
                     <a href="/docs/dev-file-uploads" class="doc-card">
                         <div class="doc-card-body">
-                            <h3><span class="mdi mdi-file-upload"></span> File Uploads</h3>
+                            <h3><span class="mdi mdi-file-upload"></span> File Uploads (Basic)</h3>
                             <p>Handle file uploads, validation, storage, and security.</p>
                         </div>
                         <span class="badge badge-guide">Guide</span>
+                    </a>
+                    <a href="/docs/features/file-uploads" class="doc-card">
+                        <div class="doc-card-body">
+                            <h3><span class="mdi mdi-cloud-upload"></span> Media System (Complete)</h3>
+                            <p>File uploads, image processing, thumbnails, variants, and watermarks.</p>
+                        </div>
+                        <div class="doc-card-badges">
+                            <span class="badge badge-new">New</span>
+                            <span class="badge badge-guide">Guide</span>
+                            <span class="badge badge-production">Production</span>
+                        </div>
+                    </a>
+                    <a href="/docs/api/media-api" class="doc-card">
+                        <div class="doc-card-body">
+                            <h3><span class="mdi mdi-code-braces"></span> Media API Reference</h3>
+                            <p>Complete API documentation for media services, image processing, and watermarks.</p>
+                        </div>
+                        <div class="doc-card-badges">
+                            <span class="badge badge-new">New</span>
+                            <span class="badge badge-api">API</span>
+                            <span class="badge badge-reference">Reference</span>
+                        </div>
                     </a>
                     <a href="/docs/dev-pagination" class="doc-card">
                         <div class="doc-card-body">

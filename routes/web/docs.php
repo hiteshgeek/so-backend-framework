@@ -8,4 +8,5 @@ use Core\Routing\Router;
 use App\Controllers\DocsController;
 
 Router::get('/docs', [DocsController::class, 'index'])->name('docs.index');
+Router::get('/docs/{folder}/{file}', [DocsController::class, 'showNested'])->name('docs.show.nested');
 Router::get('/docs/{file}', [DocsController::class, 'show'])->name('docs.show');

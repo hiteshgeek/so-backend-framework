@@ -37,5 +37,8 @@ return [
 
         // Mail system for sending emails
         \Core\Mail\MailServiceProvider::class,
+
+        // Media system for file uploads and image processing
+        \App\Providers\MediaServiceProvider::class,
     ],
 ];
