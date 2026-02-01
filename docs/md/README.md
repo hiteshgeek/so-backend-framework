@@ -23,7 +23,7 @@ A production-ready PHP framework with Laravel-style routing, comprehensive secur
 - PHP 8.3 or higher
 - MySQL 8.0+ or PostgreSQL 14+
 - Composer
-- Extensions: PDO, JSON, mbstring, OpenSSL
+- **PHP Extensions:** PDO, JSON, mbstring, OpenSSL, **intl** (required for i18n)
 
 ## Quick Install
 

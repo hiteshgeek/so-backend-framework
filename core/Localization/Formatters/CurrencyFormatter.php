@@ -69,18 +69,32 @@ class CurrencyFormatter
      * @param string $currency Currency code (USD, EUR, etc.)
      * @param string|null $locale Override locale
      * @return string Formatted currency string
+     * @throws \RuntimeException If formatting fails
      */
     public function format(float $amount, string $currency = 'USD', ?string $locale = null): string
     {
         $locale = $locale ?? $this->localeManager->getCurrentLocale();
 
-        // Try using PHP Intl extension if available
-        if (extension_loaded('intl')) {
-            return $this->formatWithIntl($amount, $currency, $locale);
+        // Map locale code to full locale (en -> en_US, fr -> fr_FR, etc.)
+        $fullLocale = $this->getFullLocale($locale);
+
+        $formatter = new \NumberFormatter($fullLocale, \NumberFormatter::CURRENCY);
+
+        // Handle zero-decimal currencies (JPY, KRW, etc.)
+        if (in_array($currency, $this->zeroDecimalCurrencies)) {
+            $formatter->setAttribute(\NumberFormatter::FRACTION_DIGITS, 0);
         }
 
-        // Fallback to manual formatting
-        return $this->formatManual($amount, $currency, $locale);
+        $formatted = $formatter->formatCurrency($amount, $currency);
+
+        // Throw exception if formatting failed
+        if ($formatted === false) {
+            throw new \RuntimeException(
+                "Failed to format currency. Currency: {$currency}, Locale: {$fullLocale}"
+            );
+        }
+
+        return $formatted;
     }
 
     /**
@@ -115,116 +129,6 @@ class CurrencyFormatter
         return $this->currencySymbols[$currency] ?? $currency;
     }
 
-    /**
-     * Format using PHP Intl extension
-     *
-     * @param float $amount Amount to format
-     * @param string $currency Currency code
-     * @param string $locale Locale code
-     * @return string Formatted currency
-     */
-    protected function formatWithIntl(float $amount, string $currency, string $locale): string
-    {
-        // Map locale code to full locale (en -> en_US, fr -> fr_FR, etc.)
-        $fullLocale = $this->getFullLocale($locale);
-
-        $formatter = new \NumberFormatter($fullLocale, \NumberFormatter::CURRENCY);
-
-        // Handle zero-decimal currencies
-        if (in_array($currency, $this->zeroDecimalCurrencies)) {
-            $formatter->setAttribute(\NumberFormatter::FRACTION_DIGITS, 0);
-        }
-
-        $formatted = $formatter->formatCurrency($amount, $currency);
-
-        // Fallback if formatting failed
-        if ($formatted === false) {
-            return $this->formatManual($amount, $currency, $locale);
-        }
-
-        return $formatted;
-    }
-
-    /**
-     * Manual currency formatting (fallback)
-     *
-     * @param float $amount Amount to format
-     * @param string $currency Currency code
-     * @param string $locale Locale code
-     * @return string Formatted currency
-     */
-    protected function formatManual(float $amount, string $currency, string $locale): string
-    {
-        $symbol = $this->getCurrencySymbol($currency);
-
-        // Determine decimal places
-        $decimals = in_array($currency, $this->zeroDecimalCurrencies) ? 0 : 2;
-
-        // Get locale-specific separators
-        list($decimalSep, $thousandsSep) = $this->getSeparators($locale);
-
-        // Format number
-        $formatted = number_format($amount, $decimals, $decimalSep, $thousandsSep);
-
-        // Position symbol based on locale and currency
-        return $this->positionSymbol($formatted, $symbol, $locale, $currency);
-    }
-
-    /**
-     * Get decimal and thousands separators for locale
-     *
-     * @param string $locale Locale code
-     * @return array [decimalSeparator, thousandsSeparator]
-     */
-    protected function getSeparators(string $locale): array
-    {
-        $separators = [
-            'en' => ['.', ','],      // 1,234.56
-            'fr' => [',', ' '],      // 1 234,56
-            'de' => [',', '.'],      // 1.234,56
-            'es' => [',', '.'],      // 1.234,56
-            'it' => [',', '.'],      // 1.234,56
-            'pt' => [',', '.'],      // 1.234,56
-            'ru' => [',', ' '],      // 1 234,56
-            'ar' => ['.', ','],      // 1,234.56 (Arabic)
-            'zh' => ['.', ','],      // 1,234.56 (Chinese)
-            'ja' => ['.', ','],      // 1,234.56 (Japanese)
-            'ko' => ['.', ','],      // 1,234.56 (Korean)
-            'hi' => ['.', ','],      // 1,234.56 (Hindi)
-        ];
-
-        return $separators[$locale] ?? ['.', ','];
-    }
-
-    /**
-     * Position currency symbol
-     *
-     * @param string $formattedNumber Formatted number
-     * @param string $symbol Currency symbol
-     * @param string $locale Locale code
-     * @param string $currency Currency code
-     * @return string Formatted currency with symbol
-     */
-    protected function positionSymbol(string $formattedNumber, string $symbol, string $locale, string $currency): string
-    {
-        // Symbol before (with space for some currencies)
-        if (in_array($locale, ['en', 'zh', 'ja', 'ko'])) {
-            return $symbol . $formattedNumber;
-        }
-
-        // Symbol after with space
-        if (in_array($locale, ['fr', 'de', 'es', 'it', 'pt', 'ru'])) {
-            return $formattedNumber . ' ' . $symbol;
-        }
-
-        // Symbol after (no space) for Arabic currencies
-        if (in_array($locale, ['ar']) && in_array($currency, ['AED', 'SAR'])) {
-            return $formattedNumber . ' ' . $symbol;
-        }
-
-        // Default: symbol before
-        return $symbol . $formattedNumber;
-    }
 
     /**
      * Get full locale code from short code
@@ -263,27 +167,30 @@ class CurrencyFormatter
     public function parse(string $formatted, string $currency, ?string $locale = null): float
     {
         $locale = $locale ?? $this->localeManager->getCurrentLocale();
+        $fullLocale = $this->getFullLocale($locale);
 
-        // Remove currency symbol
-        $symbol = $this->getCurrencySymbol($currency);
-        $cleaned = str_replace($symbol, '', $formatted);
-        $cleaned = trim($cleaned);
+        // Use NumberFormatter to parse
+        $formatter = new \NumberFormatter($fullLocale, \NumberFormatter::CURRENCY);
+        $parsed = $formatter->parseCurrency($formatted, $currency);
 
-        // Get separators
-        list($decimalSep, $thousandsSep) = $this->getSeparators($locale);
+        if ($parsed === false) {
+            // Fallback to basic parsing if NumberFormatter fails
+            $symbol = $this->getCurrencySymbol($currency);
+            $cleaned = str_replace($symbol, '', $formatted);
+            $cleaned = trim($cleaned);
 
-        // Remove thousands separator
-        $cleaned = str_replace($thousandsSep, '', $cleaned);
+            // Remove common separators and convert to float
+            $cleaned = str_replace([',', ' ', '€', '$', '£', '¥', '₹'], '', $cleaned);
 
-        // Replace decimal separator with dot
-        $cleaned = str_replace($decimalSep, '.', $cleaned);
+            // Handle accounting format (negative in parentheses)
+            if (str_contains($cleaned, '(') && str_contains($cleaned, ')')) {
+                $cleaned = str_replace(['(', ')'], '', $cleaned);
+                $cleaned = '-' . $cleaned;
+            }
 
-        // Handle accounting format (negative in parentheses)
-        if (str_contains($cleaned, '(') && str_contains($cleaned, ')')) {
-            $cleaned = str_replace(['(', ')'], '', $cleaned);
-            $cleaned = '-' . $cleaned;
+            $parsed = (float) $cleaned;
         }
 
-        return (float) $cleaned;
+        return $parsed;
     }
 }

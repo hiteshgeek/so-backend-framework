@@ -15,6 +15,36 @@ This guide provides step-by-step instructions for implementing and extending the
 
 ---
 
+## Requirements
+
+**PHP Intl Extension is Required**
+
+The localization system requires the PHP Intl extension for accurate currency, number, and date formatting. Before implementing localization features, ensure php-intl is installed:
+
+```bash
+php -m | grep intl
+```
+
+**Installation:**
+
+```bash
+# Ubuntu/Debian
+sudo apt-get install php8.3-intl
+sudo service apache2 restart
+
+# CentOS/RHEL
+sudo yum install php-intl
+sudo systemctl restart httpd
+
+# macOS (Homebrew)
+brew install php
+# Intl is included by default
+```
+
+The framework validates this requirement during service provider registration and will throw a `MissingExtensionException` with installation instructions if the extension is not loaded.
+
+---
+
 ## Architecture Overview
 
 ### Core Components
@@ -481,6 +511,8 @@ use NumberFormatter;
 
 class CurrencyFormatter
 {
+    protected array $zeroDecimalCurrencies = ['JPY', 'KRW', 'VND', 'CLP'];
+
     /**
      * Format amount as currency
      *
@@ -491,10 +523,6 @@ class CurrencyFormatter
      */
     public function format(float $amount, string $currency = 'USD', string $locale = 'en'): string
     {
-        if (!extension_loaded('intl')) {
-            return $this->fallbackFormat($amount, $currency, $locale);
-        }
-
         $localeMap = [
             'en' => 'en_US',
             'fr' => 'fr_FR',
@@ -502,40 +530,28 @@ class CurrencyFormatter
             'es' => 'es_ES',
             'ar' => 'ar_AE',
             'zh' => 'zh_CN',
+            'ja' => 'ja_JP',
+            'hi' => 'hi_IN',
         ];
 
         $fullLocale = $localeMap[$locale] ?? 'en_US';
 
         $formatter = new NumberFormatter($fullLocale, NumberFormatter::CURRENCY);
-        return $formatter->formatCurrency($amount, $currency);
-    }
 
-    /**
-     * Fallback formatting without intl extension
-     */
-    private function fallbackFormat(float $amount, string $currency, string $locale): string
-    {
-        $symbols = [
-            'USD' => '$',
-            'EUR' => '€',
-            'GBP' => '£',
-            'JPY' => '¥',
-            'CNY' => '¥',
-            'INR' => '₹',
-            'AED' => 'د.إ',
-            'SAR' => '﷼',
-        ];
-
-        $symbol = $symbols[$currency] ?? $currency . ' ';
-
-        // Locale-specific decimal separators
-        if ($locale === 'fr' || $locale === 'de') {
-            $formatted = number_format($amount, 2, ',', ' ');
-            return $symbol . $formatted;
+        // Handle zero-decimal currencies (JPY, KRW, etc.)
+        if (in_array($currency, $this->zeroDecimalCurrencies)) {
+            $formatter->setAttribute(NumberFormatter::FRACTION_DIGITS, 0);
         }
 
-        $formatted = number_format($amount, 2, '.', ',');
-        return $symbol . $formatted;
+        $formatted = $formatter->formatCurrency($amount, $currency);
+
+        if ($formatted === false) {
+            throw new \RuntimeException(
+                "Failed to format currency. Currency: {$currency}, Locale: {$fullLocale}"
+            );
+        }
+
+        return $formatted;
     }
 }
 ```
@@ -578,21 +594,13 @@ class DateTimeFormatter
             $datetime->setTimezone(new DateTimeZone($timezone));
         }
 
-        // Use IntlDateFormatter if available
-        if (extension_loaded('intl')) {
-            return $this->formatWithIntl($datetime, $format, $locale);
-        }
-
-        return $this->fallbackFormat($datetime, $format, $locale);
-    }
-
-    private function formatWithIntl(DateTime $datetime, string $format, string $locale): string
-    {
         $localeMap = [
             'en' => 'en_US',
             'fr' => 'fr_FR',
             'de' => 'de_DE',
             'es' => 'es_ES',
+            'ja' => 'ja_JP',
+            'hi' => 'hi_IN',
         ];
 
         $fullLocale = $localeMap[$locale] ?? 'en_US';
@@ -612,19 +620,15 @@ class DateTimeFormatter
             $datetime->getTimezone()
         );
 
-        return $formatter->format($datetime);
-    }
+        $result = $formatter->format($datetime);
 
-    private function fallbackFormat(DateTime $datetime, string $format, string $locale): string
-    {
-        $formatMap = [
-            'short' => 'm/d/y g:i A',
-            'medium' => 'M j, Y g:i A',
-            'long' => 'F j, Y g:i:s A',
-        ];
+        if ($result === false) {
+            throw new \RuntimeException(
+                "Failed to format datetime. Locale: {$fullLocale}, Format: {$format}"
+            );
+        }
 
-        $phpFormat = $formatMap[$format] ?? 'M j, Y g:i A';
-        return $datetime->format($phpFormat);
+        return $result;
     }
 }
 ```
@@ -1067,7 +1071,7 @@ class LocaleServiceProvider
 'locale' => env('APP_LOCALE', 'en'),
 'fallback_locale' => env('APP_FALLBACK_LOCALE', 'en'),
 'available_locales' => ['en', 'fr', 'de', 'es', 'ar', 'zh'],
-'timezone' => env('APP_TIMEZONE', 'UTC'),
+'timezone' => env('APP_TIMEZONE', 'Asia/Kolkata'),
 ```
 
 **File:** `.env`
@@ -1075,7 +1079,9 @@ class LocaleServiceProvider
 ```bash
 APP_LOCALE=en
 APP_FALLBACK_LOCALE=en
-APP_TIMEZONE=UTC
+APP_TIMEZONE=Asia/Kolkata
+DEFAULT_CURRENCY=INR
+LOCALE_DETECTION_ENABLED=true
 ```
 
 ---
@@ -1391,12 +1397,14 @@ dd(locale()); // Should show 'fr'
 
 ### Currency Not Formatting
 
-**Symptom:** Raw number instead of formatted currency
+**Symptom:** Application throws MissingExtensionException or RuntimeException
 
 **Solutions:**
-1. Install `php-intl` extension: `sudo apt-get install php-intl`
-2. Check locale code is valid
-3. Use fallback formatter if needed
+1. Install `php-intl` extension (required): `sudo apt-get install php8.3-intl`
+2. Restart your web server: `sudo service apache2 restart`
+3. Verify installation: `php -m | grep intl`
+4. Check that locale code is valid (must be in localeMap)
+5. Check that currency code is valid (3-letter ISO code)
 
 ---
 

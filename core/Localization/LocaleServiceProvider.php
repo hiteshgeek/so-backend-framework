@@ -77,41 +77,49 @@ class LocaleServiceProvider
      * Register formatter services
      *
      * @return void
+     * @throws \Core\Exceptions\MissingExtensionException
      */
     protected function registerFormatters(): void
     {
+        // Validate that php-intl extension is loaded
+        $this->validateIntlExtension();
+
         // CurrencyFormatter
         $this->app->singleton('currency.formatter', function ($app) {
-            // Check if class exists (Phase 2 implementation)
-            if (class_exists('Core\Localization\Formatters\CurrencyFormatter')) {
-                return new \Core\Localization\Formatters\CurrencyFormatter(
-                    $app->make('locale')
-                );
-            }
-            return null;
+            return new \Core\Localization\Formatters\CurrencyFormatter(
+                $app->make('locale')
+            );
         });
 
         // NumberFormatter
         $this->app->singleton('number.formatter', function ($app) {
-            // Check if class exists (Phase 2 implementation)
-            if (class_exists('Core\Localization\Formatters\NumberFormatter')) {
-                return new \Core\Localization\Formatters\NumberFormatter(
-                    $app->make('locale')
-                );
-            }
-            return null;
+            return new \Core\Localization\Formatters\NumberFormatter(
+                $app->make('locale')
+            );
         });
 
         // DateTimeFormatter
         $this->app->singleton('datetime.formatter', function ($app) {
-            // Check if class exists (Phase 2 implementation)
-            if (class_exists('Core\Localization\Formatters\DateTimeFormatter')) {
-                return new \Core\Localization\Formatters\DateTimeFormatter(
-                    $app->make('locale')
-                );
-            }
-            return null;
+            return new \Core\Localization\Formatters\DateTimeFormatter(
+                $app->make('locale')
+            );
         });
+    }
+
+    /**
+     * Validate that required PHP extensions are loaded
+     *
+     * @return void
+     * @throws \Core\Exceptions\MissingExtensionException
+     */
+    protected function validateIntlExtension(): void
+    {
+        if (!extension_loaded('intl')) {
+            throw new \Core\Exceptions\MissingExtensionException(
+                'intl',
+                'The localization system requires the PHP intl extension for currency, number, and date formatting.'
+            );
+        }
     }
 
     /**

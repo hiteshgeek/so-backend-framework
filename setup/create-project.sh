@@ -85,6 +85,50 @@ echo -e "${YELLOW}Destination:${NC} $DEST_DIR"
 echo -e "${YELLOW}Keep docs:${NC}   $KEEP_DOCS"
 echo ""
 
+# Check PHP version and required extensions
+echo -e "${BLUE}[0/10]${NC} Checking PHP requirements..."
+
+# Check PHP version
+PHP_VERSION=$(php -r "echo PHP_VERSION;")
+PHP_MAJOR=$(php -r "echo PHP_MAJOR_VERSION;")
+PHP_MINOR=$(php -r "echo PHP_MINOR_VERSION;")
+
+if [ "$PHP_MAJOR" -lt 8 ] || ([ "$PHP_MAJOR" -eq 8 ] && [ "$PHP_MINOR" -lt 3 ]); then
+    echo -e "${RED}✗ PHP 8.3 or higher required (found: $PHP_VERSION)${NC}"
+    exit 1
+fi
+echo -e "${GREEN}✓${NC} PHP version: $PHP_VERSION"
+
+# Check required extensions
+REQUIRED_EXTENSIONS=("json" "mbstring" "openssl" "pdo" "intl")
+MISSING_EXTENSIONS=()
+
+for ext in "${REQUIRED_EXTENSIONS[@]}"; do
+    if ! php -m | grep -qi "^$ext$"; then
+        MISSING_EXTENSIONS+=("$ext")
+    fi
+done
+
+if [ ${#MISSING_EXTENSIONS[@]} -gt 0 ]; then
+    echo -e "${RED}✗ Missing required PHP extensions: ${MISSING_EXTENSIONS[*]}${NC}"
+    echo ""
+    echo -e "${YELLOW}Install missing extensions:${NC}"
+    echo ""
+    echo "Ubuntu/Debian:"
+    echo "  sudo apt-get install php8.3-${MISSING_EXTENSIONS[0]}"
+    echo ""
+    echo "CentOS/RHEL:"
+    echo "  sudo yum install php-${MISSING_EXTENSIONS[0]}"
+    echo ""
+    echo "macOS (Homebrew):"
+    echo "  brew install php@8.3"
+    echo ""
+    echo "After installation, restart your web server and try again."
+    exit 1
+fi
+echo -e "${GREEN}✓${NC} All required extensions installed: ${REQUIRED_EXTENSIONS[*]}"
+echo ""
+
 # Create destination directory
 echo -e "${BLUE}[1/10]${NC} Creating destination directory..."
 mkdir -p "$DEST_DIR"
@@ -455,6 +499,59 @@ cat > "$DEST_DIR/README.md" << EOF
 # $PROJECT_NAME
 
 A PHP application built with the SO Framework.
+
+## Requirements
+
+- **PHP 8.3 or higher**
+- **MySQL 8.0+** or **PostgreSQL 14+**
+- **Composer**
+- **Required PHP Extensions:**
+  - \`ext-json\` - JSON encoding/decoding
+  - \`ext-mbstring\` - Multi-byte string support
+  - \`ext-openssl\` - Encryption and security
+  - \`ext-pdo\` - Database connectivity
+  - \`ext-intl\` - Internationalization (required)
+
+### Verify Requirements
+
+\`\`\`bash
+# Check PHP version
+php -v
+
+# Check installed extensions
+php -m | grep -E "json|mbstring|openssl|pdo|intl"
+
+# Or use the framework validator
+php -r "
+\\\$required = ['json', 'mbstring', 'openssl', 'pdo', 'intl'];
+\\\$missing = array_filter(\\\$required, fn(\\\$ext) => !extension_loaded(\\\$ext));
+if (\\\$missing) {
+    echo '❌ Missing: ' . implode(', ', \\\$missing) . PHP_EOL;
+    exit(1);
+}
+echo '✓ All required extensions installed' . PHP_EOL;
+"
+\`\`\`
+
+### Installing Missing Extensions
+
+**Ubuntu/Debian:**
+\`\`\`bash
+sudo apt-get install php8.3-intl php8.3-mbstring php8.3-xml
+sudo service apache2 restart
+\`\`\`
+
+**CentOS/RHEL:**
+\`\`\`bash
+sudo yum install php-intl php-mbstring
+sudo systemctl restart httpd
+\`\`\`
+
+**macOS (Homebrew):**
+\`\`\`bash
+brew install php@8.3
+# All extensions included by default
+\`\`\`
 
 ## Quick Start
 

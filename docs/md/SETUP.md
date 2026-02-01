@@ -1,5 +1,92 @@
 # Setup Guide - SO Backend Framework
 
+## Prerequisites
+
+### System Requirements
+
+- **PHP 8.3 or higher**
+- **MySQL 5.7+** or **MariaDB 10.3+**
+- **Composer** (for dependency management)
+- **Web Server** (Apache, Nginx, or PHP built-in server)
+
+### Required PHP Extensions
+
+The framework requires the following PHP extensions to be installed:
+
+```bash
+php -m | grep -E "json|mbstring|openssl|pdo|intl"
+```
+
+**Core Extensions:**
+- `ext-json` - JSON encoding/decoding
+- `ext-mbstring` - Multi-byte string support
+- `ext-openssl` - Encryption and security features
+- `ext-pdo` - Database connectivity
+- **`ext-intl`** - Internationalization (i18n) support *(Required)*
+
+### Installing PHP Extensions
+
+#### Ubuntu/Debian
+
+```bash
+sudo apt-get update
+sudo apt-get install php8.3 php8.3-cli php8.3-common php8.3-mysql \
+    php8.3-json php8.3-mbstring php8.3-xml php8.3-curl \
+    php8.3-intl php8.3-zip php8.3-gd
+
+# Restart web server
+sudo service apache2 restart
+# OR for PHP-FPM
+sudo service php8.3-fpm restart
+```
+
+#### CentOS/RHEL
+
+```bash
+sudo yum install php php-cli php-common php-mysqlnd \
+    php-json php-mbstring php-xml php-intl
+
+# Restart web server
+sudo systemctl restart httpd
+```
+
+#### macOS (Homebrew)
+
+```bash
+brew install php@8.3
+# All required extensions are included by default in Homebrew PHP
+```
+
+#### Windows (XAMPP/WAMP)
+
+Edit `php.ini` and uncomment:
+```ini
+extension=intl
+extension=mbstring
+extension=openssl
+extension=pdo_mysql
+```
+
+Restart Apache/web server after changes.
+
+### Verify Installation
+
+Run this command to verify all required extensions are installed:
+
+```bash
+php -r "
+\$required = ['json', 'mbstring', 'openssl', 'pdo', 'intl'];
+\$missing = array_filter(\$required, fn(\$ext) => !extension_loaded(\$ext));
+if (\$missing) {
+    echo '❌ Missing extensions: ' . implode(', ', \$missing) . PHP_EOL;
+    exit(1);
+}
+echo '✓ All required PHP extensions are installed' . PHP_EOL;
+"
+```
+
+---
+
 ## Quick Start
 
 ### 1. Configure Environment

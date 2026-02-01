@@ -12,6 +12,48 @@ The SO Backend Framework includes a comprehensive internationalization and local
 
 ---
 
+## Requirements
+
+**PHP Intl Extension Required**
+
+The localization system requires the PHP Intl extension for accurate currency, number, and date formatting across different locales.
+
+### Installation
+
+**Ubuntu/Debian:**
+```bash
+sudo apt-get install php8.3-intl
+sudo service apache2 restart
+# or for PHP-FPM:
+sudo service php8.3-fpm restart
+```
+
+**CentOS/RHEL:**
+```bash
+sudo yum install php-intl
+sudo systemctl restart httpd
+```
+
+**macOS (Homebrew):**
+```bash
+brew install php
+# Intl is included by default in Homebrew PHP
+```
+
+**Verify Installation:**
+```bash
+php -m | grep intl
+# Should output: intl
+```
+
+**Check in PHP Info:**
+```php
+phpinfo();
+// Search for "intl" section
+```
+
+---
+
 ## Quick Start
 
 ### Basic Translation
@@ -275,8 +317,8 @@ public function register(Request $request): Response
 # .env
 APP_LOCALE=en
 APP_FALLBACK_LOCALE=en
-APP_TIMEZONE=UTC
-DEFAULT_CURRENCY=USD
+APP_TIMEZONE=Asia/Kolkata
+DEFAULT_CURRENCY=INR
 LOCALE_DETECTION_ENABLED=true
 ```
 
@@ -286,7 +328,7 @@ LOCALE_DETECTION_ENABLED=true
 ```php
 'locale' => env('APP_LOCALE', 'en'),
 'fallback_locale' => env('APP_FALLBACK_LOCALE', 'en'),
-'timezone' => env('APP_TIMEZONE', 'UTC'),
+'timezone' => env('APP_TIMEZONE', 'Asia/Kolkata'),
 'available_locales' => ['en', 'fr', 'de', 'es', 'ar', 'zh'],
 ```
 
@@ -300,7 +342,7 @@ LOCALE_DETECTION_ENABLED=true
 ],
 
 'currencies' => [
-    'default' => env('DEFAULT_CURRENCY', 'USD'),
+    'default' => env('DEFAULT_CURRENCY', 'INR'),
     'available' => ['USD', 'EUR', 'GBP', 'JPY', 'CNY', 'AED', 'SAR', 'INR'],
 ],
 ```
@@ -429,11 +471,15 @@ Check:
 3. Check middleware is registered
 4. Check browser Accept-Language header
 
-### Formatting Doesn't Work
+### Application Fails to Start
 
-1. Check if PHP Intl extension is installed: `php -m | grep intl`
-2. If not available, manual fallback is used (less accurate)
-3. Install Intl for best results: `apt-get install php-intl`
+**Error:** "Required PHP extension 'intl' is not loaded"
+
+**Solution:**
+1. Install the extension (see Requirements section above)
+2. Verify installation: `php -m | grep intl`
+3. Restart your web server
+4. Check `php.ini` to ensure `extension=intl.so` is uncommented (or `extension=intl.dll` on Windows)
 
 ---
 

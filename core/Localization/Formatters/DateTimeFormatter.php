@@ -5,12 +5,13 @@ namespace Core\Localization\Formatters;
 use Core\Localization\LocaleManager;
 use DateTime;
 use DateTimeZone;
+use IntlDateFormatter;
 use Exception;
 
 /**
  * DateTimeFormatter
  *
- * Formats dates and times with locale-specific patterns and timezone support.
+ * Formats dates and times with locale-specific patterns using IntlDateFormatter.
  * Supports relative time formatting ("2 days ago") and multiple format presets.
  *
  * Format Presets:
@@ -27,62 +28,6 @@ class DateTimeFormatter
     protected LocaleManager $localeManager;
 
     /**
-     * Date format patterns by locale and preset
-     */
-    protected array $dateFormats = [
-        'en' => [
-            'short' => 'n/j/y',
-            'medium' => 'M j, Y',
-            'long' => 'F j, Y',
-            'full' => 'l, F j, Y',
-        ],
-        'fr' => [
-            'short' => 'd/m/Y',
-            'medium' => 'j M Y',
-            'long' => 'j F Y',
-            'full' => 'l j F Y',
-        ],
-        'de' => [
-            'short' => 'd.m.y',
-            'medium' => 'd. M Y',
-            'long' => 'd. F Y',
-            'full' => 'l, d. F Y',
-        ],
-        'es' => [
-            'short' => 'd/m/y',
-            'medium' => 'd M Y',
-            'long' => 'd \d\e F \d\e Y',
-            'full' => 'l, d \d\e F \d\e Y',
-        ],
-    ];
-
-    /**
-     * Time format patterns by locale and preset
-     */
-    protected array $timeFormats = [
-        'en' => [
-            'short' => 'g:i A',
-            'medium' => 'g:i:s A',
-            'long' => 'g:i:s A T',
-        ],
-        'fr' => [
-            'short' => 'H:i',
-            'medium' => 'H:i:s',
-            'long' => 'H:i:s T',
-        ],
-        'de' => [
-            'short' => 'H:i',
-            'medium' => 'H:i:s',
-            'long' => 'H:i:s T',
-        ],
-        'es' => [
-            'short' => 'H:i',
-            'medium' => 'H:i:s',
-            'long' => 'H:i:s T',
-        ],
-    ];
-
-    /**
      * Constructor
      *
      * @param LocaleManager $localeManager LocaleManager instance
@@ -93,13 +38,14 @@ class DateTimeFormatter
     }
 
     /**
-     * Format date/time with locale and timezone
+     * Format date/time with locale and timezone using IntlDateFormatter
      *
      * @param DateTime|string $datetime DateTime object or string
-     * @param string $format Format preset (short, medium, long, full) or custom format
+     * @param string $format Format preset (short, medium, long, full)
      * @param string|null $locale Override locale
      * @param string|null $timezone Override timezone
      * @return string Formatted date/time
+     * @throws \RuntimeException If formatting fails
      */
     public function format(DateTime|string $datetime, string $format = 'medium', ?string $locale = null, ?string $timezone = null): string
     {
@@ -109,19 +55,46 @@ class DateTimeFormatter
         // Convert string to DateTime
         $dateObj = $this->toDateTime($datetime, $timezone);
 
-        // Get format pattern
-        $pattern = $this->getDateTimePattern($format, $locale);
+        // Map to IntlDateFormatter constants
+        $formatMap = [
+            'short' => [IntlDateFormatter::SHORT, IntlDateFormatter::SHORT],
+            'medium' => [IntlDateFormatter::MEDIUM, IntlDateFormatter::MEDIUM],
+            'long' => [IntlDateFormatter::LONG, IntlDateFormatter::LONG],
+            'full' => [IntlDateFormatter::FULL, IntlDateFormatter::FULL],
+        ];
 
-        return $dateObj->format($pattern);
+        [$dateFormat, $timeFormat] = $formatMap[$format] ?? $formatMap['medium'];
+
+        // Get full locale
+        $fullLocale = $this->getFullLocale($locale);
+
+        // Create IntlDateFormatter
+        $formatter = new IntlDateFormatter(
+            $fullLocale,
+            $dateFormat,
+            $timeFormat,
+            $dateObj->getTimezone()
+        );
+
+        $result = $formatter->format($dateObj);
+
+        if ($result === false) {
+            throw new \RuntimeException(
+                "Failed to format datetime. Locale: {$fullLocale}, Format: {$format}"
+            );
+        }
+
+        return $result;
     }
 
     /**
-     * Format date only
+     * Format date only using IntlDateFormatter
      *
      * @param DateTime|string $date DateTime object or string
-     * @param string $format Format preset or custom
+     * @param string $format Format preset (short, medium, long, full)
      * @param string|null $locale Override locale
      * @return string Formatted date
+     * @throws \RuntimeException If formatting fails
      */
     public function formatDate(DateTime|string $date, string $format = 'medium', ?string $locale = null): string
     {
@@ -130,20 +103,45 @@ class DateTimeFormatter
         // Convert string to DateTime
         $dateObj = $this->toDateTime($date);
 
-        // Get format pattern
-        $pattern = $this->getDatePattern($format, $locale);
+        // Map to IntlDateFormatter constants
+        $formatMap = [
+            'short' => IntlDateFormatter::SHORT,
+            'medium' => IntlDateFormatter::MEDIUM,
+            'long' => IntlDateFormatter::LONG,
+            'full' => IntlDateFormatter::FULL,
+        ];
 
-        return $dateObj->format($pattern);
+        $dateFormat = $formatMap[$format] ?? IntlDateFormatter::MEDIUM;
+        $fullLocale = $this->getFullLocale($locale);
+
+        // Create IntlDateFormatter (date only, no time)
+        $formatter = new IntlDateFormatter(
+            $fullLocale,
+            $dateFormat,
+            IntlDateFormatter::NONE,
+            $dateObj->getTimezone()
+        );
+
+        $result = $formatter->format($dateObj);
+
+        if ($result === false) {
+            throw new \RuntimeException(
+                "Failed to format date. Locale: {$fullLocale}, Format: {$format}"
+            );
+        }
+
+        return $result;
     }
 
     /**
-     * Format time only
+     * Format time only using IntlDateFormatter
      *
      * @param DateTime|string $time DateTime object or string
-     * @param string $format Format preset or custom
+     * @param string $format Format preset (short, medium, long, full)
      * @param string|null $locale Override locale
      * @param string|null $timezone Override timezone
      * @return string Formatted time
+     * @throws \RuntimeException If formatting fails
      */
     public function formatTime(DateTime|string $time, string $format = 'medium', ?string $locale = null, ?string $timezone = null): string
     {
@@ -153,10 +151,34 @@ class DateTimeFormatter
         // Convert string to DateTime
         $dateObj = $this->toDateTime($time, $timezone);
 
-        // Get format pattern
-        $pattern = $this->getTimePattern($format, $locale);
+        // Map to IntlDateFormatter constants
+        $formatMap = [
+            'short' => IntlDateFormatter::SHORT,
+            'medium' => IntlDateFormatter::MEDIUM,
+            'long' => IntlDateFormatter::LONG,
+            'full' => IntlDateFormatter::FULL,
+        ];
 
-        return $dateObj->format($pattern);
+        $timeFormat = $formatMap[$format] ?? IntlDateFormatter::MEDIUM;
+        $fullLocale = $this->getFullLocale($locale);
+
+        // Create IntlDateFormatter (time only, no date)
+        $formatter = new IntlDateFormatter(
+            $fullLocale,
+            IntlDateFormatter::NONE,
+            $timeFormat,
+            $dateObj->getTimezone()
+        );
+
+        $result = $formatter->format($dateObj);
+
+        if ($result === false) {
+            throw new \RuntimeException(
+                "Failed to format time. Locale: {$fullLocale}, Format: {$format}"
+            );
+        }
+
+        return $result;
     }
 
     /**
@@ -277,70 +299,29 @@ class DateTimeFormatter
     }
 
     /**
-     * Get date pattern for format preset
+     * Get full locale code from short code
      *
-     * @param string $format Format preset or custom pattern
-     * @param string $locale Locale code
-     * @return string PHP date format pattern
+     * @param string $locale Short locale code (e.g., 'en')
+     * @return string Full locale code (e.g., 'en_US')
      */
-    protected function getDatePattern(string $format, string $locale): string
+    protected function getFullLocale(string $locale): string
     {
-        // Check if it's a preset
-        if (isset($this->dateFormats[$locale][$format])) {
-            return $this->dateFormats[$locale][$format];
-        }
+        $localeMap = [
+            'en' => 'en_US',
+            'fr' => 'fr_FR',
+            'de' => 'de_DE',
+            'es' => 'es_ES',
+            'it' => 'it_IT',
+            'pt' => 'pt_BR',
+            'ru' => 'ru_RU',
+            'ar' => 'ar_AE',
+            'zh' => 'zh_CN',
+            'ja' => 'ja_JP',
+            'ko' => 'ko_KR',
+            'hi' => 'hi_IN',
+        ];
 
-        // Check default locale (en)
-        if (isset($this->dateFormats['en'][$format])) {
-            return $this->dateFormats['en'][$format];
-        }
-
-        // Assume it's a custom format
-        return $format;
-    }
-
-    /**
-     * Get time pattern for format preset
-     *
-     * @param string $format Format preset or custom pattern
-     * @param string $locale Locale code
-     * @return string PHP date format pattern
-     */
-    protected function getTimePattern(string $format, string $locale): string
-    {
-        // Check if it's a preset
-        if (isset($this->timeFormats[$locale][$format])) {
-            return $this->timeFormats[$locale][$format];
-        }
-
-        // Check default locale (en)
-        if (isset($this->timeFormats['en'][$format])) {
-            return $this->timeFormats['en'][$format];
-        }
-
-        // Assume it's a custom format
-        return $format;
-    }
-
-    /**
-     * Get combined date/time pattern
-     *
-     * @param string $format Format preset or custom pattern
-     * @param string $locale Locale code
-     * @return string PHP date format pattern
-     */
-    protected function getDateTimePattern(string $format, string $locale): string
-    {
-        // If custom format (contains PHP date format characters)
-        if (str_contains($format, 'Y') || str_contains($format, 'H') || str_contains($format, 'i')) {
-            return $format;
-        }
-
-        // Combine date and time patterns
-        $datePattern = $this->getDatePattern($format, $locale);
-        $timePattern = $this->getTimePattern($format, $locale);
-
-        return $datePattern . ' ' . $timePattern;
+        return $localeMap[$locale] ?? 'en_US';
     }
 
     /**
@@ -377,23 +358,45 @@ class DateTimeFormatter
     }
 
     /**
-     * Parse formatted date string to DateTime
+     * Parse formatted date string to DateTime using IntlDateFormatter
      *
      * @param string $formatted Formatted date string
-     * @param string $format Format pattern used
+     * @param string $format Format preset (short, medium, long, full)
      * @param string|null $locale Locale code
      * @return DateTime|null DateTime object or null on failure
      */
-    public function parse(string $formatted, string $format, ?string $locale = null): ?DateTime
+    public function parse(string $formatted, string $format = 'medium', ?string $locale = null): ?DateTime
     {
         $locale = $locale ?? $this->localeManager->getCurrentLocale();
+        $fullLocale = $this->getFullLocale($locale);
 
-        // Get format pattern
-        $pattern = $this->getDatePattern($format, $locale);
+        // Map to IntlDateFormatter constants
+        $formatMap = [
+            'short' => IntlDateFormatter::SHORT,
+            'medium' => IntlDateFormatter::MEDIUM,
+            'long' => IntlDateFormatter::LONG,
+            'full' => IntlDateFormatter::FULL,
+        ];
+
+        $dateFormat = $formatMap[$format] ?? IntlDateFormatter::MEDIUM;
 
         try {
-            $dateObj = DateTime::createFromFormat($pattern, $formatted);
-            return $dateObj !== false ? $dateObj : null;
+            $formatter = new IntlDateFormatter(
+                $fullLocale,
+                $dateFormat,
+                IntlDateFormatter::NONE
+            );
+
+            $timestamp = $formatter->parse($formatted);
+
+            if ($timestamp === false) {
+                return null;
+            }
+
+            $dateObj = new DateTime();
+            $dateObj->setTimestamp($timestamp);
+
+            return $dateObj;
         } catch (Exception $e) {
             return null;
         }
