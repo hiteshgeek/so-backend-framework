@@ -38,13 +38,14 @@ class LocaleManager
      * @param Translator $translator Translator instance
      * @param array $availableLocales Available locales
      * @param string $defaultLocale Default locale
+     * @param string|null $timezone Timezone (for testing, defaults to config value)
      */
-    public function __construct(Translator $translator, array $availableLocales, string $defaultLocale)
+    public function __construct(Translator $translator, array $availableLocales, string $defaultLocale, ?string $timezone = null)
     {
         $this->translator = $translator;
         $this->availableLocales = $availableLocales;
         $this->defaultLocale = $defaultLocale;
-        $this->timezone = config('app.timezone', 'UTC');
+        $this->timezone = $timezone ?? config('app.timezone', 'UTC');
     }
 
     /**

@@ -17,11 +17,17 @@ class TranslationLoader
 
     /**
      * Constructor
+     *
+     * @param string|null $basePath Base path to resources/lang (for testing)
      */
-    public function __construct()
+    public function __construct(?string $basePath = null)
     {
-        // Default namespace points to resources/lang
-        $this->namespaces['*'] = base_path('resources/lang');
+        // Use provided path or default to base_path() helper
+        if ($basePath !== null) {
+            $this->namespaces['*'] = $basePath;
+        } else {
+            $this->namespaces['*'] = base_path('resources/lang');
+        }
     }
 
     /**
