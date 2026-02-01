@@ -199,7 +199,7 @@
   width: 22px;
   height: 22px;
   border-radius: 50%;
-  display: flex;
+  display: none; /*flex;*/
   align-items: center;
   justify-content: center;
   z-index: 1;
