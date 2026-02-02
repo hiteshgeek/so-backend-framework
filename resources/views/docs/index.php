@@ -122,6 +122,7 @@ function renderSection($icon, $title, $cards, $gridClass = 'docs-grid') {
                 renderCard('/docs/asset-management', 'package-variant-closed', 'Asset Management', 'CSS/JS loading, cache busting, CDN support.', 'default'),
                 renderCard('/docs/auth-system', 'shield-lock', 'Authentication System', 'Session auth, JWT, remember me.', ['default', 'security', 'production']),
                 renderCard('/docs/password-reset', 'key-variant', 'Password Reset', 'Secure password recovery with tokens and email.', ['new', 'security', 'owasp']),
+                renderCard('/docs/dev-password-migration', 'key-change', 'Password Migration', 'Migrate legacy SHA1 to Argon2ID with automatic upgrade on login.', ['new', 'security']),
                 renderCard('/docs/security-layer', 'lock', 'Security Layer', 'CSRF, JWT, Rate Limiting, XSS Prevention.', ['essential', 'security', 'production']),
                 renderCard('/docs/encrypter', 'lock-outline', 'Encrypter (AES-256)', 'AES-256-CBC encryption for sensitive data.', ['new', 'security', 'compliance']),
                 renderCard('/docs/auth-lockout', 'shield-alert', 'Auth Account Lockout', 'Brute force protection and account lockout.', ['new', 'security', 'production']),
@@ -207,6 +208,7 @@ function renderSection($icon, $title, $cards, $gridClass = 'docs-grid') {
                 renderCard('/docs/dev-auth', 'shield-lock', 'Authentication & Authorization', 'Auth middleware, session and JWT, protecting routes.', 'guide'),
                 renderCard('/docs/dev-api-auth', 'key-chain', 'API Authentication (JWT)', 'JWT tokens, API authentication, and token management.', 'guide'),
                 renderCard('/docs/dev-security', 'speedometer', 'CSRF, Rate Limiting & CORS', 'Security middleware configuration and usage.', 'guide'),
+                renderCard('/docs/dev-password-migration', 'key-change', 'Password Migration', 'Migrate from legacy SHA1 to Argon2ID with dual-hash support.', ['new', 'security']),
                 renderCard('/docs/dev-error-handling', 'alert-circle', 'Error Handling', 'Exception handling, custom error pages, and logging.', 'guide'),
                 renderCard('/docs/dev-custom-middleware', 'cog-transfer', 'Creating Custom Middleware', 'Build and register your own middleware step by step.', 'guide'),
             ]) ?>

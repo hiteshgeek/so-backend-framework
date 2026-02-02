@@ -6,6 +6,7 @@ use Core\Model\Model;
 use Core\ActivityLog\LogsActivity;
 use Core\Notifications\Notifiable;
 use Core\Model\Traits\HasStatusField;
+use Core\Security\LegacyPasswordHasher;
 use App\Constants\DatabaseTables;
 
 /**
@@ -87,6 +88,7 @@ class User extends Model
         'email',
         'mobile',
         'password',
+        'password_hash',  // New secure password field
         'ustatusid',
         'is_admin',
         'non_login',
@@ -163,15 +165,38 @@ class User extends Model
 
     /**
      * Hash password when setting
+     *
+     * During migration period, stores password in both formats:
+     * - password: Legacy format (sha1) for old framework compatibility
+     * - password_hash: Modern format (argon2id) for new framework
+     *
+     * After migration is complete, remove legacy hash storage.
      */
-    protected function setPasswordAttribute(string $value): void
+    protected function setPasswordAttribute(?string $value): void
     {
-        // Only hash if not already hashed (check for bcrypt or argon2 prefix)
-        if (str_starts_with($value, '$2y$') || str_starts_with($value, '$argon2')) {
+        // Handle null/empty password (e.g., when loading from DB with NULL password)
+        if ($value === null || $value === '') {
             $this->attributes['password'] = $value;
-        } else {
-            $this->attributes['password'] = password_hash($value, PASSWORD_ARGON2ID);
+            return;
         }
+
+        // Don't re-hash if already hashed
+        if (LegacyPasswordHasher::isModernHash($value)) {
+            $this->attributes['password_hash'] = $value;
+            return;
+        }
+
+        if (LegacyPasswordHasher::isLegacyHash($value)) {
+            $this->attributes['password'] = $value;
+            return;
+        }
+
+        // Plain text password - hash in BOTH formats for compatibility
+        // Legacy format for old framework (temporary, during migration)
+        $this->attributes['password'] = LegacyPasswordHasher::hash($value);
+
+        // Modern secure format (permanent)
+        $this->attributes['password_hash'] = password_hash($value, PASSWORD_ARGON2ID);
     }
 
     /**
@@ -251,11 +276,68 @@ class User extends Model
     // ============================================
 
     /**
-     * Verify password
+     * Verify password with automatic migration
+     *
+     * Verification priority:
+     * 1. Try modern hash (password_hash column) if present
+     * 2. Fall back to legacy hash (password column)
+     * 3. On successful legacy verification, upgrade to modern hash
+     *
+     * @param string $password Plain text password
+     * @return bool True if password is valid
      */
     public function verifyPassword(string $password): bool
     {
-        return password_verify($password, $this->attributes['password']);
+        $modernHash = $this->attributes['password_hash'] ?? null;
+        $legacyHash = $this->attributes['password'] ?? null;
+
+        // Priority 1: Try modern hash if available
+        if ($modernHash && LegacyPasswordHasher::isModernHash($modernHash)) {
+            if (password_verify($password, $modernHash)) {
+                // Check if password needs rehashing (algorithm upgrade)
+                if (password_needs_rehash($modernHash, PASSWORD_ARGON2ID)) {
+                    $this->upgradePassword($password);
+                }
+                return true;
+            }
+            // Modern hash exists but doesn't match - fail
+            // Don't fall back if user already has modern password
+            return false;
+        }
+
+        // Priority 2: Try legacy hash
+        if ($legacyHash && LegacyPasswordHasher::isLegacyHash($legacyHash)) {
+            if (LegacyPasswordHasher::verify($password, $legacyHash)) {
+                // SUCCESS with legacy password - upgrade to modern hash
+                $this->upgradePassword($password);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Upgrade password to modern hash format
+     *
+     * Called automatically when user logs in with legacy password.
+     * Stores the new secure hash without changing the legacy hash
+     * (so old framework continues to work).
+     *
+     * @param string $plainPassword The plain text password
+     */
+    protected function upgradePassword(string $plainPassword): void
+    {
+        // Store modern hash directly (bypass mutator to avoid re-hashing legacy)
+        $this->attributes['password_hash'] = password_hash($plainPassword, PASSWORD_ARGON2ID);
+
+        // Save only the password_hash field
+        $db = app('db');
+        $db->table(static::$table)
+            ->where(static::$primaryKey, '=', $this->attributes[static::$primaryKey])
+            ->update(['password_hash' => $this->attributes['password_hash']]);
+
+        error_log("Password upgraded to modern hash for user: " . ($this->attributes['email'] ?? 'unknown'));
     }
 
     /**

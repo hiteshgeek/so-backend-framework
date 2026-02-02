@@ -146,6 +146,9 @@ class DocsController
             'timestamps-userstamps' => 'TIMESTAMPS-USERSTAMPS.md',
             'dev-timestamps' => 'DEV-TIMESTAMPS.md',
 
+            // Security & Password
+            'dev-password-migration' => 'DEV-PASSWORD-MIGRATION.md',
+
             // Test Documentation (from tests/ folder)
             'middleware' => '../../tests/MIDDLEWARE_IMPLEMENTATION_SUMMARY.md',
             'internal-api' => '../../tests/INTERNAL_API_LAYER_SUMMARY.md',
