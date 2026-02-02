@@ -86,7 +86,7 @@ echo -e "${YELLOW}Keep docs:${NC}   $KEEP_DOCS"
 echo ""
 
 # Check PHP version and required extensions
-echo -e "${BLUE}[0/11]${NC} Checking PHP requirements..."
+echo -e "${BLUE}[0/12]${NC} Checking PHP requirements..."
 
 # Check PHP version
 PHP_VERSION=$(php -r "echo PHP_VERSION;")
@@ -146,11 +146,11 @@ fi
 echo ""
 
 # Create destination directory
-echo -e "${BLUE}[1/11]${NC} Creating destination directory..."
+echo -e "${BLUE}[1/12]${NC} Creating destination directory..."
 mkdir -p "$DEST_DIR"
 
 # Copy framework structure
-echo -e "${BLUE}[2/11]${NC} Copying framework files..."
+echo -e "${BLUE}[2/12]${NC} Copying framework files..."
 
 # Build rsync exclude list
 RSYNC_EXCLUDES=(
@@ -159,9 +159,20 @@ RSYNC_EXCLUDES=(
     'node_modules'
     'vendor'
     '.env'
+    'composer.lock'
+
+    # IDE & Editor settings
+    '.vscode'
+    '.idea'
+    '.claude'
+
+    # Testing files
+    'tests'
+    'phpunit.xml'
+    '.phpunit.cache'
+    '.phpunit.result.cache'
 
     # Development files
-    'tests'
     'todo'
     'setup'
     '*.log'
@@ -235,7 +246,7 @@ eval $RSYNC_CMD
 echo -e "${GREEN}✓${NC} Framework files copied"
 
 # Create minimal welcome page
-echo -e "${BLUE}[3/11]${NC} Creating minimal welcome page..."
+echo -e "${BLUE}[3/12]${NC} Creating minimal welcome page..."
 
 cat > "$DEST_DIR/resources/views/welcome.php" << 'WELCOME_EOF'
 <!DOCTYPE html>
@@ -388,7 +399,7 @@ CSS_EOF
 echo -e "${GREEN}✓${NC} Minimal welcome page created"
 
 # Create empty directories for new project
-echo -e "${BLUE}[4/11]${NC} Creating empty directories..."
+echo -e "${BLUE}[4/12]${NC} Creating empty directories..."
 
 # Create empty controller directories (auth controllers already copied by rsync)
 mkdir -p "$DEST_DIR/app/Controllers/Api/V1"
@@ -426,7 +437,7 @@ touch "$DEST_DIR/routes/web/.gitkeep"
 echo -e "${GREEN}✓${NC} Empty directories created"
 
 # Clean route files
-echo -e "${BLUE}[5/11]${NC} Cleaning route files..."
+echo -e "${BLUE}[5/12]${NC} Cleaning route files..."
 
 # Clean web.php - remove demo requires
 if [ -f "$DEST_DIR/routes/web.php" ]; then
@@ -450,7 +461,7 @@ fi
 echo -e "${GREEN}✓${NC} Route files cleaned"
 
 # Clean database seeders - remove all and create empty folder
-echo -e "${BLUE}[6/11]${NC} Cleaning database seeders..."
+echo -e "${BLUE}[6/12]${NC} Cleaning database seeders..."
 
 # Clean database folder - remove all, recreate empty
 rm -rf "$DEST_DIR/database/seeders"
@@ -464,7 +475,7 @@ touch "$DEST_DIR/database/migrations/.gitkeep"
 echo -e "${GREEN}✓${NC} Database folders cleaned"
 
 # Create storage directories
-echo -e "${BLUE}[7/11]${NC} Creating storage directories..."
+echo -e "${BLUE}[7/12]${NC} Creating storage directories..."
 mkdir -p "$DEST_DIR/storage/sessions"
 mkdir -p "$DEST_DIR/storage/cache"
 mkdir -p "$DEST_DIR/storage/logs"
@@ -479,7 +490,7 @@ touch "$DEST_DIR/storage/uploads/.gitkeep"
 echo -e "${GREEN}✓${NC} Storage directories created"
 
 # Set permissions
-echo -e "${BLUE}[8/11]${NC} Setting permissions..."
+echo -e "${BLUE}[8/12]${NC} Setting permissions..."
 chmod -R 755 "$DEST_DIR"
 chmod -R 775 "$DEST_DIR/storage"
 
@@ -490,7 +501,7 @@ fi
 echo -e "${GREEN}✓${NC} Permissions set"
 
 # Create .env file
-echo -e "${BLUE}[9/11]${NC} Creating environment file..."
+echo -e "${BLUE}[9/12]${NC} Creating environment file..."
 
 if [ -f "$DEST_DIR/.env.example" ]; then
     cp "$DEST_DIR/.env.example" "$DEST_DIR/.env"
@@ -507,7 +518,7 @@ else
 fi
 
 # Setup media system (file uploads & image processing)
-echo -e "${BLUE}[10/11]${NC} Setting up media system..."
+echo -e "${BLUE}[10/12]${NC} Setting up media system..."
 
 # Create rpkfiles directory if it doesn't exist
 RPKFILES_PATH="/var/www/html/rpkfiles"
@@ -557,7 +568,7 @@ fi
 echo -e "${GREEN}✓${NC} Media system setup complete"
 
 # Create minimal README
-echo -e "${BLUE}[11/11]${NC} Creating project README..."
+echo -e "${BLUE}[11/12]${NC} Creating project README..."
 
 PROJECT_NAME=$(basename "$DEST_DIR")
 
@@ -773,6 +784,15 @@ EOF
 
 echo -e "${GREEN}✓${NC} README.md created"
 
+# Copy setup scripts (vhost install/cleanup)
+echo -e "${BLUE}[12/12]${NC} Copying setup scripts..."
+mkdir -p "$DEST_DIR/setup"
+cp "$SOURCE_DIR/setup/install-vhost.sh" "$DEST_DIR/setup/"
+cp "$SOURCE_DIR/setup/cleanup-vhost.sh" "$DEST_DIR/setup/"
+chmod +x "$DEST_DIR/setup/install-vhost.sh"
+chmod +x "$DEST_DIR/setup/cleanup-vhost.sh"
+echo -e "${GREEN}✓${NC} Setup scripts copied (install-vhost.sh, cleanup-vhost.sh)"
+
 # Initialize git repository (optional)
 if command -v git &> /dev/null; then
     cd "$DEST_DIR"
@@ -856,9 +876,11 @@ echo -e "  1. ${BLUE}cd $DEST_DIR${NC}"
 echo -e "  2. ${BLUE}composer install${NC}"
 echo -e "  3. ${BLUE}Edit .env file (database, JWT secret)${NC}"
 echo -e "  4. ${BLUE}Import database schema${NC}"
-echo -e "  5. ${BLUE}Run media migrations: php artisan migrate${NC}"
-echo -e "  6. ${BLUE}Start queue worker: php artisan queue:work${NC} (for image processing)"
-echo -e "  7. ${BLUE}php -S localhost:8000 -t public${NC}"
+echo -e "  5. ${BLUE}sudo bash setup/install-vhost.sh${NC} (sets up http://${PROJECT_NAME}.local)"
+echo -e "  6. Open ${BLUE}http://${PROJECT_NAME}.local${NC} in browser"
+echo ""
+echo -e "${YELLOW}Alternative (without vhost):${NC}"
+echo -e "  ${BLUE}php -S localhost:8000 -t public${NC}"
 echo ""
 echo -e "${BLUE}Media System Notes:${NC}"
 echo -e "  • Shared directory: ${GREEN}/var/www/html/rpkfiles${NC}"
@@ -878,7 +900,7 @@ echo -e "  • Demo dashboard (views, routes, controller, assets)"
 echo -e "  • Demo web auth UI (login/register pages, views)"
 echo -e "  • Demo models (Category, Order, Product, Review, Tag)"
 echo -e "  • Demo API endpoints (/api/demo, /api/products, /api/orders)"
-echo -e "  • Test files, development files (tests/, todo/, setup/)"
+echo -e "  • Test files, development files (tests/, todo/)"
 echo ""
 echo -e "${GREEN}What was included:${NC}"
 echo -e "  ✓ Complete auth system (JWT-based API authentication)"
@@ -892,6 +914,7 @@ echo -e "  ✓ All middleware (8 files): Auth, JWT, CORS, CSRF, Throttle, etc."
 echo -e "  ✓ All providers (6 files): Session, Cache, Queue, Notifications, Activity, Media"
 echo -e "  ✓ Clean minimal welcome page"
 echo -e "  ✓ Theme toggle (dark/light mode)"
+echo -e "  ✓ Setup scripts (install-vhost.sh, cleanup-vhost.sh)"
 echo ""
 echo -e "${BLUE}Empty directories (ready for your code):${NC}"
 echo -e "  • app/Controllers/Api/V1/, V2/, Web/, Internal/"
