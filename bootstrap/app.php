@@ -101,6 +101,14 @@ $app->singleton('router', function ($app) {
     return new Router();
 });
 
+// Register middleware aliases
+Router::middlewareAlias('auth', \App\Middleware\AuthMiddleware::class);
+Router::middlewareAlias('guest', \App\Middleware\GuestMiddleware::class);
+Router::middlewareAlias('throttle', \App\Middleware\ThrottleMiddleware::class);
+Router::middlewareAlias('csrf', \App\Middleware\CsrfMiddleware::class);
+Router::middlewareAlias('cors', \App\Middleware\CorsMiddleware::class);
+Router::middlewareAlias('jwt', \App\Middleware\JwtMiddleware::class);
+
 $app->singleton('auth', function ($app) {
     // Create login throttle instance with config
     $throttleConfig = $app->make('config')->get('auth.login_throttle', []);
