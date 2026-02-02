@@ -245,7 +245,7 @@ eval $RSYNC_CMD
 
 echo -e "${GREEN}✓${NC} Framework files copied"
 
-# Create minimal welcome page
+# Create minimal welcome page with inline styles (self-contained)
 echo -e "${BLUE}[3/12]${NC} Creating minimal welcome page..."
 
 cat > "$DEST_DIR/resources/views/welcome.php" << 'WELCOME_EOF'
@@ -255,14 +255,107 @@ cat > "$DEST_DIR/resources/views/welcome.php" << 'WELCOME_EOF'
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= htmlspecialchars(config('app.name', 'My Application')) ?></title>
-    <?php
-    assets()->cdn('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap', 'css', 'head', 5);
-    assets()->css('css/base.css', 'head', 8);
-    assets()->css('css/pages/welcome.css', 'head', 10);
-    assets()->js('js/theme.js', 'body_end', 10);
-    ?>
-    <script>(function(){var t=localStorage.getItem("theme");if(!t&&window.matchMedia("(prefers-color-scheme:dark)").matches)t="dark";if(t)document.documentElement.setAttribute("data-theme",t);})()</script>
-    <?= render_assets('head') ?>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: #f8fafc;
+            color: #1e293b;
+            line-height: 1.6;
+        }
+
+        .welcome-container {
+            max-width: 600px;
+            width: 100%;
+            margin: 24px;
+            padding: 48px 32px;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        .welcome-subtitle {
+            font-size: 16px;
+            color: #64748b;
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .next-steps { margin-bottom: 32px; }
+
+        .next-steps h2 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .next-steps ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .next-steps li {
+            padding: 8px 0;
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .next-steps li::before {
+            content: "→ ";
+            color: #2563eb;
+            font-weight: 600;
+            margin-right: 8px;
+        }
+
+        code {
+            background: #f1f5f9;
+            color: #0f172a;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 13px;
+        }
+
+        .info {
+            text-align: center;
+            padding-top: 24px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .info p {
+            font-size: 12px;
+            color: #94a3b8;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            body { background: #0f172a; color: #f1f5f9; }
+            .welcome-container { background: #1e293b; border-color: #334155; }
+            .welcome-subtitle, .next-steps li { color: #94a3b8; }
+            code { background: #0f172a; color: #e2e8f0; }
+            .info { border-color: #334155; }
+            .info p { color: #64748b; }
+        }
+
+        @media (max-width: 480px) {
+            .welcome-container { padding: 24px 16px; margin: 16px; }
+            h1 { font-size: 24px; }
+            .welcome-subtitle { font-size: 14px; }
+        }
+    </style>
 </head>
 <body>
     <div class="welcome-container">
@@ -284,117 +377,9 @@ cat > "$DEST_DIR/resources/views/welcome.php" << 'WELCOME_EOF'
             <p>Framework v<?= htmlspecialchars(config('app.version', '2.0.0')) ?> | PHP <?= PHP_VERSION ?></p>
         </div>
     </div>
-    <?= render_assets('body_end') ?>
 </body>
 </html>
 WELCOME_EOF
-
-mkdir -p "$DEST_DIR/public/assets/css/pages"
-
-cat > "$DEST_DIR/public/assets/css/pages/welcome.css" << 'CSS_EOF'
-/**
- * Minimal Welcome Page CSS
- */
-
-body {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  background: var(--background);
-}
-
-.welcome-container {
-  max-width: 600px;
-  width: 100%;
-  margin: var(--space-3);
-  padding: var(--space-5) var(--space-4);
-  background: var(--surface);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-lg);
-  border: 1px solid var(--border);
-}
-
-h1 {
-  font-size: 32px;
-  font-weight: 700;
-  color: var(--text);
-  margin-bottom: var(--space-1);
-  text-align: center;
-}
-
-.welcome-subtitle {
-  font-size: 16px;
-  color: var(--text-secondary);
-  text-align: center;
-  margin-bottom: var(--space-4);
-}
-
-.next-steps {
-  margin-bottom: var(--space-4);
-}
-
-.next-steps h2 {
-  font-size: 18px;
-  font-weight: 600;
-  color: var(--text);
-  margin-bottom: var(--space-2);
-}
-
-.next-steps ul {
-  list-style: none;
-  padding: 0;
-}
-
-.next-steps li {
-  padding: var(--space-1) 0;
-  color: var(--text-secondary);
-  font-size: 14px;
-  line-height: 1.6;
-}
-
-.next-steps li::before {
-  content: "→ ";
-  color: var(--primary);
-  font-weight: 600;
-  margin-right: 8px;
-}
-
-.next-steps code {
-  background: var(--code-bg);
-  color: var(--code-text);
-  padding: 2px 6px;
-  border-radius: var(--radius-sm);
-  font-family: 'Consolas', 'Monaco', monospace;
-  font-size: 13px;
-}
-
-.info {
-  text-align: center;
-  padding-top: var(--space-3);
-  border-top: 1px solid var(--border);
-}
-
-.info p {
-  font-size: 12px;
-  color: var(--text-muted);
-}
-
-@media (max-width: 480px) {
-  .welcome-container {
-    padding: var(--space-3) var(--space-2);
-    margin: var(--space-2);
-  }
-
-  h1 {
-    font-size: 24px;
-  }
-
-  .welcome-subtitle {
-    font-size: 14px;
-  }
-}
-CSS_EOF
 
 echo -e "${GREEN}✓${NC} Minimal welcome page created"
 
@@ -459,6 +444,42 @@ if [ -f "$DEST_DIR/routes/api.php" ]; then
 fi
 
 echo -e "${GREEN}✓${NC} Route files cleaned"
+
+# Create clean composer.json without dev dependencies
+echo -e "${BLUE}[5.5/12]${NC} Creating clean composer.json..."
+cat > "$DEST_DIR/composer.json" << 'COMPOSER_EOF'
+{
+    "name": "so/framework",
+    "description": "Production-ready PHP framework",
+    "type": "project",
+    "license": "MIT",
+    "require": {
+        "php": "^8.3",
+        "ext-json": "*",
+        "ext-mbstring": "*",
+        "ext-openssl": "*",
+        "ext-pdo": "*",
+        "ext-intl": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Core\\": "core/",
+            "App\\": "app/"
+        },
+        "files": [
+            "core/Support/Helpers.php"
+        ]
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
+COMPOSER_EOF
+echo -e "${GREEN}✓${NC} composer.json created (without dev dependencies)"
 
 # Clean database seeders - remove all and create empty folder
 echo -e "${BLUE}[6/12]${NC} Cleaning database seeders..."
@@ -787,11 +808,11 @@ echo -e "${GREEN}✓${NC} README.md created"
 # Copy setup scripts (vhost install/cleanup)
 echo -e "${BLUE}[12/12]${NC} Copying setup scripts..."
 mkdir -p "$DEST_DIR/setup"
-cp "$SOURCE_DIR/setup/install-vhost.sh" "$DEST_DIR/setup/"
-cp "$SOURCE_DIR/setup/cleanup-vhost.sh" "$DEST_DIR/setup/"
-chmod +x "$DEST_DIR/setup/install-vhost.sh"
-chmod +x "$DEST_DIR/setup/cleanup-vhost.sh"
-echo -e "${GREEN}✓${NC} Setup scripts copied (install-vhost.sh, cleanup-vhost.sh)"
+cp "$SOURCE_DIR/setup/install-vhost-sixorbit.sh" "$DEST_DIR/setup/"
+cp "$SOURCE_DIR/setup/cleanup-vhost-sixorbit.sh" "$DEST_DIR/setup/"
+chmod +x "$DEST_DIR/setup/install-vhost-sixorbit.sh"
+chmod +x "$DEST_DIR/setup/cleanup-vhost-sixorbit.sh"
+echo -e "${GREEN}✓${NC} Setup scripts copied (install-vhost-sixorbit.sh, cleanup-vhost-sixorbit.sh)"
 
 # Initialize git repository (optional)
 if command -v git &> /dev/null; then
@@ -876,8 +897,8 @@ echo -e "  1. ${BLUE}cd $DEST_DIR${NC}"
 echo -e "  2. ${BLUE}composer install${NC}"
 echo -e "  3. ${BLUE}Edit .env file (database, JWT secret)${NC}"
 echo -e "  4. ${BLUE}Import database schema${NC}"
-echo -e "  5. ${BLUE}sudo bash setup/install-vhost.sh${NC} (sets up http://${PROJECT_NAME}.local)"
-echo -e "  6. Open ${BLUE}http://${PROJECT_NAME}.local${NC} in browser"
+echo -e "  5. ${BLUE}sudo bash setup/install-vhost-sixorbit.sh${NC} (sets up virtual host)"
+echo -e "  6. Open ${BLUE}http://sixorbit.local${NC} in browser"
 echo ""
 echo -e "${YELLOW}Alternative (without vhost):${NC}"
 echo -e "  ${BLUE}php -S localhost:8000 -t public${NC}"
@@ -914,7 +935,7 @@ echo -e "  ✓ All middleware (8 files): Auth, JWT, CORS, CSRF, Throttle, etc."
 echo -e "  ✓ All providers (6 files): Session, Cache, Queue, Notifications, Activity, Media"
 echo -e "  ✓ Clean minimal welcome page"
 echo -e "  ✓ Theme toggle (dark/light mode)"
-echo -e "  ✓ Setup scripts (install-vhost.sh, cleanup-vhost.sh)"
+echo -e "  ✓ Setup scripts (install-vhost-sixorbit.sh, cleanup-vhost-sixorbit.sh)"
 echo ""
 echo -e "${BLUE}Empty directories (ready for your code):${NC}"
 echo -e "  • app/Controllers/Api/V1/, V2/, Web/, Internal/"

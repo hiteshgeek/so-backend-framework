@@ -40,10 +40,9 @@ class User extends Model
     protected static string $primaryKey = 'uid';
 
     /**
-     * Timestamp column names (matching auser table)
+     * Disable automatic timestamps (auser table doesn't have created_at/updated_at)
      */
-    protected static string $createdAt = 'created_ts';
-    protected static string $updatedAt = 'updated_ts';
+    protected bool $timestamps = false;
 
     // ============================================
     // MASS ASSIGNMENT PROTECTION

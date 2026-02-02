@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Virtual Host Setup Script - Sixorbit.be.local
+# Virtual Host Setup Script - Sixorbit.local
 # Sets up Apache virtual host and configures the application
 #
 
@@ -12,15 +12,15 @@ GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 NC='\033[0m'
 
-DOMAIN="sixorbit.be.local"
-CONF_FILE="sixorbit.be.local.conf"
+DOMAIN="sixorbit.local"
+CONF_FILE="sixorbit.local.conf"
 SETUP_DIR="$(cd "$(dirname "$0")" && pwd)"
 PROJECT_DIR="$(cd "${SETUP_DIR}/.." && pwd)"
 PUBLIC_DIR="${PROJECT_DIR}/public"
 
 echo ""
 echo "========================================="
-echo "  Sixorbit.be.local - VHost Setup"
+echo "  Sixorbit.local - VHost Setup"
 echo "========================================="
 echo ""
 

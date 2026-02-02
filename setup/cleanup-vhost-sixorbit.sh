@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Cleanup Script - Remove sixorbit.be.local Virtual Host
+# Cleanup Script - Remove sixorbit.local Virtual Host
 # Removes Apache config, disables site, and cleans up /etc/hosts
 #
 
@@ -12,8 +12,8 @@ GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 NC='\033[0m'
 
-DOMAIN="sixorbit.be.local"
-CONF_FILE="sixorbit.be.local.conf"
+DOMAIN="sixorbit.local"
+CONF_FILE="sixorbit.local.conf"
 
 echo ""
 echo "========================================="

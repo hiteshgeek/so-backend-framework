@@ -23,11 +23,16 @@ const currentUserId = DashboardConfig.currentUserId;
 const csrfToken = DashboardConfig.csrfToken;
 
 function loadUsers() {
-    fetch(DashboardConfig.apiBaseUrl)
+    fetch(DashboardConfig.apiBaseUrl, {
+        credentials: 'same-origin'
+    })
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                renderUsers(data.users);
+                renderUsers(data.data?.users || []);
+            } else {
+                console.error('API error:', data.message);
+                showAlert(data.message || 'Error loading users', 'error');
             }
         })
         .catch(error => {
@@ -71,14 +76,17 @@ function openCreateModal() {
 }
 
 function editUser(id) {
-    fetch(`${DashboardConfig.apiBaseUrl}/${id}`)
+    fetch(`${DashboardConfig.apiBaseUrl}/${id}`, {
+        credentials: 'same-origin'
+    })
         .then(response => response.json())
         .then(data => {
-            if (data.success) {
+            if (data.success && data.data?.user) {
+                const user = data.data.user;
                 document.getElementById('modalTitle').textContent = 'Edit User';
-                document.getElementById('userId').value = data.user.id;
-                document.getElementById('userName').value = data.user.name;
-                document.getElementById('userEmail').value = data.user.email;
+                document.getElementById('userId').value = user.id;
+                document.getElementById('userName').value = user.name;
+                document.getElementById('userEmail').value = user.email;
                 document.getElementById('userPassword').value = '';
                 document.getElementById('userPassword').required = false;
                 document.getElementById('passwordOptional').style.display = 'inline';

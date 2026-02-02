@@ -431,14 +431,44 @@ if ($missing === 'composer') {
 
     <script>
     function copyCommand(btn, text) {
-        navigator.clipboard.writeText(text).then(function() {
-            btn.textContent = 'Copied!';
-            btn.classList.add('copied');
+        // Try modern clipboard API first, fallback to execCommand
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text).then(function() {
+                showCopied(btn);
+            }).catch(function() {
+                fallbackCopy(btn, text);
+            });
+        } else {
+            fallbackCopy(btn, text);
+        }
+    }
+
+    function fallbackCopy(btn, text) {
+        var textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        document.body.appendChild(textarea);
+        textarea.select();
+        try {
+            document.execCommand('copy');
+            showCopied(btn);
+        } catch (err) {
+            btn.textContent = 'Failed';
             setTimeout(function() {
                 btn.textContent = 'Copy';
-                btn.classList.remove('copied');
             }, 2000);
-        });
+        }
+        document.body.removeChild(textarea);
+    }
+
+    function showCopied(btn) {
+        btn.textContent = 'Copied!';
+        btn.classList.add('copied');
+        setTimeout(function() {
+            btn.textContent = 'Copy';
+            btn.classList.remove('copied');
+        }, 2000);
     }
     </script>
 </body>
