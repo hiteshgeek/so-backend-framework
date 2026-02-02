@@ -39,10 +39,43 @@ class User extends Model
      */
     protected static string $primaryKey = 'uid';
 
+    // ============================================
+    // TIMESTAMP CONFIGURATION
+    // ============================================
+
     /**
-     * Disable automatic timestamps (auser table doesn't have created_at/updated_at)
+     * Enable timestamps (auser table has created_ts/updated_ts)
      */
-    protected bool $timestamps = false;
+    protected bool $timestamps = true;
+
+    /**
+     * Enable userstamps (auser table has created_uid/updated_uid)
+     */
+    protected bool $userstamps = true;
+
+    /**
+     * Map framework's CREATED_AT to actual column name
+     * Access via: $user->getCreatedAt() or $user->created_ts
+     */
+    const CREATED_AT = 'created_ts';
+
+    /**
+     * Map framework's UPDATED_AT to actual column name
+     * Access via: $user->getUpdatedAt() or $user->updated_ts
+     */
+    const UPDATED_AT = 'updated_ts';
+
+    /**
+     * Map framework's CREATED_BY to actual column name
+     * Access via: $user->getCreatedBy() or $user->created_uid
+     */
+    const CREATED_BY = 'created_uid';
+
+    /**
+     * Map framework's UPDATED_BY to actual column name
+     * Access via: $user->getUpdatedBy() or $user->updated_uid
+     */
+    const UPDATED_BY = 'updated_uid';
 
     // ============================================
     // MASS ASSIGNMENT PROTECTION

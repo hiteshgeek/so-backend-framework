@@ -11,6 +11,7 @@
  *   $breadcrumbs - Array of breadcrumb items (optional)
  *   $badge - Badge text (optional, e.g., 'New', 'Beta')
  *   $badgeType - Badge type (optional, e.g., 'new', 'beta')
+ *   $docSection - 'docs' or 'dev' (optional, defaults to 'docs')
  */
 
 $title = $title ?? 'Documentation';
@@ -18,6 +19,11 @@ $icon = $icon ?? 'file-document';
 $breadcrumbs = $breadcrumbs ?? [];
 $badge = $badge ?? null;
 $badgeType = $badgeType ?? 'new';
+$docSection = $docSection ?? 'docs';
+
+// Determine breadcrumb base based on section
+$sectionLabel = ($docSection === 'dev') ? 'Development' : 'Docs';
+$sectionHash = ($docSection === 'dev') ? '#dev-panel' : '#docs-panel';
 ?>
 
 <header class="docs-header">
@@ -45,8 +51,8 @@ $badgeType = $badgeType ?? 'new';
 <?php if (!empty($breadcrumbs)): ?>
     <div class="breadcrumb-bar">
         <nav class="breadcrumbs">
-            <a href="/docs" class="breadcrumb-item">
-                <span class="mdi mdi-home"></span> Docs
+            <a href="/docs<?= $sectionHash ?>" class="breadcrumb-item">
+                <span class="mdi mdi-home"></span> <?= $sectionLabel ?>
             </a>
             <?php foreach ($breadcrumbs as $crumb): ?>
                 <span class="mdi mdi-chevron-right breadcrumb-separator"></span>

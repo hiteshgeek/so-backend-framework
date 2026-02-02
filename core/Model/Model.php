@@ -67,14 +67,35 @@ abstract class Model
     protected bool $timestamps = true;
 
     /**
+     * Indicates if the model should track user who created/updated.
+     */
+    protected bool $userstamps = false;
+
+    /**
      * The name of the "created at" column.
+     * Override in child model: const CREATED_AT = 'created_ts';
+     * Set to null to disable created timestamp while keeping updated.
      */
     const CREATED_AT = 'created_at';
 
     /**
      * The name of the "updated at" column.
+     * Override in child model: const UPDATED_AT = 'updated_ts';
+     * Set to null to disable updated timestamp while keeping created.
      */
     const UPDATED_AT = 'updated_at';
+
+    /**
+     * The name of the "created by" column (user ID who created).
+     * Override in child model: const CREATED_BY = 'created_uid';
+     */
+    const CREATED_BY = 'created_by';
+
+    /**
+     * The name of the "updated by" column (user ID who updated).
+     * Override in child model: const UPDATED_BY = 'updated_uid';
+     */
+    const UPDATED_BY = 'updated_by';
 
     /**
      * The storage format of the model's date columns.
@@ -436,17 +457,57 @@ abstract class Model
     }
 
     /**
-     * Update timestamps on create
+     * Update timestamps on create/update
      */
     protected function updateTimestamps(): void
     {
         $time = $this->freshTimestampString();
 
-        if (!$this->exists) {
+        // Set created_at only on new records
+        if (!$this->exists && static::CREATED_AT !== null) {
             $this->setAttribute(static::CREATED_AT, $time);
         }
 
-        $this->setAttribute(static::UPDATED_AT, $time);
+        // Always set updated_at
+        if (static::UPDATED_AT !== null) {
+            $this->setAttribute(static::UPDATED_AT, $time);
+        }
+
+        // Handle userstamps if enabled
+        if ($this->userstamps) {
+            $this->updateUserstamps();
+        }
+    }
+
+    /**
+     * Update userstamps (created_by/updated_by)
+     */
+    protected function updateUserstamps(): void
+    {
+        $userId = $this->getCurrentUserId();
+
+        if ($userId !== null) {
+            // Set created_by only on new records
+            if (!$this->exists && static::CREATED_BY !== null) {
+                $this->setAttribute(static::CREATED_BY, $userId);
+            }
+
+            // Always set updated_by
+            if (static::UPDATED_BY !== null) {
+                $this->setAttribute(static::UPDATED_BY, $userId);
+            }
+        }
+    }
+
+    /**
+     * Get current authenticated user ID for userstamps
+     */
+    protected function getCurrentUserId(): ?int
+    {
+        if (function_exists('auth') && auth()->check()) {
+            return auth()->id();
+        }
+        return null;
     }
 
     /**
@@ -454,7 +515,9 @@ abstract class Model
      */
     protected function freshTimestamp(): void
     {
-        $this->setAttribute(static::UPDATED_AT, $this->freshTimestampString());
+        if (static::UPDATED_AT !== null) {
+            $this->setAttribute(static::UPDATED_AT, $this->freshTimestampString());
+        }
     }
 
     /**
@@ -463,6 +526,50 @@ abstract class Model
     public function freshTimestampString(): string
     {
         return date($this->dateFormat);
+    }
+
+    /**
+     * Get the created at timestamp (regardless of actual column name)
+     */
+    public function getCreatedAt(): ?string
+    {
+        if (static::CREATED_AT === null) {
+            return null;
+        }
+        return $this->getAttribute(static::CREATED_AT);
+    }
+
+    /**
+     * Get the updated at timestamp (regardless of actual column name)
+     */
+    public function getUpdatedAt(): ?string
+    {
+        if (static::UPDATED_AT === null) {
+            return null;
+        }
+        return $this->getAttribute(static::UPDATED_AT);
+    }
+
+    /**
+     * Get the user ID who created this record
+     */
+    public function getCreatedBy(): ?int
+    {
+        if (static::CREATED_BY === null) {
+            return null;
+        }
+        return $this->getAttribute(static::CREATED_BY);
+    }
+
+    /**
+     * Get the user ID who last updated this record
+     */
+    public function getUpdatedBy(): ?int
+    {
+        if (static::UPDATED_BY === null) {
+            return null;
+        }
+        return $this->getAttribute(static::UPDATED_BY);
     }
 
     /**

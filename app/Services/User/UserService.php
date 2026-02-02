@@ -177,7 +177,7 @@ class UserService
      * Transform user to array for API response
      *
      * @param User $user
-     * @param bool $includeTimestamps Include created_ts/updated_ts
+     * @param bool $includeTimestamps Include timestamps
      * @return array
      */
     public function toArray(User $user, bool $includeTimestamps = true): array
@@ -189,9 +189,9 @@ class UserService
         ];
 
         if ($includeTimestamps) {
-            // auser table uses created_ts/updated_ts instead of created_at/updated_at
-            $data['created_at'] = $user->created_ts ?? null;
-            $data['updated_at'] = $user->updated_ts ?? null;
+            // Use framework accessor methods (works regardless of actual column names)
+            $data['created_at'] = $user->getCreatedAt();
+            $data['updated_at'] = $user->getUpdatedAt();
         }
 
         return $data;

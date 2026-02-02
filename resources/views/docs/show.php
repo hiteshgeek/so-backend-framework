@@ -22,6 +22,10 @@
     // Format the filename nicely for display
     $displayName = str_replace(['.md', '-', '_'], ['', ' ', ' '], $filename ?? 'Documentation');
     $displayName = ucwords(strtolower($displayName));
+
+    // Detect if this is a dev doc (starts with DEV- or dev-)
+    $isDevDoc = str_starts_with($filename ?? '', 'DEV-') || str_starts_with($filename ?? '', 'dev-');
+    $docSection = $isDevDoc ? 'dev' : 'docs';
     ?>
 
     <?php

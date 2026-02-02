@@ -143,6 +143,8 @@ class DocsController
 
             // Model Features
             'status-field-trait' => 'STATUS-FIELD-TRAIT.md',
+            'timestamps-userstamps' => 'TIMESTAMPS-USERSTAMPS.md',
+            'dev-timestamps' => 'DEV-TIMESTAMPS.md',
 
             // Test Documentation (from tests/ folder)
             'middleware' => '../../tests/MIDDLEWARE_IMPLEMENTATION_SUMMARY.md',

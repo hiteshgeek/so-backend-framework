@@ -1666,6 +1666,8 @@ All three traits can be used together without conflicts.
 ### See Also
 - [ACTIVITY-LOGGING.md](/docs/activity-logging) - Complete activity logging guide
 - [STATUS-FIELD-TRAIT.md](/docs/status-field-trait) - Complete status field guide
+- [TIMESTAMPS-USERSTAMPS.md](/docs/timestamps-userstamps) - Flexible timestamp and user tracking
+- [DEV-TIMESTAMPS.md](/docs/dev-timestamps) - Timestamps implementation guide
 - [DEV-MODEL-ADVANCED.md](/docs/dev-model-advanced) - Advanced model patterns
 - [SERVICE-LAYER.md](/docs/service-layer) - Using traits in services
 
