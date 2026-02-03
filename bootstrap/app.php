@@ -147,6 +147,80 @@ $app->singleton('events', function ($app) {
     return new \Core\Events\EventDispatcher();
 });
 
+// View service with composers, components, debugger, and SOTemplate engine
+$app->singleton('view', function ($app) {
+    $view = new \Core\View\View(
+        $app->basePath('resources/views')
+    );
+
+    // Set up component manager
+    $componentsPath = $app->basePath('resources/views/components');
+    if (!is_dir($componentsPath)) {
+        @mkdir($componentsPath, 0755, true);
+    }
+    $components = new \Core\View\ComponentManager($view, $componentsPath);
+    $view->setComponentManager($components);
+
+    // Set up composer manager
+    $composers = new \Core\View\ViewComposerManager($app);
+    $view->setComposerManager($composers);
+
+    // Set up debugger
+    $debugEnabled = $app->make('config')->get('app.debug', false);
+    $debugger = new \Core\View\ViewDebugger($debugEnabled);
+    $view->setDebugger($debugger);
+
+    // Set up SOTemplate engine for .sot.php files
+    $viewConfig = $app->make('config')->get('view', []);
+
+    $viewPath = $viewConfig['paths'][0] ?? $app->basePath('resources/views');
+    $cachePath = $viewConfig['compiled'] ?? $app->basePath('storage/views/compiled');
+    $autoReload = $viewConfig['auto_reload'] ?? $app->make('config')->get('app.debug', false);
+    $extension = $viewConfig['extension'] ?? '.sot.php';
+
+    // Ensure compiled views directory exists
+    if (!is_dir($cachePath)) {
+        @mkdir($cachePath, 0755, true);
+    }
+
+    $sotEngine = new \Core\View\SOTemplate\SOTemplateEngine(
+        $viewPath,
+        $cachePath,
+        $autoReload,
+        $extension
+    );
+    $sotEngine->setView($view);
+
+    // Register custom directives from config
+    $customDirectives = $viewConfig['directives'] ?? [];
+    foreach ($customDirectives as $name => $handler) {
+        if (is_callable($handler)) {
+            $sotEngine->directive($name, $handler);
+        }
+    }
+
+    $view->setSOTemplateEngine($sotEngine);
+
+    return $view;
+});
+
+// Expose view managers for direct access
+$app->singleton('view.components', function ($app) {
+    return $app->make('view')->getComponentManager();
+});
+
+$app->singleton('view.composers', function ($app) {
+    return $app->make('view')->getComposerManager();
+});
+
+$app->singleton('view.debugger', function ($app) {
+    return $app->make('view')->getDebugger();
+});
+
+$app->singleton('view.sotemplate', function ($app) {
+    return $app->make('view')->getSOTemplateEngine();
+});
+
 // Register service providers from config
 $providers = $app->make('config')->get('app.providers', []);
 $providerInstances = [];

@@ -1,8 +1,10 @@
 <?php
+
 /**
  * Helper function to render badges
  */
-function renderBadges($badges) {
+function renderBadges($badges)
+{
     if (empty($badges)) return '';
 
     if (is_string($badges)) {
@@ -25,7 +27,8 @@ function renderBadges($badges) {
 /**
  * Helper function to render a documentation card
  */
-function renderCard($url, $icon, $title, $description, $badges = []) {
+function renderCard($url, $icon, $title, $description, $badges = [])
+{
     $html = '<a href="' . htmlspecialchars($url) . '" class="doc-card">';
     $html .= '<div class="doc-card-body">';
     $html .= '<h3><span class="mdi mdi-' . htmlspecialchars($icon) . '"></span> ' . htmlspecialchars($title) . '</h3>';
@@ -39,7 +42,8 @@ function renderCard($url, $icon, $title, $description, $badges = []) {
 /**
  * Helper function to render a featured card
  */
-function renderFeaturedCard($url, $icon, $title, $description, $badges = []) {
+function renderFeaturedCard($url, $icon, $title, $description, $badges = [])
+{
     $html = '<a href="' . htmlspecialchars($url) . '" class="doc-card featured">';
     $html .= '<div class="doc-card-body">';
     $html .= '<h3><span class="mdi mdi-' . htmlspecialchars($icon) . '"></span> ' . htmlspecialchars($title) . '</h3>';
@@ -53,7 +57,8 @@ function renderFeaturedCard($url, $icon, $title, $description, $badges = []) {
 /**
  * Helper function to render a documentation section
  */
-function renderSection($icon, $title, $cards, $gridClass = 'docs-grid') {
+function renderSection($icon, $title, $cards, $gridClass = 'docs-grid')
+{
     $html = '<div class="docs-section">';
     $html .= '<div class="docs-section-title"><span class="mdi mdi-' . htmlspecialchars($icon) . '"></span> ' . htmlspecialchars($title) . '</div>';
     $html .= '<div class="' . htmlspecialchars($gridClass) . '">';
@@ -65,14 +70,22 @@ function renderSection($icon, $title, $cards, $gridClass = 'docs-grid') {
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= htmlspecialchars($title ?? 'Documentation') ?></title>
     <?php include __DIR__ . '/_styles.php'; ?>
-    <script>(function(){var t=localStorage.getItem("theme");if(!t&&window.matchMedia("(prefers-color-scheme:dark)").matches)t="dark";if(t)document.documentElement.setAttribute("data-theme",t);})()</script>
+    <script>
+        (function() {
+            var t = localStorage.getItem("theme");
+            if (!t && window.matchMedia("(prefers-color-scheme:dark)").matches) t = "dark";
+            if (t) document.documentElement.setAttribute("data-theme", t);
+        })()
+    </script>
     <?= render_assets('head') ?>
 </head>
+
 <body>
     <div class="docs-header">
         <div class="docs-header-inner">
@@ -116,10 +129,12 @@ function renderSection($icon, $title, $cards, $gridClass = 'docs-grid') {
 
             <?= renderSection('cube-outline', 'Core Architecture', [
                 renderCard('/docs/request-flow', 'transit-connection-variant', 'Request Flow Diagram', 'Visual walkthrough of the HTTP request lifecycle.', 'new'),
+                renderCard('/docs/ui-engine', 'view-dashboard', 'UiEngine System', 'Programmatic UI generation with symmetric PHP/JS API - 49 elements across 4 categories.', ['new', 'production', 'unique']),
                 renderCard('/docs/framework-features', 'office-building', 'Framework Features', 'Overview of all systems and capabilities.', 'default'),
                 renderCard('/docs/core-enhancements', 'rocket-launch-outline', 'Core Enhancements', 'Phase 6 features: Str class, validation, subqueries, eager loading, 2FA, and more.', ['new', 'production']),
                 renderCard('/docs/view-templates', 'image-multiple', 'View Templates', 'PHP native view templating and layouts.', 'default'),
-                renderCard('/docs/asset-management', 'package-variant-closed', 'Asset Management', 'CSS/JS loading, cache busting, CDN support.', 'default'),
+                renderCard('/docs/sotemplate', 'code-braces-box', 'SOTemplate Engine', 'Blade-like template engine with compilation, caching, and 3-5x performance boost.', ['new', 'performance', 'production']),
+
                 renderCard('/docs/auth-system', 'shield-lock', 'Authentication System', 'Session auth, JWT, remember me.', ['default', 'security', 'production']),
                 renderCard('/docs/password-reset', 'key-variant', 'Password Reset', 'Secure password recovery with tokens and email.', ['new', 'security', 'owasp']),
                 renderCard('/docs/dev-password-migration', 'key-change', 'Password Migration', 'Migrate legacy SHA1 to Argon2ID with automatic upgrade on login.', ['new', 'security']),
@@ -190,6 +205,14 @@ function renderSection($icon, $title, $cards, $gridClass = 'docs-grid') {
 
             <?= renderSection('application-cog', 'Controllers & Views', [
                 renderCard('/docs/dev-web-controllers', 'monitor', 'Web Controllers & Views', 'Return views, pass data, use redirects and flash messages.', 'guide'),
+                renderCard('/docs/dev-sotemplate', 'code-braces-box', 'SOTemplate Guide', 'Build templates with Blade-like syntax: @if, @foreach, {{ }}, and <x-component>.', ['new', 'guide', 'performance']),
+                renderCard('/docs/dev-view-components', 'puzzle-outline', 'View Components Guide', 'Build reusable UI components, composers, slots, and loop helpers.', ['new', 'guide']),
+                renderCard('/docs/dev-ui-engine', 'view-dashboard', 'UiEngine Guide', 'Build forms and layouts with UiEngine fluent API and config arrays.', ['new', 'guide', 'production']),
+                renderCard('/docs/dev-ui-engine-forms', 'form-select', 'UiEngine Forms Guide', 'Step-by-step: login forms, registration, CRUD forms, validation, and file uploads.', ['new', 'guide', 'step-by-step']),
+                renderCard('/docs/dev-ui-engine-layouts', 'view-dashboard-variant', 'UiEngine Layouts Guide', 'Step-by-step: cards, grids, dashboards, responsive design, and page layouts.', ['new', 'guide', 'step-by-step']),
+                renderCard('/docs/dev-ui-engine-tables', 'table', 'UiEngine Tables Guide', 'Step-by-step: data tables, pagination, sorting, actions, and server-side data.', ['new', 'guide', 'step-by-step']),
+                renderCard('/docs/dev-ui-engine-elements', 'format-list-bulleted-type', 'UiEngine Element Reference', 'Complete API reference for all 49 form, display, navigation, and layout elements.', ['new', 'reference', 'api']),
+                renderCard('/docs/dev-ui-engine-advanced', 'code-tags-check', 'UiEngine Advanced Patterns', 'Custom elements, dynamic forms, JS integration, AJAX, and server-side rendering.', ['new', 'guide', 'advanced']),
                 renderCard('/docs/dev-api-controllers', 'api', 'API Controllers & JSON', 'JSON responses, status codes, filtering, and pagination.', 'guide'),
                 renderCard('/docs/dev-forms-validation', 'form-textbox', 'Form Handling & Validation', 'Forms with CSRF, validation rules, and error display.', 'guide'),
                 renderCard('/docs/dev-file-uploads', 'file-upload', 'File Uploads (Basic)', 'Handle file uploads, validation, storage, and security.', 'guide'),
@@ -275,334 +298,342 @@ function renderSection($icon, $title, $cards, $gridClass = 'docs-grid') {
     </footer>
 
     <script>
-    function switchDocsTab(button) {
-        document.querySelectorAll('.docs-tab-button').forEach(function(btn) {
-            btn.classList.remove('active');
-        });
-        document.querySelectorAll('.docs-tab-panel').forEach(function(panel) {
-            panel.classList.remove('active');
-        });
-        button.classList.add('active');
-        var target = document.getElementById(button.getAttribute('data-tab'));
-        if (target) target.classList.add('active');
-        var tabId = button.getAttribute('data-tab');
-        window.history.replaceState(null, '', '#' + tabId);
-        localStorage.setItem('docs-active-tab', tabId);
-    }
-
-    function trackCardVisit(url) {
-        localStorage.setItem('docs-last-visited-card', url);
-    }
-
-    (function() {
-        var savedTab = localStorage.getItem('docs-active-tab');
-        var hash = window.location.hash.replace('#', '');
-        var tabToActivate = hash || savedTab;
-
-        if (tabToActivate) {
-            var btn = document.querySelector('.docs-tab-button[data-tab="' + tabToActivate + '"]');
-            if (btn) switchDocsTab(btn);
-        }
-
-        var lastVisited = localStorage.getItem('docs-last-visited-card');
-        var visitedCard = null;
-
-        function normalizeUrl(url) {
-            if (!url) return '';
-            try {
-                var urlObj = new URL(url, window.location.origin);
-                return urlObj.origin + urlObj.pathname.replace(/\/$/, '');
-            } catch (e) {
-                return url.replace(/\/$/, '').split('#')[0].split('?')[0];
-            }
-        }
-
-        var normalizedLastVisited = normalizeUrl(lastVisited);
-
-        var matchFound = false;
-        document.querySelectorAll('.doc-card').forEach(function(card) {
-            var href = card.getAttribute('href');
-            var normalizedHref = normalizeUrl(href);
-
-            if (normalizedHref && normalizedHref === normalizedLastVisited) {
-                card.classList.add('visited');
-                visitedCard = card;
-                matchFound = true;
-            }
-
-            card.addEventListener('click', function() {
-                trackCardVisit(href);
+        function switchDocsTab(button) {
+            document.querySelectorAll('.docs-tab-button').forEach(function(btn) {
+                btn.classList.remove('active');
             });
-        });
-
-        if (visitedCard) {
-            setTimeout(function() {
-                visitedCard.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'center',
-                    inline: 'nearest'
-                });
-            }, 300);
-        }
-
-        // ===== STICKY TABS (below header) =====
-        var docsTabs = document.getElementById('docs-tabs');
-        var docsHeader = document.querySelector('.docs-header');
-
-        function updateHeaderHeight() {
-            if (docsHeader) {
-                var headerHeight = docsHeader.offsetHeight;
-                document.documentElement.style.setProperty('--header-height', headerHeight + 'px');
-            }
-        }
-
-        if (docsTabs && docsHeader) {
-            // Set initial header height
-            updateHeaderHeight();
-
-            // Update on resize
-            window.addEventListener('resize', updateHeaderHeight);
-
-            // Observe when tabs become stuck
-            var observer = new IntersectionObserver(function(entries) {
-                entries.forEach(function(entry) {
-                    if (!entry.isIntersecting) {
-                        docsTabs.classList.add('is-stuck');
-                    } else {
-                        docsTabs.classList.remove('is-stuck');
-                    }
-                });
-            }, { threshold: [1], rootMargin: '-' + (docsHeader.offsetHeight + 1) + 'px 0px 0px 0px' });
-
-            observer.observe(docsTabs);
-        }
-
-        // ===== DOCUMENTATION SEARCH =====
-        var searchInput = document.getElementById('docs-search-input');
-        var searchResults = document.getElementById('docs-search-results');
-        var searchIndex = [];
-
-        // Build search index from all doc cards
-        function buildSearchIndex() {
-            searchIndex = [];
-
             document.querySelectorAll('.docs-tab-panel').forEach(function(panel) {
-                var tabId = panel.id;
-                var tabName = tabId === 'docs-panel' ? 'Docs' : 'Development';
+                panel.classList.remove('active');
+            });
+            button.classList.add('active');
+            var target = document.getElementById(button.getAttribute('data-tab'));
+            if (target) target.classList.add('active');
+            var tabId = button.getAttribute('data-tab');
+            window.history.replaceState(null, '', '#' + tabId);
+            localStorage.setItem('docs-active-tab', tabId);
+        }
 
-                panel.querySelectorAll('.docs-section').forEach(function(section) {
-                    var sectionTitle = section.querySelector('.docs-section-title');
-                    var sectionName = sectionTitle ? sectionTitle.textContent.trim() : '';
+        function trackCardVisit(url) {
+            localStorage.setItem('docs-last-visited-card', url);
+        }
 
-                    section.querySelectorAll('.doc-card').forEach(function(card) {
-                        var title = card.querySelector('h3');
-                        var desc = card.querySelector('p');
-                        var icon = card.querySelector('h3 .mdi');
+        (function() {
+            var savedTab = localStorage.getItem('docs-active-tab');
+            var hash = window.location.hash.replace('#', '');
+            var tabToActivate = hash || savedTab;
 
-                        searchIndex.push({
-                            url: card.getAttribute('href'),
-                            title: title ? title.textContent.trim() : '',
-                            description: desc ? desc.textContent.trim() : '',
-                            icon: icon ? icon.className.replace('mdi mdi-', '') : 'file-document',
-                            tab: tabName,
-                            tabId: tabId,
-                            section: sectionName
+            if (tabToActivate) {
+                var btn = document.querySelector('.docs-tab-button[data-tab="' + tabToActivate + '"]');
+                if (btn) switchDocsTab(btn);
+            }
+
+            var lastVisited = localStorage.getItem('docs-last-visited-card');
+            var visitedCard = null;
+
+            function normalizeUrl(url) {
+                if (!url) return '';
+                try {
+                    var urlObj = new URL(url, window.location.origin);
+                    return urlObj.origin + urlObj.pathname.replace(/\/$/, '');
+                } catch (e) {
+                    return url.replace(/\/$/, '').split('#')[0].split('?')[0];
+                }
+            }
+
+            var normalizedLastVisited = normalizeUrl(lastVisited);
+
+            var matchFound = false;
+            document.querySelectorAll('.doc-card').forEach(function(card) {
+                var href = card.getAttribute('href');
+                var normalizedHref = normalizeUrl(href);
+
+                if (normalizedHref && normalizedHref === normalizedLastVisited) {
+                    card.classList.add('visited');
+                    visitedCard = card;
+                    matchFound = true;
+                }
+
+                card.addEventListener('click', function() {
+                    trackCardVisit(href);
+                });
+            });
+
+            if (visitedCard) {
+                setTimeout(function() {
+                    visitedCard.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'center',
+                        inline: 'nearest'
+                    });
+                }, 300);
+            }
+
+            // ===== STICKY TABS (below header) =====
+            var docsTabs = document.getElementById('docs-tabs');
+            var docsHeader = document.querySelector('.docs-header');
+
+            function updateHeaderHeight() {
+                if (docsHeader) {
+                    var headerHeight = docsHeader.offsetHeight;
+                    document.documentElement.style.setProperty('--header-height', headerHeight + 'px');
+                }
+            }
+
+            if (docsTabs && docsHeader) {
+                // Set initial header height
+                updateHeaderHeight();
+
+                // Update on resize
+                window.addEventListener('resize', updateHeaderHeight);
+
+                // Observe when tabs become stuck
+                var observer = new IntersectionObserver(function(entries) {
+                    entries.forEach(function(entry) {
+                        if (!entry.isIntersecting) {
+                            docsTabs.classList.add('is-stuck');
+                        } else {
+                            docsTabs.classList.remove('is-stuck');
+                        }
+                    });
+                }, {
+                    threshold: [1],
+                    rootMargin: '-' + (docsHeader.offsetHeight + 1) + 'px 0px 0px 0px'
+                });
+
+                observer.observe(docsTabs);
+            }
+
+            // ===== DOCUMENTATION SEARCH =====
+            var searchInput = document.getElementById('docs-search-input');
+            var searchResults = document.getElementById('docs-search-results');
+            var searchIndex = [];
+
+            // Build search index from all doc cards
+            function buildSearchIndex() {
+                searchIndex = [];
+
+                document.querySelectorAll('.docs-tab-panel').forEach(function(panel) {
+                    var tabId = panel.id;
+                    var tabName = tabId === 'docs-panel' ? 'Docs' : 'Development';
+
+                    panel.querySelectorAll('.docs-section').forEach(function(section) {
+                        var sectionTitle = section.querySelector('.docs-section-title');
+                        var sectionName = sectionTitle ? sectionTitle.textContent.trim() : '';
+
+                        section.querySelectorAll('.doc-card').forEach(function(card) {
+                            var title = card.querySelector('h3');
+                            var desc = card.querySelector('p');
+                            var icon = card.querySelector('h3 .mdi');
+
+                            searchIndex.push({
+                                url: card.getAttribute('href'),
+                                title: title ? title.textContent.trim() : '',
+                                description: desc ? desc.textContent.trim() : '',
+                                icon: icon ? icon.className.replace('mdi mdi-', '') : 'file-document',
+                                tab: tabName,
+                                tabId: tabId,
+                                section: sectionName
+                            });
                         });
                     });
                 });
-            });
-        }
-
-        // Search function
-        function searchDocs(query) {
-            if (!query || query.length < 2) return [];
-
-            var lowerQuery = query.toLowerCase();
-            var results = [];
-
-            searchIndex.forEach(function(item) {
-                var titleMatch = item.title.toLowerCase().indexOf(lowerQuery) !== -1;
-                var descMatch = item.description.toLowerCase().indexOf(lowerQuery) !== -1;
-                var sectionMatch = item.section.toLowerCase().indexOf(lowerQuery) !== -1;
-
-                if (titleMatch || descMatch || sectionMatch) {
-                    // Calculate relevance score
-                    var score = 0;
-                    if (item.title.toLowerCase().indexOf(lowerQuery) === 0) score += 100;
-                    else if (titleMatch) score += 50;
-                    if (descMatch) score += 20;
-                    if (sectionMatch) score += 10;
-
-                    results.push({
-                        item: item,
-                        score: score
-                    });
-                }
-            });
-
-            // Sort by score descending
-            results.sort(function(a, b) { return b.score - a.score; });
-
-            return results.slice(0, 10).map(function(r) { return r.item; });
-        }
-
-        // Highlight matching text
-        function highlightText(text, query) {
-            if (!query) return text;
-            var regex = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
-            return text.replace(regex, '<mark>$1</mark>');
-        }
-
-        // Render search results
-        function renderResults(results, query) {
-            if (results.length === 0) {
-                searchResults.innerHTML =
-                    '<div class="docs-search-no-results">' +
-                    '<span class="mdi mdi-file-search-outline"></span>' +
-                    'No results found for "' + query + '"' +
-                    '</div>';
-                searchResults.classList.add('active');
-                return;
             }
 
-            var html = '<div class="docs-search-results-header">' + results.length + ' result' + (results.length !== 1 ? 's' : '') + ' found</div>';
+            // Search function
+            function searchDocs(query) {
+                if (!query || query.length < 2) return [];
 
-            results.forEach(function(item) {
-                html +=
-                    '<a href="' + item.url + '" class="docs-search-result" data-tab="' + item.tabId + '">' +
-                    '<div class="docs-search-result-title">' +
-                    '<span class="mdi mdi-' + item.icon + '"></span>' +
-                    highlightText(item.title, query) +
-                    '</div>' +
-                    '<div class="docs-search-result-desc">' + highlightText(item.description, query) + '</div>' +
-                    '<div class="docs-search-result-meta">' +
-                    '<span class="docs-search-result-tab">' + item.tab + '</span>' +
-                    '<span class="docs-search-result-section">' + item.section + '</span>' +
-                    '</div>' +
-                    '</a>';
-            });
+                var lowerQuery = query.toLowerCase();
+                var results = [];
 
-            searchResults.innerHTML = html;
-            searchResults.classList.add('active');
+                searchIndex.forEach(function(item) {
+                    var titleMatch = item.title.toLowerCase().indexOf(lowerQuery) !== -1;
+                    var descMatch = item.description.toLowerCase().indexOf(lowerQuery) !== -1;
+                    var sectionMatch = item.section.toLowerCase().indexOf(lowerQuery) !== -1;
 
-            // Add click handlers and keyboard support to results
-            searchResults.querySelectorAll('.docs-search-result').forEach(function(result, idx) {
-                result.setAttribute('tabindex', '0');
-                result.setAttribute('data-index', idx);
+                    if (titleMatch || descMatch || sectionMatch) {
+                        // Calculate relevance score
+                        var score = 0;
+                        if (item.title.toLowerCase().indexOf(lowerQuery) === 0) score += 100;
+                        else if (titleMatch) score += 50;
+                        if (descMatch) score += 20;
+                        if (sectionMatch) score += 10;
 
-                result.addEventListener('click', function(e) {
-                    var tabId = this.getAttribute('data-tab');
-                    var btn = document.querySelector('.docs-tab-button[data-tab="' + tabId + '"]');
-                    if (btn && !btn.classList.contains('active')) {
-                        switchDocsTab(btn);
-                    }
-                    trackCardVisit(this.getAttribute('href'));
-                });
-
-                // Keyboard navigation within results
-                result.addEventListener('keydown', function(e) {
-                    var items = searchResults.querySelectorAll('.docs-search-result');
-                    var currentIndex = parseInt(this.getAttribute('data-index'));
-
-                    if (e.key === 'ArrowDown') {
-                        e.preventDefault();
-                        var nextIndex = (currentIndex + 1) % items.length;
-                        items[nextIndex].focus();
-                    } else if (e.key === 'ArrowUp') {
-                        e.preventDefault();
-                        var prevIndex = currentIndex === 0 ? items.length - 1 : currentIndex - 1;
-                        items[prevIndex].focus();
-                    } else if (e.key === 'Enter') {
-                        e.preventDefault();
-                        this.click();
-                    } else if (e.key === 'Escape') {
-                        e.preventDefault();
-                        hideResults();
-                        searchInput.focus();
+                        results.push({
+                            item: item,
+                            score: score
+                        });
                     }
                 });
-            });
 
-            // Set initial focus indicator
-            if (searchResults.querySelector('.docs-search-result')) {
-                searchResults.querySelector('.docs-search-result').classList.add('keyboard-focus');
+                // Sort by score descending
+                results.sort(function(a, b) {
+                    return b.score - a.score;
+                });
+
+                return results.slice(0, 10).map(function(r) {
+                    return r.item;
+                });
             }
-        }
 
-        // Hide results
-        function hideResults() {
-            searchResults.classList.remove('active');
-        }
+            // Highlight matching text
+            function highlightText(text, query) {
+                if (!query) return text;
+                var regex = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+                return text.replace(regex, '<mark>$1</mark>');
+            }
 
-        // Event listeners
-        if (searchInput) {
-            buildSearchIndex();
-
-            var debounceTimer;
-            searchInput.addEventListener('input', function() {
-                clearTimeout(debounceTimer);
-                var query = this.value.trim();
-
-                if (query.length < 2) {
-                    hideResults();
+            // Render search results
+            function renderResults(results, query) {
+                if (results.length === 0) {
+                    searchResults.innerHTML =
+                        '<div class="docs-search-no-results">' +
+                        '<span class="mdi mdi-file-search-outline"></span>' +
+                        'No results found for "' + query + '"' +
+                        '</div>';
+                    searchResults.classList.add('active');
                     return;
                 }
 
-                debounceTimer = setTimeout(function() {
-                    var results = searchDocs(query);
-                    renderResults(results, query);
-                }, 150);
-            });
+                var html = '<div class="docs-search-results-header">' + results.length + ' result' + (results.length !== 1 ? 's' : '') + ' found</div>';
 
-            // Hide on click outside
-            document.addEventListener('click', function(e) {
-                if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
-                    hideResults();
+                results.forEach(function(item) {
+                    html +=
+                        '<a href="' + item.url + '" class="docs-search-result" data-tab="' + item.tabId + '">' +
+                        '<div class="docs-search-result-title">' +
+                        '<span class="mdi mdi-' + item.icon + '"></span>' +
+                        highlightText(item.title, query) +
+                        '</div>' +
+                        '<div class="docs-search-result-desc">' + highlightText(item.description, query) + '</div>' +
+                        '<div class="docs-search-result-meta">' +
+                        '<span class="docs-search-result-tab">' + item.tab + '</span>' +
+                        '<span class="docs-search-result-section">' + item.section + '</span>' +
+                        '</div>' +
+                        '</a>';
+                });
+
+                searchResults.innerHTML = html;
+                searchResults.classList.add('active');
+
+                // Add click handlers and keyboard support to results
+                searchResults.querySelectorAll('.docs-search-result').forEach(function(result, idx) {
+                    result.setAttribute('tabindex', '0');
+                    result.setAttribute('data-index', idx);
+
+                    result.addEventListener('click', function(e) {
+                        var tabId = this.getAttribute('data-tab');
+                        var btn = document.querySelector('.docs-tab-button[data-tab="' + tabId + '"]');
+                        if (btn && !btn.classList.contains('active')) {
+                            switchDocsTab(btn);
+                        }
+                        trackCardVisit(this.getAttribute('href'));
+                    });
+
+                    // Keyboard navigation within results
+                    result.addEventListener('keydown', function(e) {
+                        var items = searchResults.querySelectorAll('.docs-search-result');
+                        var currentIndex = parseInt(this.getAttribute('data-index'));
+
+                        if (e.key === 'ArrowDown') {
+                            e.preventDefault();
+                            var nextIndex = (currentIndex + 1) % items.length;
+                            items[nextIndex].focus();
+                        } else if (e.key === 'ArrowUp') {
+                            e.preventDefault();
+                            var prevIndex = currentIndex === 0 ? items.length - 1 : currentIndex - 1;
+                            items[prevIndex].focus();
+                        } else if (e.key === 'Enter') {
+                            e.preventDefault();
+                            this.click();
+                        } else if (e.key === 'Escape') {
+                            e.preventDefault();
+                            hideResults();
+                            searchInput.focus();
+                        }
+                    });
+                });
+
+                // Set initial focus indicator
+                if (searchResults.querySelector('.docs-search-result')) {
+                    searchResults.querySelector('.docs-search-result').classList.add('keyboard-focus');
                 }
-            });
+            }
 
-            // Show results on focus if there's a query
-            searchInput.addEventListener('focus', function() {
-                if (this.value.trim().length >= 2) {
-                    var results = searchDocs(this.value.trim());
-                    renderResults(results, this.value.trim());
-                }
-            });
+            // Hide results
+            function hideResults() {
+                searchResults.classList.remove('active');
+            }
 
-            // Keyboard shortcuts
-            document.addEventListener('keydown', function(e) {
-                // "/" to focus search
-                if (e.key === '/' && document.activeElement !== searchInput) {
-                    e.preventDefault();
-                    searchInput.focus();
-                }
+            // Event listeners
+            if (searchInput) {
+                buildSearchIndex();
 
-                // Escape to close results and blur
-                if (e.key === 'Escape' && document.activeElement === searchInput) {
-                    hideResults();
-                    searchInput.blur();
-                }
-            });
+                var debounceTimer;
+                searchInput.addEventListener('input', function() {
+                    clearTimeout(debounceTimer);
+                    var query = this.value.trim();
 
-            // Arrow navigation from search input to results
-            searchInput.addEventListener('keydown', function(e) {
-                var items = searchResults.querySelectorAll('.docs-search-result');
-                if (items.length === 0) return;
+                    if (query.length < 2) {
+                        hideResults();
+                        return;
+                    }
 
-                if (e.key === 'ArrowDown') {
-                    e.preventDefault();
-                    items[0].focus();
-                } else if (e.key === 'ArrowUp') {
-                    e.preventDefault();
-                    items[items.length - 1].focus();
-                } else if (e.key === 'Enter' && items.length > 0) {
-                    e.preventDefault();
-                    items[0].click();
-                }
-            });
-        }
-    })();
+                    debounceTimer = setTimeout(function() {
+                        var results = searchDocs(query);
+                        renderResults(results, query);
+                    }, 150);
+                });
+
+                // Hide on click outside
+                document.addEventListener('click', function(e) {
+                    if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+                        hideResults();
+                    }
+                });
+
+                // Show results on focus if there's a query
+                searchInput.addEventListener('focus', function() {
+                    if (this.value.trim().length >= 2) {
+                        var results = searchDocs(this.value.trim());
+                        renderResults(results, this.value.trim());
+                    }
+                });
+
+                // Keyboard shortcuts
+                document.addEventListener('keydown', function(e) {
+                    // "/" to focus search
+                    if (e.key === '/' && document.activeElement !== searchInput) {
+                        e.preventDefault();
+                        searchInput.focus();
+                    }
+
+                    // Escape to close results and blur
+                    if (e.key === 'Escape' && document.activeElement === searchInput) {
+                        hideResults();
+                        searchInput.blur();
+                    }
+                });
+
+                // Arrow navigation from search input to results
+                searchInput.addEventListener('keydown', function(e) {
+                    var items = searchResults.querySelectorAll('.docs-search-result');
+                    if (items.length === 0) return;
+
+                    if (e.key === 'ArrowDown') {
+                        e.preventDefault();
+                        items[0].focus();
+                    } else if (e.key === 'ArrowUp') {
+                        e.preventDefault();
+                        items[items.length - 1].focus();
+                    } else if (e.key === 'Enter' && items.length > 0) {
+                        e.preventDefault();
+                        items[0].click();
+                    }
+                });
+            }
+        })();
     </script>
-<?= render_assets('body_end') ?>
+    <?= render_assets('body_end') ?>
 </body>
+
 </html>

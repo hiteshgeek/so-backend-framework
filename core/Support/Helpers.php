@@ -1717,3 +1717,421 @@ if (!function_exists('str')) {
         return $value;
     }
 }
+
+// ============================================
+// View Component & Template Helper Functions
+// ============================================
+
+if (!function_exists('component')) {
+    /**
+     * Render a component
+     *
+     * @param string $name Component name (e.g., 'alert', 'card', 'form.input')
+     * @param array $props Component properties
+     * @param string|callable|null $slot Default slot content
+     * @param array $slots Named slots
+     * @return string Rendered HTML
+     */
+    function component(string $name, array $props = [], string|callable|null $slot = null, array $slots = []): string
+    {
+        return app('view.components')->render($name, $props, $slot, $slots);
+    }
+}
+
+if (!function_exists('loop')) {
+    /**
+     * Create a loop iterator with $loop variable access
+     *
+     * Usage:
+     *   <?php foreach (loop($items) as $item => $loop): ?>
+     *       <?= $loop->iteration ?>. <?= $item ?>
+     *       <?php if ($loop->first): ?> (first) <?php endif; ?>
+     *   <?php endforeach; ?>
+     *
+     * @param iterable $items Items to iterate
+     * @return \Generator Yields item => LoopHelper pairs
+     */
+    function loop(iterable $items): \Generator
+    {
+        static $loopStack = [];
+
+        $array = is_array($items) ? $items : iterator_to_array($items);
+        $count = count($array);
+        $depth = count($loopStack) + 1;
+        $parent = !empty($loopStack) ? end($loopStack) : null;
+
+        $index = 0;
+        foreach ($array as $key => $item) {
+            $loopHelper = new \Core\View\LoopHelper($index, $count, $depth, $parent);
+            $loopStack[] = $loopHelper;
+
+            yield $item => $loopHelper;
+
+            array_pop($loopStack);
+            $index++;
+        }
+    }
+}
+
+if (!function_exists('is_auth')) {
+    /**
+     * Check if user is authenticated (for view conditionals)
+     *
+     * @return bool
+     */
+    function is_auth(): bool
+    {
+        return auth()->check();
+    }
+}
+
+if (!function_exists('is_guest')) {
+    /**
+     * Check if user is a guest (not authenticated)
+     *
+     * @return bool
+     */
+    function is_guest(): bool
+    {
+        return auth()->guest();
+    }
+}
+
+if (!function_exists('user')) {
+    /**
+     * Get the authenticated user
+     *
+     * @return \App\Models\User|null
+     */
+    function user(): ?object
+    {
+        return auth()->user();
+    }
+}
+
+if (!function_exists('can')) {
+    /**
+     * Check if user has a permission/ability
+     *
+     * @param string $ability Ability/permission to check
+     * @param mixed $arguments Optional arguments
+     * @return bool
+     */
+    function can(string $ability, mixed $arguments = null): bool
+    {
+        $user = auth()->user();
+        if (!$user) {
+            return false;
+        }
+
+        // Integrate with authorization if available
+        if (method_exists($user, 'can')) {
+            return $user->can($ability, $arguments);
+        }
+
+        return false;
+    }
+}
+
+if (!function_exists('cannot')) {
+    /**
+     * Check if user lacks a permission/ability
+     *
+     * @param string $ability Ability/permission to check
+     * @param mixed $arguments Optional arguments
+     * @return bool
+     */
+    function cannot(string $ability, mixed $arguments = null): bool
+    {
+        return !can($ability, $arguments);
+    }
+}
+
+if (!function_exists('class_list')) {
+    /**
+     * Build a class string from conditions
+     *
+     * Usage:
+     *   class_list(['btn', 'btn-primary' => $isPrimary, 'disabled' => $isDisabled])
+     *   // Returns: "btn btn-primary" if $isPrimary is true
+     *
+     * @param array $classes Array of class names and conditional classes
+     * @return string Space-separated class names
+     */
+    function class_list(array $classes): string
+    {
+        $result = [];
+
+        foreach ($classes as $key => $value) {
+            if (is_numeric($key)) {
+                // Always include non-conditional classes
+                $result[] = $value;
+            } elseif ($value) {
+                // Include conditional classes if condition is truthy
+                $result[] = $key;
+            }
+        }
+
+        return implode(' ', $result);
+    }
+}
+
+if (!function_exists('selected')) {
+    /**
+     * Return 'selected' if values match (for select options)
+     *
+     * @param mixed $value Option value
+     * @param mixed $current Currently selected value
+     * @return string 'selected' or empty string
+     */
+    function selected(mixed $value, mixed $current): string
+    {
+        return $value == $current ? 'selected' : '';
+    }
+}
+
+if (!function_exists('checked')) {
+    /**
+     * Return 'checked' if value is truthy or matches
+     *
+     * @param mixed $value Value to check
+     * @param mixed $compare Value to compare against (default: true)
+     * @return string 'checked' or empty string
+     */
+    function checked(mixed $value, mixed $compare = true): string
+    {
+        return $value == $compare ? 'checked' : '';
+    }
+}
+
+if (!function_exists('disabled')) {
+    /**
+     * Return 'disabled' if value is truthy
+     *
+     * @param mixed $value Value to check
+     * @return string 'disabled' or empty string
+     */
+    function disabled(mixed $value): string
+    {
+        return $value ? 'disabled' : '';
+    }
+}
+
+if (!function_exists('readonly')) {
+    /**
+     * Return 'readonly' if value is truthy
+     *
+     * @param mixed $value Value to check
+     * @return string 'readonly' or empty string
+     */
+    function readonly(mixed $value): string
+    {
+        return $value ? 'readonly' : '';
+    }
+}
+
+if (!function_exists('required')) {
+    /**
+     * Return 'required' if value is truthy
+     *
+     * @param mixed $value Value to check
+     * @return string 'required' or empty string
+     */
+    function required(mixed $value): string
+    {
+        return $value ? 'required' : '';
+    }
+}
+
+if (!function_exists('push_once')) {
+    /**
+     * Push content to stack only once (prevents duplicates)
+     *
+     * @param string $name Stack name
+     * @param string $content Content to push
+     * @param string|null $key Unique key (defaults to content hash)
+     * @param int $priority Priority (lower = first)
+     */
+    function push_once(string $name, string $content, ?string $key = null, int $priority = 50): void
+    {
+        app('assets')->pushOnce($name, $content, $key, $priority);
+    }
+}
+
+if (!function_exists('prepend_stack')) {
+    /**
+     * Prepend content to a stack (appears before other items)
+     *
+     * @param string $name Stack name
+     * @param string $content Content to prepend
+     * @param int $priority Priority (default -50)
+     */
+    function prepend_stack(string $name, string $content, int $priority = -50): void
+    {
+        app('assets')->prepend($name, $content, $priority);
+    }
+}
+
+if (!function_exists('view_debug')) {
+    /**
+     * Dump view variables in debug mode
+     *
+     * @param array $data Variables to dump (use get_defined_vars())
+     * @return string HTML output or empty if not in debug mode
+     */
+    function view_debug(array $data = []): string
+    {
+        if (!config('app.debug', false)) {
+            return '';
+        }
+
+        try {
+            $debugger = app('view.debugger');
+            if ($debugger && $debugger->isEnabled()) {
+                return $debugger->dumpVariables($data);
+            }
+        } catch (\Throwable $e) {
+            // Debugger not available
+        }
+
+        return '';
+    }
+}
+
+// ============================================
+// SOTemplate Helper Functions
+// ============================================
+
+if (!function_exists('sot')) {
+    /**
+     * Render a SOTemplate view
+     *
+     * This is an alias for view() but explicitly uses the SOTemplate engine.
+     * Useful when you want to ensure a template is rendered using SOTemplate
+     * even if the file extension is .php
+     *
+     * @param string $template Template name (dot notation)
+     * @param array $data Template data
+     * @return string Rendered HTML
+     */
+    function sot(string $template, array $data = []): string
+    {
+        $engine = app('view.sotemplate');
+
+        if ($engine === null) {
+            // Fall back to regular view
+            return view($template, $data);
+        }
+
+        return $engine->render($template, $data);
+    }
+}
+
+if (!function_exists('view_clear')) {
+    /**
+     * Clear compiled view cache
+     *
+     * @return int Number of files cleared
+     */
+    function view_clear(): int
+    {
+        try {
+            $engine = app('view.sotemplate');
+            if ($engine !== null) {
+                return $engine->clearCache();
+            }
+        } catch (\Throwable $e) {
+            // Engine not available
+        }
+
+        return 0;
+    }
+}
+
+if (!function_exists('view_cache_stats')) {
+    /**
+     * Get view cache statistics
+     *
+     * @return array{files: int, size: int, oldest: int|null, newest: int|null}
+     */
+    function view_cache_stats(): array
+    {
+        try {
+            $engine = app('view.sotemplate');
+            if ($engine !== null) {
+                return $engine->getCacheStats();
+            }
+        } catch (\Throwable $e) {
+            // Engine not available
+        }
+
+        return ['files' => 0, 'size' => 0, 'oldest' => null, 'newest' => null];
+    }
+}
+
+if (!function_exists('resource_path')) {
+    /**
+     * Get resources path
+     *
+     * @param string $path Relative path
+     * @return string Full path
+     */
+    function resource_path(string $path = ''): string
+    {
+        return base_path('resources' . ($path ? DIRECTORY_SEPARATOR . $path : ''));
+    }
+}
+
+if (!function_exists('method_field')) {
+    /**
+     * Generate a hidden input for form method spoofing
+     *
+     * @param string $method HTTP method (PUT, PATCH, DELETE)
+     * @return string Hidden input HTML
+     */
+    function method_field(string $method): string
+    {
+        return '<input type="hidden" name="_method" value="' . e(strtoupper($method)) . '">';
+    }
+}
+
+if (!function_exists('html_attributes')) {
+    /**
+     * Build HTML attributes string from an array
+     *
+     * @param array $attributes Attributes array
+     * @return string HTML attributes string
+     */
+    function html_attributes(array $attributes): string
+    {
+        $html = [];
+
+        foreach ($attributes as $key => $value) {
+            if ($value === null || $value === false) {
+                continue;
+            }
+
+            if ($value === true) {
+                $html[] = e($key);
+            } else {
+                $html[] = e($key) . '="' . e($value) . '"';
+            }
+        }
+
+        return implode(' ', $html);
+    }
+}
+
+if (!function_exists('json_encode_safe')) {
+    /**
+     * Safely encode data as JSON for use in templates
+     *
+     * @param mixed $data Data to encode
+     * @param int $flags JSON flags (default: safe for embedding in HTML)
+     * @return string JSON string
+     */
+    function json_encode_safe(mixed $data, int $flags = JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT): string
+    {
+        return json_encode($data, $flags) ?: '{}';
+    }
+}

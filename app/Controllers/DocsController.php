@@ -163,6 +163,50 @@ class DocsController
             // Phase 6 Core Enhancements
             'core-enhancements' => 'CORE-ENHANCEMENTS.md',
             'dev-core-enhancements' => 'DEV-CORE-ENHANCEMENTS.md',
+
+            // View System
+            'view-components' => 'VIEW-COMPONENTS.md',
+            'dev-view-components' => 'DEV-VIEW-COMPONENTS.md',
+            'sotemplate' => 'SOTEMPLATE.md',
+            'dev-sotemplate' => 'DEV-SOTEMPLATE.md',
+
+            // UiEngine
+            'ui-engine' => 'UI-ENGINE.md',
+            'dev-ui-engine' => 'DEV-UI-ENGINE.md',
+            'dev-ui-engine-forms' => 'DEV-UI-ENGINE-FORMS.md',
+            'dev-ui-engine-layouts' => 'DEV-UI-ENGINE-LAYOUTS.md',
+            'dev-ui-engine-tables' => 'DEV-UI-ENGINE-TABLES.md',
+            'dev-ui-engine-elements' => 'DEV-UI-ENGINE-ELEMENTS.md',
+            'dev-ui-engine-advanced' => 'DEV-UI-ENGINE-ADVANCED.md',
+
+            // Database & Schema
+            'schema-builder' => 'SCHEMA-BUILDER.md',
+            'multi-database' => 'MULTI-DATABASE.md',
+            'model-observers' => 'MODEL-OBSERVERS.md',
+
+            // Security Additions
+            'password-reset' => 'PASSWORD-RESET.md',
+            'encrypter' => 'ENCRYPTER.md',
+
+            // Enterprise Features
+            'context-permissions' => 'CONTEXT-PERMISSIONS.md',
+
+            // Internationalization (i18n)
+            'pluralization' => 'PLURALIZATION.md',
+            'rtl-support' => 'RTL-SUPPORT.md',
+            'icu-messageformat' => 'ICU-MESSAGEFORMAT.md',
+            'dev-locale-validation' => 'DEV-LOCALE-VALIDATION.md',
+            'dev-translation-cli' => 'DEV-TRANSLATION-CLI.md',
+            'dev-translation-commands' => 'DEV-TRANSLATION-COMMANDS.md',
+            'dev-rtl-layouts' => 'DEV-RTL-LAYOUTS.md',
+
+            // Media & Files
+            'chunked-uploads' => 'CHUNKED-UPLOADS.md',
+            'webp-conversion' => 'WEBP-CONVERSION.md',
+            'video-processing' => 'VIDEO-PROCESSING.md',
+            'cdn-integration' => 'CDN-INTEGRATION.md',
+            'dev-chunked-uploads' => 'DEV-CHUNKED-UPLOADS.md',
+            'dev-video-processing' => 'DEV-VIDEO-PROCESSING.md',
         ];
 
         if (!isset($allowedFiles[$file])) {

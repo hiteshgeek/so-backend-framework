@@ -40,6 +40,11 @@ class AssetManager
     protected array $stacks = [];
 
     /**
+     * Track items that have been pushed once (prevents duplicates)
+     */
+    protected array $pushedOnce = [];
+
+    /**
      * Base URL for assets (CDN or empty for local)
      */
     protected string $assetBaseUrl;
@@ -224,9 +229,117 @@ class AssetManager
     {
         $content = ob_get_clean();
         if ($this->pushContext !== null) {
-            $this->push($this->pushContext['name'], $content, $this->pushContext['priority']);
+            // Check if this is a pushOnce operation
+            if (!empty($this->pushContext['once'])) {
+                $this->pushOnce(
+                    $this->pushContext['name'],
+                    $content,
+                    $this->pushContext['key'] ?? null,
+                    $this->pushContext['priority']
+                );
+            } elseif (!empty($this->pushContext['prepend'])) {
+                $this->prepend(
+                    $this->pushContext['name'],
+                    $content,
+                    $this->pushContext['priority']
+                );
+            } else {
+                $this->push($this->pushContext['name'], $content, $this->pushContext['priority']);
+            }
             $this->pushContext = null;
         }
+    }
+
+    /**
+     * Push content onto a stack only once (prevents duplicates).
+     *
+     * Useful for partials or components that may be included multiple times
+     * but should only add their dependencies once.
+     *
+     * @param string $name Stack name
+     * @param string $content Content to push
+     * @param string|null $key Unique identifier (defaults to md5 of content)
+     * @param int $priority Priority (lower = first)
+     */
+    public function pushOnce(string $name, string $content, ?string $key = null, int $priority = 50): void
+    {
+        $key = $key ?? md5($content);
+        $stackKey = $name . ':' . $key;
+
+        if (isset($this->pushedOnce[$stackKey])) {
+            return;
+        }
+
+        $this->pushedOnce[$stackKey] = true;
+        $this->push($name, $content, $priority);
+    }
+
+    /**
+     * Start capturing content for pushOnce.
+     *
+     * @param string $name Stack name
+     * @param string|null $key Unique identifier
+     * @param int $priority Priority
+     */
+    public function startPushOnce(string $name, ?string $key = null, int $priority = 50): void
+    {
+        ob_start();
+        $this->pushContext = [
+            'name' => $name,
+            'priority' => $priority,
+            'once' => true,
+            'key' => $key,
+        ];
+    }
+
+    /**
+     * Prepend content to a stack (appears before existing items).
+     *
+     * Uses a negative priority by default to appear before normal pushes.
+     *
+     * @param string $name Stack name
+     * @param string $content Content to prepend
+     * @param int $priority Priority (default -50 to appear before normal pushes)
+     */
+    public function prepend(string $name, string $content, int $priority = -50): void
+    {
+        $this->push($name, $content, $priority);
+    }
+
+    /**
+     * Start capturing content to prepend.
+     *
+     * @param string $name Stack name
+     * @param int $priority Priority (default -50)
+     */
+    public function startPrepend(string $name, int $priority = -50): void
+    {
+        ob_start();
+        $this->pushContext = [
+            'name' => $name,
+            'priority' => $priority,
+            'prepend' => true,
+        ];
+    }
+
+    /**
+     * Check if content has been pushed once with a specific key.
+     *
+     * @param string $name Stack name
+     * @param string $key Unique key
+     * @return bool
+     */
+    public function hasPushedOnce(string $name, string $key): bool
+    {
+        return isset($this->pushedOnce[$name . ':' . $key]);
+    }
+
+    /**
+     * Clear the once-pushed tracking (useful for testing).
+     */
+    public function clearOnce(): void
+    {
+        $this->pushedOnce = [];
     }
 
     /**
@@ -287,5 +400,6 @@ class AssetManager
     {
         $this->assets = [];
         $this->stacks = [];
+        $this->pushedOnce = [];
     }
 }

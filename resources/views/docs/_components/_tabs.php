@@ -83,11 +83,24 @@ HTML;
 /**
  * Render code tabs (specialized for code examples)
  *
- * @param array $codeExamples Array of code examples [['label' => '', 'lang' => '', 'code' => '']]
+ * @param string|array $idOrExamples Either a unique ID (if 2 args) or array of code examples
+ * @param array|null $codeExamples Array of code examples [['label' => '', 'language' => '', 'code' => '']]
  * @return string HTML output
  */
-function codeTabs(array $codeExamples): string
+function codeTabs(string|array $idOrExamples, ?array $codeExamples = null): string
 {
+    // Handle both signatures: codeTabs($array) and codeTabs($id, $array)
+    if (is_array($idOrExamples)) {
+        $codeExamples = $idOrExamples;
+        $id = 'code-tabs-' . uniqid();
+    } else {
+        $id = $idOrExamples;
+    }
+
+    if (empty($codeExamples)) {
+        return '';
+    }
+
     $tabs = [];
 
     $langIcons = [
@@ -110,8 +123,9 @@ function codeTabs(array $codeExamples): string
     ];
 
     foreach ($codeExamples as $example) {
-        $label = $example['label'] ?? ucfirst($example['lang'] ?? 'Code');
-        $lang = strtolower($example['lang'] ?? 'text');
+        // Support both 'lang' and 'language' keys
+        $lang = strtolower($example['language'] ?? $example['lang'] ?? 'text');
+        $label = $example['label'] ?? ucfirst($lang);
         $code = $example['code'] ?? '';
         $icon = $langIcons[$lang] ?? 'file-code';
 
@@ -141,5 +155,5 @@ HTML;
         ];
     }
 
-    return tabs($tabs);
+    return tabs($tabs, $id);
 }

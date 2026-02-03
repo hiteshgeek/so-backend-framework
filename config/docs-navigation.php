@@ -22,6 +22,9 @@ return [
 
     // Core Concepts
     ['key' => 'view-templates', 'title' => 'View Templates', 'url' => '/docs/view-templates'],
+    ['key' => 'sotemplate', 'title' => 'SOTemplate Engine', 'url' => '/docs/sotemplate'],
+    ['key' => 'view-components', 'title' => 'View Components', 'url' => '/docs/view-components'],
+    ['key' => 'ui-engine', 'title' => 'UiEngine', 'url' => '/docs/ui-engine'],
     ['key' => 'asset-management', 'title' => 'Asset Management', 'url' => '/docs/asset-management'],
 
     // Security & Authentication
@@ -75,8 +78,16 @@ return [
     ['key' => 'api-media-api', 'title' => 'Media API Reference', 'url' => '/docs/api/media-api'],
     ['key' => 'dev-pagination', 'title' => 'Pagination', 'url' => '/docs/dev-pagination'],
 
-    // Frontend
+    // Frontend & Views
     ['key' => 'dev-assets', 'title' => 'Assets', 'url' => '/docs/dev-assets'],
+    ['key' => 'dev-sotemplate', 'title' => 'SOTemplate Guide', 'url' => '/docs/dev-sotemplate'],
+    ['key' => 'dev-view-components', 'title' => 'View Components', 'url' => '/docs/dev-view-components'],
+    ['key' => 'dev-ui-engine', 'title' => 'UiEngine Guide', 'url' => '/docs/dev-ui-engine'],
+    ['key' => 'dev-ui-engine-forms', 'title' => 'UiEngine Forms Guide', 'url' => '/docs/dev-ui-engine-forms'],
+    ['key' => 'dev-ui-engine-layouts', 'title' => 'UiEngine Layouts Guide', 'url' => '/docs/dev-ui-engine-layouts'],
+    ['key' => 'dev-ui-engine-tables', 'title' => 'UiEngine Tables Guide', 'url' => '/docs/dev-ui-engine-tables'],
+    ['key' => 'dev-ui-engine-elements', 'title' => 'UiEngine Element Reference', 'url' => '/docs/dev-ui-engine-elements'],
+    ['key' => 'dev-ui-engine-advanced', 'title' => 'UiEngine Advanced Patterns', 'url' => '/docs/dev-ui-engine-advanced'],
 
     // Authentication & Security
     ['key' => 'dev-auth', 'title' => 'Authentication', 'url' => '/docs/dev-auth'],

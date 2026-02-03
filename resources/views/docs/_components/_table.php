@@ -9,7 +9,31 @@
  *       ['id', 'int', 'User ID'],
  *       ['name', 'string', 'User name'],
  *   ]) ?>
+ *
+ *   // Or with combined format (first row = headers):
+ *   <?= table([
+ *       ['Name', 'Type', 'Description'],
+ *       ['id', 'int', 'User ID'],
+ *       ['name', 'string', 'User name'],
+ *   ]) ?>
  */
+
+/**
+ * Render a table where first row is headers
+ *
+ * @param array $rows First row is headers, rest are data rows
+ * @param array $options Options: striped, hover, compact
+ * @return string HTML output
+ */
+function table(array $rows, array $options = []): string
+{
+    if (empty($rows)) {
+        return '';
+    }
+
+    $headers = array_shift($rows);
+    return dataTable($headers, $rows, $options);
+}
 
 /**
  * Render a data table

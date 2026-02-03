@@ -56,6 +56,10 @@ $kernel->registerCommands([
     \Core\Console\Commands\MakeTranslationCommand::class,
     \Core\Console\Commands\TranslationsMissingCommand::class,
     \Core\Console\Commands\TranslationsSyncCommand::class,
+    // View commands
+    \Core\Console\Commands\ViewClearCommand::class,
+    \Core\Console\Commands\ViewCacheCommand::class,
+    \Core\Console\Commands\ViewStatusCommand::class,
     // Test command
     \Core\Console\Commands\TestCommand::class,
 ]);
