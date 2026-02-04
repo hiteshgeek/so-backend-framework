@@ -165,14 +165,6 @@ class Column extends ContainerElement {
         return super.buildClassString();
     }
 
-    /**
-     * Render content
-     * @returns {string}
-     */
-    renderContent() {
-        return this.renderChildren();
-    }
-
     // ==================
     // Config Export
     // ==================

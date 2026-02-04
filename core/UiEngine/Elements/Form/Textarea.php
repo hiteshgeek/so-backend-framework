@@ -62,13 +62,6 @@ class Textarea extends FormElement
     protected ?string $resize = null;
 
     /**
-     * Auto-resize based on content
-     *
-     * @var bool
-     */
-    protected bool $autoResize = false;
-
-    /**
      * Show character counter
      *
      * @var bool
@@ -103,10 +96,6 @@ class Textarea extends FormElement
 
         if (isset($config['resize'])) {
             $this->resize = $config['resize'];
-        }
-
-        if (isset($config['autoResize'])) {
-            $this->autoResize = (bool) $config['autoResize'];
         }
 
         if (isset($config['showCounter'])) {
@@ -205,14 +194,18 @@ class Textarea extends FormElement
     }
 
     /**
-     * Enable auto-resize based on content
+     * Enable/disable autosize functionality
      *
-     * @param bool $autoResize
+     * @param bool $enable
      * @return static
      */
-    public function autoResize(bool $autoResize = true): static
+    public function autosize(bool $enable = true): static
     {
-        $this->autoResize = $autoResize;
+        if ($enable) {
+            $this->addClass(CssPrefix::cls('form-control-autosize'));
+        } else {
+            $this->removeClass(CssPrefix::cls('form-control-autosize'));
+        }
         return $this;
     }
 
@@ -259,10 +252,6 @@ class Textarea extends FormElement
 
         if ($this->minlength !== null) {
             $attrs['minlength'] = $this->minlength;
-        }
-
-        if ($this->autoResize) {
-            $attrs[CssPrefix::data('auto-resize')] = 'true';
         }
 
         if ($this->showCounter && $this->maxlength !== null) {
@@ -349,10 +338,6 @@ class Textarea extends FormElement
 
         if ($this->resize !== null) {
             $config['resize'] = $this->resize;
-        }
-
-        if ($this->autoResize) {
-            $config['autoResize'] = true;
         }
 
         if ($this->showCounter) {

@@ -132,75 +132,299 @@ require_once '../includes/navbar.php';
                     </div>
                 </div>
 
-                <!-- Section 4b: Link Buttons -->
+                <!-- Section 4b: Link Buttons with All Style Variants -->
                 <div class="so-card so-mb-4">
                     <div class="so-card-header">
-                        <h3 class="so-card-title">Link Buttons</h3>
+                        <h3 class="so-card-title">Link Buttons - All Style Variants</h3>
                     </div>
                     <div class="so-card-body">
-                        <p class="so-text-muted so-mb-3">Link buttons look like text links but behave like buttons. Use text color helper classes for contextual colors.</p>
-                                <div class="so-flex so-gap-4 so-flex-wrap so-mb-4">
-                                    <button class="so-btn so-btn-link">Default Link</button>
-                                    <button class="so-btn so-btn-link so-text-primary">Primary</button>
-                                    <button class="so-btn so-btn-link so-text-secondary">Secondary</button>
-                                    <button class="so-btn so-btn-link so-text-success">Success</button>
-                                    <button class="so-btn so-btn-link so-text-danger">Danger</button>
-                                    <button class="so-btn so-btn-link so-text-warning">Warning</button>
-                                    <button class="so-btn so-btn-link so-text-info">Info</button>
-                                    <button class="so-btn so-btn-link so-text-dark">Dark</button>
-                                </div>
+                        <p class="so-text-muted so-mb-3">Anchor tags (&lt;a&gt;) styled as buttons - available in 5 styles: Solid, Outline, Light, Ghost, and Link</p>
 
-                                <h5 class="so-mb-3">Link Buttons with Icons</h5>
-                                <div class="so-flex so-gap-4 so-flex-wrap so-mb-4">
-                                    <button class="so-btn so-btn-link so-text-primary">
-                                        <span class="material-icons">edit</span>
-                                        Edit
-                                    </button>
-                                    <button class="so-btn so-btn-link so-text-danger">
-                                        <span class="material-icons">delete</span>
-                                        Delete
-                                    </button>
-                                    <button class="so-btn so-btn-link so-text-success">
-                                        <span class="material-icons">add</span>
-                                        Add New
-                                    </button>
-                                    <button class="so-btn so-btn-link so-text-info">
-                                        <span class="material-icons">visibility</span>
-                                        View
-                                    </button>
-                                </div>
+                        <h5 class="so-mb-3">Primary Variants</h5>
+                        <div class="so-flex so-gap-2 so-flex-wrap so-mb-4">
+                            <a href="#" class="so-btn so-btn-primary">Solid</a>
+                            <a href="#" class="so-btn so-btn-outline-primary">Outline</a>
+                            <a href="#" class="so-btn so-btn-light-primary">Light</a>
+                            <a href="#" class="so-btn so-btn-ghost so-btn-primary">Ghost</a>
+                            <a href="#" class="so-btn so-btn-link so-text-primary">Link</a>
+                        </div>
 
-                                <h5 class="so-mb-3">Link Button Sizes</h5>
-                                <div class="so-flex so-gap-4 so-items-center so-flex-wrap">
-                                    <button class="so-btn so-btn-link so-btn-xs so-text-primary">Extra Small</button>
-                                    <button class="so-btn so-btn-link so-btn-sm so-text-primary">Small</button>
-                                    <button class="so-btn so-btn-link so-text-primary">Default</button>
-                                    <button class="so-btn so-btn-link so-btn-lg so-text-primary">Large</button>
-                                </div>
-                        <?= so_code_block('<!-- Default Link Button -->
-<button class="so-btn so-btn-link">Default Link</button>
+                        <h5 class="so-mb-3">Secondary Variants</h5>
+                        <div class="so-flex so-gap-2 so-flex-wrap so-mb-4">
+                            <a href="#" class="so-btn so-btn-secondary">Solid</a>
+                            <a href="#" class="so-btn so-btn-outline-secondary">Outline</a>
+                            <a href="#" class="so-btn so-btn-light-secondary">Light</a>
+                            <a href="#" class="so-btn so-btn-ghost so-btn-secondary">Ghost</a>
+                            <a href="#" class="so-btn so-btn-link so-text-secondary">Link</a>
+                        </div>
 
-<!-- Contextual Colors (use text helper classes) -->
-<button class="so-btn so-btn-link so-text-primary">Primary</button>
-<button class="so-btn so-btn-link so-text-secondary">Secondary</button>
-<button class="so-btn so-btn-link so-text-success">Success</button>
-<button class="so-btn so-btn-link so-text-danger">Danger</button>
-<button class="so-btn so-btn-link so-text-warning">Warning</button>
-<button class="so-btn so-btn-link so-text-info">Info</button>
-<button class="so-btn so-btn-link so-text-light">Light</button>
-<button class="so-btn so-btn-link so-text-dark">Dark</button>
+                        <h5 class="so-mb-3">Success Variants</h5>
+                        <div class="so-flex so-gap-2 so-flex-wrap so-mb-4">
+                            <a href="#" class="so-btn so-btn-success">Solid</a>
+                            <a href="#" class="so-btn so-btn-outline-success">Outline</a>
+                            <a href="#" class="so-btn so-btn-light-success">Light</a>
+                            <a href="#" class="so-btn so-btn-ghost so-btn-success">Ghost</a>
+                            <a href="#" class="so-btn so-btn-link so-text-success">Link</a>
+                        </div>
 
-<!-- With Icon -->
-<button class="so-btn so-btn-link so-text-danger">
+                        <h5 class="so-mb-3">Danger Variants</h5>
+                        <div class="so-flex so-gap-2 so-flex-wrap so-mb-4">
+                            <a href="#" class="so-btn so-btn-danger">Solid</a>
+                            <a href="#" class="so-btn so-btn-outline-danger">Outline</a>
+                            <a href="#" class="so-btn so-btn-light-danger">Light</a>
+                            <a href="#" class="so-btn so-btn-ghost so-btn-danger">Ghost</a>
+                            <a href="#" class="so-btn so-btn-link so-text-danger">Link</a>
+                        </div>
+
+                        <h5 class="so-mb-3">Warning Variants</h5>
+                        <div class="so-flex so-gap-2 so-flex-wrap so-mb-4">
+                            <a href="#" class="so-btn so-btn-warning">Solid</a>
+                            <a href="#" class="so-btn so-btn-outline-warning">Outline</a>
+                            <a href="#" class="so-btn so-btn-light-warning">Light</a>
+                            <a href="#" class="so-btn so-btn-ghost so-btn-warning">Ghost</a>
+                            <a href="#" class="so-btn so-btn-link so-text-warning">Link</a>
+                        </div>
+
+                        <h5 class="so-mb-3">Info Variants</h5>
+                        <div class="so-flex so-gap-2 so-flex-wrap so-mb-4">
+                            <a href="#" class="so-btn so-btn-info">Solid</a>
+                            <a href="#" class="so-btn so-btn-outline-info">Outline</a>
+                            <a href="#" class="so-btn so-btn-light-info">Light</a>
+                            <a href="#" class="so-btn so-btn-ghost so-btn-info">Ghost</a>
+                            <a href="#" class="so-btn so-btn-link so-text-info">Link</a>
+                        </div>
+
+                        <h5 class="so-mb-3">Light Variants</h5>
+                        <div class="so-flex so-gap-2 so-flex-wrap so-mb-4">
+                            <a href="#" class="so-btn so-btn-light">Solid</a>
+                            <a href="#" class="so-btn so-btn-outline-light">Outline</a>
+                            <a href="#" class="so-btn so-btn-light-light">Light</a>
+                            <a href="#" class="so-btn so-btn-ghost so-btn-light">Ghost</a>
+                            <a href="#" class="so-btn so-btn-link so-text-light">Link</a>
+                        </div>
+
+                        <h5 class="so-mb-3">Dark Variants</h5>
+                        <div class="so-flex so-gap-2 so-flex-wrap so-mb-4">
+                            <a href="#" class="so-btn so-btn-dark">Solid</a>
+                            <a href="#" class="so-btn so-btn-outline-dark">Outline</a>
+                            <a href="#" class="so-btn so-btn-light-dark">Light</a>
+                            <a href="#" class="so-btn so-btn-ghost so-btn-dark">Ghost</a>
+                            <a href="#" class="so-btn so-btn-link so-text-dark">Link</a>
+                        </div>
+
+                        <h5 class="so-mb-3">Link Button Colors</h5>
+                        <div class="so-flex so-gap-3 so-flex-wrap so-mb-4">
+                            <a href="#" class="so-btn so-btn-link so-text-primary">Primary</a>
+                            <a href="#" class="so-btn so-btn-link so-text-secondary">Secondary</a>
+                            <a href="#" class="so-btn so-btn-link so-text-success">Success</a>
+                            <a href="#" class="so-btn so-btn-link so-text-danger">Danger</a>
+                            <a href="#" class="so-btn so-btn-link so-text-warning">Warning</a>
+                            <a href="#" class="so-btn so-btn-link so-text-info">Info</a>
+                            <a href="#" class="so-btn so-btn-link so-text-light">Light</a>
+                            <a href="#" class="so-btn so-btn-link so-text-dark">Dark</a>
+                        </div>
+
+                        <h5 class="so-mb-3">Link Buttons with Icons</h5>
+                        <div class="so-flex so-gap-3 so-flex-wrap so-mb-4">
+                            <a href="#" class="so-btn so-btn-link so-text-primary">
+                                <span class="material-icons">edit</span>
+                                Edit
+                            </a>
+                            <a href="#" class="so-btn so-btn-link so-text-danger">
+                                <span class="material-icons">delete</span>
+                                Delete
+                            </a>
+                            <a href="#" class="so-btn so-btn-link so-text-success">
+                                <span class="material-icons">add</span>
+                                Add New
+                            </a>
+                        </div>
+
+                        <h5 class="so-mb-3">Link Button Sizes</h5>
+                        <div class="so-flex so-gap-3 so-items-center so-flex-wrap">
+                            <a href="#" class="so-btn so-btn-link so-btn-xs so-text-primary">Extra Small</a>
+                            <a href="#" class="so-btn so-btn-link so-btn-sm so-text-primary">Small</a>
+                            <a href="#" class="so-btn so-btn-link so-text-primary">Default</a>
+                            <a href="#" class="so-btn so-btn-link so-btn-lg so-text-primary">Large</a>
+                        </div>
+
+                        <?= so_code_block('<!-- Primary with all 5 style variants -->
+<a href="#" class="so-btn so-btn-primary">Solid</a>
+<a href="#" class="so-btn so-btn-outline-primary">Outline</a>
+<a href="#" class="so-btn so-btn-light-primary">Light</a>
+<a href="#" class="so-btn so-btn-ghost so-btn-primary">Ghost</a>
+<a href="#" class="so-btn so-btn-link so-text-primary">Link</a>
+
+<!-- Secondary with all 5 style variants -->
+<a href="#" class="so-btn so-btn-secondary">Solid</a>
+<a href="#" class="so-btn so-btn-outline-secondary">Outline</a>
+<a href="#" class="so-btn so-btn-light-secondary">Light</a>
+<a href="#" class="so-btn so-btn-ghost so-btn-secondary">Ghost</a>
+<a href="#" class="so-btn so-btn-link so-text-secondary">Link</a>
+
+<!-- Success with all 5 style variants -->
+<a href="#" class="so-btn so-btn-success">Solid</a>
+<a href="#" class="so-btn so-btn-outline-success">Outline</a>
+<a href="#" class="so-btn so-btn-light-success">Light</a>
+<a href="#" class="so-btn so-btn-ghost so-btn-success">Ghost</a>
+<a href="#" class="so-btn so-btn-link so-text-success">Link</a>
+
+<!-- Danger with all 5 style variants -->
+<a href="#" class="so-btn so-btn-danger">Solid</a>
+<a href="#" class="so-btn so-btn-outline-danger">Outline</a>
+<a href="#" class="so-btn so-btn-light-danger">Light</a>
+<a href="#" class="so-btn so-btn-ghost so-btn-danger">Ghost</a>
+<a href="#" class="so-btn so-btn-link so-text-danger">Link</a>
+
+<!-- Warning with all 5 style variants -->
+<a href="#" class="so-btn so-btn-warning">Solid</a>
+<a href="#" class="so-btn so-btn-outline-warning">Outline</a>
+<a href="#" class="so-btn so-btn-light-warning">Light</a>
+<a href="#" class="so-btn so-btn-ghost so-btn-warning">Ghost</a>
+<a href="#" class="so-btn so-btn-link so-text-warning">Link</a>
+
+<!-- Info with all 5 style variants -->
+<a href="#" class="so-btn so-btn-info">Solid</a>
+<a href="#" class="so-btn so-btn-outline-info">Outline</a>
+<a href="#" class="so-btn so-btn-light-info">Light</a>
+<a href="#" class="so-btn so-btn-ghost so-btn-info">Ghost</a>
+<a href="#" class="so-btn so-btn-link so-text-info">Link</a>
+
+<!-- Light with all 5 style variants -->
+<a href="#" class="so-btn so-btn-light">Solid</a>
+<a href="#" class="so-btn so-btn-outline-light">Outline</a>
+<a href="#" class="so-btn so-btn-light-light">Light</a>
+<a href="#" class="so-btn so-btn-ghost so-btn-light">Ghost</a>
+<a href="#" class="so-btn so-btn-link so-text-light">Link</a>
+
+<!-- Dark with all 5 style variants -->
+<a href="#" class="so-btn so-btn-dark">Solid</a>
+<a href="#" class="so-btn so-btn-outline-dark">Outline</a>
+<a href="#" class="so-btn so-btn-light-dark">Light</a>
+<a href="#" class="so-btn so-btn-ghost so-btn-dark">Ghost</a>
+<a href="#" class="so-btn so-btn-link so-text-dark">Link</a>
+
+<!-- Link button - all 8 colors -->
+<a href="#" class="so-btn so-btn-link so-text-primary">Primary</a>
+<a href="#" class="so-btn so-btn-link so-text-secondary">Secondary</a>
+<a href="#" class="so-btn so-btn-link so-text-success">Success</a>
+<a href="#" class="so-btn so-btn-link so-text-danger">Danger</a>
+<a href="#" class="so-btn so-btn-link so-text-warning">Warning</a>
+<a href="#" class="so-btn so-btn-link so-text-info">Info</a>
+<a href="#" class="so-btn so-btn-link so-text-light">Light</a>
+<a href="#" class="so-btn so-btn-link so-text-dark">Dark</a>
+
+<!-- Link buttons with icons -->
+<a href="#" class="so-btn so-btn-link so-text-primary">
+    <span class="material-icons">edit</span>
+    Edit
+</a>
+<a href="#" class="so-btn so-btn-link so-text-danger">
     <span class="material-icons">delete</span>
     Delete
-</button>
+</a>
 
-<!-- Sizes -->
-<button class="so-btn so-btn-link so-btn-xs">Extra Small</button>
-<button class="so-btn so-btn-link so-btn-sm">Small</button>
-<button class="so-btn so-btn-link">Default</button>
-<button class="so-btn so-btn-link so-btn-lg">Large</button>', 'html') ?>
+<!-- Link button sizes -->
+<a href="#" class="so-btn so-btn-link so-btn-xs so-text-primary">Extra Small</a>
+<a href="#" class="so-btn so-btn-link so-btn-sm so-text-primary">Small</a>
+<a href="#" class="so-btn so-btn-link so-text-primary">Default</a>
+<a href="#" class="so-btn so-btn-link so-btn-lg so-text-primary">Large</a>', 'html') ?>
+                    </div>
+                </div>
+
+                <!-- Section 4c: Button Style Variants by Color -->
+                <div class="so-card so-mb-4">
+                    <div class="so-card-header">
+                        <h3 class="so-card-title">Button Style Variants by Color</h3>
+                    </div>
+                    <div class="so-card-body">
+                        <p class="so-text-muted so-mb-3">Each color available in 5 styles: Solid, Outline, Light, Ghost, and Link</p>
+
+                        <h5 class="so-mb-3">Primary Variants</h5>
+                        <div class="so-flex so-gap-2 so-flex-wrap so-mb-4">
+                            <button class="so-btn so-btn-primary">Solid</button>
+                            <button class="so-btn so-btn-outline-primary">Outline</button>
+                            <button class="so-btn so-btn-light-primary">Light</button>
+                            <button class="so-btn so-btn-ghost so-btn-primary">Ghost</button>
+                            <button class="so-btn so-btn-link so-text-primary">Link</button>
+                        </div>
+
+                        <h5 class="so-mb-3">Secondary Variants</h5>
+                        <div class="so-flex so-gap-2 so-flex-wrap so-mb-4">
+                            <button class="so-btn so-btn-secondary">Solid</button>
+                            <button class="so-btn so-btn-outline-secondary">Outline</button>
+                            <button class="so-btn so-btn-light-secondary">Light</button>
+                            <button class="so-btn so-btn-ghost so-btn-secondary">Ghost</button>
+                            <button class="so-btn so-btn-link so-text-secondary">Link</button>
+                        </div>
+
+                        <h5 class="so-mb-3">Success Variants</h5>
+                        <div class="so-flex so-gap-2 so-flex-wrap so-mb-4">
+                            <button class="so-btn so-btn-success">Solid</button>
+                            <button class="so-btn so-btn-outline-success">Outline</button>
+                            <button class="so-btn so-btn-light-success">Light</button>
+                            <button class="so-btn so-btn-ghost so-btn-success">Ghost</button>
+                            <button class="so-btn so-btn-link so-text-success">Link</button>
+                        </div>
+
+                        <h5 class="so-mb-3">Danger Variants</h5>
+                        <div class="so-flex so-gap-2 so-flex-wrap so-mb-4">
+                            <button class="so-btn so-btn-danger">Solid</button>
+                            <button class="so-btn so-btn-outline-danger">Outline</button>
+                            <button class="so-btn so-btn-light-danger">Light</button>
+                            <button class="so-btn so-btn-ghost so-btn-danger">Ghost</button>
+                            <button class="so-btn so-btn-link so-text-danger">Link</button>
+                        </div>
+
+                        <h5 class="so-mb-3">Warning Variants</h5>
+                        <div class="so-flex so-gap-2 so-flex-wrap so-mb-4">
+                            <button class="so-btn so-btn-warning">Solid</button>
+                            <button class="so-btn so-btn-outline-warning">Outline</button>
+                            <button class="so-btn so-btn-light-warning">Light</button>
+                            <button class="so-btn so-btn-ghost so-btn-warning">Ghost</button>
+                            <button class="so-btn so-btn-link so-text-warning">Link</button>
+                        </div>
+
+                        <h5 class="so-mb-3">Info Variants</h5>
+                        <div class="so-flex so-gap-2 so-flex-wrap so-mb-4">
+                            <button class="so-btn so-btn-info">Solid</button>
+                            <button class="so-btn so-btn-outline-info">Outline</button>
+                            <button class="so-btn so-btn-light-info">Light</button>
+                            <button class="so-btn so-btn-ghost so-btn-info">Ghost</button>
+                            <button class="so-btn so-btn-link so-text-info">Link</button>
+                        </div>
+
+                        <h5 class="so-mb-3">Light Variants</h5>
+                        <div class="so-flex so-gap-2 so-flex-wrap so-mb-4">
+                            <button class="so-btn so-btn-light">Solid</button>
+                            <button class="so-btn so-btn-outline-light">Outline</button>
+                            <button class="so-btn so-btn-light-light">Light</button>
+                            <button class="so-btn so-btn-ghost so-btn-light">Ghost</button>
+                            <button class="so-btn so-btn-link so-text-light">Link</button>
+                        </div>
+
+                        <h5 class="so-mb-3">Dark Variants</h5>
+                        <div class="so-flex so-gap-2 so-flex-wrap">
+                            <button class="so-btn so-btn-dark">Solid</button>
+                            <button class="so-btn so-btn-outline-dark">Outline</button>
+                            <button class="so-btn so-btn-light-dark">Light</button>
+                            <button class="so-btn so-btn-ghost so-btn-dark">Ghost</button>
+                            <button class="so-btn so-btn-link so-text-dark">Link</button>
+                        </div>
+
+                        <?= so_code_block('<!-- Primary Variants -->
+<button class="so-btn so-btn-primary">Solid</button>
+<button class="so-btn so-btn-outline-primary">Outline</button>
+<button class="so-btn so-btn-light-primary">Light</button>
+<button class="so-btn so-btn-ghost so-btn-primary">Ghost</button>
+<button class="so-btn so-btn-link so-text-primary">Link</button>
+
+<!-- Danger Variants -->
+<button class="so-btn so-btn-danger">Solid</button>
+<button class="so-btn so-btn-outline-danger">Outline</button>
+<button class="so-btn so-btn-light-danger">Light</button>
+<button class="so-btn so-btn-ghost so-btn-danger">Ghost</button>
+<button class="so-btn so-btn-link so-text-danger">Link</button>', 'html') ?>
                     </div>
                 </div>
 

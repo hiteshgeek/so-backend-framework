@@ -161,16 +161,6 @@ class Input extends FormElement
     }
 
     /**
-     * Set as email input
-     *
-     * @return static
-     */
-    public function email(): static
-    {
-        return $this->inputType('email');
-    }
-
-    /**
      * Set as password input
      *
      * @return static
@@ -181,16 +171,6 @@ class Input extends FormElement
     }
 
     /**
-     * Set as number input
-     *
-     * @return static
-     */
-    public function number(): static
-    {
-        return $this->inputType('number');
-    }
-
-    /**
      * Set as telephone input
      *
      * @return static
@@ -198,16 +178,6 @@ class Input extends FormElement
     public function tel(): static
     {
         return $this->inputType('tel');
-    }
-
-    /**
-     * Set as URL input
-     *
-     * @return static
-     */
-    public function url(): static
-    {
-        return $this->inputType('url');
     }
 
     /**
@@ -291,24 +261,24 @@ class Input extends FormElement
     }
 
     /**
-     * Set minimum value
+     * Set minimum value (HTML attribute)
      *
-     * @param mixed $min
+     * @param int|float|string $min Minimum value
      * @return static
      */
-    public function min(mixed $min): static
+    public function minValue(mixed $min): static
     {
         $this->min = $min;
         return $this;
     }
 
     /**
-     * Set maximum value
+     * Set maximum value (HTML attribute)
      *
-     * @param mixed $max
+     * @param int|float|string $max Maximum value
      * @return static
      */
-    public function max(mixed $max): static
+    public function maxValue(mixed $max): static
     {
         $this->max = $max;
         return $this;
@@ -351,12 +321,12 @@ class Input extends FormElement
     }
 
     /**
-     * Set validation pattern
+     * Set validation pattern (HTML attribute)
      *
-     * @param string $pattern
+     * @param string $pattern Regex pattern
      * @return static
      */
-    public function pattern(string $pattern): static
+    public function inputPattern(string $pattern): static
     {
         $this->pattern = $pattern;
         return $this;

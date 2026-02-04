@@ -90,7 +90,7 @@ class ErrorReporter extends SOComponent {
      * @private
      */
     _updatePosition() {
-        const position = this.options.position;
+        const position = this._opts.position;
 
         // Remove existing position classes
         Object.values(ErrorReporter.POSITIONS).forEach(pos => {
@@ -112,7 +112,7 @@ class ErrorReporter extends SOComponent {
         });
 
         // Error item click (focus field)
-        if (this.options.showFieldLinks) {
+        if (this._opts.showFieldLinks) {
             this.delegate('click', SixOrbit.sel('error-reporter-item'), (e, target) => {
                 const field = target.dataset.field;
                 if (field) {
@@ -122,7 +122,7 @@ class ErrorReporter extends SOComponent {
         }
 
         // Dismiss individual error
-        if (this.options.dismissible) {
+        if (this._opts.dismissible) {
             this.delegate('click', SixOrbit.sel('error-item-close'), (e, target) => {
                 e.stopPropagation();
                 const item = target.closest(SixOrbit.sel('error-reporter-item'));
@@ -161,7 +161,7 @@ class ErrorReporter extends SOComponent {
      * @returns {this}
      */
     setPosition(position) {
-        this.options.position = position;
+        this._opts.position = position;
         this._updatePosition();
         return this;
     }
@@ -306,7 +306,7 @@ class ErrorReporter extends SOComponent {
      * @private
      */
     _renderErrors() {
-        const maxErrors = this.options.maxErrors;
+        const maxErrors = this._opts.maxErrors;
         let renderedCount = 0;
         let html = '';
 
@@ -326,11 +326,11 @@ class ErrorReporter extends SOComponent {
 
                 html += `
                     <li class="${SixOrbit.cls('error-reporter-item')}" data-field="${this._escapeHtml(field)}">
-                        ${this.options.groupByField ? `
+                        ${this._opts.groupByField ? `
                             <span class="${SixOrbit.cls('error-field')}">${this._formatFieldName(field)}:</span>
                         ` : ''}
                         <span class="${SixOrbit.cls('error-message')}">${this._escapeHtml(message)}</span>
-                        ${this.options.dismissible ? `
+                        ${this._opts.dismissible ? `
                             <button type="button" class="${SixOrbit.cls('error-item-close')}" aria-label="Dismiss">
                                 <span class="material-icons">close</span>
                             </button>
@@ -379,12 +379,12 @@ class ErrorReporter extends SOComponent {
      * @private
      */
     _startAutoHide() {
-        if (!this.options.autoHide) return;
+        if (!this._opts.autoHide) return;
 
         this._stopAutoHide();
         this._autoHideTimer = setTimeout(() => {
             this.clearAll();
-        }, this.options.autoHideDelay);
+        }, this._opts.autoHideDelay);
     }
 
     /**

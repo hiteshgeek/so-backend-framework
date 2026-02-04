@@ -3,8 +3,8 @@
 // Form layouts, floating labels, validation display
 // ============================================
 
-@use 'sass:math';
-@use '../abstracts' as *;
+@use "sass:math";
+@use "../abstracts" as *;
 
 // ============================================
 // FORM LAYOUT VARIABLES
@@ -30,12 +30,12 @@ $form-horizontal-label-width-wide: 240px !default;
   // The input/textarea/select - Matches framework input styles
   > .#{$so-prefix}form-control {
     height: $form-floating-height; // 40px - matches framework
-    padding: spacing('4') spacing('3') spacing('2'); // 16px 16px 8px - balanced vertical spacing
-    font-size: font-size('base'); // 14px - matches framework
-    line-height: line-height('normal');
-    border-radius: radius('base');
-    border: 1px solid css-var('form-border');
-    background: css-var('form-bg');
+    padding: spacing("4") spacing("3") spacing("2"); // 16px 16px 8px - balanced vertical spacing
+    font-size: font-size("base"); // 14px - matches framework
+    line-height: line-height("normal");
+    border-radius: radius("base");
+    border: 1px solid css-var("form-border");
+    background: css-var("form-bg");
 
     &::placeholder {
       color: transparent;
@@ -44,12 +44,12 @@ $form-horizontal-label-width-wide: 240px !default;
 
     // Show placeholder only when focused (Material style)
     &:focus::placeholder {
-      color: css-var('form-placeholder');
+      color: css-var("form-placeholder");
       transition-delay: 0.1s;
     }
 
     &:focus {
-      border-color: css-var('accent-primary');
+      border-color: css-var("accent-primary");
       box-shadow: none;
       outline: none;
     }
@@ -60,12 +60,12 @@ $form-horizontal-label-width-wide: 240px !default;
       top: 2px; // Align label center with border edge
       transform: translateY(-50%) scale($form-floating-label-scale);
       padding: 0 4px;
-      background: css-var('form-bg');
-      color: css-var('text-secondary');
+      background: css-var("form-bg");
+      color: css-var("text-secondary");
     }
 
     &:focus ~ label {
-      color: css-var('accent-primary');
+      color: css-var("accent-primary");
     }
   }
 
@@ -81,15 +81,15 @@ $form-horizontal-label-width-wide: 240px !default;
   > label {
     position: absolute;
     top: 50%;
-    left: spacing('3'); // Matches input horizontal padding
+    left: spacing("3"); // Matches input horizontal padding
     transform: translateY(-50%);
     transform-origin: left top;
     padding: 0;
     margin: 0;
     pointer-events: none;
-    color: css-var('text-muted');
-    font-size: font-size('base'); // 14px - matches framework
-    font-weight: font-weight('normal');
+    color: css-var("text-muted");
+    font-size: font-size("base"); // 14px - matches framework
+    font-weight: font-weight("normal");
     line-height: 1;
     background: transparent;
     transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
@@ -97,8 +97,8 @@ $form-horizontal-label-width-wide: 240px !default;
 
     // Required asterisk
     &.#{$so-prefix}required::after {
-      content: ' *';
-      color: css-var('accent-danger');
+      content: " *";
+      color: css-var("accent-danger");
     }
   }
 
@@ -118,12 +118,12 @@ $form-horizontal-label-width-wide: 240px !default;
   &.#{$so-prefix}form-floating-sm {
     > .#{$so-prefix}form-control {
       height: $form-floating-height-sm; // 32px
-      padding: 10px spacing('2') 2px;
+      padding: 10px spacing("2") 2px;
       font-size: $so-form-font-size-sm; // 13px
     }
 
     > label {
-      left: spacing('2');
+      left: spacing("2");
       font-size: $so-form-font-size-sm;
     }
 
@@ -138,12 +138,12 @@ $form-horizontal-label-width-wide: 240px !default;
   &.#{$so-prefix}form-floating-lg {
     > .#{$so-prefix}form-control {
       height: $form-floating-height-lg; // 48px
-      padding: 18px spacing('4') 6px;
+      padding: 18px spacing("4") 6px;
       font-size: $so-form-font-size-lg; // 15px
     }
 
     > label {
-      left: spacing('4');
+      left: spacing("4");
       font-size: $so-form-font-size-lg;
     }
 
@@ -157,7 +157,7 @@ $form-horizontal-label-width-wide: 240px !default;
   // Validation states
   &.has-error {
     > .#{$so-prefix}form-control {
-      border-color: css-var('accent-danger');
+      border-color: css-var("accent-danger");
 
       &:focus {
         box-shadow: 0 0 0 3px alpha($so-danger, 0.15);
@@ -165,18 +165,18 @@ $form-horizontal-label-width-wide: 240px !default;
     }
 
     > label {
-      color: css-var('accent-danger');
+      color: css-var("accent-danger");
     }
 
     > .#{$so-prefix}form-control:focus ~ label,
     > .#{$so-prefix}form-control:not(:placeholder-shown) ~ label {
-      color: css-var('accent-danger');
+      color: css-var("accent-danger");
     }
   }
 
   &.has-success {
     > .#{$so-prefix}form-control {
-      border-color: css-var('accent-success');
+      border-color: css-var("accent-success");
 
       &:focus {
         box-shadow: 0 0 0 3px alpha($so-success, 0.15);
@@ -185,13 +185,13 @@ $form-horizontal-label-width-wide: 240px !default;
 
     > .#{$so-prefix}form-control:focus ~ label,
     > .#{$so-prefix}form-control:not(:placeholder-shown) ~ label {
-      color: css-var('accent-success');
+      color: css-var("accent-success");
     }
   }
 
   &.has-warning {
     > .#{$so-prefix}form-control {
-      border-color: css-var('accent-warning');
+      border-color: css-var("accent-warning");
 
       &:focus {
         box-shadow: 0 0 0 3px alpha($so-warning, 0.15);
@@ -200,7 +200,7 @@ $form-horizontal-label-width-wide: 240px !default;
 
     > .#{$so-prefix}form-control:focus ~ label,
     > .#{$so-prefix}form-control:not(:placeholder-shown) ~ label {
-      color: css-var('accent-warning');
+      color: css-var("accent-warning");
     }
   }
 
@@ -208,14 +208,14 @@ $form-horizontal-label-width-wide: 240px !default;
   &.#{$so-prefix}disabled,
   &:has(.#{$so-prefix}form-control:disabled) {
     > .#{$so-prefix}form-control {
-      background: css-var('form-disabled-bg');
-      color: css-var('text-muted');
+      background: css-var("form-disabled-bg");
+      color: css-var("text-muted");
       cursor: not-allowed;
       opacity: 0.7;
     }
 
     > label {
-      color: css-var('text-muted');
+      color: css-var("text-muted");
     }
   }
 
@@ -224,7 +224,7 @@ $form-horizontal-label-width-wide: 240px !default;
     > .#{$so-prefix}form-control {
       // Visual indicator that input is not in tab order
       &:focus {
-        outline: 2px dashed css-var('form-border');
+        outline: 2px dashed css-var("form-border");
         outline-offset: 2px;
       }
     }
@@ -234,18 +234,18 @@ $form-horizontal-label-width-wide: 240px !default;
   &:has(.#{$so-prefix}form-control:read-only),
   &.#{$so-prefix}form-floating-readonly {
     > .#{$so-prefix}form-control {
-      background: css-var('form-disabled-bg');
+      background: css-var("form-disabled-bg");
       cursor: default;
 
       &:focus {
-        border-color: css-var('form-border');
+        border-color: css-var("form-border");
         box-shadow: none;
       }
     }
 
     > .#{$so-prefix}form-control:focus ~ label,
     > .#{$so-prefix}form-control:not(:placeholder-shown) ~ label {
-      color: css-var('text-muted');
+      color: css-var("text-muted");
     }
   }
 
@@ -263,12 +263,12 @@ $form-horizontal-label-width-wide: 240px !default;
 
   &.#{$so-prefix}form-floating-info {
     > .#{$so-prefix}form-control:focus {
-      border-color: css-var('accent-info');
+      border-color: css-var("accent-info");
       box-shadow: 0 0 0 3px alpha($so-info, 0.15);
     }
 
     > .#{$so-prefix}form-control:focus ~ label {
-      color: css-var('accent-info');
+      color: css-var("accent-info");
     }
   }
 
@@ -284,7 +284,7 @@ $form-horizontal-label-width-wide: 240px !default;
 
     > .#{$so-prefix}form-control:focus ~ label,
     > .#{$so-prefix}form-control:not(:placeholder-shown) ~ label {
-      left: spacing('2');
+      left: spacing("2");
     }
 
     > .#{$so-prefix}input-icon {
@@ -292,7 +292,7 @@ $form-horizontal-label-width-wide: 240px !default;
       left: 12px; // Matches framework
       top: 50%;
       transform: translateY(-50%);
-      color: css-var('text-muted');
+      color: css-var("text-muted");
       pointer-events: none;
       z-index: 2;
 
@@ -303,7 +303,7 @@ $form-horizontal-label-width-wide: 240px !default;
 
     // Icon color on focus
     &:focus-within > .#{$so-prefix}input-icon {
-      color: css-var('accent-primary');
+      color: css-var("accent-primary");
     }
   }
 
@@ -319,7 +319,7 @@ $form-horizontal-label-width-wide: 240px !default;
       right: 12px; // Matches framework
       top: 50%;
       transform: translateY(-50%);
-      color: css-var('text-muted');
+      color: css-var("text-muted");
       z-index: 2;
       display: flex;
       align-items: center;
@@ -332,15 +332,17 @@ $form-horizontal-label-width-wide: 240px !default;
 
     > .#{$so-prefix}input-action {
       cursor: pointer;
-      padding: spacing('1');
+      padding: spacing("1");
       background: transparent;
       border: none;
-      border-radius: radius('md');
-      transition: color $so-transition-base, background $so-transition-base;
+      border-radius: radius("md");
+      transition:
+        color $so-transition-base,
+        background $so-transition-base;
 
       &:hover {
-        color: css-var('text-primary');
-        background: css-var('card-hover-bg');
+        color: css-var("text-primary");
+        background: css-var("card-hover-bg");
       }
     }
   }
@@ -355,13 +357,13 @@ $form-horizontal-label-width-wide: 240px !default;
 
   // Helper text integration
   + .#{$so-prefix}form-hint {
-    margin-top: spacing('1');
+    margin-top: spacing("1");
   }
 
   + .#{$so-prefix}form-error,
   + .#{$so-prefix}form-success,
   + .#{$so-prefix}form-warning {
-    margin-top: spacing('1');
+    margin-top: spacing("1");
   }
 }
 
@@ -371,13 +373,13 @@ $form-horizontal-label-width-wide: 240px !default;
     border-width: 1px; // Matches framework inputs
 
     &:focus {
-      border-color: css-var('accent-primary');
+      border-color: css-var("accent-primary");
     }
   }
 
   > .#{$so-prefix}form-control:focus ~ label,
   > .#{$so-prefix}form-control:not(:placeholder-shown) ~ label {
-    background: css-var('card-bg');
+    background: css-var("card-bg");
   }
 }
 
@@ -385,28 +387,28 @@ $form-horizontal-label-width-wide: 240px !default;
 .#{$so-prefix}form-floating-filled {
   > .#{$so-prefix}form-control {
     border: none;
-    border-bottom: 1px solid css-var('form-border');
-    border-radius: radius('base') radius('base') 0 0;
-    background: css-var('card-hover-bg');
+    border-bottom: 1px solid css-var("form-border");
+    border-radius: radius("base") radius("base") 0 0;
+    background: css-var("card-hover-bg");
 
     &:hover {
       background: alpha($so-grey-500, 0.08);
     }
 
     &:focus {
-      border-bottom-color: css-var('accent-primary');
+      border-bottom-color: css-var("accent-primary");
       box-shadow: none;
     }
   }
 
   > label {
-    left: spacing('3');
+    left: spacing("3");
   }
 
   > .#{$so-prefix}form-control:focus ~ label,
   > .#{$so-prefix}form-control:not(:placeholder-shown) ~ label {
     top: 2px;
-    left: spacing('3');
+    left: spacing("3");
     background: transparent;
   }
 
@@ -425,18 +427,18 @@ $form-horizontal-label-width-wide: 240px !default;
 .#{$so-prefix}form-floating-standard {
   > .#{$so-prefix}form-control {
     border: none;
-    border-bottom: 1px solid css-var('form-border');
+    border-bottom: 1px solid css-var("form-border");
     border-radius: 0;
     background: transparent;
     padding-left: 0;
     padding-right: 0;
 
     &:hover {
-      border-bottom-color: css-var('text-primary');
+      border-bottom-color: css-var("text-primary");
     }
 
     &:focus {
-      border-bottom-color: css-var('accent-primary');
+      border-bottom-color: css-var("accent-primary");
       box-shadow: none;
     }
   }
@@ -454,14 +456,16 @@ $form-horizontal-label-width-wide: 240px !default;
 
   // Animated underline effect
   &::after {
-    content: '';
+    content: "";
     position: absolute;
     bottom: 0;
     left: 50%;
     width: 0;
     height: 1px;
-    background: css-var('accent-primary');
-    transition: width 0.2s cubic-bezier(0.4, 0, 0.2, 1), left 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    background: css-var("accent-primary");
+    transition:
+      width 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+      left 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   &:focus-within::after {
@@ -478,14 +482,14 @@ $form-horizontal-label-width-wide: 240px !default;
   .#{$so-prefix}form-group {
     display: grid;
     grid-template-columns: $form-horizontal-label-width 1fr;
-    gap: spacing('4');
+    gap: spacing("4");
     align-items: start;
-    margin-bottom: spacing('4');
+    margin-bottom: spacing("4");
 
     // Label alignment
     > .#{$so-prefix}form-label {
       margin-bottom: 0;
-      padding-top: spacing('2') + 2px;
+      padding-top: spacing("2") + 2px;
       text-align: right;
     }
   }
@@ -510,7 +514,7 @@ $form-horizontal-label-width-wide: 240px !default;
   @media (max-width: 768px) {
     .#{$so-prefix}form-group {
       grid-template-columns: 1fr;
-      gap: spacing('1');
+      gap: spacing("1");
 
       > .#{$so-prefix}form-label {
         text-align: left;
@@ -555,7 +559,7 @@ $form-horizontal-label-width-wide: 240px !default;
   display: flex;
   flex-wrap: wrap;
   align-items: flex-end;
-  gap: spacing('3');
+  gap: spacing("3");
 
   .#{$so-prefix}form-group {
     flex: 0 0 auto;
@@ -563,7 +567,7 @@ $form-horizontal-label-width-wide: 240px !default;
   }
 
   .#{$so-prefix}form-label {
-    margin-bottom: spacing('1');
+    margin-bottom: spacing("1");
   }
 
   // Auto-width inputs in inline form
@@ -593,13 +597,13 @@ $form-horizontal-label-width-wide: 240px !default;
 .#{$so-prefix}form-control-plaintext {
   display: block;
   width: 100%;
-  padding: spacing('2') 0;
-  font-size: font-size('base');
-  color: css-var('text-primary');
+  padding: spacing("2") 0;
+  font-size: font-size("base");
+  color: css-var("text-primary");
   background: transparent;
   border: none;
   border-bottom: 1px solid transparent;
-  line-height: line-height('normal');
+  line-height: line-height("normal");
 
   &:focus {
     outline: none;
@@ -607,18 +611,18 @@ $form-horizontal-label-width-wide: 240px !default;
 
   // With underline variant
   &.#{$so-prefix}form-control-plaintext-underline {
-    border-bottom-color: css-var('border-color');
+    border-bottom-color: css-var("border-color");
   }
 
   // Size variants - Small
   &.#{$so-prefix}form-control-plaintext-sm {
-    padding: spacing('1') 0;
+    padding: spacing("1") 0;
     font-size: $so-form-font-size-sm;
   }
 
   // Size variants - Large
   &.#{$so-prefix}form-control-plaintext-lg {
-    padding: spacing('3') 0;
+    padding: spacing("3") 0;
     font-size: $so-form-font-size-lg;
   }
 }
@@ -630,8 +634,8 @@ $form-horizontal-label-width-wide: 240px !default;
 .#{$so-prefix}form-row {
   display: flex;
   flex-wrap: wrap;
-  gap: spacing('4');
-  margin-bottom: spacing('4');
+  gap: spacing("4");
+  margin-bottom: spacing("4");
 
   > .#{$so-prefix}form-group {
     flex: 1 1 0;
@@ -649,7 +653,11 @@ $form-horizontal-label-width-wide: 240px !default;
   @for $i from 1 through 12 {
     > .#{$so-prefix}col-#{$i} {
       flex: 0 0 auto;
-      width: calc(#{math.percentage(math.div($i, 12))} - #{spacing('4')} * #{math.div(12 - $i, 12)});
+      width: calc(
+        #{math.percentage(math.div($i, 12))} -
+          #{spacing("4")} *
+          #{math.div(12 - $i, 12)}
+      );
     }
   }
 
@@ -667,11 +675,11 @@ $form-horizontal-label-width-wide: 240px !default;
 
 // Gap variants
 .#{$so-prefix}form-row-sm {
-  gap: spacing('2');
+  gap: spacing("2");
 }
 
 .#{$so-prefix}form-row-lg {
-  gap: spacing('6');
+  gap: spacing("6");
 }
 
 // ============================================
@@ -680,9 +688,18 @@ $form-horizontal-label-width-wide: 240px !default;
 
 // Shake animation for errors
 @keyframes #{$so-prefix}form-shake {
-  0%, 100% { transform: translateX(0); }
-  20%, 60% { transform: translateX(-4px); }
-  40%, 80% { transform: translateX(4px); }
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20%,
+  60% {
+    transform: translateX(-4px);
+  }
+  40%,
+  80% {
+    transform: translateX(4px);
+  }
 }
 
 .#{$so-prefix}form-group.#{$so-prefix}shake {
@@ -691,32 +708,42 @@ $form-horizontal-label-width-wide: 240px !default;
 
 // Success checkmark animation
 @keyframes #{$so-prefix}form-success-pop {
-  0% { transform: translateY(-50%) scale(0); opacity: 0; }
-  50% { transform: translateY(-50%) scale(1.2); }
-  100% { transform: translateY(-50%) scale(1); opacity: 1; }
+  0% {
+    transform: translateY(-50%) scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: translateY(-50%) scale(1.2);
+  }
+  100% {
+    transform: translateY(-50%) scale(1);
+    opacity: 1;
+  }
 }
 
-.#{$so-prefix}form-group.has-success .#{$so-prefix}input-wrapper.#{$so-prefix}show-success-icon::after {
-  content: 'check_circle';
-  font-family: 'Material Icons';
+.#{$so-prefix}form-group.has-success
+  .#{$so-prefix}input-wrapper.#{$so-prefix}show-success-icon::after {
+  content: "check_circle";
+  font-family: "Material Icons";
   position: absolute;
   right: 12px;
   top: 50%;
   transform: translateY(-50%);
-  color: css-var('accent-success');
+  color: css-var("accent-success");
   font-size: 20px;
   animation: #{$so-prefix}form-success-pop 0.3s ease;
 }
 
 // Error icon animation
-.#{$so-prefix}form-group.has-error .#{$so-prefix}input-wrapper.#{$so-prefix}show-error-icon::after {
-  content: 'error';
-  font-family: 'Material Icons';
+.#{$so-prefix}form-group.has-error
+  .#{$so-prefix}input-wrapper.#{$so-prefix}show-error-icon::after {
+  content: "error";
+  font-family: "Material Icons";
   position: absolute;
   right: 12px;
   top: 50%;
   transform: translateY(-50%);
-  color: css-var('accent-danger');
+  color: css-var("accent-danger");
   font-size: 20px;
 }
 
@@ -725,8 +752,8 @@ $form-horizontal-label-width-wide: 240px !default;
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-top: spacing('1');
-  gap: spacing('2');
+  margin-top: spacing("1");
+  gap: spacing("2");
 }
 
 .#{$so-prefix}form-hint-left {
@@ -740,16 +767,16 @@ $form-horizontal-label-width-wide: 240px !default;
 
 // Character counter
 .#{$so-prefix}form-char-counter {
-  font-size: font-size('xs');
-  color: css-var('text-muted');
+  font-size: font-size("xs");
+  color: css-var("text-muted");
   font-variant-numeric: tabular-nums;
 
   &.#{$so-prefix}warning {
-    color: css-var('accent-warning');
+    color: css-var("accent-warning");
   }
 
   &.#{$so-prefix}danger {
-    color: css-var('accent-danger');
+    color: css-var("accent-danger");
   }
 }
 
@@ -758,33 +785,33 @@ $form-horizontal-label-width-wide: 240px !default;
 // ============================================
 
 .#{$so-prefix}form-card {
-  background: css-var('card-bg');
-  border: 1px solid css-var('card-border');
-  border-radius: radius('lg');
-  padding: spacing('6');
-  box-shadow: shadow('sm');
+  background: css-var("card-bg");
+  border: 1px solid css-var("card-border");
+  border-radius: radius("lg");
+  padding: spacing("6");
+  box-shadow: shadow("sm");
 
   @include dark-mode {
-    box-shadow: shadow-dark('sm');
+    box-shadow: shadow-dark("sm");
   }
 }
 
 .#{$so-prefix}form-card-header {
-  margin-bottom: spacing('6');
-  padding-bottom: spacing('4');
-  border-bottom: 1px solid css-var('border-color');
+  margin-bottom: spacing("6");
+  padding-bottom: spacing("4");
+  border-bottom: 1px solid css-var("border-color");
 }
 
 .#{$so-prefix}form-card-title {
-  font-size: font-size('lg');
-  font-weight: font-weight('semibold');
-  color: css-var('text-heading');
-  margin: 0 0 spacing('1');
+  font-size: font-size("lg");
+  font-weight: font-weight("semibold");
+  color: css-var("text-heading");
+  margin: 0 0 spacing("1");
 }
 
 .#{$so-prefix}form-card-subtitle {
-  font-size: font-size('sm');
-  color: css-var('text-secondary');
+  font-size: font-size("sm");
+  color: css-var("text-secondary");
   margin: 0;
 }
 
@@ -793,12 +820,12 @@ $form-horizontal-label-width-wide: 240px !default;
 }
 
 .#{$so-prefix}form-card-footer {
-  margin-top: spacing('6');
-  padding-top: spacing('4');
-  border-top: 1px solid css-var('border-color');
+  margin-top: spacing("6");
+  padding-top: spacing("4");
+  border-top: 1px solid css-var("border-color");
   display: flex;
   justify-content: flex-end;
-  gap: spacing('3');
+  gap: spacing("3");
 
   // Align buttons to start
   &.#{$so-prefix}form-card-footer-start {
@@ -821,7 +848,7 @@ $form-horizontal-label-width-wide: 240px !default;
 // ============================================
 
 .#{$so-prefix}form-section {
-  margin-bottom: spacing('8');
+  margin-bottom: spacing("8");
 
   &:last-child {
     margin-bottom: 0;
@@ -829,18 +856,18 @@ $form-horizontal-label-width-wide: 240px !default;
 }
 
 .#{$so-prefix}form-section-title {
-  font-size: font-size('base');
-  font-weight: font-weight('semibold');
-  color: css-var('text-heading');
-  margin: 0 0 spacing('4');
-  padding-bottom: spacing('2');
-  border-bottom: 1px solid css-var('border-color');
+  font-size: font-size("base");
+  font-weight: font-weight("semibold");
+  color: css-var("text-heading");
+  margin: 0 0 spacing("4");
+  padding-bottom: spacing("2");
+  border-bottom: 1px solid css-var("border-color");
 }
 
 .#{$so-prefix}form-section-subtitle {
-  font-size: font-size('sm');
-  color: css-var('text-secondary');
-  margin: spacing-neg('3') 0 spacing('4');
+  font-size: font-size("sm");
+  color: css-var("text-secondary");
+  margin: spacing-neg("3") 0 spacing("4");
 }
 
 // ============================================
@@ -849,24 +876,36 @@ $form-horizontal-label-width-wide: 240px !default;
 
 .#{$so-prefix}form-divider {
   height: 1px;
-  background: css-var('border-color');
-  margin: spacing('6') 0;
+  background: css-var("border-color");
+  margin: spacing("6") 0;
   border: none;
 }
 
 .#{$so-prefix}form-divider-text {
   display: flex;
   align-items: center;
-  gap: spacing('3');
-  margin: spacing('6') 0;
-  color: css-var('text-muted');
-  font-size: font-size('sm');
+  gap: spacing("3");
+  margin: spacing("6") 0;
+  color: css-var("text-muted");
+  font-size: font-size("sm");
 
   &::before,
   &::after {
-    content: '';
+    content: "";
     flex: 1;
     height: 1px;
-    background: css-var('border-color');
+    background: css-var("border-color");
   }
+}
+
+// ============================================
+// 10. FORM HELP TEXT
+// ============================================
+
+.#{$so-prefix}form-text {
+  display: block;
+  margin-top: spacing("2");
+  font-size: font-size("xs");
+  color: css-var("text-muted");
+  line-height: line-height("relaxed");
 }

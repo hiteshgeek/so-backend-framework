@@ -33,6 +33,67 @@
 }
 
 // ============================================
+// ANCHOR TAGS AS BUTTONS
+// Ensure anchor hover styles match button hover styles
+// ============================================
+
+// Primary
+a.#{$so-prefix}btn.#{$so-prefix}btn-primary {
+  &:hover:not(:disabled) {
+    color: $so-white;
+  }
+}
+
+// Secondary
+a.#{$so-prefix}btn.#{$so-prefix}btn-secondary {
+  &:hover:not(:disabled) {
+    color: $so-white;
+  }
+}
+
+// Success
+a.#{$so-prefix}btn.#{$so-prefix}btn-success {
+  &:hover:not(:disabled) {
+    color: $so-white;
+  }
+}
+
+// Danger
+a.#{$so-prefix}btn.#{$so-prefix}btn-danger {
+  &:hover:not(:disabled) {
+    color: $so-white;
+  }
+}
+
+// Warning
+a.#{$so-prefix}btn.#{$so-prefix}btn-warning {
+  &:hover:not(:disabled) {
+    color: $so-grey-900;
+  }
+}
+
+// Info
+a.#{$so-prefix}btn.#{$so-prefix}btn-info {
+  &:hover:not(:disabled) {
+    color: $so-white;
+  }
+}
+
+// Light
+a.#{$so-prefix}btn.#{$so-prefix}btn-light {
+  &:hover:not(:disabled) {
+    color: $so-grey-800;
+  }
+}
+
+// Dark
+a.#{$so-prefix}btn.#{$so-prefix}btn-dark {
+  &:hover:not(:disabled) {
+    color: $so-white;
+  }
+}
+
+// ============================================
 // BUTTON SIZES
 // ============================================
 

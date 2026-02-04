@@ -4,6 +4,7 @@
 // ============================================
 
 import { Element } from './Element.js';
+import { FormElement } from './FormElement.js';
 
 /**
  * ContainerElement - Base class for container elements
@@ -89,6 +90,111 @@ class ContainerElement extends Element {
      */
     addMany(elements) {
         elements.forEach(el => this.add(el));
+        return this;
+    }
+
+    /**
+     * Replace content with raw HTML (clears existing children)
+     * Creates a simple wrapper that renders the HTML as-is
+     * @param {string} htmlContent Raw HTML string
+     * @returns {this}
+     */
+    html(htmlContent) {
+        // Clear existing children (replace behavior)
+        this._children = [];
+
+        // Create a simple object that implements the render interface
+        const htmlWrapper = {
+            render() {
+                const wrapper = document.createElement('div');
+                wrapper.innerHTML = htmlContent;
+                // Return a fragment containing all children
+                const fragment = document.createDocumentFragment();
+                while (wrapper.firstChild) {
+                    fragment.appendChild(wrapper.firstChild);
+                }
+                // For single element, return that element
+                // Otherwise wrap in a div
+                if (fragment.childNodes.length === 1) {
+                    return fragment.firstChild;
+                }
+                const container = document.createElement('div');
+                container.appendChild(fragment);
+                return container;
+            },
+            toHtml() {
+                return htmlContent;
+            }
+        };
+        this._children.push(htmlWrapper);
+        return this;
+    }
+
+    /**
+     * Append raw HTML content (keeps existing children)
+     * Adds HTML content as a child element
+     * @param {string} htmlContent Raw HTML string
+     * @returns {this}
+     */
+    appendHtml(htmlContent) {
+        // Create a simple object that implements the render interface
+        const htmlWrapper = {
+            render() {
+                const wrapper = document.createElement('div');
+                wrapper.innerHTML = htmlContent;
+                // Return a fragment containing all children
+                const fragment = document.createDocumentFragment();
+                while (wrapper.firstChild) {
+                    fragment.appendChild(wrapper.firstChild);
+                }
+                // For single element, return that element
+                // Otherwise wrap in a div
+                if (fragment.childNodes.length === 1) {
+                    return fragment.firstChild;
+                }
+                const container = document.createElement('div');
+                container.appendChild(fragment);
+                return container;
+            },
+            toHtml() {
+                return htmlContent;
+            }
+        };
+        this._children.push(htmlWrapper);
+        return this;
+    }
+
+    /**
+     * Prepend raw HTML content
+     * Adds HTML content as first child
+     * @param {string} htmlContent Raw HTML string
+     * @returns {this}
+     */
+    prependHtml(htmlContent) {
+        // Create a simple object that implements the render interface
+        const htmlWrapper = {
+            render() {
+                const wrapper = document.createElement('div');
+                wrapper.innerHTML = htmlContent;
+                // Return a fragment containing all children
+                const fragment = document.createDocumentFragment();
+                while (wrapper.firstChild) {
+                    fragment.appendChild(wrapper.firstChild);
+                }
+                // For single element, return that element
+                // Otherwise wrap in a div
+                if (fragment.childNodes.length === 1) {
+                    return fragment.firstChild;
+                }
+                const container = document.createElement('div');
+                container.appendChild(fragment);
+                return container;
+            },
+            toHtml() {
+                return htmlContent;
+            }
+        };
+        this._children.unshift(htmlWrapper);
         return this;
     }
 
@@ -405,9 +511,22 @@ class ContainerElement extends Element {
     renderChildren() {
         const fragment = document.createDocumentFragment();
 
+        // Element types that render their labels inline (not as separate label element)
+        const inlineLabelTypes = ['checkbox', 'radio', 'switch', 'toggle'];
+
         this._children.forEach(child => {
             if (child instanceof Element) {
-                fragment.appendChild(child.render());
+                // For FormElements with labels, use renderGroup() UNLESS they render labels inline
+                const shouldUseRenderGroup =
+                    child instanceof FormElement &&
+                    child.getLabel() &&
+                    !inlineLabelTypes.includes(child.getType());
+
+                if (shouldUseRenderGroup) {
+                    fragment.appendChild(child.renderGroup());
+                } else {
+                    fragment.appendChild(child.render());
+                }
             } else if (child instanceof HTMLElement) {
                 fragment.appendChild(child);
             } else if (typeof child === 'string') {
@@ -416,7 +535,17 @@ class ContainerElement extends Element {
                 // Config object - try to render via UiEngine if available
                 if (window.UiEngine) {
                     const element = window.UiEngine.fromConfig(child);
-                    fragment.appendChild(element.render());
+                    // Check if it's a FormElement with label
+                    const shouldUseRenderGroup =
+                        element instanceof FormElement &&
+                        element.getLabel() &&
+                        !inlineLabelTypes.includes(element.getType());
+
+                    if (shouldUseRenderGroup) {
+                        fragment.appendChild(element.renderGroup());
+                    } else {
+                        fragment.appendChild(element.render());
+                    }
                 }
             }
         });

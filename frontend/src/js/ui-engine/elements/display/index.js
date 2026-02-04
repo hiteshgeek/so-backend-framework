@@ -25,6 +25,7 @@ import { Skeleton } from './Skeleton.js';
 import { EmptyState } from './EmptyState.js';
 import { MediaObject } from './MediaObject.js';
 import { CodeBlock } from './CodeBlock.js';
+import { Image } from './Image.js';
 
 // Named exports
 export {
@@ -50,6 +51,7 @@ export {
     EmptyState,
     MediaObject,
     CodeBlock,
+    Image,
 };
 
 // Default export as object
@@ -76,4 +78,5 @@ export default {
     EmptyState,
     MediaObject,
     CodeBlock,
+    Image,
 };

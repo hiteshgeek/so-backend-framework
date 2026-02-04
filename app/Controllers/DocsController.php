@@ -255,6 +255,8 @@ class DocsController
         $allowedPaths = [
             'features/file-uploads' => 'features/file-uploads.md',
             'api/media-api' => 'api/media-api.md',
+            'uiengine/html' => 'UIENGINE-HTML.md',
+            'uiengine/image' => 'UIENGINE-IMAGE.md',
         ];
 
         $path = $folder . '/' . $file;
@@ -263,12 +265,14 @@ class DocsController
             return Response::view('errors/404', [], 404);
         }
 
+        $fileType = $allowedPaths[$path];
+
         // Get navigation data using the combined path as key
         $navigationKey = str_replace('/', '-', $path);
         $navigation = $this->getNavigation($navigationKey);
 
-        // Build file path
-        $filePath = __DIR__ . '/../../docs/' . $allowedPaths[$path];
+        // Build file path for markdown
+        $filePath = __DIR__ . '/../../docs/' . $fileType;
         $filePath = realpath($filePath) ?: $filePath;
 
         if (!file_exists($filePath)) {
@@ -281,7 +285,7 @@ class DocsController
         return Response::view('docs/show', array_merge([
             'title' => ucwords(str_replace(['-', '/'], ' ', $path)) . ' - ' . config('app.name'),
             'markdown' => $markdown,
-            'filename' => $allowedPaths[$path]
+            'filename' => $fileType
         ], $navigation));
     }
 }

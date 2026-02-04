@@ -3,6 +3,10 @@
 // Exports all UI elements
 // ============================================
 
+// Core Elements
+export { Html } from './Html.js';
+export { RawHtml } from './RawHtml.js';
+
 // Form Elements
 export * from './form/index.js';
 

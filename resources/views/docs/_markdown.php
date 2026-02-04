@@ -21,6 +21,9 @@ class MarkdownParser {
     private $inTable = false;
     private $tableRows = [];
     private $inBlockquote = false;
+    private $inHtmlBlock = false;
+    private $htmlBlockContent = '';
+    private $htmlBlockTag = '';
     private $usedIds = [];
 
     public function parse($markdown) {
@@ -46,6 +49,38 @@ class MarkdownParser {
 
             if ($this->inCodeBlock) {
                 $this->codeBlockContent .= $line . "\n";
+                continue;
+            }
+
+            // Handle raw HTML blocks (div, style, script, span, button, etc.)
+            if (preg_match('/^<(div|style|script|span|button|a)(\s|>)/', $line, $m)) {
+                if (!$this->inHtmlBlock) {
+                    $this->closeOpenElements();
+                    $this->inHtmlBlock = true;
+                    $this->htmlBlockTag = $m[1];
+                    $this->htmlBlockContent = $line . "\n";
+                } else {
+                    $this->htmlBlockContent .= $line . "\n";
+                }
+                continue;
+            }
+
+            // Handle self-closing or single-line HTML tags
+            if (preg_match('/^<[^>]+>.*<\/[^>]+>$/', $line) || preg_match('/^<[^>]+\/>$/', $line)) {
+                $this->closeOpenElements();
+                $this->html .= $line . "\n";
+                continue;
+            }
+
+            if ($this->inHtmlBlock) {
+                $this->htmlBlockContent .= $line . "\n";
+                // Check for closing tag
+                if (preg_match('/<\/' . preg_quote($this->htmlBlockTag, '/') . '>/', $line)) {
+                    $this->html .= $this->htmlBlockContent;
+                    $this->inHtmlBlock = false;
+                    $this->htmlBlockContent = '';
+                    $this->htmlBlockTag = '';
+                }
                 continue;
             }
 
@@ -152,6 +187,12 @@ class MarkdownParser {
             $this->html .= $this->renderTable($this->tableRows);
             $this->inTable = false;
             $this->tableRows = [];
+        }
+        if ($this->inHtmlBlock) {
+            $this->html .= $this->htmlBlockContent;
+            $this->inHtmlBlock = false;
+            $this->htmlBlockContent = '';
+            $this->htmlBlockTag = '';
         }
     }
 

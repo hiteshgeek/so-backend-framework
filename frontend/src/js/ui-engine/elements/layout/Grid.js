@@ -70,8 +70,6 @@ class Grid extends ContainerElement {
         return attrs;
     }
 
-    renderContent() { return this.renderChildren(); }
-
     toConfig() {
         const config = super.toConfig();
         if (this._columns !== null) config.columns = this._columns;

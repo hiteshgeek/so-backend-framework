@@ -248,6 +248,12 @@ class Checkbox extends FormElement {
             const groupLabel = document.createElement('label');
             groupLabel.className = `${SixOrbit.cls('form-label')} ${SixOrbit.cls('mb-2')}`;
             groupLabel.textContent = this._label;
+            if (this._required) {
+                const required = document.createElement('span');
+                required.className = SixOrbit.cls('text-danger');
+                required.textContent = ' *';
+                groupLabel.appendChild(required);
+            }
             container.appendChild(groupLabel);
         }
 
@@ -303,6 +309,22 @@ class Checkbox extends FormElement {
 
         container.appendChild(group);
 
+        // Help text
+        if (this._help) {
+            const helpEl = document.createElement('div');
+            helpEl.className = SixOrbit.cls('form-text');
+            helpEl.textContent = this._help;
+            container.appendChild(helpEl);
+        }
+
+        // Error
+        if (this._error) {
+            const errorEl = document.createElement('div');
+            errorEl.className = `${SixOrbit.cls('invalid-feedback')} ${SixOrbit.cls('d-block')}`;
+            errorEl.textContent = this._error;
+            container.appendChild(errorEl);
+        }
+
         return container;
     }
 
@@ -350,6 +372,16 @@ class Checkbox extends FormElement {
 
         html += '</label>';
 
+        // Add help text
+        if (this._help) {
+            html += `<div class="${SixOrbit.cls('form-text')}">${this._escapeHtml(this._help)}</div>`;
+        }
+
+        // Add error
+        if (this._error) {
+            html += `<div class="${SixOrbit.cls('invalid-feedback')} ${SixOrbit.cls('d-block')}">${this._escapeHtml(this._error)}</div>`;
+        }
+
         return html;
     }
 
@@ -363,7 +395,11 @@ class Checkbox extends FormElement {
 
         // Group label
         if (this._label) {
-            html += `<label class="${SixOrbit.cls('form-label')} ${SixOrbit.cls('mb-2')}">${this._escapeHtml(this._label)}</label>`;
+            html += `<label class="${SixOrbit.cls('form-label')} ${SixOrbit.cls('mb-2')}">${this._escapeHtml(this._label)}`;
+            if (this._required) {
+                html += ` <span class="${SixOrbit.cls('text-danger')}">*</span>`;
+            }
+            html += '</label>';
         }
 
         // Checkbox group wrapper
@@ -398,6 +434,17 @@ class Checkbox extends FormElement {
         });
 
         html += '</div>'; // End checkbox-group
+
+        // Help text
+        if (this._help) {
+            html += `<div class="${SixOrbit.cls('form-text')}">${this._escapeHtml(this._help)}</div>`;
+        }
+
+        // Error
+        if (this._error) {
+            html += `<div class="${SixOrbit.cls('invalid-feedback')} ${SixOrbit.cls('d-block')}">${this._escapeHtml(this._error)}</div>`;
+        }
+
         html += '</div>'; // End form-group
 
         return html;

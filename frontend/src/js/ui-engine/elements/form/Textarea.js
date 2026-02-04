@@ -433,6 +433,11 @@ class Textarea extends FormElement {
     buildClassString() {
         super.buildClassString();
 
+        // Add autosize class if enabled (matches PHP)
+        if (this._autoResize) {
+            this._extraClasses.add(SixOrbit.cls('form-control-autosize'));
+        }
+
         // Add resize class if specified
         if (this._resize !== null) {
             this._extraClasses.add(SixOrbit.cls('resize-' + this._resize));

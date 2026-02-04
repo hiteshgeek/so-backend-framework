@@ -431,6 +431,17 @@ class Autocomplete extends FormElement
     }
 
     /**
+     * Override to prevent adding so-form-control class
+     * Autocomplete is a complex component with its own wrapper structure
+     *
+     * @return void
+     */
+    protected function addBaseClasses(): void
+    {
+        // Do not add form-control class - autocomplete has custom structure
+    }
+
+    /**
      * Build CSS class string for wrapper
      *
      * @return string
@@ -470,6 +481,9 @@ class Autocomplete extends FormElement
 
         $attrs['class'] = $this->buildClassString();
 
+        // Add autocomplete initialization attribute
+        $attrs[CssPrefix::data('autocomplete')] = true;
+
         // Data attributes for JS initialization
         if ($this->multiple) {
             $attrs[CssPrefix::data('multiple')] = 'true';
@@ -481,6 +495,20 @@ class Autocomplete extends FormElement
 
         if ($this->asyncUrl) {
             $attrs[CssPrefix::data('async')] = $this->asyncUrl;
+        }
+
+        // Add options data if static options provided
+        if (!empty($this->options)) {
+            $attrs[CssPrefix::data('options')] = json_encode($this->options);
+        }
+
+        // Add configuration
+        if ($this->minLength > 0) {
+            $attrs[CssPrefix::data('min-length')] = $this->minLength;
+        }
+
+        if ($this->clearable) {
+            $attrs[CssPrefix::data('clearable')] = 'true';
         }
 
         return $attrs;

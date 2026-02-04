@@ -226,15 +226,15 @@ trait HasValidation
     /**
      * Add required rule
      *
-     * @param string|null $message Custom error message
+     * @param bool $required Whether field is required
      * @return static
      */
-    public function required(?string $message = null): static
+    public function required(bool $required = true): static
     {
-        $this->addRule('required');
-
-        if ($message) {
-            $this->message('required', $message);
+        if ($required) {
+            $this->addRule('required');
+        } else {
+            $this->removeRule('required');
         }
 
         return $this;

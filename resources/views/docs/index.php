@@ -105,6 +105,9 @@ function renderSection($icon, $title, $cards, $gridClass = 'docs-grid')
             <button class="docs-tab-button" data-tab="dev-panel" onclick="switchDocsTab(this)">
                 <span class="mdi mdi-code-braces"></span> Development
             </button>
+            <button class="docs-tab-button" data-tab="uiengine-panel" onclick="switchDocsTab(this)">
+                <span class="mdi mdi-view-dashboard"></span> UiEngine
+            </button>
             <div class="docs-search-wrapper">
                 <div class="docs-search-box">
                     <span class="mdi mdi-magnify"></span>
@@ -282,6 +285,69 @@ function renderSection($icon, $title, $cards, $gridClass = 'docs-grid')
                 renderCard('/docs/dev-locale-validation', 'check-circle', 'Locale Validation Rules', 'Country-specific validation: phone numbers, postal codes, and tax IDs for 40+ countries.', ['new', 'guide', 'enterprise']),
                 renderCard('/docs/dev-translation-cli', 'console', 'Translation CLI Commands', 'Create, sync, and audit translations with make:translation, translations:missing, translations:sync.', ['new', 'guide', 'cli']),
                 renderCard('/docs/dev-rtl-layouts', 'format-textbox', 'RTL Layout Guide', 'Building layouts that support right-to-left languages with CSS and helpers.', ['new', 'guide', 'i18n']),
+            ]) ?>
+
+        </div>
+
+        <!-- ==================== UIENGINE TAB ==================== -->
+        <div class="docs-tab-panel" id="uiengine-panel">
+
+            <?= renderSection('code-tags', 'Base Elements', [
+                renderCard('/docs/uiengine/html', 'xml', 'Html Element', 'Generic HTML element for creating any tag (div, span, p, a, etc.) with symmetric PHP/JS API.', ['new', 'core', 'dual']),
+                renderCard('/docs/uiengine/image', 'image', 'Image Element', 'Image element with responsive features, lazy loading, and styling (fluid, rounded, circle, thumbnail).', ['new', 'media', 'dual']),
+            ]) ?>
+
+            <?= renderSection('form-select', 'Form Elements (Coming Soon)', [
+                renderCard('#', 'form-textbox', 'Input', 'Text, email, password, number, tel, url inputs', 'future'),
+                renderCard('#', 'form-select', 'Select', 'Dropdown select with options and enhanced mode', 'future'),
+                renderCard('#', 'checkbox-marked', 'Checkbox', 'Single and grouped checkboxes', 'future'),
+                renderCard('#', 'radiobox-marked', 'Radio', 'Radio button groups', 'future'),
+                renderCard('#', 'form-textarea', 'Textarea', 'Multi-line text input with autosize', 'future'),
+                renderCard('#', 'button', 'Button', 'Buttons with variants, sizes, and icons', 'future'),
+                renderCard('#', 'file-upload', 'FileInput', 'File upload with validation', 'future'),
+                renderCard('#', 'eye-off', 'Hidden', 'Hidden form fields', 'future'),
+                renderCard('#', 'form', 'Form', 'Form container with CSRF and validation', 'future'),
+                renderCard('#', 'toggle-switch', 'Switch', 'Toggle switch element', 'future'),
+                renderCard('#', 'tune-vertical', 'Slider', 'Range slider input', 'future'),
+            ]) ?>
+
+            <?= renderSection('eye', 'Display Elements (Coming Soon)', [
+                renderCard('#', 'alert', 'Alert', 'Alert messages with variants', 'future'),
+                renderCard('#', 'label', 'Badge', 'Badge labels with colors', 'future'),
+                renderCard('#', 'card', 'Card', 'Card containers with header/body/footer', 'future'),
+                renderCard('#', 'window-maximize', 'Modal', 'Modal dialogs', 'future'),
+                renderCard('#', 'tab', 'Tabs', 'Tab navigation panels', 'future'),
+                renderCard('#', 'accordion', 'Accordion', 'Collapsible accordion panels', 'future'),
+                renderCard('#', 'progress-check', 'Progress', 'Progress bars', 'future'),
+                renderCard('#', 'table', 'Table', 'Data tables with sorting', 'future'),
+                renderCard('#', 'message-text', 'Toast', 'Toast notifications', 'future'),
+                renderCard('#', 'tooltip-text', 'Tooltip', 'Hover tooltips', 'future'),
+                renderCard('#', 'arrow-right', 'Breadcrumb', 'Breadcrumb navigation', 'future'),
+                renderCard('#', 'page-next', 'Pagination', 'Page pagination', 'future'),
+                renderCard('#', 'view-carousel', 'Carousel', 'Image carousel', 'future'),
+                renderCard('#', 'timeline', 'Timeline', 'Timeline component', 'future'),
+                renderCard('#', 'stairs', 'Stepper', 'Step indicators', 'future'),
+                renderCard('#', 'format-list-bulleted', 'ListGroup', 'List groups', 'future'),
+                renderCard('#', 'star', 'Rating', 'Star ratings', 'future'),
+                renderCard('#', 'loading', 'Spinner', 'Loading spinners', 'future'),
+                renderCard('#', 'rectangle-outline', 'Skeleton', 'Loading skeletons', 'future'),
+                renderCard('#', 'inbox', 'EmptyState', 'Empty state messages', 'future'),
+                renderCard('#', 'image-text', 'MediaObject', 'Media objects', 'future'),
+                renderCard('#', 'code-tags', 'CodeBlock', 'Code blocks with syntax highlighting', 'future'),
+            ]) ?>
+
+            <?= renderSection('view-dashboard', 'Layout Elements (Coming Soon)', [
+                renderCard('#', 'table-row', 'Row', 'Grid row container', 'future'),
+                renderCard('#', 'table-column', 'Column', 'Grid column with responsive sizes', 'future'),
+                renderCard('#', 'crop-square', 'Container', 'Page container', 'future'),
+                renderCard('#', 'minus', 'Divider', 'Horizontal divider', 'future'),
+            ]) ?>
+
+            <?= renderSection('menu', 'Navigation Elements (Coming Soon)', [
+                renderCard('#', 'navigation', 'Navbar', 'Navigation bar', 'future'),
+                renderCard('#', 'menu', 'NavItem', 'Navigation items', 'future'),
+                renderCard('#', 'menu-down', 'Dropdown', 'Dropdown menus', 'future'),
+                renderCard('#', 'sidebar', 'Sidebar', 'Sidebar navigation', 'future'),
             ]) ?>
 
         </div>

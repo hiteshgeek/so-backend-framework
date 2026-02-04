@@ -214,6 +214,192 @@ class FileInput extends FormElement {
     }
 
     /**
+     * Render to DOM (matches PHP structure)
+     * @returns {HTMLElement}
+     */
+    render() {
+        if (this._dropzone) {
+            return this._renderDropzone();
+        }
+        return this._renderStyledInput();
+    }
+
+    /**
+     * Render styled file input with wrapper (matches PHP)
+     * @returns {HTMLElement}
+     * @private
+     */
+    _renderStyledInput() {
+        const wrapper = document.createElement('div');
+        wrapper.className = SixOrbit.cls('form-control-file');
+
+        // Render the actual file input
+        const input = super.render();
+        wrapper.appendChild(input);
+
+        // Add button
+        const button = document.createElement('span');
+        button.className = SixOrbit.cls('form-file-button');
+
+        const icon = document.createElement('span');
+        icon.className = 'material-icons';
+        icon.textContent = 'upload_file';
+        button.appendChild(icon);
+        button.appendChild(document.createTextNode('Browse'));
+
+        wrapper.appendChild(button);
+
+        // Add text display
+        const text = document.createElement('span');
+        text.className = SixOrbit.cls('form-file-text');
+        text.textContent = 'No file chosen';
+        wrapper.appendChild(text);
+
+        return wrapper;
+    }
+
+    /**
+     * Render as dropzone (matches PHP)
+     * @returns {HTMLElement}
+     * @private
+     */
+    _renderDropzone() {
+        const wrapper = document.createElement('div');
+        wrapper.className = SixOrbit.cls('dropzone');
+
+        // Content area
+        const content = document.createElement('div');
+        content.className = SixOrbit.cls('dropzone-content');
+
+        const icon = document.createElement('span');
+        icon.className = `material-icons ${SixOrbit.cls('dropzone-icon')}`;
+        icon.textContent = 'cloud_upload';
+        content.appendChild(icon);
+
+        const text = document.createElement('p');
+        text.className = SixOrbit.cls('dropzone-text');
+        text.textContent = 'Drag and drop files here or click to browse';
+        content.appendChild(text);
+
+        if (this._accept) {
+            const hint = document.createElement('p');
+            hint.className = SixOrbit.cls('dropzone-hint');
+            hint.textContent = `Accepted: ${this._accept}`;
+            content.appendChild(hint);
+        }
+
+        if (this._maxSize) {
+            const hint = document.createElement('p');
+            hint.className = SixOrbit.cls('dropzone-hint');
+            hint.textContent = `Max size: ${this._formatBytes(this._maxSize)}`;
+            content.appendChild(hint);
+        }
+
+        wrapper.appendChild(content);
+
+        // Hidden file input
+        const input = super.render();
+        wrapper.appendChild(input);
+
+        // Preview area
+        if (this._preview) {
+            const preview = document.createElement('div');
+            preview.className = SixOrbit.cls('dropzone-preview');
+            wrapper.appendChild(preview);
+        }
+
+        return wrapper;
+    }
+
+    /**
+     * Render to HTML string (matches PHP structure)
+     * @returns {string}
+     */
+    toHtml() {
+        if (this._dropzone) {
+            return this._toHtmlDropzone();
+        }
+        return this._toHtmlStyledInput();
+    }
+
+    /**
+     * Render styled input to HTML string
+     * @returns {string}
+     * @private
+     */
+    _toHtmlStyledInput() {
+        let html = `<div class="${SixOrbit.cls('form-control-file')}">`;
+
+        // Render the actual file input
+        html += super.toHtml();
+
+        // Add button
+        html += `<span class="${SixOrbit.cls('form-file-button')}">`;
+        html += '<span class="material-icons">upload_file</span>';
+        html += 'Browse';
+        html += '</span>';
+
+        // Add text display
+        html += `<span class="${SixOrbit.cls('form-file-text')}">No file chosen</span>`;
+
+        html += '</div>';
+
+        return html;
+    }
+
+    /**
+     * Render dropzone to HTML string
+     * @returns {string}
+     * @private
+     */
+    _toHtmlDropzone() {
+        let html = `<div class="${SixOrbit.cls('dropzone')}">`;
+        html += `<div class="${SixOrbit.cls('dropzone-content')}">`;
+        html += `<span class="material-icons ${SixOrbit.cls('dropzone-icon')}">cloud_upload</span>`;
+        html += `<p class="${SixOrbit.cls('dropzone-text')}">Drag and drop files here or click to browse</p>`;
+
+        if (this._accept) {
+            html += `<p class="${SixOrbit.cls('dropzone-hint')}">Accepted: ${this._escapeHtml(this._accept)}</p>`;
+        }
+
+        if (this._maxSize) {
+            html += `<p class="${SixOrbit.cls('dropzone-hint')}">Max size: ${this._formatBytes(this._maxSize)}</p>`;
+        }
+
+        html += '</div>';
+
+        // Hidden file input
+        html += super.toHtml();
+
+        // Preview area
+        if (this._preview) {
+            html += `<div class="${SixOrbit.cls('dropzone-preview')}"></div>`;
+        }
+
+        html += '</div>';
+
+        return html;
+    }
+
+    /**
+     * Format bytes to human readable
+     * @param {number} bytes
+     * @returns {string}
+     * @private
+     */
+    _formatBytes(bytes) {
+        const units = ['B', 'KB', 'MB', 'GB'];
+        let i = 0;
+
+        while (bytes >= 1024 && i < units.length - 1) {
+            bytes /= 1024;
+            i++;
+        }
+
+        return `${Math.round(bytes * 100) / 100} ${units[i]}`;
+    }
+
+    /**
      * Get files
      * @returns {FileList|null}
      */

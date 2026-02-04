@@ -30,24 +30,29 @@ $app->singleton('db', function ($app) {
     return new class($dbConnection) {
         public $connection;
 
-        public function __construct($connection) {
+        public function __construct($connection)
+        {
             $this->connection = $connection;
         }
 
-        public function table(string $table): QueryBuilder {
+        public function table(string $table): QueryBuilder
+        {
             $builder = new QueryBuilder($this->connection);
             return $builder->table($table);
         }
 
-        public function lastInsertId(): string {
+        public function lastInsertId(): string
+        {
             return $this->connection->lastInsertId();
         }
 
-        public function execute(string $sql, array $params = []): int {
+        public function execute(string $sql, array $params = []): int
+        {
             return $this->connection->query($sql, $params)->rowCount();
         }
 
-        public function query(string $sql, array $params = []): \PDOStatement {
+        public function query(string $sql, array $params = []): \PDOStatement
+        {
             return $this->connection->query($sql, $params);
         }
     };
@@ -63,24 +68,29 @@ $app->singleton('db-essentials', function ($app) {
     return new class($dbConnection) {
         public $connection;
 
-        public function __construct($connection) {
+        public function __construct($connection)
+        {
             $this->connection = $connection;
         }
 
-        public function table(string $table): QueryBuilder {
+        public function table(string $table): QueryBuilder
+        {
             $builder = new QueryBuilder($this->connection);
             return $builder->table($table);
         }
 
-        public function lastInsertId(): string {
+        public function lastInsertId(): string
+        {
             return $this->connection->lastInsertId();
         }
 
-        public function execute(string $sql, array $params = []): int {
+        public function execute(string $sql, array $params = []): int
+        {
             return $this->connection->query($sql, $params)->rowCount();
         }
 
-        public function query(string $sql, array $params = []): \PDOStatement {
+        public function query(string $sql, array $params = []): \PDOStatement
+        {
             return $this->connection->query($sql, $params);
         }
     };

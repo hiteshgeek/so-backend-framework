@@ -58,8 +58,6 @@ class Flex extends ContainerElement {
         return super.buildClassString();
     }
 
-    renderContent() { return this.renderChildren(); }
-
     toConfig() {
         const config = super.toConfig();
         if (this._direction) config.direction = this._direction;

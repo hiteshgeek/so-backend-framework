@@ -70,6 +70,60 @@ abstract class ContainerElement extends Element implements ContainerInterface
     }
 
     /**
+     * Replace content with raw HTML (clears existing children)
+     *
+     * @param string $html Raw HTML content
+     * @return static
+     */
+    public function html(string $html): static
+    {
+        // Clear existing children (replace behavior)
+        $this->children = [];
+
+        // Create RawHtml element using ElementFactory to avoid circular dependency
+        $element = ElementFactory::create([
+            'type' => 'rawhtml',
+            'innerHTML' => $html
+        ]);
+        $this->children[] = $element;
+        return $this;
+    }
+
+    /**
+     * Append raw HTML content
+     *
+     * @param string $html Raw HTML content
+     * @return static
+     */
+    public function appendHtml(string $html): static
+    {
+        // Create RawHtml element using ElementFactory to avoid circular dependency
+        $element = ElementFactory::create([
+            'type' => 'rawhtml',
+            'innerHTML' => $html
+        ]);
+        $this->children[] = $element;
+        return $this;
+    }
+
+    /**
+     * Prepend raw HTML content
+     *
+     * @param string $html Raw HTML content
+     * @return static
+     */
+    public function prependHtml(string $html): static
+    {
+        // Create RawHtml element using ElementFactory to avoid circular dependency
+        $element = ElementFactory::create([
+            'type' => 'rawhtml',
+            'innerHTML' => $html
+        ]);
+        array_unshift($this->children, $element);
+        return $this;
+    }
+
+    /**
      * Add multiple child elements
      *
      * @param array<ElementInterface|array> $elements
@@ -118,28 +172,27 @@ abstract class ContainerElement extends Element implements ContainerInterface
     }
 
     /**
-     * Remove a child element
+     * Remove a child element by index or ID
      *
-     * @param ElementInterface|string $element Element instance or ID
+     * @param int|string $indexOrId Element index or ID
      * @return static
      */
-    public function remove(ElementInterface|string $element): static
+    public function remove(int|string $indexOrId): static
     {
-        if (is_string($element)) {
+        if (is_int($indexOrId)) {
+            // Remove by index
+            if (isset($this->children[$indexOrId])) {
+                array_splice($this->children, $indexOrId, 1);
+            }
+        } else {
             // Remove by ID
             $this->children = array_filter(
                 $this->children,
-                fn($child) => $child->getId() !== $element
+                fn($child) => $child->getId() !== $indexOrId
             );
-        } else {
-            // Remove by instance
-            $this->children = array_filter(
-                $this->children,
-                fn($child) => $child !== $element
-            );
+            $this->children = array_values($this->children);
         }
 
-        $this->children = array_values($this->children);
         return $this;
     }
 

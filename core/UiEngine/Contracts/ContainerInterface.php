@@ -70,6 +70,22 @@ interface ContainerInterface extends ElementInterface
     public function find(string $id): ?ElementInterface;
 
     /**
+     * Find all children matching a callback
+     *
+     * @param callable $callback fn(ElementInterface) => bool
+     * @return array<ElementInterface>
+     */
+    public function findAll(callable $callback): array;
+
+    /**
+     * Find first child matching a callback
+     *
+     * @param callable $callback fn(ElementInterface) => bool
+     * @return ElementInterface|null
+     */
+    public function findFirst(callable $callback): ?ElementInterface;
+
+    /**
      * Find all form elements (recursively)
      *
      * @return array<FormElementInterface>

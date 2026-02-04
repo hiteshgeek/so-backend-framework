@@ -136,4 +136,10 @@ return [
 
     // Complete Guides
     ['key' => 'comprehensive-security', 'title' => 'Comprehensive Security Guide', 'url' => '/docs/comprehensive-security'],
+
+    // ===== UIENGINE ELEMENT REFERENCE =====
+
+    // Base Elements
+    ['key' => 'uiengine-html', 'title' => 'Html Element', 'url' => '/docs/uiengine/html'],
+    ['key' => 'uiengine-image', 'title' => 'Image Element', 'url' => '/docs/uiengine/image'],
 ];

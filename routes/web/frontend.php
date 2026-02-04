@@ -125,6 +125,28 @@ Router::get('/frontend/ui-engine/display/{component}', function(\Core\Http\Reque
     }
 });
 
+// UI Engine form demos (custom forms directory)
+Router::get('/frontend/ui-engine-form/{component}', function(\Core\Http\Request $request, $component) {
+    $file = __DIR__ . "/../../public/frontend/demos/ui-engine-form/{$component}.php";
+    if (file_exists($file)) {
+        // Set $_SERVER vars so demo config works correctly
+        $_SERVER['PHP_SELF'] = "/demo/ui-engine-form/{$component}.php";
+        $_SERVER['SCRIPT_NAME'] = "/demo/ui-engine-form/{$component}.php";
+        $_SERVER['REQUEST_URI'] = "/demo/ui-engine-form/{$component}.php";
+
+        // Change working directory so relative includes work
+        $oldDir = getcwd();
+        chdir(dirname($file));
+        ob_start();
+        require basename($file);
+        $content = ob_get_clean();
+        chdir($oldDir);
+        return response($content);
+    } else {
+        abort(404);
+    }
+});
+
 // Elements demos (separate directory)
 Router::get('/frontend/elements/{component}', function(\Core\Http\Request $request, $component) {
     $file = __DIR__ . "/../../public/frontend/demos/elements/{$component}.php";

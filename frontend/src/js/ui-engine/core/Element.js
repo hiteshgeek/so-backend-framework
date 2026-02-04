@@ -53,7 +53,7 @@ class Element extends SOComponent {
      * @private
      */
     _initFromConfig(config) {
-        this.options = { ...this.constructor.DEFAULTS, ...config };
+        this._opts = { ...this.constructor.DEFAULTS, ...config };
 
         // Type and tag
         this._type = config.type || 'element';

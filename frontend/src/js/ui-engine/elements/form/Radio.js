@@ -129,13 +129,12 @@ class Radio extends FormElement {
      * @returns {string}
      */
     buildClassString() {
-        this._extraClasses.add(SixOrbit.cls('form-check-input'));
-
-        if (this._error) {
-            this._extraClasses.add(SixOrbit.cls('is-invalid'));
+        // For button style, add btn-check class
+        if (this._buttonStyle) {
+            this._extraClasses.add(SixOrbit.cls('btn-check'));
         }
 
-        // Remove form-control
+        // Remove form-control (standard radio uses wrapper label pattern, no input class needed)
         this._extraClasses.delete(SixOrbit.cls('form-control'));
 
         return super.buildClassString();
@@ -163,71 +162,123 @@ class Radio extends FormElement {
     }
 
     /**
-     * Render single radio to DOM
-     * @param {Object} option
-     * @param {number} index
-     * @returns {HTMLElement}
-     * @private
-     */
-    _renderSingleRadio(option, index) {
-        const wrapper = document.createElement('div');
-        wrapper.className = SixOrbit.cls('form-check');
-
-        if (this._inline) {
-            wrapper.classList.add(SixOrbit.cls('form-check-inline'));
-        }
-
-        const input = document.createElement('input');
-        input.type = 'radio';
-        input.className = SixOrbit.cls('form-check-input');
-        input.name = this._name;
-        input.value = option.value ?? option;
-        input.id = `${this._id || this._name}-${index}`;
-
-        if (option.checked || this._value == input.value) {
-            input.checked = true;
-        }
-
-        if (option.disabled || this._disabled) {
-            input.disabled = true;
-        }
-
-        wrapper.appendChild(input);
-
-        const label = document.createElement('label');
-        label.className = SixOrbit.cls('form-check-label');
-        label.setAttribute('for', input.id);
-        label.textContent = option.label ?? option;
-        wrapper.appendChild(label);
-
-        return wrapper;
-    }
-
-    /**
-     * Render to DOM
+     * Render to DOM (matches PHP structure)
      * @returns {HTMLElement}
      */
     render() {
         // If options provided, render radio group
         if (this._options && this._options.length > 0) {
             const container = document.createElement('div');
-            container.className = SixOrbit.cls('radio-group');
+            container.className = SixOrbit.cls('form-group');
 
+            // Group label
+            if (this._label) {
+                const labelEl = document.createElement('label');
+                labelEl.className = `${SixOrbit.cls('form-label')} ${SixOrbit.cls('mb-2')}`;
+                labelEl.textContent = this._label;
+                if (this._required) {
+                    const required = document.createElement('span');
+                    required.className = SixOrbit.cls('text-danger');
+                    required.textContent = ' *';
+                    labelEl.appendChild(required);
+                }
+                container.appendChild(labelEl);
+            }
+
+            // Button group or radio group wrapper
+            const groupWrapper = document.createElement('div');
+            if (this._buttonStyle) {
+                groupWrapper.className = SixOrbit.cls('btn-group');
+                groupWrapper.setAttribute('role', 'group');
+            } else {
+                groupWrapper.className = this._inline
+                    ? `${SixOrbit.cls('radio-group')} ${SixOrbit.cls('radio-group-inline')}`
+                    : `${SixOrbit.cls('radio-group')} ${SixOrbit.cls('radio-group-vertical')}`;
+            }
+
+            // Radio buttons
             this._options.forEach((opt, index) => {
-                container.appendChild(this._renderSingleRadio(opt, index));
+                const value = opt.value ?? index;
+                const label = opt.label ?? value;
+                const disabled = opt.disabled ?? false;
+                const optionId = this._id ? `${this._id}_${index}` : `${this._name}_${index}`;
+                const checked = this._isSelected(value);
+
+                if (this._buttonStyle) {
+                    // Button style radio
+                    const input = document.createElement('input');
+                    input.type = 'radio';
+                    input.className = SixOrbit.cls('btn-check');
+                    input.name = this._name;
+                    input.id = optionId;
+                    input.value = value;
+                    input.setAttribute('autocomplete', 'off');
+                    if (checked) input.checked = true;
+                    if (disabled || this._disabled) input.disabled = true;
+                    groupWrapper.appendChild(input);
+
+                    const labelEl = document.createElement('label');
+                    labelEl.className = `${SixOrbit.cls('btn')} ${SixOrbit.cls('btn', this._buttonVariant)}`;
+                    labelEl.setAttribute('for', optionId);
+                    labelEl.textContent = label;
+                    groupWrapper.appendChild(labelEl);
+                } else {
+                    // Standard radio with so-radio structure
+                    const wrapper = document.createElement('label');
+                    wrapper.className = SixOrbit.cls('radio');
+                    if (disabled || this._disabled) {
+                        wrapper.classList.add(SixOrbit.cls('disabled'));
+                    }
+                    if (this._error) {
+                        wrapper.classList.add(SixOrbit.cls('is-invalid'));
+                    }
+
+                    const input = document.createElement('input');
+                    input.type = 'radio';
+                    input.name = this._name;
+                    input.value = value;
+                    if (checked) input.checked = true;
+                    if (disabled || this._disabled) input.disabled = true;
+                    if (this._required) input.required = true;
+                    wrapper.appendChild(input);
+
+                    const circle = document.createElement('span');
+                    circle.className = SixOrbit.cls('radio-circle');
+                    wrapper.appendChild(circle);
+
+                    const labelSpan = document.createElement('span');
+                    labelSpan.className = SixOrbit.cls('radio-label');
+                    labelSpan.textContent = label;
+                    wrapper.appendChild(labelSpan);
+
+                    groupWrapper.appendChild(wrapper);
+                }
             });
 
+            container.appendChild(groupWrapper);
+
+            // Help text
+            if (this._help) {
+                const helpEl = document.createElement('div');
+                helpEl.className = SixOrbit.cls('form-text');
+                helpEl.textContent = this._help;
+                container.appendChild(helpEl);
+            }
+
+            // Error
+            if (this._error) {
+                const errorEl = document.createElement('div');
+                errorEl.className = `${SixOrbit.cls('invalid-feedback')} ${SixOrbit.cls('d-block')}`;
+                errorEl.textContent = this._error;
+                container.appendChild(errorEl);
+            }
+
+            this.element = container;
+            this._attachEventHandlers();
             return container;
         }
 
-        // Single radio
-        const wrapper = document.createElement('div');
-        wrapper.className = SixOrbit.cls('form-check');
-
-        if (this._inline) {
-            wrapper.classList.add(SixOrbit.cls('form-check-inline'));
-        }
-
+        // Single radio (fallback - rarely used)
         const input = document.createElement('input');
         const attrs = this.buildAttributes();
         Object.entries(attrs).forEach(([name, value]) => {
@@ -238,89 +289,184 @@ class Radio extends FormElement {
             }
         });
 
-        wrapper.appendChild(input);
         this.element = input;
-
-        if (this._label) {
-            const label = document.createElement('label');
-            label.className = SixOrbit.cls('form-check-label');
-            label.textContent = this._label;
-            if (this._id) {
-                label.setAttribute('for', this._id);
-            }
-            wrapper.appendChild(label);
-        }
-
         this._attachEventHandlers();
-        return wrapper;
+        return input;
     }
 
     /**
-     * Render to HTML string
+     * Render a standard radio option (matches PHP)
+     * @param {string} id
+     * @param {*} value
+     * @param {string} label
+     * @param {boolean} checked
+     * @param {boolean} disabled
+     * @returns {string}
+     * @private
+     */
+    _renderStandardOption(id, value, label, checked, disabled) {
+        // Wrapper label with so-radio class
+        let labelClass = SixOrbit.cls('radio');
+        if (disabled || this._disabled) {
+            labelClass += ` ${SixOrbit.cls('disabled')}`;
+        }
+        if (this._error) {
+            labelClass += ` ${SixOrbit.cls('is-invalid')}`;
+        }
+
+        let html = `<label class="${labelClass}">`;
+
+        // Hidden input
+        html += '<input type="radio"';
+        html += ` name="${this._escapeHtml(this._name)}"`;
+        html += ` value="${this._escapeHtml(String(value))}"`;
+
+        if (checked) {
+            html += ' checked';
+        }
+
+        if (disabled || this._disabled) {
+            html += ' disabled';
+        }
+
+        if (this._required) {
+            html += ' required';
+        }
+
+        html += '>';
+
+        // Visual circle indicator
+        html += `<span class="${SixOrbit.cls('radio-circle')}"></span>`;
+
+        // Label text
+        html += `<span class="${SixOrbit.cls('radio-label')}">${this._escapeHtml(String(label))}</span>`;
+
+        html += '</label>';
+
+        return html;
+    }
+
+    /**
+     * Render a button-style radio option (matches PHP)
+     * @param {string} id
+     * @param {*} value
+     * @param {string} label
+     * @param {boolean} checked
+     * @param {boolean} disabled
+     * @returns {string}
+     * @private
+     */
+    _renderButtonOption(id, value, label, checked, disabled) {
+        let html = '';
+
+        // Input (hidden visually)
+        html += '<input type="radio"';
+        html += ` class="${SixOrbit.cls('btn-check')}"`;
+        html += ` name="${this._escapeHtml(this._name)}"`;
+        html += ` id="${this._escapeHtml(id)}"`;
+        html += ` value="${this._escapeHtml(String(value))}"`;
+        html += ' autocomplete="off"';
+
+        if (checked) {
+            html += ' checked';
+        }
+
+        if (disabled || this._disabled) {
+            html += ' disabled';
+        }
+
+        html += '>';
+
+        // Label as button
+        html += `<label class="${SixOrbit.cls('btn')} ${SixOrbit.cls('btn', this._buttonVariant)}" for="${this._escapeHtml(id)}">${this._escapeHtml(String(label))}</label>`;
+
+        return html;
+    }
+
+    /**
+     * Check if a value is selected
+     * @param {*} value
+     * @returns {boolean}
+     * @private
+     */
+    _isSelected(value) {
+        if (this._value === null || this._value === undefined) {
+            return false;
+        }
+        return String(this._value) === String(value);
+    }
+
+    /**
+     * Render to HTML string (matches PHP Radio.render())
      * @returns {string}
      */
     toHtml() {
-        // If options provided, render radio group
+        // If options provided, render radio group (PHP structure)
         if (this._options && this._options.length > 0) {
-            // Button style uses btn-group wrapper
-            if (this._buttonStyle) {
-                let html = `<div class="${SixOrbit.cls('btn-group')}" role="group">`;
+            let html = `<div class="${SixOrbit.cls('form-group')}">`;
 
-                this._options.forEach((opt, index) => {
-                    const value = opt.value ?? opt;
-                    const label = opt.label ?? opt;
-                    const id = `${this._id || this._name}-${index}`;
-                    const checked = (opt.checked || this._value == value) ? ' checked' : '';
-                    const disabled = (opt.disabled || this._disabled) ? ' disabled' : '';
-
-                    html += `<input type="radio" class="${SixOrbit.cls('btn-check')}" name="${this._escapeHtml(this._name)}" value="${this._escapeHtml(String(value))}" id="${this._escapeHtml(id)}" autocomplete="off"${checked}${disabled}>`;
-                    html += `<label class="${SixOrbit.cls('btn')} ${SixOrbit.cls('btn', this._buttonVariant)}" for="${this._escapeHtml(id)}">${this._escapeHtml(String(label))}</label>`;
-                });
-
-                html += '</div>';
-                return html;
+            // Group label
+            if (this._label) {
+                html += `<label class="${SixOrbit.cls('form-label')} ${SixOrbit.cls('mb-2')}">${this._escapeHtml(this._label)}`;
+                if (this._required) {
+                    html += ` <span class="${SixOrbit.cls('text-danger')}">*</span>`;
+                }
+                html += '</label>';
             }
 
-            // Standard radio group
-            let html = `<div class="${SixOrbit.cls('radio-group')}">`;
+            // Button group wrapper for button style
+            if (this._buttonStyle) {
+                html += `<div class="${SixOrbit.cls('btn-group')}" role="group">`;
+            } else {
+                // Radio group wrapper
+                let groupClass = SixOrbit.cls('radio-group');
+                groupClass += this._inline
+                    ? ` ${SixOrbit.cls('radio-group-inline')}`
+                    : ` ${SixOrbit.cls('radio-group-vertical')}`;
+                html += `<div class="${groupClass}">`;
+            }
 
+            // Radio buttons
             this._options.forEach((opt, index) => {
-                const value = opt.value ?? opt;
-                const label = opt.label ?? opt;
-                const id = `${this._id || this._name}-${index}`;
-                const checked = (opt.checked || this._value == value) ? ' checked' : '';
-                const disabled = (opt.disabled || this._disabled) ? ' disabled' : '';
-                const inlineClass = this._inline ? ` ${SixOrbit.cls('form-check-inline')}` : '';
+                const value = opt.value ?? index;
+                const label = opt.label ?? value;
+                const disabled = opt.disabled ?? false;
+                const optionId = this._id ? `${this._id}_${index}` : `${this._name}_${index}`;
+                const checked = this._isSelected(value);
 
-                html += `<div class="${SixOrbit.cls('form-check')}${inlineClass}">`;
-                html += `<input type="radio" class="${SixOrbit.cls('form-check-input')}" name="${this._escapeHtml(this._name)}" value="${this._escapeHtml(String(value))}" id="${this._escapeHtml(id)}"${checked}${disabled}>`;
-                html += `<label class="${SixOrbit.cls('form-check-label')}" for="${this._escapeHtml(id)}">${this._escapeHtml(String(label))}</label>`;
-                html += '</div>';
+                if (this._buttonStyle) {
+                    html += this._renderButtonOption(optionId, value, label, checked, disabled);
+                } else {
+                    html += this._renderStandardOption(optionId, value, label, checked, disabled);
+                }
             });
 
+            // Close group wrapper
             html += '</div>';
+
+            // Help text
+            if (this._help) {
+                html += `<div class="${SixOrbit.cls('form-text')}">${this._escapeHtml(this._help)}</div>`;
+            }
+
+            // Error
+            if (this._error) {
+                html += `<div class="${SixOrbit.cls('invalid-feedback')} ${SixOrbit.cls('d-block')}">${this._escapeHtml(this._error)}</div>`;
+            }
+
+            html += '</div>';
+
             return html;
         }
 
-        // Single radio
-        const inlineClass = this._inline ? ` ${SixOrbit.cls('form-check-inline')}` : '';
+        // Single radio (fallback - rarely used)
         const attrs = this.buildAttributes();
         let attrStr = Object.entries(attrs)
             .filter(([, v]) => v !== false && v !== null && v !== undefined)
             .map(([k, v]) => v === true ? k : `${k}="${this._escapeHtml(String(v))}"`)
             .join(' ');
 
-        let html = `<div class="${SixOrbit.cls('form-check')}${inlineClass}">`;
-        html += `<input ${attrStr}>`;
-
-        if (this._label) {
-            const forAttr = this._id ? ` for="${this._escapeHtml(this._id)}"` : '';
-            html += `<label class="${SixOrbit.cls('form-check-label')}"${forAttr}>${this._escapeHtml(this._label)}</label>`;
-        }
-
-        html += '</div>';
-
-        return html;
+        return `<input ${attrStr}>`;
     }
 
     // ==================

@@ -28,6 +28,9 @@ use Core\UiEngine\Elements\Layout\Row;
 use Core\UiEngine\Elements\Layout\Column;
 use Core\UiEngine\Elements\Layout\Container;
 use Core\UiEngine\Elements\Layout\Divider;
+use Core\UiEngine\Elements\Html;
+use Core\UiEngine\Elements\RawHtml;
+use Core\UiEngine\Elements\Display\Image;
 use InvalidArgumentException;
 
 /**
@@ -91,6 +94,12 @@ class ElementFactory
         static::register('col', Column::class); // Alias
         static::register('container', Container::class);
         static::register('divider', Divider::class);
+
+        // HTML elements
+        static::register('html', Html::class);
+        static::register('rawhtml', RawHtml::class);
+        static::register('image', Image::class);
+        static::register('img', Image::class); // Alias
 
         static::$initialized = true;
     }

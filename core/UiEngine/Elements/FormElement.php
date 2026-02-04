@@ -679,7 +679,7 @@ abstract class FormElement extends Element implements FormElementInterface
             'disabled' => $this->disabled,
             'readonly' => $this->readonly,
             'required' => $this->isRequired,
-            'rules' => $this->rules,
+            'rules' => $this->validationRules,
             'events' => $this->events,
         ]);
     }

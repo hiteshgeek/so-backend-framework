@@ -92,13 +92,6 @@ class Slider extends FormElement
     protected string $variant = 'primary';
 
     /**
-     * Slider size (xs, sm, default, lg)
-     *
-     * @var string|null
-     */
-    protected ?string $size = null;
-
-    /**
      * Vertical orientation
      *
      * @var bool
@@ -174,10 +167,6 @@ class Slider extends FormElement
 
         if (isset($config['variant'])) {
             $this->variant = $config['variant'];
-        }
-
-        if (isset($config['size'])) {
-            $this->size = $config['size'];
         }
 
         if (isset($config['vertical'])) {
@@ -498,7 +487,7 @@ class Slider extends FormElement
         $classes = [CssPrefix::cls('slider')];
 
         // Size variant
-        if ($this->size) {
+        if ($this->size !== 'md') {
             $classes[] = CssPrefix::cls('slider', $this->size);
         }
 
@@ -827,7 +816,7 @@ class Slider extends FormElement
             $config['variant'] = $this->variant;
         }
 
-        if ($this->size !== null) {
+        if ($this->size !== 'md') {
             $config['size'] = $this->size;
         }
 

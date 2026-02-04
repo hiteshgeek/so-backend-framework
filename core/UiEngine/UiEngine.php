@@ -14,6 +14,9 @@ use Core\UiEngine\Elements\Form\FileInput;
 use Core\UiEngine\Elements\Form\Hidden;
 use Core\UiEngine\Elements\Form\Form;
 use Core\UiEngine\Elements\Form\SwitchElement;
+use Core\UiEngine\Elements\Form\Slider;
+use Core\UiEngine\Elements\Form\Autocomplete;
+use Core\UiEngine\Elements\Form\Dropzone;
 use Core\UiEngine\Elements\Display\Alert;
 use Core\UiEngine\Elements\Display\Badge;
 use Core\UiEngine\Elements\Display\Card;
@@ -27,6 +30,8 @@ use Core\UiEngine\Elements\Layout\Row;
 use Core\UiEngine\Elements\Layout\Column;
 use Core\UiEngine\Elements\Layout\Container;
 use Core\UiEngine\Elements\Layout\Divider;
+use Core\UiEngine\Elements\Html;
+use Core\UiEngine\Elements\Display\Image;
 use Core\UiEngine\Validation\ClientRuleExporter;
 
 /**
@@ -292,6 +297,23 @@ class UiEngine
     }
 
     /**
+     * Create a slider (range input)
+     *
+     * @param string|null $name
+     * @return Slider
+     */
+    public static function slider(?string $name = null): Slider
+    {
+        $slider = Slider::make();
+
+        if ($name !== null) {
+            $slider->name($name);
+        }
+
+        return $slider;
+    }
+
+    /**
      * Create a hidden input
      *
      * @param string|null $name
@@ -311,6 +333,40 @@ class UiEngine
         }
 
         return $hidden;
+    }
+
+    /**
+     * Create an autocomplete input
+     *
+     * @param string|null $name
+     * @return Autocomplete
+     */
+    public static function autocomplete(?string $name = null): Autocomplete
+    {
+        $autocomplete = Autocomplete::make();
+
+        if ($name !== null) {
+            $autocomplete->name($name);
+        }
+
+        return $autocomplete;
+    }
+
+    /**
+     * Create a dropzone file upload
+     *
+     * @param string|null $name
+     * @return Dropzone
+     */
+    public static function dropzone(?string $name = null): Dropzone
+    {
+        $dropzone = Dropzone::make();
+
+        if ($name !== null) {
+            $dropzone->name($name);
+        }
+
+        return $dropzone;
     }
 
     /**
@@ -605,6 +661,114 @@ class UiEngine
         }
 
         return $divider;
+    }
+
+    // ==================
+    // HTML Elements
+    // ==================
+
+    /**
+     * Create a generic HTML element
+     *
+     * @param string $tag
+     * @param string|null $content
+     * @return Html
+     */
+    public static function html(string $tag = 'div', ?string $content = null): Html
+    {
+        $element = Html::make();
+        $element->tag($tag);
+
+        if ($content !== null) {
+            $element->text($content);
+        }
+
+        return $element;
+    }
+
+    /**
+     * Create a div element
+     *
+     * @param string|null $content
+     * @return Html
+     */
+    public static function div(?string $content = null): Html
+    {
+        return static::html('div', $content);
+    }
+
+    /**
+     * Create a span element
+     *
+     * @param string|null $content
+     * @return Html
+     */
+    public static function span(?string $content = null): Html
+    {
+        return static::html('span', $content);
+    }
+
+    /**
+     * Create a paragraph element
+     *
+     * @param string|null $content
+     * @return Html
+     */
+    public static function p(?string $content = null): Html
+    {
+        return static::html('p', $content);
+    }
+
+    /**
+     * Create an anchor/link element
+     *
+     * @param string|null $href
+     * @param string|null $text
+     * @return Html
+     */
+    public static function a(?string $href = null, ?string $text = null): Html
+    {
+        $element = static::html('a', $text);
+
+        if ($href !== null) {
+            $element->href($href);
+        }
+
+        return $element;
+    }
+
+    /**
+     * Create an image element
+     *
+     * @param string|null $src
+     * @param string|null $alt
+     * @return Image
+     */
+    public static function img(?string $src = null, ?string $alt = null): Image
+    {
+        $image = Image::make();
+
+        if ($src !== null) {
+            $image->src($src);
+        }
+
+        if ($alt !== null) {
+            $image->alt($alt);
+        }
+
+        return $image;
+    }
+
+    /**
+     * Alias for img()
+     *
+     * @param string|null $src
+     * @param string|null $alt
+     * @return Image
+     */
+    public static function image(?string $src = null, ?string $alt = null): Image
+    {
+        return static::img($src, $alt);
     }
 
     // ==================

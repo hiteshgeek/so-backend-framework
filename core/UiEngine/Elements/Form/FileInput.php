@@ -315,7 +315,33 @@ class FileInput extends FormElement
             return $this->renderDropzone();
         }
 
-        return parent::render();
+        return $this->renderStyledInput();
+    }
+
+    /**
+     * Render styled file input with wrapper
+     *
+     * @return string
+     */
+    protected function renderStyledInput(): string
+    {
+        $html = '<div class="' . CssPrefix::cls('form-control-file') . '">';
+
+        // Render the actual file input
+        $html .= parent::render();
+
+        // Add button
+        $html .= '<span class="' . CssPrefix::cls('form-file-button') . '">';
+        $html .= '<span class="material-icons">upload_file</span>';
+        $html .= 'Browse';
+        $html .= '</span>';
+
+        // Add text display
+        $html .= '<span class="' . CssPrefix::cls('form-file-text') . '">No file chosen</span>';
+
+        $html .= '</div>';
+
+        return $html;
     }
 
     /**

@@ -27,6 +27,7 @@ class Card extends ContainerElement {
         super._initFromConfig(config);
 
         this._title = config.title || null;
+        this._titleHtml = config.titleHtml ? this._sanitizeHtml(config.titleHtml) : null;
         this._subtitle = config.subtitle || null;
         this._body = config.body || null;
         this._footer = config.footer || null;
@@ -46,6 +47,20 @@ class Card extends ContainerElement {
      */
     title(title) {
         this._title = title;
+        if (this.element) this._updateContent();
+        return this;
+    }
+
+    /**
+     * Set title as HTML (XSS-safe)
+     * Only allows safe tags (h1-h6, span, div, p, strong, em) and
+     * safe attributes (class, id). All event handlers and dangerous
+     * content are stripped.
+     * @param {string} html
+     * @returns {this}
+     */
+    titleHtml(html) {
+        this._titleHtml = this._sanitizeHtml(html);
         if (this.element) this._updateContent();
         return this;
     }
@@ -463,6 +478,55 @@ class Card extends ContainerElement {
      * Render content
      * @returns {string}
      */
+    /**
+     * Sanitize HTML to prevent XSS
+     * Allows only safe tags and attributes:
+     * - Tags: h1-h6, span, div, p, strong, em, br
+     * - Attributes: class, id
+     * @param {string} html
+     * @returns {string}
+     * @private
+     */
+    _sanitizeHtml(html) {
+        // Create a temporary div to parse HTML
+        const temp = document.createElement('div');
+        temp.innerHTML = html;
+
+        // Allowed tags
+        const allowedTags = ['H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'SPAN', 'DIV', 'P', 'STRONG', 'EM', 'BR'];
+
+        // Recursively clean nodes
+        const cleanNode = (node) => {
+            // Remove nodes with disallowed tags
+            if (node.nodeType === Node.ELEMENT_NODE) {
+                if (!allowedTags.includes(node.tagName)) {
+                    node.remove();
+                    return null;
+                }
+
+                // Remove all attributes except class and id
+                const attrs = Array.from(node.attributes);
+                attrs.forEach(attr => {
+                    if (attr.name !== 'class' && attr.name !== 'id') {
+                        node.removeAttribute(attr.name);
+                    }
+                });
+            }
+
+            // Clean child nodes
+            if (node.childNodes) {
+                Array.from(node.childNodes).forEach(child => cleanNode(child));
+            }
+
+            return node;
+        };
+
+        // Clean all children
+        Array.from(temp.childNodes).forEach(child => cleanNode(child));
+
+        return temp.innerHTML;
+    }
+
     renderContent() {
         let html = '';
 
@@ -471,42 +535,45 @@ class Card extends ContainerElement {
             html += `<img src="${this._escapeHtml(this._image)}" class="${SixOrbit.cls('card-img-top')}" alt="">`;
         }
 
-        // Header (title/subtitle)
-        if (this._title || this._headerActions.length > 0) {
+        // Header (only if there are header actions)
+        if (this._headerActions.length > 0) {
             html += `<div class="${SixOrbit.cls('card-header')}">`;
+            html += `<div class="${SixOrbit.cls('d-flex')} ${SixOrbit.cls('justify-content-between')} ${SixOrbit.cls('align-items-center')}">`;
+            html += `<div>`;
 
-            if (this._headerActions.length > 0) {
-                html += `<div class="${SixOrbit.cls('d-flex')} ${SixOrbit.cls('justify-content-between')} ${SixOrbit.cls('align-items-center')}">`;
-                html += `<div>`;
-            }
-
-            if (this._title) {
+            if (this._titleHtml) {
+                html += this._titleHtml;
+            } else if (this._title) {
                 html += `<h5 class="${SixOrbit.cls('card-title')} ${SixOrbit.cls('mb-0')}">${this._escapeHtml(this._title)}</h5>`;
             }
             if (this._subtitle) {
                 html += `<h6 class="${SixOrbit.cls('card-subtitle')} ${SixOrbit.cls('text-muted')}">${this._escapeHtml(this._subtitle)}</h6>`;
             }
 
-            if (this._headerActions.length > 0) {
-                html += `</div>`;
-                html += `<div class="${SixOrbit.cls('card-header-actions')}">`;
-                this._headerActions.forEach(action => {
-                    html += `<button type="button" class="${SixOrbit.cls('btn')} ${SixOrbit.cls('btn-sm')} ${SixOrbit.cls('btn-link')}" title="${this._escapeHtml(action.title || '')}">`;
-                    html += `<span class="material-icons">${this._escapeHtml(action.icon)}</span>`;
-                    html += `</button>`;
-                });
-                html += `</div></div>`;
-            }
-
+            html += `</div>`;
+            html += `<div class="${SixOrbit.cls('card-header-actions')}">`;
+            this._headerActions.forEach(action => {
+                html += `<button type="button" class="${SixOrbit.cls('btn')} ${SixOrbit.cls('btn-sm')} ${SixOrbit.cls('btn-link')}" title="${this._escapeHtml(action.title || '')}">`;
+                html += `<span class="material-icons">${this._escapeHtml(action.icon)}</span>`;
+                html += `</button>`;
+            });
+            html += `</div></div>`;
             html += '</div>';
         }
 
         // Body
         html += `<div class="${SixOrbit.cls('card-body')}">`;
 
-        // Title in body (if no header)
-        if (!this._title && this._content) {
-            // Just content
+        // Title in body (if no header actions)
+        if (this._headerActions.length === 0 && (this._title || this._titleHtml)) {
+            if (this._titleHtml) {
+                html += this._titleHtml;
+            } else if (this._title) {
+                html += `<h5 class="${SixOrbit.cls('card-title')}">${this._escapeHtml(this._title)}</h5>`;
+            }
+            if (this._subtitle) {
+                html += `<h6 class="${SixOrbit.cls('card-subtitle')} ${SixOrbit.cls('text-muted')}">${this._escapeHtml(this._subtitle)}</h6>`;
+            }
         }
 
         // Body content
@@ -514,8 +581,16 @@ class Card extends ContainerElement {
             html += `<p class="${SixOrbit.cls('card-text')}">${this._escapeHtml(this._body)}</p>`;
         }
 
-        // Render children
-        html += this.renderChildren();
+        // Render children as HTML
+        this._children.forEach(child => {
+            if (child instanceof Element) {
+                html += child.toHtml();
+            } else if (typeof child === 'string') {
+                html += this._escapeHtml(child);
+            } else if (typeof child === 'object' && child.toHtml) {
+                html += child.toHtml();
+            }
+        });
 
         html += '</div>';
 
@@ -532,6 +607,30 @@ class Card extends ContainerElement {
         return html;
     }
 
+    /**
+     * Render to DOM
+     * @returns {HTMLElement}
+     */
+    render() {
+        const el = document.createElement(this.getTagName());
+
+        // Apply attributes
+        const attrs = this.buildAttributes();
+        Object.entries(attrs).forEach(([name, value]) => {
+            if (value === true) {
+                el.setAttribute(name, '');
+            } else if (value !== false && value !== null && value !== undefined) {
+                el.setAttribute(name, value);
+            }
+        });
+
+        // Use renderContent() to build the card structure
+        el.innerHTML = this.renderContent();
+
+        this.element = el;
+        return el;
+    }
+
     // ==================
     // Config Export
     // ==================
@@ -544,6 +643,7 @@ class Card extends ContainerElement {
         const config = super.toConfig();
 
         if (this._title) config.title = this._title;
+        if (this._titleHtml) config.titleHtml = this._titleHtml;
         if (this._subtitle) config.subtitle = this._subtitle;
         if (this._body) config.body = this._body;
         if (this._footer) config.footer = this._footer;

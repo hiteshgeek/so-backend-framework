@@ -34,6 +34,13 @@ class Card extends ContainerElement
     protected ?string $title = null;
 
     /**
+     * Card title as sanitized HTML
+     *
+     * @var string|null
+     */
+    protected ?string $titleHtml = null;
+
+    /**
      * Card subtitle
      *
      * @var string|null
@@ -166,6 +173,10 @@ class Card extends ContainerElement
             $this->title = $config['title'];
         }
 
+        if (isset($config['titleHtml'])) {
+            $this->titleHtml = $this->sanitizeHtml($config['titleHtml']);
+        }
+
         if (isset($config['subtitle'])) {
             $this->subtitle = $config['subtitle'];
         }
@@ -244,6 +255,22 @@ class Card extends ContainerElement
     public function title(string $title): static
     {
         $this->title = $title;
+        return $this;
+    }
+
+    /**
+     * Set card title as HTML (XSS-safe)
+     *
+     * Only allows safe tags (h1-h6, span, div, p, strong, em) and
+     * safe attributes (class, id). All event handlers and dangerous
+     * content are stripped.
+     *
+     * @param string $html
+     * @return static
+     */
+    public function titleHtml(string $html): static
+    {
+        $this->titleHtml = $this->sanitizeHtml($html);
         return $this;
     }
 
@@ -609,7 +636,7 @@ class Card extends ContainerElement
      * @param string $style
      * @return static
      */
-    public function style(string $style): static
+    public function cardStyleType(string $style): static
     {
         $this->cardStyle = $style;
         return $this;
@@ -622,7 +649,7 @@ class Card extends ContainerElement
      */
     public function bordered(): static
     {
-        return $this->style('bordered');
+        return $this->cardStyleType('bordered');
     }
 
     /**
@@ -632,7 +659,7 @@ class Card extends ContainerElement
      */
     public function flat(): static
     {
-        return $this->style('flat');
+        return $this->cardStyleType('flat');
     }
 
     /**
@@ -642,7 +669,7 @@ class Card extends ContainerElement
      */
     public function elevated(): static
     {
-        return $this->style('elevated');
+        return $this->cardStyleType('elevated');
     }
 
     /**
@@ -652,7 +679,7 @@ class Card extends ContainerElement
      */
     public function padded(): static
     {
-        return $this->style('padded');
+        return $this->cardStyleType('padded');
     }
 
     /**
@@ -743,6 +770,54 @@ class Card extends ContainerElement
         }
 
         return parent::buildClassString();
+    }
+
+    /**
+     * Sanitize HTML to prevent XSS
+     *
+     * Allows only safe tags and attributes:
+     * - Tags: h1-h6, span, div, p, strong, em, br
+     * - Attributes: class, id
+     *
+     * @param string $html
+     * @return string
+     */
+    protected function sanitizeHtml(string $html): string
+    {
+        // Allowed tags
+        $allowedTags = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'span', 'div', 'p', 'strong', 'em', 'br'];
+
+        // Strip all tags except allowed ones
+        $html = strip_tags($html, '<' . implode('><', $allowedTags) . '>');
+
+        // Remove dangerous attributes (event handlers, style, etc.)
+        $html = preg_replace('/\s*on\w+\s*=\s*["\'].*?["\']/i', '', $html);
+        $html = preg_replace('/\s*style\s*=\s*["\'].*?["\']/i', '', $html);
+        $html = preg_replace('/\s*onclick\s*=\s*["\'].*?["\']/i', '', $html);
+        $html = preg_replace('/javascript:/i', '', $html);
+
+        // Only allow class and id attributes
+        $html = preg_replace_callback(
+            '/<(\w+)([^>]*)>/i',
+            function($matches) {
+                $tag = $matches[1];
+                $attrs = $matches[2];
+
+                // Extract only class and id attributes
+                $safeAttrs = '';
+                if (preg_match('/\s+class\s*=\s*["\']([^"\']*)["\']/', $attrs, $classMatch)) {
+                    $safeAttrs .= ' class="' . htmlspecialchars($classMatch[1], ENT_QUOTES, 'UTF-8') . '"';
+                }
+                if (preg_match('/\s+id\s*=\s*["\']([^"\']*)["\']/', $attrs, $idMatch)) {
+                    $safeAttrs .= ' id="' . htmlspecialchars($idMatch[1], ENT_QUOTES, 'UTF-8') . '"';
+                }
+
+                return '<' . $tag . $safeAttrs . '>';
+            },
+            $html
+        );
+
+        return $html;
     }
 
     /**
@@ -844,7 +919,9 @@ class Card extends ContainerElement
         $html .= '<div class="' . CssPrefix::cls('card-body') . '">';
 
         // Title (if not in header)
-        if ($this->title !== null && !$this->collapsible) {
+        if ($this->titleHtml !== null && !$this->collapsible) {
+            $html .= $this->titleHtml;
+        } elseif ($this->title !== null && !$this->collapsible) {
             $html .= '<h5 class="' . CssPrefix::cls('card-title') . '">' . e($this->title) . '</h5>';
         }
 
@@ -881,6 +958,10 @@ class Card extends ContainerElement
 
         if ($this->title !== null) {
             $config['title'] = $this->title;
+        }
+
+        if ($this->titleHtml !== null) {
+            $config['titleHtml'] = $this->titleHtml;
         }
 
         if ($this->subtitle !== null) {

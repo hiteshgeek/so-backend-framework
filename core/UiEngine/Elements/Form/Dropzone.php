@@ -293,12 +293,12 @@ class Dropzone extends FormElement
     }
 
     /**
-     * Set custom message
+     * Set custom upload message
      *
      * @param string $message
      * @return static
      */
-    public function message(string $message): static
+    public function uploadMessage(string $message): static
     {
         $this->message = $message;
         return $this;
@@ -333,9 +333,20 @@ class Dropzone extends FormElement
      *
      * @return string
      */
+    /**
+     * Override to prevent adding so-form-control class
+     * Dropzone is a complex component with its own wrapper structure
+     *
+     * @return void
+     */
+    protected function addBaseClasses(): void
+    {
+        // Do not add form-control class - dropzone has custom structure
+    }
+
     public function buildClassString(): string
     {
-        $this->addClass(CssPrefix::cls('dropzone'));
+        $this->addClass(CssPrefix::cls('form-file-dropzone'));
 
         if ($this->error) {
             $this->addClass(CssPrefix::cls('is-invalid'));
@@ -345,13 +356,17 @@ class Dropzone extends FormElement
     }
 
     /**
-     * Gather all attributes
+     * Gather all attributes for wrapper div
+     * Note: name attribute is excluded - it's only on the inner input element
      *
      * @return array<string, mixed>
      */
     protected function gatherAllAttributes(): array
     {
         $attrs = parent::gatherAllAttributes();
+
+        // Remove name attribute - it should only be on the input element
+        unset($attrs['name']);
 
         $attrs[CssPrefix::data('ui-init')] = 'dropzone';
 
@@ -382,7 +397,8 @@ class Dropzone extends FormElement
             $config['existingFiles'] = $this->existingFiles;
         }
 
-        $attrs[CssPrefix::data('ui-config')] = htmlspecialchars(json_encode($config), ENT_QUOTES);
+        // Don't use htmlspecialchars - attribute values are already escaped in render()
+        $attrs[CssPrefix::data('ui-config')] = json_encode($config);
 
         return $attrs;
     }
@@ -410,13 +426,8 @@ class Dropzone extends FormElement
 
         $html .= '>';
 
-        // Drop area
-        $html .= '<div class="' . CssPrefix::cls('dropzone-area') . '">';
-        $html .= '<span class="material-icons ' . CssPrefix::cls('dropzone-icon') . '">' . e($this->icon) . '</span>';
-        $html .= '<p class="' . CssPrefix::cls('dropzone-message') . '">' . e($this->message) . '</p>';
-
-        // File input
-        $html .= '<input type="file" class="' . CssPrefix::cls('dropzone-input') . '"';
+        // Hidden file input (positioned absolutely by CSS)
+        $html .= '<input type="file"';
         if ($this->name !== null) {
             $html .= ' name="' . e($this->name) . ($this->multiple ? '[]' : '') . '"';
         }
@@ -428,11 +439,34 @@ class Dropzone extends FormElement
         }
         $html .= '>';
 
+        // Icon
+        $html .= '<div class="' . CssPrefix::cls('form-file-dropzone-icon') . '">';
+        $html .= '<span class="material-icons">' . e($this->icon) . '</span>';
         $html .= '</div>';
 
-        // Preview area
+        // Message text with highlighted "click to browse"
+        $html .= '<div class="' . CssPrefix::cls('form-file-dropzone-text') . '">';
+        $html .= e($this->message);
+        $html .= '</div>';
+
+        // Hint text (file type and size info)
+        if ($this->accept || $this->maxFileSize) {
+            $html .= '<div class="' . CssPrefix::cls('form-file-dropzone-hint') . '">';
+            $hints = [];
+            if ($this->accept) {
+                $hints[] = 'Accepts: ' . e($this->accept);
+            }
+            if ($this->maxFileSize) {
+                $maxMB = round($this->maxFileSize / 1024 / 1024, 0);
+                $hints[] = 'Max ' . $maxMB . 'MB';
+            }
+            $html .= implode(' | ', $hints);
+            $html .= '</div>';
+        }
+
+        // Preview area for uploaded files
         if ($this->showPreview) {
-            $html .= '<div class="' . CssPrefix::cls('dropzone-preview') . '">';
+            $html .= '<div class="' . CssPrefix::cls('form-file-dropzone-files') . '">';
 
             // Render existing files
             foreach ($this->existingFiles as $file) {

@@ -9,6 +9,9 @@ import { ContainerElement } from './core/ContainerElement.js';
 import { ValidationEngine } from './validation/ValidationEngine.js';
 import { ErrorReporter } from './validation/ErrorReporter.js';
 import SixOrbit from '../core/so-config.js';
+import Html from './elements/Html.js';
+import RawHtml from './elements/RawHtml.js';
+import Image from './elements/display/Image.js';
 
 // Import all element categories
 import * as FormElements from './elements/form/index.js';
@@ -165,12 +168,11 @@ class UiEngine {
     /**
      * Create input element
      * @param {string} name
-     * @returns {FormElement}
+     * @returns {Input}
      */
     static input(name = null) {
-        return FormElement.make({
+        return this.fromConfig({
             type: 'input',
-            tagName: 'input',
             name
         });
     }
@@ -201,12 +203,11 @@ class UiEngine {
     /**
      * Create textarea element
      * @param {string} name
-     * @returns {FormElement}
+     * @returns {Textarea}
      */
     static textarea(name = null) {
-        return FormElement.make({
+        return this.fromConfig({
             type: 'textarea',
-            tagName: 'textarea',
             name
         });
     }
@@ -214,12 +215,11 @@ class UiEngine {
     /**
      * Create select element
      * @param {string} name
-     * @returns {FormElement}
+     * @returns {Select}
      */
     static select(name = null) {
-        return FormElement.make({
+        return this.fromConfig({
             type: 'select',
-            tagName: 'select',
             name
         });
     }
@@ -230,7 +230,7 @@ class UiEngine {
      * @returns {SwitchElement}
      */
     static switch(name = null) {
-        return FormElements.SwitchElement.make({
+        return this.fromConfig({
             type: 'switch',
             name
         });
@@ -246,17 +246,87 @@ class UiEngine {
     }
 
     /**
+     * Create checkbox element
+     * @param {string} name
+     * @returns {Checkbox}
+     */
+    static checkbox(name = null) {
+        return this.fromConfig({
+            type: 'checkbox',
+            name
+        });
+    }
+
+    /**
+     * Create radio element
+     * @param {string} name
+     * @returns {Radio}
+     */
+    static radio(name = null) {
+        return this.fromConfig({
+            type: 'radio',
+            name
+        });
+    }
+
+    /**
+     * Create file input element
+     * @param {string} name
+     * @returns {FileInput}
+     */
+    static file(name = null) {
+        return this.fromConfig({
+            type: 'file-input',
+            name
+        });
+    }
+
+    /**
+     * Create autocomplete element
+     * @param {string} name
+     * @returns {Autocomplete}
+     */
+    static autocomplete(name = null) {
+        return this.fromConfig({
+            type: 'autocomplete',
+            name
+        });
+    }
+
+    /**
+     * Create dropzone element
+     * @param {string} name
+     * @returns {Dropzone}
+     */
+    static dropzone(name = null) {
+        return this.fromConfig({
+            type: 'dropzone',
+            name
+        });
+    }
+
+    /**
+     * Create slider element
+     * @param {string} name
+     * @returns {Slider}
+     */
+    static slider(name = null) {
+        return this.fromConfig({
+            type: 'slider',
+            name
+        });
+    }
+
+    /**
      * Create button element
      * @param {string} text
-     * @returns {Element}
+     * @returns {Button}
      */
     static button(text = null) {
-        const btn = Element.make({
+        const btn = this.fromConfig({
             type: 'button',
-            tagName: 'button',
-            content: text
+            text: text
         });
-        btn.setClass(`${SixOrbit.cls('btn')} ${SixOrbit.cls('btn-primary')}`);
         return btn;
     }
 
@@ -277,9 +347,8 @@ class UiEngine {
      * @returns {ContainerElement}
      */
     static form(action = null) {
-        const form = ContainerElement.make({
-            type: 'form',
-            tagName: 'form'
+        const form = this.fromConfig({
+            type: 'form'
         });
         if (action) {
             form.setAttr('action', action);
@@ -293,11 +362,9 @@ class UiEngine {
      * @returns {ContainerElement}
      */
     static row() {
-        const row = ContainerElement.make({
-            type: 'row',
-            tagName: 'div'
+        const row = this.fromConfig({
+            type: 'row'
         });
-        row.setClass(SixOrbit.cls('row'));
         return row;
     }
 
@@ -307,11 +374,10 @@ class UiEngine {
      * @returns {ContainerElement}
      */
     static col(size = null) {
-        const col = ContainerElement.make({
+        const col = this.fromConfig({
             type: 'column',
-            tagName: 'div'
+            size: size
         });
-        col.setClass(size ? SixOrbit.cls('col', size) : SixOrbit.cls('col'));
         return col;
     }
 
@@ -335,14 +401,10 @@ class UiEngine {
      * @returns {ContainerElement}
      */
     static card(title = null) {
-        const card = ContainerElement.make({
+        const card = this.fromConfig({
             type: 'card',
-            tagName: 'div'
+            title: title
         });
-        card.setClass(SixOrbit.cls('card'));
-        if (title) {
-            card._title = title;
-        }
         return card;
     }
 
@@ -352,14 +414,98 @@ class UiEngine {
      * @returns {Element}
      */
     static alert(message = null) {
-        const alert = Element.make({
+        const alert = this.fromConfig({
             type: 'alert',
-            tagName: 'div',
-            content: message
+            message: message
         });
-        alert.setClass(`${SixOrbit.cls('alert')} ${SixOrbit.cls('alert-info')}`);
-        alert.setAttr('role', 'alert');
         return alert;
+    }
+
+    // ==================
+    // HTML Elements
+    // ==================
+
+    /**
+     * Create a generic HTML element
+     * @param {string} tag
+     * @param {string} content
+     * @returns {Html}
+     */
+    static html(tag = 'div', content = null) {
+        const element = Html.make();
+        element.tag(tag);
+        if (content !== null) {
+            element.text(content);
+        }
+        return element;
+    }
+
+    /**
+     * Create a div element
+     * @param {string} content
+     * @returns {Html}
+     */
+    static div(content = null) {
+        return this.html('div', content);
+    }
+
+    /**
+     * Create a span element
+     * @param {string} content
+     * @returns {Html}
+     */
+    static span(content = null) {
+        return this.html('span', content);
+    }
+
+    /**
+     * Create a paragraph element
+     * @param {string} content
+     * @returns {Html}
+     */
+    static p(content = null) {
+        return this.html('p', content);
+    }
+
+    /**
+     * Create an anchor/link element
+     * @param {string} href
+     * @param {string} text
+     * @returns {Html}
+     */
+    static a(href = null, text = null) {
+        const element = this.html('a', text);
+        if (href !== null) {
+            element.href(href);
+        }
+        return element;
+    }
+
+    /**
+     * Create an image element
+     * @param {string} src
+     * @param {string} alt
+     * @returns {Image}
+     */
+    static img(src = null, alt = null) {
+        const image = Image.make();
+        if (src !== null) {
+            image.src(src);
+        }
+        if (alt !== null) {
+            image.alt(alt);
+        }
+        return image;
+    }
+
+    /**
+     * Alias for img()
+     * @param {string} src
+     * @param {string} alt
+     * @returns {Image}
+     */
+    static image(src = null, alt = null) {
+        return this.img(src, alt);
     }
 
     // ==================
@@ -636,6 +782,8 @@ class UiEngine {
 UiEngine.register('element', Element);
 UiEngine.register('form-element', FormElement);
 UiEngine.register('container', ContainerElement);
+UiEngine.register('html', Html);
+UiEngine.register('rawhtml', RawHtml);
 
 // ==================
 // Register Form Elements

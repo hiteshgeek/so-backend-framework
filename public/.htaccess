@@ -1,3 +1,8 @@
+# Disable OPcache for this project
+<IfModule mod_php8.c>
+    php_flag opcache.enable Off
+</IfModule>
+
 <IfModule mod_rewrite.c>
     <IfModule mod_negotiation.c>
         Options -MultiViews -Indexes +FollowSymLinks
