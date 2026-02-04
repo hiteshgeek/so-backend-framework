@@ -1,5 +1,6 @@
 # Dependencies
 /vendor/
+/frontend/vendor/
 /node_modules/
 composer.lock
 package-lock.json
@@ -44,6 +45,8 @@ package-lock.json
 /public/uploads/*
 !/public/uploads/.gitkeep
 /public/mix-manifest.json
+/public/frontend/dist/
+/frontend/node_modules/
 
 # OS
 Thumbs.db
