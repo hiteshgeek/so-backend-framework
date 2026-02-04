@@ -1,0 +1,38 @@
+{
+  "name": "sixorbit-ui",
+  "version": "1.0.0",
+  "description": "SixOrbit UI Framework - Modern UI components for ERP applications",
+  "main": "dist/js/sixorbit-full.js",
+  "scripts": {
+    "build": "node build.js",
+    "dev": "node build.js --dev",
+    "watch": "node build.js --watch",
+    "clean": "rm -rf dist/*"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.23",
+    "chokidar": "^5.0.0",
+    "esbuild": "^0.19.0",
+    "javascript-obfuscator": "^5.1.0",
+    "postcss": "^8.5.6",
+    "postcss-prefix-selector": "^2.1.1",
+    "sass": "^1.69.0"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ],
+  "keywords": [
+    "ui-framework",
+    "css",
+    "scss",
+    "javascript",
+    "components",
+    "erp",
+    "sixorbit",
+    "admin-dashboard"
+  ],
+  "author": "SixOrbit",
+  "license": "MIT"
+}

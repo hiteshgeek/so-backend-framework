@@ -1,0 +1,212 @@
+// ============================================
+// SIXORBIT UI - GO TO TOP/BOTTOM BUTTON
+// Scroll navigation button with progress indicator
+// Uses existing button classes (so-btn, so-btn-icon, so-btn-circle)
+// ============================================
+
+@use '../abstracts' as *;
+
+// ============================================
+// GO TO TOP/BOTTOM BASE
+// ============================================
+
+.#{$so-prefix}go-to-top {
+  position: fixed;
+  z-index: z-index('modal-backdrop'); // Above sidebar (1040)
+  opacity: 0;
+  transform: translateY(20px) scale(0.9);
+  transition: opacity $so-transition-slow, transform $so-transition-slow, background $so-transition-fast, border-color $so-transition-fast;
+  pointer-events: none;
+  box-shadow: shadow('lg');
+
+  // Visible state
+  &.#{$so-prefix}show {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+  }
+
+  // Hover lift effect
+  &:hover {
+    transform: translateY(-2px) scale(1);
+    box-shadow: shadow('xl');
+  }
+
+  // Active press effect
+  &:active {
+    transform: translateY(0) scale(0.95);
+  }
+}
+
+// Go to bottom variant - animate from bottom
+.#{$so-prefix}go-to-bottom {
+  transform: translateY(-20px) scale(0.9);
+
+  &.#{$so-prefix}show {
+    transform: translateY(0) scale(1);
+  }
+
+  &:hover {
+    transform: translateY(2px) scale(1);
+  }
+}
+
+// ============================================
+// POSITION VARIANTS
+// ============================================
+
+.#{$so-prefix}go-to-top-bottom-right {
+  top: auto;
+  left: auto;
+  bottom: spacing('6');
+  right: spacing('6');
+}
+
+.#{$so-prefix}go-to-top-bottom-left {
+  top: auto;
+  right: auto;
+  bottom: spacing('6');
+  left: spacing('6');
+}
+
+.#{$so-prefix}go-to-top-bottom-center {
+  top: auto;
+  right: auto;
+  bottom: spacing('6');
+  left: 50%;
+  transform: translateX(-50%) translateY(20px) scale(0.9);
+
+  &.#{$so-prefix}show {
+    transform: translateX(-50%) translateY(0) scale(1);
+  }
+
+  &:hover {
+    transform: translateX(-50%) translateY(-2px) scale(1);
+  }
+
+  &:active {
+    transform: translateX(-50%) translateY(0) scale(0.95);
+  }
+}
+
+// ============================================
+// PAIRED BUTTONS (TOP + BOTTOM)
+// ============================================
+
+// When both buttons exist, offset the bottom one
+.#{$so-prefix}go-to-top-paired {
+  &.#{$so-prefix}go-to-top-bottom-right {
+    bottom: calc(spacing('6') + 52px); // Button height + gap
+  }
+
+  &.#{$so-prefix}go-to-top-bottom-left {
+    bottom: calc(spacing('6') + 52px);
+  }
+
+  &.#{$so-prefix}go-to-top-bottom-center {
+    bottom: calc(spacing('6') + 52px);
+  }
+}
+
+// ============================================
+// MOBILE ADJUSTMENTS
+// ============================================
+
+@include mobile {
+  .#{$so-prefix}go-to-top-bottom-right {
+    bottom: spacing('4');
+    right: spacing('4');
+  }
+
+  .#{$so-prefix}go-to-top-bottom-left {
+    bottom: spacing('4');
+    left: spacing('4');
+  }
+
+  .#{$so-prefix}go-to-top-bottom-center {
+    bottom: spacing('4');
+    left: 50%;
+  }
+
+  .#{$so-prefix}go-to-top-paired {
+    &.#{$so-prefix}go-to-top-bottom-right,
+    &.#{$so-prefix}go-to-top-bottom-left,
+    &.#{$so-prefix}go-to-top-bottom-center {
+      bottom: calc(spacing('4') + 48px);
+    }
+  }
+}
+
+// ============================================
+// SCROLL PROGRESS INDICATOR
+// Shows a ring around the button that fills based on scroll position
+// Uses SVG for better browser compatibility
+// ============================================
+
+.#{$so-prefix}go-to-top-progress {
+  --scroll-progress: 0;
+  // Allow SVG ring to extend outside button bounds
+  overflow: visible !important;
+
+  // Progress ring container
+  .so-progress-ring {
+    position: absolute;
+    top: -4px;
+    left: -4px;
+    width: calc(100% + 8px);
+    height: calc(100% + 8px);
+    transform: rotate(-90deg);
+    pointer-events: none;
+    overflow: visible;
+
+    circle {
+      fill: none;
+      stroke-width: 3;
+
+      // Default: white ring for solid colored buttons (best contrast)
+      &.so-progress-ring-track {
+        stroke: rgba(255, 255, 255, 0.25);
+      }
+
+      &.so-progress-ring-progress {
+        stroke: white;
+        stroke-linecap: round;
+        transition: stroke-dashoffset 0.1s linear;
+      }
+    }
+  }
+
+  // Ensure icon is above the progress ring
+  .material-icons {
+    position: relative;
+    z-index: 1;
+  }
+
+  // ----------------------------------------
+  // Button variant specific colors
+  // ----------------------------------------
+
+  // Secondary variant - use dark colors for gray button
+  &.#{$so-prefix}btn-secondary {
+    .so-progress-ring-track {
+      stroke: rgba(0, 0, 0, 0.15);
+    }
+    .so-progress-ring-progress {
+      stroke: rgba(0, 0, 0, 0.5);
+    }
+  }
+
+  // Outline/Ghost variants - use accent color on light background
+  &.#{$so-prefix}btn-outline,
+  &[class*="btn-outline-"],
+  &.#{$so-prefix}btn-ghost {
+    .so-progress-ring-track {
+      stroke: css-var('accent-primary');
+      opacity: 0.25;
+    }
+    .so-progress-ring-progress {
+      stroke: css-var('accent-primary');
+    }
+  }
+}
+

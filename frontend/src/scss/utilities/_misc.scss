@@ -1,0 +1,648 @@
+// ============================================
+// SIXORBIT UI - MISCELLANEOUS UTILITIES
+// Shadows, opacity, overflow, interactions, etc.
+// ============================================
+
+@use '../abstracts' as *;
+
+// ============================================
+// SHADOWS
+// ============================================
+
+.#{$so-prefix}shadow {
+  box-shadow: shadow('md') !important;
+}
+
+.#{$so-prefix}shadow-none {
+  box-shadow: none !important;
+}
+
+.#{$so-prefix}shadow-sm {
+  box-shadow: shadow('sm') !important;
+}
+
+.#{$so-prefix}shadow-md {
+  box-shadow: shadow('md') !important;
+}
+
+.#{$so-prefix}shadow-lg {
+  box-shadow: shadow('lg') !important;
+}
+
+.#{$so-prefix}shadow-xl {
+  box-shadow: shadow('xl') !important;
+}
+
+.#{$so-prefix}shadow-2xl {
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
+}
+
+.#{$so-prefix}shadow-inner {
+  box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.05) !important;
+}
+
+// ============================================
+// OPACITY
+// ============================================
+
+$opacities: (
+  0: 0,
+  5: 0.05,
+  10: 0.1,
+  20: 0.2,
+  25: 0.25,
+  30: 0.3,
+  40: 0.4,
+  50: 0.5,
+  60: 0.6,
+  70: 0.7,
+  75: 0.75,
+  80: 0.8,
+  90: 0.9,
+  95: 0.95,
+  100: 1
+);
+
+@each $name, $value in $opacities {
+  .#{$so-prefix}opacity-#{$name} {
+    opacity: $value !important;
+  }
+}
+
+// ============================================
+// OVERFLOW
+// ============================================
+
+$overflows: (auto, hidden, clip, visible, scroll);
+
+@each $overflow in $overflows {
+  .#{$so-prefix}overflow-#{$overflow} {
+    overflow: $overflow !important;
+  }
+
+  .#{$so-prefix}overflow-x-#{$overflow} {
+    overflow-x: $overflow !important;
+  }
+
+  .#{$so-prefix}overflow-y-#{$overflow} {
+    overflow-y: $overflow !important;
+  }
+}
+
+// ============================================
+// CURSOR
+// ============================================
+
+$cursors: (
+  auto: auto,
+  default: default,
+  pointer: pointer,
+  wait: wait,
+  text: text,
+  move: move,
+  help: help,
+  not-allowed: not-allowed,
+  none: none,
+  context-menu: context-menu,
+  progress: progress,
+  cell: cell,
+  crosshair: crosshair,
+  vertical-text: vertical-text,
+  alias: alias,
+  copy: copy,
+  no-drop: no-drop,
+  grab: grab,
+  grabbing: grabbing,
+  all-scroll: all-scroll,
+  col-resize: col-resize,
+  row-resize: row-resize,
+  n-resize: n-resize,
+  e-resize: e-resize,
+  s-resize: s-resize,
+  w-resize: w-resize,
+  ne-resize: ne-resize,
+  nw-resize: nw-resize,
+  se-resize: se-resize,
+  sw-resize: sw-resize,
+  ew-resize: ew-resize,
+  ns-resize: ns-resize,
+  nesw-resize: nesw-resize,
+  nwse-resize: nwse-resize,
+  zoom-in: zoom-in,
+  zoom-out: zoom-out
+);
+
+@each $name, $value in $cursors {
+  .#{$so-prefix}cursor-#{$name} {
+    cursor: $value !important;
+  }
+}
+
+// ============================================
+// POINTER EVENTS
+// ============================================
+
+.#{$so-prefix}pe-none {
+  pointer-events: none !important;
+}
+
+.#{$so-prefix}pe-auto {
+  pointer-events: auto !important;
+}
+
+// ============================================
+// RESIZE
+// ============================================
+
+.#{$so-prefix}resize-none {
+  resize: none !important;
+}
+
+.#{$so-prefix}resize-y {
+  resize: vertical !important;
+}
+
+.#{$so-prefix}resize-x {
+  resize: horizontal !important;
+}
+
+.#{$so-prefix}resize {
+  resize: both !important;
+}
+
+// ============================================
+// SCROLL BEHAVIOR
+// ============================================
+
+.#{$so-prefix}scroll-auto {
+  scroll-behavior: auto !important;
+}
+
+.#{$so-prefix}scroll-smooth {
+  scroll-behavior: smooth !important;
+}
+
+// ============================================
+// SCROLL SNAP
+// ============================================
+
+.#{$so-prefix}snap-start {
+  scroll-snap-align: start !important;
+}
+
+.#{$so-prefix}snap-end {
+  scroll-snap-align: end !important;
+}
+
+.#{$so-prefix}snap-center {
+  scroll-snap-align: center !important;
+}
+
+.#{$so-prefix}snap-none {
+  scroll-snap-type: none !important;
+}
+
+.#{$so-prefix}snap-x {
+  scroll-snap-type: x var(--so-scroll-snap-strictness, mandatory) !important;
+}
+
+.#{$so-prefix}snap-y {
+  scroll-snap-type: y var(--so-scroll-snap-strictness, mandatory) !important;
+}
+
+.#{$so-prefix}snap-both {
+  scroll-snap-type: both var(--so-scroll-snap-strictness, mandatory) !important;
+}
+
+.#{$so-prefix}snap-mandatory {
+  --so-scroll-snap-strictness: mandatory;
+}
+
+.#{$so-prefix}snap-proximity {
+  --so-scroll-snap-strictness: proximity;
+}
+
+// ============================================
+// TRANSITIONS
+// ============================================
+
+.#{$so-prefix}transition-none {
+  transition-property: none !important;
+}
+
+.#{$so-prefix}transition-all {
+  transition-property: all !important;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1) !important;
+  transition-duration: 150ms !important;
+}
+
+.#{$so-prefix}transition {
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter !important;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1) !important;
+  transition-duration: 150ms !important;
+}
+
+.#{$so-prefix}transition-colors {
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke !important;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1) !important;
+  transition-duration: 150ms !important;
+}
+
+.#{$so-prefix}transition-opacity {
+  transition-property: opacity !important;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1) !important;
+  transition-duration: 150ms !important;
+}
+
+.#{$so-prefix}transition-shadow {
+  transition-property: box-shadow !important;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1) !important;
+  transition-duration: 150ms !important;
+}
+
+.#{$so-prefix}transition-transform {
+  transition-property: transform !important;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1) !important;
+  transition-duration: 150ms !important;
+}
+
+// Transition durations
+$durations: (
+  0: 0s,
+  75: 75ms,
+  100: 100ms,
+  150: 150ms,
+  200: 200ms,
+  300: 300ms,
+  500: 500ms,
+  700: 700ms,
+  1000: 1000ms
+);
+
+@each $name, $value in $durations {
+  .#{$so-prefix}duration-#{$name} {
+    transition-duration: $value !important;
+  }
+}
+
+// Transition delays
+@each $name, $value in $durations {
+  .#{$so-prefix}delay-#{$name} {
+    transition-delay: $value !important;
+  }
+}
+
+// Transition easing
+.#{$so-prefix}ease-linear {
+  transition-timing-function: linear !important;
+}
+
+.#{$so-prefix}ease-in {
+  transition-timing-function: cubic-bezier(0.4, 0, 1, 1) !important;
+}
+
+.#{$so-prefix}ease-out {
+  transition-timing-function: cubic-bezier(0, 0, 0.2, 1) !important;
+}
+
+.#{$so-prefix}ease-in-out {
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+// ============================================
+// TRANSFORMS
+// ============================================
+
+.#{$so-prefix}scale-0 {
+  transform: scale(0) !important;
+}
+
+.#{$so-prefix}scale-50 {
+  transform: scale(0.5) !important;
+}
+
+.#{$so-prefix}scale-75 {
+  transform: scale(0.75) !important;
+}
+
+.#{$so-prefix}scale-90 {
+  transform: scale(0.9) !important;
+}
+
+.#{$so-prefix}scale-95 {
+  transform: scale(0.95) !important;
+}
+
+.#{$so-prefix}scale-100 {
+  transform: scale(1) !important;
+}
+
+.#{$so-prefix}scale-105 {
+  transform: scale(1.05) !important;
+}
+
+.#{$so-prefix}scale-110 {
+  transform: scale(1.1) !important;
+}
+
+.#{$so-prefix}scale-125 {
+  transform: scale(1.25) !important;
+}
+
+.#{$so-prefix}scale-150 {
+  transform: scale(1.5) !important;
+}
+
+// Rotate
+$rotations: (0, 1, 2, 3, 6, 12, 45, 90, 180);
+
+@each $deg in $rotations {
+  .#{$so-prefix}rotate-#{$deg} {
+    transform: rotate(#{$deg}deg) !important;
+  }
+
+  .-#{$so-prefix}rotate-#{$deg} {
+    transform: rotate(-#{$deg}deg) !important;
+  }
+}
+
+// Skew
+.#{$so-prefix}skew-x-0 {
+  transform: skewX(0deg) !important;
+}
+
+.#{$so-prefix}skew-x-1 {
+  transform: skewX(1deg) !important;
+}
+
+.#{$so-prefix}skew-x-2 {
+  transform: skewX(2deg) !important;
+}
+
+.#{$so-prefix}skew-x-3 {
+  transform: skewX(3deg) !important;
+}
+
+.#{$so-prefix}skew-x-6 {
+  transform: skewX(6deg) !important;
+}
+
+.#{$so-prefix}skew-x-12 {
+  transform: skewX(12deg) !important;
+}
+
+.#{$so-prefix}skew-y-0 {
+  transform: skewY(0deg) !important;
+}
+
+.#{$so-prefix}skew-y-1 {
+  transform: skewY(1deg) !important;
+}
+
+.#{$so-prefix}skew-y-2 {
+  transform: skewY(2deg) !important;
+}
+
+.#{$so-prefix}skew-y-3 {
+  transform: skewY(3deg) !important;
+}
+
+.#{$so-prefix}skew-y-6 {
+  transform: skewY(6deg) !important;
+}
+
+.#{$so-prefix}skew-y-12 {
+  transform: skewY(12deg) !important;
+}
+
+// Transform origin
+$origins: (
+  center: center,
+  top: top,
+  top-right: top right,
+  right: right,
+  bottom-right: bottom right,
+  bottom: bottom,
+  bottom-left: bottom left,
+  left: left,
+  top-left: top left
+);
+
+@each $name, $value in $origins {
+  .#{$so-prefix}origin-#{$name} {
+    transform-origin: $value !important;
+  }
+}
+
+// ============================================
+// APPEARANCE
+// ============================================
+
+.#{$so-prefix}appearance-none {
+  appearance: none !important;
+}
+
+.#{$so-prefix}appearance-auto {
+  appearance: auto !important;
+}
+
+// ============================================
+// TOUCH ACTION
+// ============================================
+
+.#{$so-prefix}touch-auto {
+  touch-action: auto !important;
+}
+
+.#{$so-prefix}touch-none {
+  touch-action: none !important;
+}
+
+.#{$so-prefix}touch-pan-x {
+  touch-action: pan-x !important;
+}
+
+.#{$so-prefix}touch-pan-y {
+  touch-action: pan-y !important;
+}
+
+.#{$so-prefix}touch-pan-left {
+  touch-action: pan-left !important;
+}
+
+.#{$so-prefix}touch-pan-right {
+  touch-action: pan-right !important;
+}
+
+.#{$so-prefix}touch-pan-up {
+  touch-action: pan-up !important;
+}
+
+.#{$so-prefix}touch-pan-down {
+  touch-action: pan-down !important;
+}
+
+.#{$so-prefix}touch-pinch-zoom {
+  touch-action: pinch-zoom !important;
+}
+
+.#{$so-prefix}touch-manipulation {
+  touch-action: manipulation !important;
+}
+
+// ============================================
+// WILL-CHANGE
+// ============================================
+
+.#{$so-prefix}will-change-auto {
+  will-change: auto !important;
+}
+
+.#{$so-prefix}will-change-scroll {
+  will-change: scroll-position !important;
+}
+
+.#{$so-prefix}will-change-contents {
+  will-change: contents !important;
+}
+
+.#{$so-prefix}will-change-transform {
+  will-change: transform !important;
+}
+
+// ============================================
+// CONTENT
+// ============================================
+
+.#{$so-prefix}content-none {
+  content: none !important;
+}
+
+// ============================================
+// ISOLATION
+// ============================================
+
+.#{$so-prefix}isolate {
+  isolation: isolate !important;
+}
+
+.#{$so-prefix}isolation-auto {
+  isolation: auto !important;
+}
+
+// ============================================
+// MIX BLEND MODE
+// ============================================
+
+$blend-modes: (normal, multiply, screen, overlay, darken, lighten, color-dodge, color-burn, hard-light, soft-light, difference, exclusion, hue, saturation, color, luminosity);
+
+@each $mode in $blend-modes {
+  .#{$so-prefix}mix-blend-#{$mode} {
+    mix-blend-mode: $mode !important;
+  }
+}
+
+// ============================================
+// BACKGROUND BLEND MODE
+// ============================================
+
+@each $mode in $blend-modes {
+  .#{$so-prefix}bg-blend-#{$mode} {
+    background-blend-mode: $mode !important;
+  }
+}
+
+// ============================================
+// FILTER
+// ============================================
+
+.#{$so-prefix}blur {
+  filter: blur(8px) !important;
+}
+
+.#{$so-prefix}blur-none {
+  filter: blur(0) !important;
+}
+
+.#{$so-prefix}blur-sm {
+  filter: blur(4px) !important;
+}
+
+.#{$so-prefix}blur-md {
+  filter: blur(12px) !important;
+}
+
+.#{$so-prefix}blur-lg {
+  filter: blur(16px) !important;
+}
+
+.#{$so-prefix}blur-xl {
+  filter: blur(24px) !important;
+}
+
+.#{$so-prefix}blur-2xl {
+  filter: blur(40px) !important;
+}
+
+.#{$so-prefix}blur-3xl {
+  filter: blur(64px) !important;
+}
+
+// Grayscale
+.#{$so-prefix}grayscale-0 {
+  filter: grayscale(0) !important;
+}
+
+.#{$so-prefix}grayscale {
+  filter: grayscale(100%) !important;
+}
+
+// Sepia
+.#{$so-prefix}sepia-0 {
+  filter: sepia(0) !important;
+}
+
+.#{$so-prefix}sepia {
+  filter: sepia(100%) !important;
+}
+
+// Invert
+.#{$so-prefix}invert-0 {
+  filter: invert(0) !important;
+}
+
+.#{$so-prefix}invert {
+  filter: invert(100%) !important;
+}
+
+// ============================================
+// BACKDROP FILTER
+// ============================================
+
+.#{$so-prefix}backdrop-blur {
+  backdrop-filter: blur(8px) !important;
+}
+
+.#{$so-prefix}backdrop-blur-none {
+  backdrop-filter: blur(0) !important;
+}
+
+.#{$so-prefix}backdrop-blur-sm {
+  backdrop-filter: blur(4px) !important;
+}
+
+.#{$so-prefix}backdrop-blur-md {
+  backdrop-filter: blur(12px) !important;
+}
+
+.#{$so-prefix}backdrop-blur-lg {
+  backdrop-filter: blur(16px) !important;
+}
+
+.#{$so-prefix}backdrop-blur-xl {
+  backdrop-filter: blur(24px) !important;
+}
+
+.#{$so-prefix}backdrop-blur-2xl {
+  backdrop-filter: blur(40px) !important;
+}

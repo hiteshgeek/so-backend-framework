@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DataTable - Demo</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+
+    <!-- Tabulator CSS -->
+    <link href="libs/tabulator.min.css" rel="stylesheet">
+
+    <!-- Common Styles -->
+    <link rel="stylesheet" href="../../common/sixorbit-common.css">
+
+    <!-- Plugin Styles -->
+    <link rel="stylesheet" href="datatable.css">
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #f8f9fa;
+            font-family: 'Google Sans', 'Roboto', sans-serif;
+            height: 100vh;
+            overflow: auto;
+        }
+
+        .dt-wrapper {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 20px;
+            background: white;
+            min-height: calc(100vh - 40px);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .dt-nav {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #e8eaed;
+            flex-shrink: 0;
+        }
+
+        .dt-tables-container {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            flex: 1;
+        }
+
+        .dt-table-section {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .dt-table-section-title {
+            font-size: 16px;
+            font-weight: 500;
+            color: #202124;
+            margin: 0 0 12px 0;
+            padding: 8px 0;
+            border-bottom: 2px solid #1a73e8;
+        }
+
+        #datatable-container,
+        #datatable-container-2,
+        #datatable-container-3 {
+            height: 500px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+        }
+
+        .dt-back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: #f8f9fa;
+            color: #202124;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+
+        .dt-back-button:hover {
+            background: #e8eaed;
+        }
+
+        .dt-nav-title {
+            font-size: 20px;
+            font-weight: 500;
+            color: #202124;
+            margin: 0;
+        }
+
+        @media (max-width: 768px) {
+            .dt-wrapper {
+                padding: 12px;
+            }
+
+            .dt-nav {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+
+            .dt-nav-title {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dt-wrapper">
+        <div class="dt-nav">
+            <a href="../../index.html" class="dt-back-button">
+                <span class="material-symbols-rounded" style="font-size:18px">arrow_back</span>
+                Back to Main Menu
+            </a>
+            <h1 class="dt-nav-title">DataTable Demo</h1>
+        </div>
+
+        <div class="dt-tables-container">
+            <div class="dt-table-section">
+                <h2 class="dt-table-section-title">Table 1 - Employee Data (Full Features)</h2>
+                <div id="datatable-container"></div>
+            </div>
+
+            <div class="dt-table-section">
+                <h2 class="dt-table-section-title">Table 2 - Employee Data (Minimal Features)</h2>
+                <div id="datatable-container-2"></div>
+            </div>
+
+            <div class="dt-table-section">
+                <h2 class="dt-table-section-title">Table 3 - Employee Data (Infinite Scroll)</h2>
+                <div id="datatable-container-3"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabulator JS -->
+    <script src="libs/tabulator.min.js"></script>
+
+    <!-- SheetJS for Excel Export -->
+    <script src="libs/xlsx.full.min.js"></script>
+
+    <!-- Sample Data -->
+    <script src="sample-data.js"></script>
+    <!-- DataTable Plugin -->
+    <script src="datatable.js"></script>
+
+    <script>
+        // Initialize the DataTable plugin
+        const dataTable = new DataTable('datatable-container', {
+            columns: sampleColumns,
+            data: sampleTableData,
+            pagination: true,
+            paginationSizeSelector: [10, 25, 50, 100],
+            groupBy: null,  // No default grouping
+            enableColumnSelection: true,
+            enableSearch: true,
+            enableGrouping: true,
+            showFooter: true,  // Enable footer totals
+            calcFooterTotals: true,  // Auto-calculate totals from data
+            cellSpacing: 'normal',  // Options: 'compact', 'normal', 'comfortable'
+            enableCellSelection: true,  // Enable cell range selection with sum display
+            enableRowSelection: true,  // Enable row selection with checkboxes
+            groupTotalsInline: true,  // Show totals inline with group headers (AG Grid style)
+            showSerialNumber: true,  // Show S.N. (serial number) column
+            enableRowExpand: true,  // Enable row expand/collapse feature
+            // Actions for each row
+            actions: [
+                {
+                    id: 'view',
+                    label: 'View Details',
+                    icon: 'visibility',
+                    onClick: function(rowData) {
+                        alert('View Details:\n\n' + JSON.stringify(rowData, null, 2));
+                    }
+                },
+                {
+                    id: 'edit',
+                    label: 'Edit Record',
+                    icon: 'edit',
+                    onClick: function(rowData) {
+                        alert('Edit Record:\n\nEmployee: ' + rowData.name + '\nID: ' + rowData.id);
+                    }
+                },
+                {
+                    id: 'copy',
+                    label: 'Copy Record',
+                    icon: 'content_copy',
+                    onClick: function(rowData) {
+                        console.log('Copy:', rowData);
+                        alert('Record copied to clipboard!');
+                    }
+                },
+                {
+                    id: 'print',
+                    label: 'Print Report',
+                    icon: 'print',
+                    onClick: function(rowData) {
+                        alert('Printing report for: ' + rowData.name);
+                    }
+                },
+                {
+                    id: 'download',
+                    label: 'Download PDF',
+                    icon: 'download',
+                    onClick: function(rowData) {
+                        alert('Downloading PDF for: ' + rowData.name);
+                    }
+                },
+                {
+                    id: 'delete',
+                    label: 'Delete Record',
+                    icon: 'delete',
+                    onClick: function(rowData) {
+                        if (confirm('Are you sure you want to delete ' + rowData.name + '?')) {
+                            alert('Record deleted!');
+                        }
+                    },
+                    disabled: function(rowData) {
+                        // Example: Disable delete for managers
+                        return rowData.position === 'Manager';
+                    }
+                }
+            ],
+            onRowClick: function(rowData) {
+                console.log('Row clicked:', rowData);
+            },
+            onRowSelectionChange: function(data, rows) {
+                console.log('Selected rows:', data);
+                console.log('Selected row count:', data.length);
+            },
+            onActionClick: function(action, rowData) {
+                console.log('Action clicked:', action.label, 'for row:', rowData);
+            },
+            // Row expand callback - can load data via AJAX
+            exportFilename: 'employees_report',
+            exportOptions: [
+                { key: 'includeHeader', label: 'Include header row', type: 'checkbox', default: true, group: 'General', excelOnly: false },
+                { key: 'highlightNegative', label: 'Highlight negative values', type: 'checkbox', default: false, group: 'Formatting', excelOnly: true },
+                { key: 'alternateRowColors', label: 'Alternate row colors', type: 'checkbox', default: true, group: 'Formatting', excelOnly: true },
+                { key: 'autoFitColumns', label: 'Auto-fit column widths', type: 'checkbox', default: false, group: 'Formatting', excelOnly: true },
+                { key: 'sheetName', label: 'Sheet name', type: 'text', default: 'Data', group: 'Excel', excelOnly: true },
+                { key: 'maxRows', label: 'Max rows to export', type: 'number', default: 0, group: 'Limits', excelOnly: false, min: 0, max: 10000 },
+                { key: 'dateFormat', label: 'Date format', type: 'text', default: 'YYYY-MM-DD', group: 'Formatting', excelOnly: false },
+                { key: 'includeSummary', label: 'Include summary sheet', type: 'checkbox', default: false, group: 'Excel', excelOnly: true }
+            ],
+            onRowExpand: function(rowData, callback) {
+                console.log('Row expanded:', rowData);
+
+                // Example 1: Simple synchronous HTML content
+                const simpleContent = `
+                    <div class="dt-expand-content">
+                        <h3>Employee Details - ${rowData.name}</h3>
+                        <div class="dt-detail-grid">
+                            <div class="dt-detail-item">
+                                <span class="dt-detail-label">Employee Code</span>
+                                <span class="dt-detail-value">${rowData.employeeCode}</span>
+                            </div>
+                            <div class="dt-detail-item">
+                                <span class="dt-detail-label">Email</span>
+                                <span class="dt-detail-value">${rowData.email}</span>
+                            </div>
+                            <div class="dt-detail-item">
+                                <span class="dt-detail-label">Phone</span>
+                                <span class="dt-detail-value">+1 (555) ${Math.floor(Math.random() * 900) + 100}-${Math.floor(Math.random() * 9000) + 1000}</span>
+                            </div>
+                            <div class="dt-detail-item">
+                                <span class="dt-detail-label">Address</span>
+                                <span class="dt-detail-value">${Math.floor(Math.random() * 9999) + 1} Main St, ${rowData.city}</span>
+                            </div>
+                            <div class="dt-detail-item">
+                                <span class="dt-detail-label">Manager</span>
+                                <span class="dt-detail-value">John Smith</span>
+                            </div>
+                            <div class="dt-detail-item">
+                                <span class="dt-detail-label">Join Date</span>
+                                <span class="dt-detail-value">${rowData.joinDate}</span>
+                            </div>
+                        </div>
+                        <div class="dt-expand-actions">
+                            <button class="dt-expand-action-btn" onclick="alert('View full profile for ${rowData.name}')">
+                                <span class="material-symbols-rounded">person</span>
+                                View Profile
+                            </button>
+                            <button class="dt-expand-action-btn" onclick="alert('Editing ${rowData.name}')">
+                                <span class="material-symbols-rounded">edit</span>
+                                Edit
+                            </button>
+                            <button class="dt-expand-action-btn" onclick="alert('Sending email to ${rowData.email}')">
+                                <span class="material-symbols-rounded">email</span>
+                                Send Email
+                            </button>
+                        </div>
+                    </div>
+                `;
+
+                // Example 2: AJAX data loading (uncomment to use)
+                /*
+                fetch('/api/employee/' + rowData.id + '/details')
+                    .then(response => response.json())
+                    .then(data => {
+                        const ajaxContent = `
+                            <div class="dt-expand-content">
+                                <h3>Additional Details (Loaded via AJAX)</h3>
+                                <div class="dt-detail-grid">
+                                    <div class="dt-detail-item">
+                                        <span class="dt-detail-label">Performance Score</span>
+                                        <span class="dt-detail-value">${data.performanceScore}</span>
+                                    </div>
+                                    <div class="dt-detail-item">
+                                        <span class="dt-detail-label">Projects</span>
+                                        <span class="dt-detail-value">${data.projects.join(', ')}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        callback(ajaxContent);
+                    })
+                    .catch(error => {
+                        callback('<div class="dt-expand-content">Error loading data</div>');
+                    });
+                */
+
+                // For this demo, use the simple content
+                callback(simpleContent);
+
+                // Example 3: Simulated AJAX with setTimeout (uncomment to test)
+                /*
+                setTimeout(() => {
+                    const asyncContent = `
+                        <div class="dt-expand-content">
+                            <h3>Loaded Asynchronously - ${rowData.name}</h3>
+                            <p style="color: #5f6368; font-size: 13px;">This content was loaded after a 500ms delay to simulate an AJAX call.</p>
+                            <div class="dt-detail-grid">
+                                <div class="dt-detail-item">
+                                    <span class="dt-detail-label">Last Login</span>
+                                    <span class="dt-detail-value">${new Date().toLocaleString()}</span>
+                                </div>
+                                <div class="dt-detail-item">
+                                    <span class="dt-detail-label">Status</span>
+                                    <span class="dt-detail-value" style="color: #34a853;">Active</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    callback(asyncContent);
+                }, 500);
+                */
+            }
+        });
+
+        // Initialize the second DataTable (minimal features - no S.N., no actions)
+        const dataTable2 = new DataTable('datatable-container-2', {
+            columns: sampleColumns,
+            data: sampleTableData.slice(0, 30), // Use first 30 rows
+            pagination: true,
+            paginationSize: 10,
+            paginationSizeSelector: [10, 25, 50],
+            groupBy: null,
+            enableColumnSelection: true,
+            enableSearch: true,
+            enableGrouping: false,    // Disable group by option
+            showFooter: true,
+            calcFooterTotals: true,
+            cellSpacing: 'compact',
+            enableCellSelection: true,
+            enableRowSelection: true,
+            groupTotalsInline: true,
+            showSerialNumber: false,  // No S.N. column
+            enableRowExpand: false,   // Disable expand (plus sign)
+            actions: [],              // No actions
+            onRowClick: function(rowData) {
+                console.log('Table 2 - Row clicked:', rowData);
+            },
+            onRowSelectionChange: function(data, rows) {
+                console.log('Table 2 - Selected rows:', data.length);
+            },
+            onRowExpand: function(rowData, callback) {
+                const content = `
+                    <div class="dt-expand-content">
+                        <h3>Employee Details - ${rowData.name}</h3>
+                        <div class="dt-detail-grid">
+                            <div class="dt-detail-item">
+                                <span class="dt-detail-label">Employee Code</span>
+                                <span class="dt-detail-value">${rowData.employeeCode}</span>
+                            </div>
+                            <div class="dt-detail-item">
+                                <span class="dt-detail-label">Email</span>
+                                <span class="dt-detail-value">${rowData.email}</span>
+                            </div>
+                            <div class="dt-detail-item">
+                                <span class="dt-detail-label">Department</span>
+                                <span class="dt-detail-value">${rowData.department}</span>
+                            </div>
+                            <div class="dt-detail-item">
+                                <span class="dt-detail-label">Position</span>
+                                <span class="dt-detail-value">${rowData.position}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                callback(content);
+            }
+        });
+
+        // Initialize the third DataTable (infinite scroll - no pagination)
+        const dataTable3 = new DataTable('datatable-container-3', {
+            columns: sampleColumns,
+            data: sampleTableData, // Full 100 rows
+            pagination: false,     // Disable pagination for infinite scroll
+            groupBy: null,
+            enableColumnSelection: true,
+            enableSearch: true,
+            enableGrouping: true,
+            showFooter: true,
+            calcFooterTotals: true,
+            cellSpacing: 'normal',
+            enableCellSelection: true,
+            enableRowSelection: true,
+            groupTotalsInline: true,
+            showSerialNumber: true,
+            enableRowExpand: true,
+            exportFilename: 'infinite_scroll_data',
+            exportOptions: [
+                { key: 'exportAll', label: 'Export all rows', type: 'checkbox', default: true, group: 'General', excelOnly: false },
+                { key: 'preserveFormatting', label: 'Preserve number formatting', type: 'checkbox', default: true, group: 'Formatting', excelOnly: true }
+            ],
+            actions: [
+                {
+                    id: 'view',
+                    label: 'View',
+                    icon: 'visibility',
+                    onClick: function(rowData) {
+                        alert('View: ' + rowData.name);
+                    }
+                },
+                {
+                    id: 'edit',
+                    label: 'Edit',
+                    icon: 'edit',
+                    onClick: function(rowData) {
+                        alert('Edit: ' + rowData.name);
+                    }
+                }
+            ],
+            onRowClick: function(rowData) {
+                console.log('Table 3 - Row clicked:', rowData);
+            },
+            onRowSelectionChange: function(data, rows) {
+                console.log('Table 3 - Selected rows:', data.length);
+            },
+            onRowExpand: function(rowData, callback) {
+                const content = `
+                    <div class="dt-expand-content">
+                        <h3>${rowData.name} - Quick View</h3>
+                        <div class="dt-detail-grid">
+                            <div class="dt-detail-item">
+                                <span class="dt-detail-label">Department</span>
+                                <span class="dt-detail-value">${rowData.department}</span>
+                            </div>
+                            <div class="dt-detail-item">
+                                <span class="dt-detail-label">Salary</span>
+                                <span class="dt-detail-value">$${rowData.salary.toLocaleString()}</span>
+                            </div>
+                            <div class="dt-detail-item">
+                                <span class="dt-detail-label">Status</span>
+                                <span class="dt-detail-value">${rowData.status}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                callback(content);
+            }
+        });
+
+        // Example: Fetch from URL with filters (commented out)
+        /*
+        const dataTableFromAPI = new DataTable('datatable-container', {
+            columns: sampleColumns,
+            dataUrl: 'https://api.example.com/employees',
+            filters: {
+                department: 'Sales',
+                status: 'Active',
+                minSalary: 50000
+            },
+            height: '600px',
+            pagination: true,
+            onRowClick: function(rowData) {
+                console.log('Row clicked:', rowData);
+            }
+        });
+        */
+    </script>
+</body>
+</html>

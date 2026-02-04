@@ -1,0 +1,433 @@
+// ============================================
+// SIXORBIT UI - SIDEBAR DRAWER
+// Drawer variant for mobile/tablet sidebar
+// ============================================
+
+@use '../abstracts' as *;
+
+// ============================================
+// DRAWER-SIDEBAR BASE STYLES
+// ============================================
+
+.#{$so-prefix}drawer-sidebar {
+  width: 280px;
+  background: css-var('sidebar-bg');
+
+  @include tablet {
+    width: 260px;
+  }
+}
+
+// ============================================
+// DRAWER HEADER (Matches Sidebar Header)
+// ============================================
+
+.#{$so-prefix}drawer-sidebar .#{$so-prefix}drawer-header {
+  padding: 0 spacing('3') 0 spacing('1') + 2px;
+  height: css-var('navbar-height');
+  border-bottom: 1px solid css-var('sidebar-border');
+  background: css-var('sidebar-bg');
+  gap: spacing('3');
+}
+
+.#{$so-prefix}drawer-brand {
+  display: flex;
+  align-items: center;
+  gap: spacing('3');
+  flex: 1;
+  min-width: 0;
+}
+
+// Logo in drawer header
+.#{$so-prefix}drawer-sidebar .#{$so-prefix}sidebar-logo {
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  border-radius: radius('lg') + 2px;
+  background: $so-primary;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $so-white;
+  font-size: font-size('md');
+  font-weight: font-weight('semibold');
+  flex-shrink: 0;
+}
+
+// Brand info
+.#{$so-prefix}drawer-sidebar .#{$so-prefix}sidebar-brand-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+}
+
+.#{$so-prefix}drawer-sidebar .#{$so-prefix}sidebar-brand-name {
+  font-size: font-size('base');
+  font-weight: font-weight('semibold');
+  color: css-var('sidebar-heading-color');
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+// Hide toggle button in drawer - not needed
+.#{$so-prefix}drawer-sidebar .#{$so-prefix}sidebar-toggle {
+  display: none;
+}
+
+// ============================================
+// DRAWER BODY (Navigation Area)
+// ============================================
+
+.#{$so-prefix}drawer-sidebar-body {
+  background: css-var('sidebar-bg');
+  padding: spacing('2') 0;
+
+  // Reset any drawer-body padding
+  &.#{$so-prefix}drawer-body {
+    padding: spacing('2') 0;
+  }
+}
+
+// Navigation list
+.#{$so-prefix}drawer-sidebar .#{$so-prefix}sidebar-nav {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+// Section headings
+.#{$so-prefix}drawer-sidebar .#{$so-prefix}sidebar-section {
+  padding: spacing('2') + 2px spacing('3') spacing('1') spacing('3');
+  font-size: font-size('xs');
+  font-weight: font-weight('semibold');
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: css-var('text-muted');
+  white-space: nowrap;
+  overflow: hidden;
+  min-height: 28px;
+  display: flex;
+  align-items: center;
+}
+
+// Menu items
+.#{$so-prefix}drawer-sidebar .#{$so-prefix}sidebar-item {
+  margin: 1px spacing('1');
+}
+
+// Navigation links
+.#{$so-prefix}drawer-sidebar .#{$so-prefix}sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: spacing('2') + 2px;
+  padding: spacing('2') spacing('2') spacing('2') spacing('3');
+  text-decoration: none;
+  color: css-var('sidebar-item-color');
+  border-radius: radius('md');
+  cursor: pointer;
+  transition: background $so-transition-base, color $so-transition-base, box-shadow $so-transition-base;
+  position: relative;
+  min-height: 36px;
+
+  &:hover {
+    background: css-var('sidebar-item-hover-bg');
+    text-decoration: none;
+    color: css-var('sidebar-item-color');
+  }
+}
+
+// Active/Current State
+.#{$so-prefix}drawer-sidebar .#{$so-prefix}sidebar-item.active > .#{$so-prefix}sidebar-link,
+.#{$so-prefix}drawer-sidebar .#{$so-prefix}sidebar-item.current > .#{$so-prefix}sidebar-link {
+  background: css-var('sidebar-item-active-bg');
+  color: css-var('sidebar-item-active-color');
+  box-shadow: 0 2px 8px alpha($so-primary, 0.3);
+}
+
+.#{$so-prefix}drawer-sidebar .#{$so-prefix}sidebar-item.active > .#{$so-prefix}sidebar-link .#{$so-prefix}sidebar-icon,
+.#{$so-prefix}drawer-sidebar .#{$so-prefix}sidebar-item.current > .#{$so-prefix}sidebar-link .#{$so-prefix}sidebar-icon {
+  color: css-var('sidebar-item-active-color');
+}
+
+// Icon
+.#{$so-prefix}drawer-sidebar .#{$so-prefix}sidebar-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  min-width: 24px;
+  flex-shrink: 0;
+  color: css-var('sidebar-item-icon-color');
+  font-size: 20px;
+  transition: color $so-transition-base;
+
+  .material-icons,
+  .material-symbols-rounded {
+    font-size: 20px;
+  }
+}
+
+// Text
+.#{$so-prefix}drawer-sidebar .#{$so-prefix}sidebar-text {
+  flex: 1;
+  font-size: font-size('base');
+  font-weight: font-weight('regular');
+  white-space: nowrap;
+  @include text-truncate;
+  line-height: line-height('snug');
+}
+
+// Arrow for expandable items
+.#{$so-prefix}drawer-sidebar .#{$so-prefix}sidebar-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  min-width: 20px;
+  color: css-var('sidebar-item-icon-color');
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  flex-shrink: 0;
+
+  .material-icons {
+    font-size: 18px;
+  }
+}
+
+.#{$so-prefix}drawer-sidebar .#{$so-prefix}sidebar-item.#{$so-prefix}open > .#{$so-prefix}sidebar-link .#{$so-prefix}sidebar-arrow {
+  transform: rotate(90deg);
+}
+
+// ============================================
+// SUBMENUS
+// ============================================
+
+.#{$so-prefix}drawer-sidebar .#{$so-prefix}sidebar-submenu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  position: relative;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+}
+
+// Open menu items
+.#{$so-prefix}drawer-sidebar .#{$so-prefix}sidebar-item.#{$so-prefix}open > .#{$so-prefix}sidebar-link {
+  color: css-var('accent-primary');
+}
+
+.#{$so-prefix}drawer-sidebar .#{$so-prefix}sidebar-item.#{$so-prefix}open > .#{$so-prefix}sidebar-link .#{$so-prefix}sidebar-icon {
+  color: css-var('accent-primary');
+}
+
+.#{$so-prefix}drawer-sidebar .#{$so-prefix}sidebar-item.#{$so-prefix}open > .#{$so-prefix}sidebar-submenu {
+  max-height: 3000px;
+  transition: max-height 0.3s ease-in;
+}
+
+.#{$so-prefix}drawer-sidebar .#{$so-prefix}sidebar-submenu .#{$so-prefix}sidebar-item {
+  margin: 0;
+  position: relative;
+}
+
+// Level 1 submenu items
+.#{$so-prefix}drawer-sidebar .#{$so-prefix}sidebar-submenu .#{$so-prefix}sidebar-link {
+  display: flex;
+  align-items: center;
+  padding: spacing('1') + 2px spacing('8') spacing('1') + 2px spacing('5');
+  font-size: font-size('sm');
+  margin: 0 spacing('1');
+  border-radius: radius('md');
+  min-height: 32px;
+  color: css-var('sidebar-item-color');
+  position: relative;
+  gap: spacing('2') + 2px;
+}
+
+// Submenu active states
+.#{$so-prefix}drawer-sidebar .#{$so-prefix}sidebar-submenu .#{$so-prefix}sidebar-item.current > .#{$so-prefix}sidebar-link,
+.#{$so-prefix}drawer-sidebar .#{$so-prefix}sidebar-submenu .#{$so-prefix}sidebar-item.active > .#{$so-prefix}sidebar-link {
+  background: css-var('sidebar-item-active-bg');
+  color: css-var('sidebar-item-active-color');
+  box-shadow: 0 2px 8px alpha($so-primary, 0.3);
+}
+
+// ============================================
+// DRAWER FOOTER
+// ============================================
+
+.#{$so-prefix}drawer-sidebar .#{$so-prefix}drawer-footer {
+  padding: spacing('1') + 2px spacing('2');
+  border-top: 1px solid css-var('sidebar-border');
+  background: css-var('sidebar-bg');
+}
+
+.#{$so-prefix}drawer-sidebar .#{$so-prefix}sidebar-footer-buttons {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  gap: 2px;
+}
+
+.#{$so-prefix}drawer-sidebar .#{$so-prefix}sidebar-footer-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: spacing('2');
+  border-radius: radius('md');
+  cursor: pointer;
+  transition: background $so-transition-base;
+  color: css-var('sidebar-item-color');
+  background: transparent;
+  border: none;
+  flex: 1;
+  min-width: 0;
+
+  &:hover {
+    background: css-var('sidebar-item-hover-bg');
+  }
+
+  .material-icons {
+    font-size: 20px;
+    margin-bottom: 2px;
+  }
+
+  span:not(.material-icons) {
+    font-size: font-size('xs');
+    white-space: nowrap;
+  }
+}
+
+// ============================================
+// DARK THEME FOR DRAWER-SIDEBAR
+// ============================================
+
+.#{$so-prefix}drawer-sidebar.drawer-sidebar-dark {
+  background: #25293c;
+
+  .#{$so-prefix}drawer-header {
+    background: #25293c;
+    border-bottom-color: #3b4056;
+  }
+
+  .#{$so-prefix}drawer-sidebar-body,
+  .#{$so-prefix}drawer-body {
+    background: #25293c;
+  }
+
+  .#{$so-prefix}drawer-footer {
+    background: #25293c;
+    border-top-color: #3b4056;
+  }
+
+  .#{$so-prefix}sidebar-brand-name {
+    color: #e7e9f0;
+  }
+
+  .#{$so-prefix}sidebar-section {
+    color: #6b7280;
+  }
+
+  .#{$so-prefix}sidebar-link {
+    color: #a3a8b8;
+
+    &:hover {
+      background: #3b4056;
+      color: #e7e9f0;
+    }
+  }
+
+  .#{$so-prefix}sidebar-item.current > .#{$so-prefix}sidebar-link,
+  .#{$so-prefix}sidebar-item.active > .#{$so-prefix}sidebar-link {
+    background: rgba(115, 103, 240, 0.15);
+    color: #8ab4f8;
+    box-shadow: none;
+  }
+
+  .#{$so-prefix}sidebar-icon {
+    color: #a3a8b8;
+  }
+
+  .#{$so-prefix}sidebar-item.current > .#{$so-prefix}sidebar-link .#{$so-prefix}sidebar-icon,
+  .#{$so-prefix}sidebar-item.active > .#{$so-prefix}sidebar-link .#{$so-prefix}sidebar-icon {
+    color: #8ab4f8;
+  }
+
+  .#{$so-prefix}sidebar-arrow {
+    color: #6b7280;
+  }
+
+  .#{$so-prefix}sidebar-item.#{$so-prefix}open > .#{$so-prefix}sidebar-link {
+    color: #8ab4f8;
+  }
+
+  .#{$so-prefix}sidebar-item.#{$so-prefix}open > .#{$so-prefix}sidebar-link .#{$so-prefix}sidebar-icon {
+    color: #8ab4f8;
+  }
+
+  .#{$so-prefix}sidebar-submenu .#{$so-prefix}sidebar-link {
+    color: #9ca3af;
+
+    &:hover {
+      background: #3b4056;
+      color: #e7e9f0;
+    }
+  }
+
+  .#{$so-prefix}sidebar-submenu .#{$so-prefix}sidebar-item.current > .#{$so-prefix}sidebar-link,
+  .#{$so-prefix}sidebar-submenu .#{$so-prefix}sidebar-item.active > .#{$so-prefix}sidebar-link {
+    background: rgba(115, 103, 240, 0.15);
+    color: #8ab4f8;
+    box-shadow: none;
+  }
+
+  .#{$so-prefix}sidebar-footer-item {
+    color: #a3a8b8;
+
+    &:hover {
+      background: #3b4056;
+    }
+  }
+}
+
+// ============================================
+// RESPONSIVE - HIDE FIXED SIDEBAR ON MOBILE/TABLET
+// ============================================
+
+@include media-down('lg') {
+  // Hide fixed sidebar on tablet/mobile
+  .#{$so-prefix}sidebar {
+    display: none !important;
+  }
+
+  // Hide overlay (drawer has its own backdrop)
+  .#{$so-prefix}sidebar-overlay {
+    display: none !important;
+  }
+
+  // Navbar full width
+  .#{$so-prefix}navbar {
+    left: 0 !important;
+  }
+
+  // Show toggle button
+  .#{$so-prefix}navbar-toggle {
+    display: flex;
+  }
+
+  // Main content full width
+  .#{$so-prefix}main-content {
+    margin-left: 0 !important;
+  }
+}
+
+// On desktop, drawer-sidebar should not be used (use fixed sidebar)
+@include desktop {
+  .#{$so-prefix}drawer-sidebar {
+    // Drawer can still exist but fixed sidebar takes precedence
+  }
+}

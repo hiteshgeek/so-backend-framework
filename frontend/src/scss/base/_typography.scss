@@ -1,0 +1,395 @@
+// ============================================
+// SIXORBIT UI - TYPOGRAPHY
+// Base typography styles and utility classes
+// ============================================
+
+@use '../abstracts' as *;
+
+// ============================================
+// HEADINGS
+// ============================================
+
+h1, .#{$so-prefix}h1 {
+  font-size: css-var('text-4xl');
+  font-weight: font-weight('medium');
+  line-height: line-height('tight');
+  color: css-var('text-heading');
+  margin-bottom: spacing('4');
+}
+
+h2, .#{$so-prefix}h2 {
+  font-size: css-var('text-3xl');
+  font-weight: font-weight('medium');
+  line-height: line-height('tight');
+  color: css-var('text-heading');
+  margin-bottom: spacing('3');
+}
+
+h3, .#{$so-prefix}h3 {
+  font-size: css-var('text-2xl');
+  font-weight: font-weight('medium');
+  line-height: line-height('snug');
+  color: css-var('text-heading');
+  margin-bottom: spacing('3');
+}
+
+h4, .#{$so-prefix}h4 {
+  font-size: css-var('text-xl');
+  font-weight: font-weight('medium');
+  line-height: line-height('snug');
+  color: css-var('text-heading');
+  margin-bottom: spacing('2');
+}
+
+h5, .#{$so-prefix}h5 {
+  font-size: css-var('text-lg');
+  font-weight: font-weight('medium');
+  line-height: line-height('normal');
+  color: css-var('text-heading');
+  margin-bottom: spacing('2');
+}
+
+h6, .#{$so-prefix}h6 {
+  font-size: css-var('text-base');
+  font-weight: font-weight('medium');
+  line-height: line-height('normal');
+  color: css-var('text-heading');
+  margin-bottom: spacing('2');
+}
+
+// ============================================
+// LISTS
+// ============================================
+
+ul, ol {
+  margin-bottom: spacing('4');
+  padding-left: spacing('6');
+
+  li {
+    margin-bottom: spacing('2');
+    line-height: line-height('relaxed');
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  // Nested lists
+  ul, ol {
+    margin-top: spacing('2');
+    margin-bottom: 0;
+  }
+}
+
+ul {
+  list-style-type: disc;
+
+  ul {
+    list-style-type: circle;
+
+    ul {
+      list-style-type: square;
+    }
+  }
+}
+
+ol {
+  list-style-type: decimal;
+
+  ol {
+    list-style-type: lower-alpha;
+
+    ol {
+      list-style-type: lower-roman;
+    }
+  }
+}
+
+// Unstyled list utility
+.#{$so-prefix}list-unstyled {
+  list-style: none;
+  padding-left: 0;
+  margin-bottom: 0;
+
+  li {
+    margin-bottom: 0;
+  }
+}
+
+// Inline list utility
+.#{$so-prefix}list-inline {
+  list-style: none;
+  padding-left: 0;
+  margin-bottom: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: spacing('3');
+
+  li {
+    margin-bottom: 0;
+  }
+}
+
+// ============================================
+// BODY TEXT
+// ============================================
+
+.#{$so-prefix}lead {
+  font-size: css-var('text-lg');
+  font-weight: font-weight('regular');
+  line-height: line-height('relaxed');
+  color: css-var('text-secondary');
+}
+
+.#{$so-prefix}small,
+small {
+  font-size: css-var('text-sm');
+  font-weight: font-weight('regular');
+}
+
+.#{$so-prefix}muted {
+  color: css-var('text-muted');
+}
+
+// ============================================
+// TEXT SIZE UTILITIES
+// ============================================
+
+.#{$so-prefix}text-xs {
+  font-size: css-var('text-xs') !important;
+}
+
+.#{$so-prefix}text-sm {
+  font-size: css-var('text-sm') !important;
+}
+
+.#{$so-prefix}text-base {
+  font-size: css-var('text-base') !important;
+}
+
+.#{$so-prefix}text-md {
+  font-size: css-var('text-md') !important;
+}
+
+.#{$so-prefix}text-lg {
+  font-size: css-var('text-lg') !important;
+}
+
+.#{$so-prefix}text-xl {
+  font-size: css-var('text-xl') !important;
+}
+
+.#{$so-prefix}text-2xl {
+  font-size: css-var('text-2xl') !important;
+}
+
+.#{$so-prefix}text-3xl {
+  font-size: css-var('text-3xl') !important;
+}
+
+.#{$so-prefix}text-4xl {
+  font-size: css-var('text-4xl') !important;
+}
+
+// ============================================
+// TEXT WEIGHT UTILITIES
+// ============================================
+
+.#{$so-prefix}font-light {
+  font-weight: font-weight('light') !important;
+}
+
+.#{$so-prefix}font-regular {
+  font-weight: font-weight('regular') !important;
+}
+
+.#{$so-prefix}font-medium {
+  font-weight: font-weight('medium') !important;
+}
+
+.#{$so-prefix}font-semibold {
+  font-weight: font-weight('semibold') !important;
+}
+
+.#{$so-prefix}font-bold {
+  font-weight: font-weight('bold') !important;
+}
+
+// ============================================
+// TEXT COLOR UTILITIES
+// ============================================
+
+.#{$so-prefix}text-primary {
+  color: css-var('text-primary') !important;
+}
+
+.#{$so-prefix}text-secondary {
+  color: css-var('text-secondary') !important;
+}
+
+.#{$so-prefix}text-muted {
+  color: css-var('text-muted') !important;
+}
+
+.#{$so-prefix}text-heading {
+  color: css-var('text-heading') !important;
+}
+
+.#{$so-prefix}text-success {
+  color: css-var('accent-success') !important;
+}
+
+.#{$so-prefix}text-danger {
+  color: css-var('accent-danger') !important;
+}
+
+.#{$so-prefix}text-warning {
+  color: css-var('accent-warning') !important;
+}
+
+.#{$so-prefix}text-info {
+  color: css-var('accent-info') !important;
+}
+
+.#{$so-prefix}text-accent {
+  color: css-var('accent-primary') !important;
+}
+
+// ============================================
+// TEXT ALIGNMENT UTILITIES
+// ============================================
+
+.#{$so-prefix}text-left {
+  text-align: left !important;
+}
+
+.#{$so-prefix}text-center {
+  text-align: center !important;
+}
+
+.#{$so-prefix}text-right {
+  text-align: right !important;
+}
+
+.#{$so-prefix}text-justify {
+  text-align: justify !important;
+}
+
+// ============================================
+// TEXT TRANSFORM UTILITIES
+// ============================================
+
+.#{$so-prefix}text-uppercase {
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px;
+}
+
+.#{$so-prefix}text-lowercase {
+  text-transform: lowercase !important;
+}
+
+.#{$so-prefix}text-capitalize {
+  text-transform: capitalize !important;
+}
+
+.#{$so-prefix}text-normal-case {
+  text-transform: none !important;
+}
+
+// ============================================
+// TEXT DECORATION UTILITIES
+// ============================================
+
+.#{$so-prefix}text-underline {
+  text-decoration: underline !important;
+}
+
+.#{$so-prefix}text-line-through {
+  text-decoration: line-through !important;
+}
+
+.#{$so-prefix}text-no-underline {
+  text-decoration: none !important;
+}
+
+// ============================================
+// TEXT TRUNCATION UTILITIES
+// ============================================
+
+.#{$so-prefix}truncate {
+  @include text-truncate;
+}
+
+.#{$so-prefix}truncate-2 {
+  @include text-truncate-lines(2);
+}
+
+.#{$so-prefix}truncate-3 {
+  @include text-truncate-lines(3);
+}
+
+// ============================================
+// LINE HEIGHT UTILITIES
+// ============================================
+
+.#{$so-prefix}leading-tight {
+  line-height: line-height('tight') !important;
+}
+
+.#{$so-prefix}leading-snug {
+  line-height: line-height('snug') !important;
+}
+
+.#{$so-prefix}leading-normal {
+  line-height: line-height('normal') !important;
+}
+
+.#{$so-prefix}leading-relaxed {
+  line-height: line-height('relaxed') !important;
+}
+
+.#{$so-prefix}leading-loose {
+  line-height: line-height('loose') !important;
+}
+
+// ============================================
+// WHITESPACE UTILITIES
+// ============================================
+
+.#{$so-prefix}whitespace-nowrap {
+  white-space: nowrap !important;
+}
+
+.#{$so-prefix}whitespace-normal {
+  white-space: normal !important;
+}
+
+.#{$so-prefix}whitespace-pre {
+  white-space: pre !important;
+}
+
+.#{$so-prefix}whitespace-pre-line {
+  white-space: pre-line !important;
+}
+
+.#{$so-prefix}whitespace-pre-wrap {
+  white-space: pre-wrap !important;
+}
+
+// ============================================
+// WORD BREAK UTILITIES
+// ============================================
+
+.#{$so-prefix}break-normal {
+  word-break: normal !important;
+  overflow-wrap: normal !important;
+}
+
+.#{$so-prefix}break-words {
+  word-break: break-word !important;
+  overflow-wrap: break-word !important;
+}
+
+.#{$so-prefix}break-all {
+  word-break: break-all !important;
+}

@@ -1,0 +1,866 @@
+// ============================================
+// SIXORBIT UI - AUTHENTICATION PAGES
+// Login, password reset, and OTP verification
+// ============================================
+
+@use "../abstracts" as *;
+
+// ============================================
+// AUTH PAGE CSS VARIABLES
+// ============================================
+
+:root {
+  --#{$so-css-var-prefix}-auth-branding-bg: linear-gradient(
+    135deg,
+    #{$so-primary} 0%,
+    #0d47a1 100%
+  );
+  --#{$so-css-var-prefix}-auth-branding-text: #{$so-white};
+  --#{$so-css-var-prefix}-auth-branding-text-muted: rgba(255, 255, 255, 0.7);
+  --#{$so-css-var-prefix}-auth-card-radius: 16px;
+  --#{$so-css-var-prefix}-auth-transition: 0.3s ease;
+}
+
+[data-theme="dark"] {
+  --#{$so-css-var-prefix}-auth-branding-bg: linear-gradient(
+    135deg,
+    #7367f0 0%,
+    #4839eb 100%
+  );
+}
+
+// ============================================
+// AUTH PAGE LAYOUT
+// ============================================
+
+.#{$so-prefix}auth-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: spacing("5");
+  background: css-var("page-bg");
+}
+
+// ============================================
+// AUTH CONTAINER - Split Layout
+// ============================================
+
+.#{$so-prefix}auth-container {
+  display: flex;
+  width: 100%;
+  max-width: 1000px;
+  min-height: 600px;
+  background: css-var("card-bg");
+  border-radius: var(--#{$so-css-var-prefix}-auth-card-radius);
+  box-shadow: css-var("shadow-lg");
+  border: 1px solid css-var("card-border");
+  overflow: hidden;
+
+  &.centered {
+    max-width: 480px;
+    min-height: auto;
+
+    .#{$so-prefix}auth-card {
+      padding: spacing("10");
+    }
+  }
+}
+
+// ============================================
+// LEFT PANEL - BRANDING
+// ============================================
+
+.#{$so-prefix}auth-branding {
+  flex: 0 0 45%;
+  background: var(--#{$so-css-var-prefix}-auth-branding-bg);
+  color: var(--#{$so-css-var-prefix}-auth-branding-text);
+  padding: spacing("10");
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+
+  // Decorative background patterns
+  &::before {
+    content: "";
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(
+      circle,
+      rgba(255, 255, 255, 0.1) 0%,
+      transparent 70%
+    );
+    pointer-events: none;
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    bottom: -30%;
+    left: -30%;
+    width: 80%;
+    height: 80%;
+    background: radial-gradient(
+      circle,
+      rgba(255, 255, 255, 0.08) 0%,
+      transparent 60%
+    );
+    pointer-events: none;
+  }
+}
+
+// Customer Logo Section
+.#{$so-prefix}customer-logo {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+
+  img {
+    max-width: 160px;
+    max-height: 80px;
+    object-fit: contain;
+    filter: brightness(0) invert(1);
+  }
+}
+
+.#{$so-prefix}customer-logo-placeholder {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto spacing("2");
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: radius("xl");
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  font-weight: font-weight("semibold");
+}
+
+.#{$so-prefix}customer-name {
+  font-size: font-size("xl");
+  font-weight: font-weight("medium");
+  margin: spacing("2") 0 0;
+  text-align: center;
+}
+
+// ============================================
+// FEATURE CAROUSEL
+// ============================================
+
+.#{$so-prefix}auth-features {
+  flex: 1;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.#{$so-prefix}auth-features-header {
+  font-size: font-size("xs");
+  font-weight: font-weight("medium");
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--#{$so-css-var-prefix}-auth-branding-text-muted);
+  margin-bottom: spacing("5");
+}
+
+.#{$so-prefix}feature-carousel {
+  position: relative;
+  min-height: 120px;
+}
+
+.#{$so-prefix}feature-slides {
+  position: relative;
+  overflow: hidden;
+}
+
+.#{$so-prefix}feature-slide {
+  display: none;
+  animation: so-auth-fade-in 0.5s ease;
+
+  &.active {
+    display: block;
+  }
+}
+
+@keyframes so-auth-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.#{$so-prefix}feature-slide-content {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: radius("lg");
+  padding: spacing("6");
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.#{$so-prefix}feature-icon {
+  width: 48px;
+  height: 48px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: radius("lg");
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: spacing("4");
+
+  .material-icons {
+    font-size: 24px;
+    color: $so-white;
+  }
+}
+
+.#{$so-prefix}feature-title {
+  font-size: font-size("lg");
+  font-weight: font-weight("medium");
+  margin-bottom: spacing("2");
+}
+
+.#{$so-prefix}feature-description {
+  font-size: font-size("base");
+  color: var(--#{$so-css-var-prefix}-auth-branding-text-muted);
+  line-height: line-height("relaxed");
+}
+
+// Carousel Dots
+.#{$so-prefix}feature-dots {
+  display: flex;
+  gap: spacing("2");
+  margin-top: spacing("5");
+  justify-content: center;
+}
+
+.#{$so-prefix}feature-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: radius("full");
+  background: rgba(255, 255, 255, 0.3);
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: all $so-transition-normal;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.5);
+  }
+
+  &.active {
+    background: $so-white;
+    transform: scale(1.2);
+  }
+}
+
+// SixOrbit Branding Footer
+.#{$so-prefix}sixorbit-branding {
+  position: relative;
+  z-index: 1;
+  margin-top: auto;
+  padding-top: spacing("8");
+  text-align: center;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.#{$so-prefix}sixorbit-branding-text {
+  font-size: font-size("xs");
+  color: var(--#{$so-css-var-prefix}-auth-branding-text-muted);
+  margin-bottom: spacing("1");
+}
+
+.#{$so-prefix}sixorbit-branding-link {
+  font-size: font-size("base");
+  font-weight: font-weight("medium");
+  color: $so-white;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: spacing("1");
+  transition: opacity $so-transition-normal;
+
+  &:hover {
+    opacity: 0.8;
+  }
+
+  .material-icons {
+    font-size: 16px;
+  }
+}
+
+.#{$so-prefix}sixorbit-logo {
+  flex-shrink: 0;
+}
+
+// ============================================
+// RIGHT PANEL - AUTH CARD (Form Area)
+// ============================================
+
+.#{$so-prefix}auth-card {
+  flex: 1;
+  padding: spacing("12") spacing("10");
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: css-var("card-bg");
+}
+
+.#{$so-prefix}auth-header {
+  text-align: center;
+  margin-bottom: spacing("8");
+}
+
+.#{$so-prefix}auth-title {
+  font-size: 28px;
+  font-weight: font-weight("medium");
+  color: css-var("text-heading");
+  margin: 0 0 spacing("2");
+}
+
+.#{$so-prefix}auth-subtitle {
+  font-size: font-size("base");
+  color: css-var("text-secondary");
+  margin: 0;
+}
+
+.#{$so-prefix}auth-body {
+  max-width: 360px;
+  margin: 0 auto;
+  width: 100%;
+
+  .#{$so-prefix}form-group {
+    margin-bottom: spacing("5");
+  }
+
+  .#{$so-prefix}form-label {
+    font-size: font-size("base");
+    font-weight: font-weight("medium");
+    color: css-var("text-primary");
+    margin-bottom: spacing("2");
+    display: block;
+  }
+}
+
+// ============================================
+// LOGIN TYPE TOGGLE (Email/Mobile)
+// ============================================
+
+.#{$so-prefix}auth-type-toggle {
+  display: flex;
+  margin-bottom: spacing("6");
+  background: css-var("card-hover-bg");
+  border-radius: radius("md");
+  padding: spacing("1");
+}
+
+.#{$so-prefix}auth-type-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: spacing("2");
+  padding: spacing("3") spacing("4");
+  font-size: font-size("base");
+  font-weight: font-weight("medium");
+  font-family: inherit;
+  color: css-var("text-secondary");
+  background: transparent;
+  border: none;
+  border-radius: radius("md");
+  cursor: pointer;
+  transition: all $so-transition-normal;
+
+  .material-icons {
+    font-size: 20px;
+  }
+
+  &:hover {
+    color: css-var("text-primary");
+  }
+
+  &.active {
+    background: css-var("card-bg");
+    color: css-var("accent-primary");
+    box-shadow: shadow("sm");
+  }
+
+  @include dark-mode {
+    &.active {
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+    }
+  }
+}
+
+// ============================================
+// INPUT WITH ICON WRAPPER
+// ============================================
+
+.#{$so-prefix}auth-input-wrapper {
+  position: relative;
+
+  .#{$so-prefix}form-control {
+    padding-left: 44px;
+  }
+
+  .#{$so-prefix}form-control-icon-left {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: css-var("text-muted");
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+
+    .material-icons {
+      font-size: 20px;
+    }
+  }
+
+  .#{$so-prefix}form-control:focus + .#{$so-prefix}form-control-icon-left,
+  .#{$so-prefix}form-control:not(:placeholder-shown)
+    + .#{$so-prefix}form-control-icon-left {
+    color: css-var("accent-primary");
+  }
+
+  &.has-toggle .#{$so-prefix}form-control {
+    padding-right: 44px;
+  }
+}
+
+// Password Toggle Button
+.#{$so-prefix}password-toggle {
+  position: absolute;
+  right: spacing("2");
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  padding: spacing("2");
+  cursor: pointer;
+  color: css-var("text-muted");
+  display: flex;
+  align-items: center;
+  border-radius: radius("md");
+  transition: color $so-transition-base;
+
+  &:hover {
+    color: css-var("text-primary");
+  }
+
+  .material-icons {
+    font-size: 20px;
+  }
+}
+
+// ============================================
+// OPTIONS ROW (Remember Me + Forgot Password)
+// ============================================
+
+.#{$so-prefix}auth-options {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: spacing("6");
+  flex-wrap: wrap;
+  gap: spacing("3");
+}
+
+.#{$so-prefix}auth-forgot-link {
+  font-size: font-size("base");
+  color: css-var("accent-primary");
+  text-decoration: none;
+  font-weight: font-weight("medium");
+  transition: opacity $so-transition-base;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+// ============================================
+// OTP INPUT GROUP
+// ============================================
+
+.#{$so-prefix}otp-container {
+  text-align: center;
+  margin-bottom: spacing("6");
+}
+
+.#{$so-prefix}otp-inputs {
+  display: flex;
+  gap: spacing("3");
+  justify-content: center;
+  margin-bottom: spacing("4");
+}
+
+.#{$so-prefix}otp-input {
+  width: 52px;
+  height: 60px;
+  text-align: center;
+  font-size: font-size("3xl");
+  font-weight: font-weight("medium");
+  font-family: "Roboto Mono", monospace;
+  color: css-var("form-text");
+  background: css-var("form-bg");
+  border: 2px solid css-var("form-border");
+  border-radius: radius("lg");
+  outline: none;
+  transition:
+    border-color $so-transition-base,
+    box-shadow $so-transition-base;
+
+  &:focus {
+    border-color: css-var("form-border-focus");
+    box-shadow: 0 0 0 3px alpha($so-primary, 0.1);
+  }
+
+  @include dark-mode {
+    &:focus {
+      box-shadow: 0 0 0 3px rgba(115, 103, 240, 0.15);
+    }
+  }
+
+  &.filled {
+    border-color: css-var("accent-success");
+  }
+
+  &.error {
+    border-color: css-var("accent-danger");
+  }
+}
+
+// OTP Size Variants
+.#{$so-prefix}otp-group-sm {
+  .#{$so-prefix}otp-inputs {
+    gap: spacing("2");
+  }
+
+  .#{$so-prefix}otp-input {
+    width: 40px;
+    height: 48px;
+    font-size: font-size("xl");
+    border-radius: radius("md");
+  }
+}
+
+.#{$so-prefix}otp-group-lg {
+  .#{$so-prefix}otp-inputs {
+    gap: spacing("4");
+  }
+
+  .#{$so-prefix}otp-input {
+    width: 64px;
+    height: 72px;
+    font-size: font-size("4xl");
+    border-radius: radius("xl");
+  }
+}
+
+// Resend OTP
+.#{$so-prefix}auth-resend {
+  font-size: font-size("base");
+  color: css-var("text-secondary");
+}
+
+.#{$so-prefix}auth-resend-btn {
+  color: css-var("accent-primary");
+  background: none;
+  border: none;
+  font-size: font-size("base");
+  font-family: inherit;
+  font-weight: font-weight("medium");
+  cursor: pointer;
+  padding: 0;
+  transition: opacity $so-transition-base;
+
+  &:disabled {
+    color: css-var("text-muted");
+    cursor: not-allowed;
+  }
+
+  &:not(:disabled):hover {
+    opacity: 0.8;
+  }
+}
+
+// ============================================
+// PASSWORD REQUIREMENTS LIST
+// ============================================
+
+.#{$so-prefix}password-requirements {
+  margin: spacing("4") 0 spacing("6");
+  padding: 0;
+  list-style: none;
+  font-size: font-size("sm");
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: spacing("2");
+    padding: spacing("1") + 2px 0;
+    color: css-var("text-muted");
+    transition: color $so-transition-normal;
+
+    .material-icons {
+      font-size: 18px;
+    }
+
+    &.valid {
+      color: css-var("accent-success");
+
+      .material-icons::before {
+        content: "check_circle";
+      }
+    }
+  }
+}
+
+// ============================================
+// SUCCESS STATE
+// ============================================
+
+.#{$so-prefix}auth-success {
+  text-align: center;
+  padding: spacing("8") 0;
+}
+
+.#{$so-prefix}auth-success-icon {
+  width: 100px;
+  height: 100px;
+  margin: 0 auto spacing("6");
+  border-radius: radius("full");
+  background: alpha($so-success, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .material-icons {
+    font-size: 48px;
+    color: css-var("accent-success");
+  }
+
+  @include dark-mode {
+    background: rgba(40, 199, 111, 0.15);
+  }
+}
+
+.#{$so-prefix}auth-success-title {
+  font-size: font-size("3xl");
+  font-weight: font-weight("medium");
+  color: css-var("text-heading");
+  margin-bottom: spacing("2");
+}
+
+.#{$so-prefix}auth-success-message {
+  font-size: font-size("base");
+  color: css-var("text-secondary");
+  margin-bottom: spacing("8");
+}
+
+// ============================================
+// STEP INDICATOR
+// ============================================
+
+.#{$so-prefix}auth-steps {
+  display: flex;
+  justify-content: center;
+  gap: spacing("3");
+  margin-bottom: spacing("8");
+}
+
+.#{$so-prefix}auth-step-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: radius("full");
+  background: css-var("border-color");
+  transition:
+    background $so-transition-normal,
+    transform $so-transition-normal;
+
+  &.active {
+    background: css-var("accent-primary");
+    transform: scale(1.3);
+  }
+
+  &.completed {
+    background: css-var("accent-success");
+  }
+}
+
+// ============================================
+// BACK LINK
+// ============================================
+
+.#{$so-prefix}auth-back {
+  display: inline-flex;
+  align-items: center;
+  gap: spacing("1");
+  font-size: font-size("base");
+  color: css-var("text-secondary");
+  text-decoration: none;
+  margin-top: spacing("6");
+  transition: color $so-transition-base;
+
+  &:hover {
+    color: css-var("accent-primary");
+  }
+
+  .material-icons {
+    font-size: 18px;
+  }
+}
+
+// ============================================
+// STEP CONTAINERS
+// ============================================
+
+.#{$so-prefix}auth-step {
+  display: none;
+
+  &.active {
+    display: block;
+    animation: so-auth-fade-in 0.3s ease;
+  }
+}
+
+// ============================================
+// LOADING STATE FOR BUTTONS
+// ============================================
+
+.#{$so-prefix}btn.#{$so-prefix}loading {
+  position: relative;
+  color: transparent !important;
+  pointer-events: none;
+
+  &::after {
+    content: "";
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 50%;
+    left: 50%;
+    margin-top: -10px;
+    margin-left: -10px;
+    border: 2px solid $so-white;
+    border-top-color: transparent;
+    border-radius: radius("full");
+    animation: so-btn-spin 0.8s linear infinite;
+  }
+}
+
+.#{$so-prefix}btn-secondary.#{$so-prefix}loading::after {
+  border-color: css-var("text-secondary");
+  border-top-color: transparent;
+}
+
+@keyframes so-btn-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// ============================================
+// FOOTER LINKS
+// ============================================
+
+.#{$so-prefix}auth-footer {
+  text-align: center;
+  margin-top: spacing("6");
+  padding-top: spacing("6");
+  border-top: 1px solid css-var("border-color");
+}
+
+.#{$so-prefix}auth-footer-text {
+  font-size: font-size("base");
+  color: css-var("text-secondary");
+}
+
+.#{$so-prefix}auth-footer-link {
+  color: css-var("accent-primary");
+  text-decoration: none;
+  font-weight: font-weight("medium");
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+// ============================================
+// RESPONSIVE - Mobile Styles
+// ============================================
+
+@media (max-width: 900px) {
+  .#{$so-prefix}auth-container {
+    flex-direction: column;
+    max-width: 480px;
+    min-height: auto;
+  }
+
+  .#{$so-prefix}auth-branding {
+    flex: none;
+    padding: spacing("8") spacing("6");
+  }
+
+  .#{$so-prefix}customer-logo {
+    margin-bottom: spacing("6");
+  }
+
+  .#{$so-prefix}auth-features {
+    display: none;
+  }
+
+  .#{$so-prefix}sixorbit-branding {
+    padding-top: spacing("6");
+    margin-top: 0;
+  }
+
+  .#{$so-prefix}auth-card {
+    padding: spacing("8") spacing("6");
+  }
+}
+
+@media (max-width: 480px) {
+  .#{$so-prefix}auth-page {
+    padding: 0;
+  }
+
+  .#{$so-prefix}auth-container {
+    border-radius: 0;
+    min-height: 100vh;
+    box-shadow: none;
+  }
+
+  .#{$so-prefix}auth-branding {
+    padding: spacing("6") spacing("5");
+  }
+
+  .#{$so-prefix}auth-card {
+    padding: spacing("6") spacing("5");
+    flex: 1;
+  }
+
+  .#{$so-prefix}auth-title {
+    font-size: font-size("3xl");
+  }
+
+  .#{$so-prefix}otp-inputs {
+    gap: spacing("2");
+  }
+
+  .#{$so-prefix}otp-input {
+    width: 44px;
+    height: 52px;
+    font-size: font-size("xl");
+  }
+}

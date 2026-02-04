@@ -1,0 +1,251 @@
+// ============================================
+// SIXORBIT UI - THEME DEFINITIONS
+// Light, Dark, and Sidebar-Dark themes
+// ============================================
+
+@use 'config' as *;
+@use 'variables' as *;
+
+// ============================================
+// LIGHT THEME (Default - Google-inspired)
+// ============================================
+$so-theme-light: (
+  // Background Colors
+  'page-bg': #f5f5f5,
+  'card-bg': #ffffff,
+  'card-hover-bg': #f1f3f4,
+
+  // Border Colors
+  'border-color': #e8eaed,
+  'card-border': rgba(0, 0, 0, 0.05),
+  'border-light': rgba(0, 0, 0, 0.03),
+  'border-dark': #dadce0,
+
+  // Text Colors
+  'text-primary': #202124,
+  'text-heading': #202124,
+  'text-secondary': #5f6368,
+  'text-muted': #9aa0a6,
+  'text-disabled': #bdc1c6,
+
+  // Accent Colors
+  'accent-primary': #1a73e8,
+  'accent-primary-hover': #1557b0,
+  'accent-primary-light': #e8f0fe,
+  'accent-success': #34a853,
+  'accent-success-hover': #2d8f47,
+  'accent-success-light': #e6f4ea,
+  'accent-danger': #ea4335,
+  'accent-danger-hover': #d33426,
+  'accent-danger-light': #fce8e6,
+  'accent-warning': #f9ab00,
+  'accent-warning-hover': #e09b00,
+  'accent-warning-light': #fef7e0,
+  'accent-info': #17a2b8,
+  'accent-info-hover': #138496,
+  'accent-info-light': #e0f7fa,
+
+  // Shadows (natural downward offset)
+  'shadow': 0 2px 6px 0 rgba(0, 0, 0, 0.15),
+  'shadow-lg': 0 4px 12px 0 rgba(0, 0, 0, 0.18),
+  'shadow-xl': 0 8px 24px 0 rgba(0, 0, 0, 0.22),
+
+  // Form Elements
+  'form-bg': #ffffff,
+  'form-border': #dadce0,
+  'form-border-hover': #bdc1c6,
+  'form-border-focus': #1a73e8,
+  'form-text': #202124,
+  'form-placeholder': #9aa0a6,
+  'form-disabled-bg': #f1f3f4,
+  'form-disabled-text': #9aa0a6,
+
+  // Dropdown
+  'dropdown-bg': #ffffff,
+  'dropdown-border': #e8eaed,
+  'dropdown-shadow': (0 4px 16px rgba(0, 0, 0, 0.16)),
+  'dropdown-item-hover': #f1f3f4,
+  'dropdown-item-active': #e8f0fe,
+  'dropdown-item-active-text': #1a73e8,
+
+  // Sidebar specific
+  'sidebar-bg': #ffffff,
+  'sidebar-border': #e8eaed,
+  'sidebar-text': #5f6368,
+  'sidebar-text-active': #1a73e8,
+  'sidebar-icon': #5f6368,
+  'sidebar-icon-active': #1a73e8,
+  'sidebar-hover-bg': #f1f3f4,
+  'sidebar-active-bg': #e8f0fe,
+  // Sidebar item colors (matching plugin)
+  'sidebar-item-color': #5d596c,
+  'sidebar-item-hover-bg': #f1f3f4,
+  'sidebar-item-active-bg': linear-gradient(135deg, #1a73e8 0%, #4285f4 100%),
+  'sidebar-item-active-color': #ffffff,
+  'sidebar-item-icon-color': #5d596c,
+
+  // Navbar specific
+  'navbar-bg': #ffffff,
+  'navbar-border': #e8eaed,
+  'navbar-shadow': (0 1px 3px 0 rgba(60, 64, 67, 0.15)),
+  'navbar-text-color': #3c4043,
+  'navbar-icon-color': #5f6368,
+  'navbar-icon-hover': #202124,
+  'navbar-brand-color': #202124,
+  'navbar-brand-hover': #1a73e8,
+  'navbar-search-bg': #f1f3f4,
+  'navbar-search-hover-bg': #e8eaed,
+  'navbar-search-focus-bg': #ffffff,
+  'navbar-search-border': transparent,
+  'navbar-search-focus-border': #1a73e8,
+  'navbar-search-placeholder': #5f6368,
+) !default;
+
+// ============================================
+// DARK THEME (Blue accent - matching light mode)
+// ============================================
+$so-theme-dark: (
+  // Background Colors
+  'page-bg': #25293c,
+  'card-bg': #2f3349,
+  'card-hover-bg': #3b4056,
+
+  // Border Colors
+  'border-color': #3b4056,
+  'card-border': rgba(255, 255, 255, 0.05),
+  'border-light': rgba(255, 255, 255, 0.03),
+  'border-dark': #474d64,
+
+  // Text Colors
+  'text-primary': #d0d4e4,
+  'text-heading': #e7e9f0,
+  'text-secondary': #a3a8b8,
+  'text-muted': #6c7293,
+  'text-disabled': #4a5068,
+
+  // Accent Colors (Blue-based - matching light mode)
+  'accent-primary': #1a73e8,
+  'accent-primary-hover': #4a9af5,
+  'accent-primary-light': rgba(26, 115, 232, 0.15),
+  'accent-success': #28c76f,
+  'accent-success-hover': #48da89,
+  'accent-success-light': rgba(40, 199, 111, 0.15),
+  'accent-danger': #ea5455,
+  'accent-danger-hover': #f08182,
+  'accent-danger-light': rgba(234, 84, 85, 0.15),
+  'accent-warning': #ff9f43,
+  'accent-warning-hover': #ffb976,
+  'accent-warning-light': rgba(255, 159, 67, 0.15),
+  'accent-info': #00cfe8,
+  'accent-info-hover': #33d8ec,
+  'accent-info-light': rgba(0, 207, 232, 0.15),
+
+  // Shadows (more prominent for dark backgrounds)
+  'shadow': 0 2px 6px 0 rgba(0, 0, 0, 0.25),
+  'shadow-lg': 0 4px 12px 0 rgba(0, 0, 0, 0.35),
+  'shadow-xl': 0 8px 24px 0 rgba(0, 0, 0, 0.45),
+
+  // Form Elements
+  'form-bg': #25293c,
+  'form-border': #3b4056,
+  'form-border-hover': #474d64,
+  'form-border-focus': #1a73e8,
+  'form-text': #d0d4e4,
+  'form-placeholder': #6c7293,
+  'form-disabled-bg': #2f3349,
+  'form-disabled-text': #6c7293,
+
+  // Dropdown
+  'dropdown-bg': #2f3349,
+  'dropdown-border': #3b4056,
+  'dropdown-shadow': 0 4px 16px rgba(0, 0, 0, 0.4),
+  'dropdown-item-hover': #3b4056,
+  'dropdown-item-active': rgba(26, 115, 232, 0.15),
+  'dropdown-item-active-text': #1a73e8,
+
+  // Sidebar specific
+  'sidebar-bg': #2f3349,
+  'sidebar-border': #3b4056,
+  'sidebar-text': #a3a8b8,
+  'sidebar-text-active': #1a73e8,
+  'sidebar-icon': #a3a8b8,
+  'sidebar-icon-active': #1a73e8,
+  'sidebar-hover-bg': #3b4056,
+  'sidebar-active-bg': rgba(26, 115, 232, 0.15),
+  // Sidebar item colors (dark theme)
+  'sidebar-item-color': #d0d4e4,
+  'sidebar-item-hover-bg': #3b4056,
+  'sidebar-item-active-bg': #1a73e8,
+  'sidebar-item-active-color': #ffffff,
+  'sidebar-item-icon-color': #a3a8b8,
+
+  // Navbar specific
+  'navbar-bg': #2f3349,
+  'navbar-border': #3b4056,
+  'navbar-shadow': (0 2px 6px 0 rgba(0, 0, 0, 0.25)),
+  'navbar-text-color': #d0d4e4,
+  'navbar-icon-color': #a3a8b8,
+  'navbar-icon-hover': #e7e9f0,
+  'navbar-brand-color': #e7e9f0,
+  'navbar-brand-hover': #1a73e8,
+  'navbar-search-bg': #25293c,
+  'navbar-search-hover-bg': #3b4056,
+  'navbar-search-focus-bg': #25293c,
+  'navbar-search-border': transparent,
+  'navbar-search-focus-border': #1a73e8,
+  'navbar-search-placeholder': #6c7293,
+) !default;
+
+// ============================================
+// SIDEBAR-DARK THEME
+// Light page with dark sidebar
+// ============================================
+$so-theme-sidebar-dark: (
+  // Sidebar overrides (dark sidebar on light page)
+  'sidebar-bg': #2f3349,
+  'sidebar-border': #3b4056,
+  'sidebar-text': #a3a8b8,
+  'sidebar-text-active': #1a73e8,
+  'sidebar-icon': #a3a8b8,
+  'sidebar-icon-active': #1a73e8,
+  'sidebar-hover-bg': #3b4056,
+  'sidebar-active-bg': rgba(26, 115, 232, 0.15),
+  'sidebar-section-text': #6c7293,
+  // Sidebar item colors (dark sidebar)
+  'sidebar-item-color': #d0d4e4,
+  'sidebar-item-hover-bg': #3b4056,
+  'sidebar-item-active-bg': #1a73e8,
+  'sidebar-item-active-color': #ffffff,
+  'sidebar-item-icon-color': #a3a8b8,
+) !default;
+
+// ============================================
+// HELPER FUNCTIONS
+// ============================================
+
+/// Get value from a theme map
+/// @param {Map} $theme - The theme map
+/// @param {String} $key - The key to get
+/// @return {*} - The value
+@function theme-get($theme, $key) {
+  @return map-get($theme, $key);
+}
+
+// ============================================
+// MIXIN: Generate CSS Variables from Theme
+// ============================================
+
+/// Generate CSS custom properties from a theme map
+/// @param {Map} $theme - The theme map to generate variables from
+@mixin generate-theme-vars($theme) {
+  @each $key, $value in $theme {
+    --#{$so-css-var-prefix}-#{$key}: #{$value};
+  }
+}
+
+/// Apply sidebar-dark specific styles
+@mixin sidebar-dark-vars() {
+  @each $key, $value in $so-theme-sidebar-dark {
+    --#{$so-css-var-prefix}-#{$key}: #{$value};
+  }
+}

@@ -1,0 +1,382 @@
+// ============================================
+// SIXORBIT UI - RTL SUPPORT
+// Right-to-left language support utilities
+// ============================================
+
+@use '../abstracts' as *;
+
+// ============================================
+// RTL CONTAINER
+// ============================================
+
+.#{$so-prefix}rtl,
+[dir="rtl"] {
+  direction: rtl;
+  text-align: right;
+}
+
+// ============================================
+// LTR CONTAINER (Force LTR inside RTL)
+// ============================================
+
+.#{$so-prefix}ltr,
+[dir="ltr"] {
+  direction: ltr;
+  text-align: left;
+}
+
+// ============================================
+// LOGICAL TEXT ALIGNMENT
+// ============================================
+
+.#{$so-prefix}text-start {
+  text-align: left;
+
+  [dir="rtl"] & {
+    text-align: right;
+  }
+}
+
+.#{$so-prefix}text-end {
+  text-align: right;
+
+  [dir="rtl"] & {
+    text-align: left;
+  }
+}
+
+// ============================================
+// LOGICAL FLOATS
+// ============================================
+
+.#{$so-prefix}float-start {
+  float: left;
+
+  [dir="rtl"] & {
+    float: right;
+  }
+}
+
+.#{$so-prefix}float-end {
+  float: right;
+
+  [dir="rtl"] & {
+    float: left;
+  }
+}
+
+// ============================================
+// LOGICAL MARGINS
+// ============================================
+
+// Margin start (left in LTR, right in RTL)
+@for $i from 0 through 8 {
+  $value: $i * 0.25rem;
+
+  .#{$so-prefix}ms-#{$i} {
+    margin-left: $value;
+
+    [dir="rtl"] & {
+      margin-left: 0;
+      margin-right: $value;
+    }
+  }
+
+  // Margin end (right in LTR, left in RTL)
+  .#{$so-prefix}me-#{$i} {
+    margin-right: $value;
+
+    [dir="rtl"] & {
+      margin-right: 0;
+      margin-left: $value;
+    }
+  }
+}
+
+// Auto margins
+.#{$so-prefix}ms-auto {
+  margin-left: auto;
+
+  [dir="rtl"] & {
+    margin-left: 0;
+    margin-right: auto;
+  }
+}
+
+.#{$so-prefix}me-auto {
+  margin-right: auto;
+
+  [dir="rtl"] & {
+    margin-right: 0;
+    margin-left: auto;
+  }
+}
+
+// ============================================
+// LOGICAL PADDING
+// ============================================
+
+// Padding start
+@for $i from 0 through 8 {
+  $value: $i * 0.25rem;
+
+  .#{$so-prefix}ps-#{$i} {
+    padding-left: $value;
+
+    [dir="rtl"] & {
+      padding-left: 0;
+      padding-right: $value;
+    }
+  }
+
+  // Padding end
+  .#{$so-prefix}pe-#{$i} {
+    padding-right: $value;
+
+    [dir="rtl"] & {
+      padding-right: 0;
+      padding-left: $value;
+    }
+  }
+}
+
+// ============================================
+// LOGICAL BORDERS
+// ============================================
+
+.#{$so-prefix}border-start {
+  border-left: 1px solid css-var('border-color');
+
+  [dir="rtl"] & {
+    border-left: none;
+    border-right: 1px solid css-var('border-color');
+  }
+}
+
+.#{$so-prefix}border-end {
+  border-right: 1px solid css-var('border-color');
+
+  [dir="rtl"] & {
+    border-right: none;
+    border-left: 1px solid css-var('border-color');
+  }
+}
+
+.#{$so-prefix}border-start-0 {
+  border-left: none !important;
+
+  [dir="rtl"] & {
+    border-right: none !important;
+  }
+}
+
+.#{$so-prefix}border-end-0 {
+  border-right: none !important;
+
+  [dir="rtl"] & {
+    border-left: none !important;
+  }
+}
+
+// ============================================
+// LOGICAL BORDER RADIUS
+// ============================================
+
+.#{$so-prefix}rounded-start {
+  border-top-left-radius: radius('base');
+  border-bottom-left-radius: radius('base');
+
+  [dir="rtl"] & {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-top-right-radius: radius('base');
+    border-bottom-right-radius: radius('base');
+  }
+}
+
+.#{$so-prefix}rounded-end {
+  border-top-right-radius: radius('base');
+  border-bottom-right-radius: radius('base');
+
+  [dir="rtl"] & {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-top-left-radius: radius('base');
+    border-bottom-left-radius: radius('base');
+  }
+}
+
+// ============================================
+// HORIZONTAL FLIP
+// ============================================
+
+.#{$so-prefix}flip-h {
+  transform: scaleX(-1);
+}
+
+// Auto-flip icons in RTL
+[dir="rtl"] {
+  .#{$so-prefix}rtl-flip {
+    transform: scaleX(-1);
+  }
+}
+
+// ============================================
+// RTL-AWARE FLEX UTILITIES
+// ============================================
+
+.#{$so-prefix}flex-row-reverse-rtl {
+  [dir="rtl"] & {
+    flex-direction: row-reverse;
+  }
+}
+
+// ============================================
+// LOGICAL POSITIONING
+// ============================================
+
+.#{$so-prefix}start-0 {
+  left: 0;
+
+  [dir="rtl"] & {
+    left: auto;
+    right: 0;
+  }
+}
+
+.#{$so-prefix}end-0 {
+  right: 0;
+
+  [dir="rtl"] & {
+    right: auto;
+    left: 0;
+  }
+}
+
+// ============================================
+// RTL-SPECIFIC COMPONENT OVERRIDES
+// ============================================
+
+[dir="rtl"] {
+  // Form controls
+  .#{$so-prefix}form-control {
+    text-align: right;
+  }
+
+  // Input with icon
+  .#{$so-prefix}input-wrapper {
+    .#{$so-prefix}input-icon {
+      left: auto;
+      right: 12px;
+    }
+
+    &:has(.#{$so-prefix}input-icon):not(.icon-right) {
+      .#{$so-prefix}form-control {
+        padding-left: spacing('3');
+        padding-right: 40px;
+      }
+    }
+
+    &.icon-right {
+      .#{$so-prefix}form-control {
+        padding-right: spacing('3');
+        padding-left: 40px;
+      }
+
+      .#{$so-prefix}input-icon {
+        right: auto;
+        left: 12px;
+      }
+    }
+
+    .#{$so-prefix}input-action {
+      right: auto;
+      left: 12px;
+    }
+  }
+
+  // Lists
+  .#{$so-prefix}list-group {
+    padding-right: 0;
+  }
+
+  // Checkboxes and radios
+  .#{$so-prefix}checkbox,
+  .#{$so-prefix}radio {
+    padding-left: 0;
+    padding-right: 28px;
+  }
+
+  .#{$so-prefix}checkbox-box,
+  .#{$so-prefix}radio-circle {
+    left: auto;
+    right: 0;
+  }
+
+  // Navigation
+  .#{$so-prefix}nav-link .material-icons:first-child {
+    margin-right: 0;
+    margin-left: spacing('2');
+  }
+
+  // Dropdown menus
+  .#{$so-prefix}dropdown-menu {
+    text-align: right;
+  }
+
+  // Alerts
+  .#{$so-prefix}alert .material-icons:first-child {
+    margin-right: 0;
+    margin-left: spacing('3');
+  }
+
+  // Breadcrumb
+  .#{$so-prefix}breadcrumb-separator {
+    transform: scaleX(-1);
+  }
+
+  // Timeline
+  .#{$so-prefix}timeline-item {
+    padding-left: 0;
+    padding-right: 40px;
+  }
+
+  .#{$so-prefix}timeline-marker {
+    left: auto;
+    right: 0;
+  }
+
+  .#{$so-prefix}timeline-connector {
+    left: auto;
+    right: 7px;
+  }
+
+  // Progress
+  .#{$so-prefix}progress-bar {
+    transform-origin: right center;
+  }
+}
+
+// ============================================
+// BIDIRECTIONAL TEXT
+// ============================================
+
+.#{$so-prefix}bidi-override {
+  unicode-bidi: bidi-override;
+}
+
+.#{$so-prefix}bidi-embed {
+  unicode-bidi: embed;
+}
+
+.#{$so-prefix}bidi-isolate {
+  unicode-bidi: isolate;
+}
+
+.#{$so-prefix}bidi-isolate-override {
+  unicode-bidi: isolate-override;
+}
+
+.#{$so-prefix}bidi-plaintext {
+  unicode-bidi: plaintext;
+}

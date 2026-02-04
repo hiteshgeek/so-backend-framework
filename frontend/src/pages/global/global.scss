@@ -1,0 +1,12 @@
+// ============================================
+// GLOBAL PAGE STYLES - ENTRY POINT
+// Imports all page-level style modules
+// ============================================
+
+// Import base framework CSS variables (required for layout components)
+@use "../../scss/base/root";
+
+// Import page modules
+@use "scss/navbar";
+@use "scss/search";
+@use "scss/sidebar";

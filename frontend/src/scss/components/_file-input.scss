@@ -1,0 +1,219 @@
+// ============================================
+// SIXORBIT UI - FILE INPUT
+// Styled file upload control
+// ============================================
+
+@use '../abstracts' as *;
+
+// ============================================
+// FILE INPUT VARIABLES
+// ============================================
+
+$file-input-button-min-width: 100px !default;
+
+// ============================================
+// FILE INPUT
+// ============================================
+
+.#{$so-prefix}form-control-file {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: $so-form-height-md;
+  font-size: font-size('base');
+  color: css-var('form-text');
+  background: css-var('form-bg');
+  border: 1px solid css-var('form-border');
+  border-radius: radius('base');
+  overflow: hidden;
+  cursor: pointer;
+  transition: border-color $so-transition-base, box-shadow $so-transition-base;
+
+  &:hover {
+    border-color: css-var('form-border-hover');
+  }
+
+  &:focus-within {
+    border-color: css-var('form-border-focus');
+    box-shadow: 0 0 0 3px alpha($so-primary, 0.1);
+
+    @include dark-mode {
+      box-shadow: 0 0 0 3px alpha($so-purple, 0.15);
+    }
+  }
+
+  // Hidden native input
+  input[type="file"] {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 2;
+
+    &:disabled {
+      cursor: not-allowed;
+    }
+  }
+
+  // Browse button
+  .#{$so-prefix}form-file-button {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: spacing('1');
+    height: 100%;
+    min-width: $file-input-button-min-width;
+    padding: 0 spacing('3');
+    background: css-var('card-hover-bg');
+    border-right: 1px solid css-var('form-border');
+    font-weight: font-weight('medium');
+    color: css-var('text-primary');
+    white-space: nowrap;
+
+    .material-icons {
+      font-size: 18px;
+    }
+  }
+
+  // File name display
+  .#{$so-prefix}form-file-text {
+    flex: 1;
+    padding: 0 spacing('3');
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: css-var('text-muted');
+
+    &.has-file {
+      color: css-var('form-text');
+    }
+  }
+
+  // Clear button (optional)
+  .#{$so-prefix}form-file-clear {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 100%;
+    padding: 0;
+    background: transparent;
+    border: none;
+    border-left: 1px solid css-var('form-border');
+    cursor: pointer;
+    color: css-var('text-muted');
+    transition: color $so-transition-base, background $so-transition-base;
+    z-index: 3;
+
+    &:hover {
+      color: css-var('accent-danger');
+      background: alpha($so-danger, 0.05);
+    }
+
+    .material-icons {
+      font-size: 18px;
+    }
+  }
+
+  &.has-file .#{$so-prefix}form-file-clear {
+    display: flex;
+  }
+
+  // Disabled state
+  &.disabled,
+  &:has(input:disabled) {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background: css-var('form-disabled-bg');
+
+    .#{$so-prefix}form-file-button {
+      background: css-var('form-disabled-bg');
+    }
+  }
+
+  // Size variants - Small
+  &.#{$so-prefix}form-control-file-sm {
+    height: $so-form-height-sm;
+    font-size: $so-form-font-size-sm;
+
+    .#{$so-prefix}form-file-button {
+      min-width: 80px;
+      padding: 0 spacing('2');
+
+      .material-icons {
+        font-size: 16px;
+      }
+    }
+
+    .#{$so-prefix}form-file-text {
+      padding: 0 spacing('2');
+    }
+  }
+
+  // Size variants - Large
+  &.#{$so-prefix}form-control-file-lg {
+    height: $so-form-height-lg;
+    font-size: $so-form-font-size-lg;
+
+    .#{$so-prefix}form-file-button {
+      min-width: 120px;
+      padding: 0 spacing('4');
+
+      .material-icons {
+        font-size: 20px;
+      }
+    }
+
+    .#{$so-prefix}form-file-text {
+      padding: 0 spacing('4');
+    }
+  }
+}
+
+// ============================================
+// CONTEXTUAL VARIANTS
+// ============================================
+
+.#{$so-prefix}form-control-file-primary {
+  border-color: css-var('accent-primary');
+
+  &:focus-within {
+    box-shadow: 0 0 0 3px alpha($so-primary, 0.15);
+  }
+
+  .#{$so-prefix}form-file-button {
+    background: alpha($so-primary, 0.1);
+    color: css-var('accent-primary');
+  }
+}
+
+.#{$so-prefix}form-control-file-success {
+  border-color: css-var('accent-success');
+
+  &:focus-within {
+    box-shadow: 0 0 0 3px alpha($so-success, 0.15);
+  }
+
+  .#{$so-prefix}form-file-button {
+    background: alpha($so-success, 0.1);
+    color: css-var('accent-success');
+  }
+}
+
+.#{$so-prefix}form-control-file-danger {
+  border-color: css-var('accent-danger');
+
+  &:focus-within {
+    box-shadow: 0 0 0 3px alpha($so-danger, 0.15);
+  }
+
+  .#{$so-prefix}form-file-button {
+    background: alpha($so-danger, 0.1);
+    color: css-var('accent-danger');
+  }
+}

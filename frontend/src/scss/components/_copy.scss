@@ -1,0 +1,225 @@
+// ============================================
+// SIXORBIT UI - COPY COMPONENT
+// Click-to-copy utility styles
+// Uses existing button classes (so-btn, so-btn-icon, so-btn-ghost)
+// Uses existing tooltip component (SOTooltip) for feedback
+// ============================================
+
+@use "../abstracts" as *;
+
+// ============================================
+// COPY BUTTON STATE MODIFIERS
+// Applied to buttons with copy functionality
+// ============================================
+
+// Success state - applied when copy succeeds
+.#{$so-prefix}copy-success {
+  color: css-var("accent-success") !important;
+
+  .material-icons {
+    animation: so-copy-success-pop 0.3s ease;
+  }
+}
+
+// Error state - applied when copy fails
+.#{$so-prefix}copy-error {
+  color: css-var("accent-danger") !important;
+}
+
+// ============================================
+// COPY WRAPPER
+// Container for content + copy button
+// ============================================
+
+.#{$so-prefix}copy-wrapper {
+  display: inline-flex;
+  align-items: center;
+  gap: spacing("2");
+  position: relative;
+
+  // Content that will be copied
+  .#{$so-prefix}copy-content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  // Button positioning
+  .#{$so-prefix}btn {
+    flex-shrink: 0;
+  }
+}
+
+// Block-level wrapper
+.#{$so-prefix}copy-block {
+  display: flex;
+  align-items: flex-start;
+  gap: spacing("2");
+  padding: spacing("3");
+  background: css-var("form-bg");
+  border: 1px solid css-var("border-color");
+  border-radius: radius("md");
+
+  .#{$so-prefix}copy-content {
+    flex: 1;
+    font-family: $so-font-family-mono;
+    font-size: font-size("sm");
+    word-break: break-all;
+    white-space: pre-wrap;
+  }
+
+  .#{$so-prefix}btn {
+    margin: spacing("-1") spacing("-1") spacing("-1") 0;
+  }
+}
+
+// ============================================
+// COPY INPUT GROUP
+// Input field with copy button
+// ============================================
+
+.#{$so-prefix}input-group {
+  // Copy button in input group - adapts to input group styling
+  .#{$so-prefix}btn[data-so-copy] {
+    border-radius: 0 radius("base") radius("base") 0;
+    border: 1px solid css-var("form-border");
+    border-left: none;
+  }
+}
+
+// ============================================
+// INLINE COPY
+// Inline text with hover copy button
+// ============================================
+
+.#{$so-prefix}copy-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: spacing("1");
+  position: relative;
+
+  .#{$so-prefix}btn {
+    opacity: 0;
+    transition: opacity 0.15s ease;
+  }
+
+  &:hover .#{$so-prefix}btn {
+    opacity: 1;
+  }
+
+  // Always show copy button
+  &.#{$so-prefix}copy-inline-show .#{$so-prefix}btn {
+    opacity: 0.6;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+}
+
+// ============================================
+// CODE BLOCK COPY
+// Copy button for code blocks
+// ============================================
+
+.#{$so-prefix}code-block {
+  position: relative;
+
+  .#{$so-prefix}btn[data-so-copy],
+  .#{$so-prefix}code-copy {
+    position: absolute;
+    right: spacing("2");
+    transition: opacity 0.15s ease;
+  }
+
+  &:hover {
+    .#{$so-prefix}btn[data-so-copy],
+    .#{$so-prefix}code-copy {
+      opacity: 1;
+    }
+  }
+}
+
+// ============================================
+// BADGE WITH COPY
+// Copyable badges (IDs, codes)
+// ============================================
+
+.#{$so-prefix}badge-copy {
+  display: inline-flex;
+  align-items: center;
+  gap: spacing("1");
+  padding-right: spacing("1");
+  cursor: pointer;
+  transition: background 0.15s ease;
+
+  &:hover {
+    background: css-var("card-hover-bg");
+  }
+
+  &::after {
+    content: "content_copy";
+    font-family: "Material Icons";
+    font-size: 12px;
+    opacity: 0.6;
+  }
+
+  &.#{$so-prefix}copy-success::after {
+    content: "check";
+    color: css-var("accent-success");
+    opacity: 1;
+  }
+}
+
+// ============================================
+// TABLE CELL COPY
+// Copyable table cells
+// ============================================
+
+td.#{$so-prefix}copy-cell,
+th.#{$so-prefix}copy-cell {
+  position: relative;
+  cursor: pointer;
+
+  &:hover {
+    background: css-var("card-hover-bg");
+
+    &::after {
+      opacity: 1;
+    }
+  }
+
+  &::after {
+    content: "content_copy";
+    font-family: "Material Icons";
+    font-size: 14px;
+    position: absolute;
+    right: spacing("2");
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0;
+    color: css-var("text-secondary");
+    transition: opacity 0.15s ease;
+  }
+
+  &.#{$so-prefix}copy-success::after {
+    content: "check";
+    color: css-var("accent-success");
+    opacity: 1;
+  }
+}
+
+// ============================================
+// ANIMATIONS
+// ============================================
+
+@keyframes so-copy-success-pop {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}

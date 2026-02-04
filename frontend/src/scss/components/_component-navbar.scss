@@ -1,0 +1,1435 @@
+// ============================================
+// SIXORBIT UI - COMPONENT NAVBAR
+// Standalone reusable navbar component
+// ============================================
+//
+// COMPONENT INTEGRATION:
+// This navbar integrates with existing framework components:
+//
+// - DROPDOWNS: Uses .so-dropdown, .so-dropdown-menu, .so-dropdown-item
+//   Example: <li class="so-dropdown"><a class="so-dropdown-toggle">...</a>
+//
+// - COLLAPSE: Uses .so-collapse, .so-collapsing classes
+//   Example: <div class="so-component-navbar-collapse so-collapse">
+//
+// - OFFCANVAS: Follows .so-modal-backdrop pattern
+//   Can use .so-modal-backdrop for backdrop
+//
+// - BADGES: Works with .so-badge inside links
+//   Example: <a class="so-component-navbar-link">Menu <span class="so-badge">New</span></a>
+//
+// - BUTTONS: Toggler can be replaced with .so-btn .so-btn-ghost
+//   Example: <button class="so-btn so-btn-ghost so-btn-icon">
+//
+// - LIST GROUP: Offcanvas body supports .so-list-group for nav items
+//
+// ============================================
+
+@use '../abstracts' as *;
+
+// ============================================
+// COMPONENT NAVBAR VARIABLES
+// ============================================
+$component-navbar-height: 56px !default;
+$component-navbar-height-sm: 48px !default;
+$component-navbar-padding-x: spacing('4') !default;
+$component-navbar-padding-y: spacing('2') !default;
+$component-navbar-brand-font-size: font-size('lg') !default;
+$component-navbar-link-padding-x: spacing('3') !default;
+$component-navbar-link-padding-y: spacing('2') !default;
+$component-navbar-toggler-size: 40px !default;
+
+// ============================================
+// BASE NAVBAR STRUCTURE
+// ============================================
+
+.#{$so-prefix}component-navbar {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  min-height: $component-navbar-height;
+  padding: $component-navbar-padding-y $component-navbar-padding-x;
+  font-family: $so-font-family;
+  -webkit-font-smoothing: antialiased;
+
+  // Default to light theme
+  background: css-var('card-bg');
+  border-bottom: 1px solid css-var('border-color');
+}
+
+// ============================================
+// NAVBAR CONTAINER
+// ============================================
+
+.#{$so-prefix}component-navbar-container {
+  display: flex;
+  flex-wrap: inherit;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+// Contained navbar (centered with max-width)
+.#{$so-prefix}component-navbar-contained {
+  .#{$so-prefix}component-navbar-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 $component-navbar-padding-x;
+  }
+}
+
+// ============================================
+// BRAND / LOGO
+// ============================================
+
+.#{$so-prefix}component-navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: spacing('2');
+  padding: spacing('1') spacing('2') spacing('1') 0;
+  font-size: $component-navbar-brand-font-size;
+  font-weight: font-weight('medium');
+  text-decoration: none;
+  white-space: nowrap;
+  color: css-var('text-heading');
+  transition: color $so-transition-normal;
+
+  &:hover {
+    color: css-var('accent-primary');
+    text-decoration: none;
+  }
+
+  img {
+    height: 32px;
+    width: auto;
+  }
+
+  .material-icons {
+    font-size: 28px;
+  }
+}
+
+// ============================================
+// NAVIGATION
+// ============================================
+
+.#{$so-prefix}component-navbar-nav {
+  display: flex;
+  flex-direction: column;
+  padding-left: 0;
+  margin-bottom: 0;
+  list-style: none;
+}
+
+.#{$so-prefix}component-navbar-item {
+  position: relative;
+  margin-bottom: 0; // Reset global ul li margin
+}
+
+.#{$so-prefix}component-navbar-link {
+  display: flex;
+  align-items: center;
+  gap: spacing('2');
+  padding: $component-navbar-link-padding-y $component-navbar-link-padding-x;
+  font-size: font-size('base');
+  font-weight: font-weight('medium');
+  color: css-var('text-secondary');
+  text-decoration: none;
+  white-space: nowrap;
+  border-radius: radius('base');
+  transition: color $so-transition-normal, background $so-transition-normal;
+
+  &:hover {
+    color: css-var('text-primary');
+    background: css-var('card-hover-bg');
+    text-decoration: none;
+  }
+
+  &.#{$so-prefix}active {
+    color: css-var('accent-primary');
+  }
+
+  &.#{$so-prefix}disabled {
+    color: css-var('text-disabled');
+    pointer-events: none;
+    cursor: not-allowed;
+  }
+
+  .material-icons {
+    font-size: 20px;
+  }
+
+  // Badge support
+  .#{$so-prefix}badge {
+    margin-left: spacing('1');
+  }
+}
+
+// ============================================
+// TEXT CONTENT
+// ============================================
+
+.#{$so-prefix}component-navbar-text {
+  padding: $component-navbar-link-padding-y $component-navbar-link-padding-x;
+  color: css-var('text-secondary');
+  font-size: font-size('base');
+}
+
+// ============================================
+// DIVIDER
+// ============================================
+
+.#{$so-prefix}component-navbar-divider {
+  width: 1px;
+  height: 24px;
+  margin: 0 spacing('2');
+  background: css-var('border-color');
+}
+
+// ============================================
+// MOBILE TOGGLER
+// ============================================
+
+.#{$so-prefix}component-navbar-toggler {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: $component-navbar-toggler-size;
+  height: $component-navbar-toggler-size;
+  padding: 0;
+  background: transparent;
+  border: 1px solid css-var('border-color');
+  border-radius: radius('base');
+  cursor: pointer;
+  transition: background $so-transition-normal;
+
+  &:hover {
+    background: css-var('card-hover-bg');
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px alpha($so-primary, 0.1);
+  }
+}
+
+.#{$so-prefix}component-navbar-toggler-icon {
+  display: block;
+  position: relative;
+  width: 22px;
+  height: 2px;
+  background: css-var('text-primary');
+  border-radius: 1px;
+  transition: background $so-transition-normal;
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: css-var('text-primary');
+    border-radius: 1px;
+    transition: transform $so-transition-normal;
+  }
+
+  &::before {
+    top: -7px;
+  }
+
+  &::after {
+    top: 7px;
+  }
+
+  // Animated X when open
+  .#{$so-prefix}component-navbar-toggler[aria-expanded="true"] & {
+    background: transparent;
+
+    &::before {
+      transform: translateY(7px) rotate(45deg);
+    }
+
+    &::after {
+      transform: translateY(-7px) rotate(-45deg);
+    }
+  }
+}
+
+// ============================================
+// COLLAPSIBLE SECTION
+// Uses existing .so-collapse and .so-collapsing classes
+// ============================================
+
+.#{$so-prefix}component-navbar-collapse {
+  flex-basis: 100%;
+  flex-grow: 1;
+  align-items: center;
+
+  // Extends .so-collapse behavior
+  &:not(.#{$so-prefix}show) {
+    display: none;
+  }
+
+  &.#{$so-prefix}show {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding-top: spacing('3');
+  }
+
+  // Uses existing .so-collapsing class for animation
+  &.#{$so-prefix}collapsing {
+    display: flex;
+    flex-direction: column;
+    height: 0;
+    overflow: hidden;
+    transition: height 0.35s ease;
+  }
+}
+
+// ============================================
+// FORM INTEGRATION
+// ============================================
+
+.#{$so-prefix}component-navbar-form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: spacing('2');
+
+  .#{$so-prefix}form-control {
+    width: auto;
+    flex: 1 1 auto;
+  }
+}
+
+.#{$so-prefix}component-navbar-search {
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  .#{$so-prefix}form-control {
+    padding-left: 40px;
+    min-width: 200px;
+  }
+
+  .search-icon {
+    position: absolute;
+    left: 12px;
+    color: css-var('text-muted');
+    font-size: 20px;
+    pointer-events: none;
+  }
+}
+
+// ============================================
+// COLOR THEMES
+// ============================================
+
+// Light theme (default)
+.#{$so-prefix}component-navbar-light {
+  background: css-var('card-bg');
+
+  .#{$so-prefix}component-navbar-brand {
+    color: css-var('text-heading');
+  }
+
+  .#{$so-prefix}component-navbar-link {
+    color: css-var('text-secondary');
+
+    &:hover {
+      color: css-var('text-primary');
+    }
+
+    &.#{$so-prefix}active {
+      color: css-var('accent-primary');
+    }
+  }
+
+  .#{$so-prefix}component-navbar-toggler-icon,
+  .#{$so-prefix}component-navbar-toggler-icon::before,
+  .#{$so-prefix}component-navbar-toggler-icon::after {
+    background: css-var('text-primary');
+  }
+}
+
+// Dark theme
+.#{$so-prefix}component-navbar-dark {
+  background: $so-grey-900;
+  border-color: $so-grey-800;
+
+  .#{$so-prefix}component-navbar-brand {
+    color: $so-white;
+
+    &:hover {
+      color: $so-grey-300;
+    }
+  }
+
+  .#{$so-prefix}component-navbar-link {
+    color: $so-grey-400;
+
+    &:hover {
+      color: $so-white;
+      background: rgba($so-white, 0.1);
+    }
+
+    &.#{$so-prefix}active {
+      color: $so-white;
+    }
+
+    &.#{$so-prefix}disabled {
+      color: $so-grey-600;
+    }
+  }
+
+  .#{$so-prefix}component-navbar-text {
+    color: $so-grey-400;
+  }
+
+  .#{$so-prefix}component-navbar-divider {
+    background: $so-grey-700;
+  }
+
+  .#{$so-prefix}component-navbar-toggler {
+    border-color: $so-grey-700;
+
+    &:hover {
+      background: rgba($so-white, 0.1);
+    }
+  }
+
+  .#{$so-prefix}component-navbar-toggler-icon,
+  .#{$so-prefix}component-navbar-toggler-icon::before,
+  .#{$so-prefix}component-navbar-toggler-icon::after {
+    background: $so-white;
+  }
+}
+
+// Primary color
+.#{$so-prefix}component-navbar-primary {
+  background: $so-primary;
+  border-color: $so-primary-700;
+
+  .#{$so-prefix}component-navbar-brand {
+    color: $so-white;
+
+    &:hover {
+      color: rgba($so-white, 0.85);
+    }
+  }
+
+  .#{$so-prefix}component-navbar-link {
+    color: rgba($so-white, 0.85);
+
+    &:hover {
+      color: $so-white;
+      background: rgba($so-white, 0.15);
+    }
+
+    &.#{$so-prefix}active {
+      color: $so-white;
+      background: rgba($so-white, 0.2);
+    }
+
+    &.#{$so-prefix}disabled {
+      color: rgba($so-white, 0.5);
+    }
+  }
+
+  .#{$so-prefix}component-navbar-text {
+    color: rgba($so-white, 0.85);
+  }
+
+  .#{$so-prefix}component-navbar-divider {
+    background: rgba($so-white, 0.25);
+  }
+
+  .#{$so-prefix}component-navbar-toggler {
+    border-color: rgba($so-white, 0.3);
+
+    &:hover {
+      background: rgba($so-white, 0.15);
+    }
+
+    &:focus {
+      box-shadow: 0 0 0 3px rgba($so-white, 0.25);
+    }
+  }
+
+  .#{$so-prefix}component-navbar-toggler-icon,
+  .#{$so-prefix}component-navbar-toggler-icon::before,
+  .#{$so-prefix}component-navbar-toggler-icon::after {
+    background: $so-white;
+  }
+}
+
+// Secondary color
+.#{$so-prefix}component-navbar-secondary {
+  background: $so-secondary;
+  border-color: $so-secondary-700;
+
+  .#{$so-prefix}component-navbar-brand,
+  .#{$so-prefix}component-navbar-link.active {
+    color: $so-white;
+  }
+
+  .#{$so-prefix}component-navbar-link {
+    color: rgba($so-white, 0.85);
+
+    &:hover {
+      color: $so-white;
+      background: rgba($so-white, 0.15);
+    }
+  }
+
+  .#{$so-prefix}component-navbar-text {
+    color: rgba($so-white, 0.85);
+  }
+
+  .#{$so-prefix}component-navbar-divider {
+    background: rgba($so-white, 0.25);
+  }
+
+  .#{$so-prefix}component-navbar-toggler {
+    border-color: rgba($so-white, 0.3);
+
+    &:hover {
+      background: rgba($so-white, 0.15);
+    }
+  }
+
+  .#{$so-prefix}component-navbar-toggler-icon,
+  .#{$so-prefix}component-navbar-toggler-icon::before,
+  .#{$so-prefix}component-navbar-toggler-icon::after {
+    background: $so-white;
+  }
+}
+
+// Success color
+.#{$so-prefix}component-navbar-success {
+  background: $so-success;
+  border-color: $so-success-700;
+
+  .#{$so-prefix}component-navbar-brand,
+  .#{$so-prefix}component-navbar-link.active {
+    color: $so-white;
+  }
+
+  .#{$so-prefix}component-navbar-link {
+    color: rgba($so-white, 0.85);
+
+    &:hover {
+      color: $so-white;
+      background: rgba($so-white, 0.15);
+    }
+  }
+
+  .#{$so-prefix}component-navbar-text {
+    color: rgba($so-white, 0.85);
+  }
+
+  .#{$so-prefix}component-navbar-divider {
+    background: rgba($so-white, 0.25);
+  }
+
+  .#{$so-prefix}component-navbar-toggler {
+    border-color: rgba($so-white, 0.3);
+
+    &:hover {
+      background: rgba($so-white, 0.15);
+    }
+  }
+
+  .#{$so-prefix}component-navbar-toggler-icon,
+  .#{$so-prefix}component-navbar-toggler-icon::before,
+  .#{$so-prefix}component-navbar-toggler-icon::after {
+    background: $so-white;
+  }
+}
+
+// Danger color
+.#{$so-prefix}component-navbar-danger {
+  background: $so-danger;
+  border-color: $so-danger-700;
+
+  .#{$so-prefix}component-navbar-brand,
+  .#{$so-prefix}component-navbar-link.active {
+    color: $so-white;
+  }
+
+  .#{$so-prefix}component-navbar-link {
+    color: rgba($so-white, 0.85);
+
+    &:hover {
+      color: $so-white;
+      background: rgba($so-white, 0.15);
+    }
+  }
+
+  .#{$so-prefix}component-navbar-text {
+    color: rgba($so-white, 0.85);
+  }
+
+  .#{$so-prefix}component-navbar-divider {
+    background: rgba($so-white, 0.25);
+  }
+
+  .#{$so-prefix}component-navbar-toggler {
+    border-color: rgba($so-white, 0.3);
+
+    &:hover {
+      background: rgba($so-white, 0.15);
+    }
+  }
+
+  .#{$so-prefix}component-navbar-toggler-icon,
+  .#{$so-prefix}component-navbar-toggler-icon::before,
+  .#{$so-prefix}component-navbar-toggler-icon::after {
+    background: $so-white;
+  }
+}
+
+// Warning color
+.#{$so-prefix}component-navbar-warning {
+  background: $so-warning;
+  border-color: $so-warning-700;
+
+  .#{$so-prefix}component-navbar-brand,
+  .#{$so-prefix}component-navbar-link.active {
+    color: $so-grey-900;
+  }
+
+  .#{$so-prefix}component-navbar-link {
+    color: rgba($so-grey-900, 0.85);
+
+    &:hover {
+      color: $so-grey-900;
+      background: rgba($so-black, 0.1);
+    }
+  }
+
+  .#{$so-prefix}component-navbar-text {
+    color: rgba($so-grey-900, 0.85);
+  }
+
+  .#{$so-prefix}component-navbar-divider {
+    background: rgba($so-black, 0.2);
+  }
+
+  .#{$so-prefix}component-navbar-toggler {
+    border-color: rgba($so-black, 0.2);
+
+    &:hover {
+      background: rgba($so-black, 0.1);
+    }
+  }
+
+  .#{$so-prefix}component-navbar-toggler-icon,
+  .#{$so-prefix}component-navbar-toggler-icon::before,
+  .#{$so-prefix}component-navbar-toggler-icon::after {
+    background: $so-grey-900;
+  }
+}
+
+// Info color
+.#{$so-prefix}component-navbar-info {
+  background: $so-info;
+  border-color: $so-info-700;
+
+  .#{$so-prefix}component-navbar-brand,
+  .#{$so-prefix}component-navbar-link.active {
+    color: $so-white;
+  }
+
+  .#{$so-prefix}component-navbar-link {
+    color: rgba($so-white, 0.85);
+
+    &:hover {
+      color: $so-white;
+      background: rgba($so-white, 0.15);
+    }
+  }
+
+  .#{$so-prefix}component-navbar-text {
+    color: rgba($so-white, 0.85);
+  }
+
+  .#{$so-prefix}component-navbar-divider {
+    background: rgba($so-white, 0.25);
+  }
+
+  .#{$so-prefix}component-navbar-toggler {
+    border-color: rgba($so-white, 0.3);
+
+    &:hover {
+      background: rgba($so-white, 0.15);
+    }
+  }
+
+  .#{$so-prefix}component-navbar-toggler-icon,
+  .#{$so-prefix}component-navbar-toggler-icon::before,
+  .#{$so-prefix}component-navbar-toggler-icon::after {
+    background: $so-white;
+  }
+}
+
+// ============================================
+// POSITIONING
+// ============================================
+
+.#{$so-prefix}component-navbar-fixed-top {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: z-index('fixed');
+}
+
+.#{$so-prefix}component-navbar-fixed-bottom {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: z-index('fixed');
+}
+
+.#{$so-prefix}component-navbar-sticky-top {
+  position: sticky;
+  top: 0;
+  z-index: z-index('sticky');
+}
+
+// ============================================
+// VISUAL MODIFIERS
+// ============================================
+
+.#{$so-prefix}component-navbar-shadow {
+  box-shadow: shadow('md');
+  border-bottom: none;
+}
+
+.#{$so-prefix}component-navbar-bordered {
+  border-bottom: 1px solid css-var('border-color');
+}
+
+.#{$so-prefix}component-navbar-transparent {
+  background: transparent;
+  border-bottom: none;
+}
+
+// ============================================
+// RESPONSIVE EXPAND VARIANTS
+// Uses .so-collapsing class from collapse component
+// ============================================
+
+// Expand at SM breakpoint (576px)
+.#{$so-prefix}component-navbar-expand-sm {
+  @include media-up('sm') {
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+
+    .#{$so-prefix}component-navbar-nav {
+      flex-direction: row;
+    }
+
+    .#{$so-prefix}component-navbar-collapse {
+      display: flex;
+      flex-basis: auto;
+
+      &.#{$so-prefix}collapsing {
+        height: auto;
+        overflow: visible;
+      }
+    }
+
+    .#{$so-prefix}component-navbar-toggler,
+    .#{$so-prefix}hamburger {
+      display: none;
+    }
+  }
+}
+
+// Expand at MD breakpoint (768px)
+.#{$so-prefix}component-navbar-expand-md {
+  @include media-up('md') {
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+
+    .#{$so-prefix}component-navbar-nav {
+      flex-direction: row;
+    }
+
+    .#{$so-prefix}component-navbar-collapse {
+      display: flex;
+      flex-basis: auto;
+
+      &.#{$so-prefix}collapsing {
+        height: auto;
+        overflow: visible;
+      }
+    }
+
+    .#{$so-prefix}component-navbar-toggler,
+    .#{$so-prefix}hamburger {
+      display: none;
+    }
+  }
+}
+
+// Expand at LG breakpoint (1024px)
+.#{$so-prefix}component-navbar-expand-lg {
+  @include media-up('lg') {
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+
+    .#{$so-prefix}component-navbar-nav {
+      flex-direction: row;
+    }
+
+    .#{$so-prefix}component-navbar-collapse {
+      display: flex;
+      flex-basis: auto;
+
+      &.#{$so-prefix}collapsing {
+        height: auto;
+        overflow: visible;
+      }
+    }
+
+    .#{$so-prefix}component-navbar-toggler,
+    .#{$so-prefix}hamburger {
+      display: none;
+    }
+  }
+}
+
+// Expand at XL breakpoint (1200px)
+.#{$so-prefix}component-navbar-expand-xl {
+  @include media-up('xl') {
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+
+    .#{$so-prefix}component-navbar-nav {
+      flex-direction: row;
+    }
+
+    .#{$so-prefix}component-navbar-collapse {
+      display: flex;
+      flex-basis: auto;
+
+      &.#{$so-prefix}collapsing {
+        height: auto;
+        overflow: visible;
+      }
+    }
+
+    .#{$so-prefix}component-navbar-toggler,
+    .#{$so-prefix}hamburger {
+      display: none;
+    }
+  }
+}
+
+// Always expanded (never collapse)
+.#{$so-prefix}component-navbar-expand {
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+
+  .#{$so-prefix}component-navbar-nav {
+    flex-direction: row;
+  }
+
+  .#{$so-prefix}component-navbar-collapse {
+    display: flex;
+    flex-basis: auto;
+  }
+
+  .#{$so-prefix}component-navbar-toggler,
+  .#{$so-prefix}hamburger {
+    display: none;
+  }
+}
+
+// ============================================
+// DROPDOWN INTEGRATION
+// Uses existing .so-dropdown component
+// ============================================
+
+.#{$so-prefix}component-navbar-nav {
+  // Dropdown inherits from .so-dropdown base styles
+  .#{$so-prefix}dropdown {
+    position: relative;
+  }
+
+  // Dropdown menu positioning for navbar context
+  .#{$so-prefix}dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    margin-top: spacing('1');
+
+    // Right-align dropdown for end items
+    &.dropdown-menu-end,
+    &.#{$so-prefix}dropdown-menu-end {
+      left: auto;
+      right: 0;
+    }
+  }
+
+  // Navbar link as dropdown trigger
+  .#{$so-prefix}component-navbar-link.#{$so-prefix}dropdown-toggle,
+  .#{$so-prefix}dropdown-toggle {
+    display: flex;
+    align-items: center;
+    gap: spacing('1');
+
+    // Uses existing .so-dropdown-arrow class if present
+    .#{$so-prefix}dropdown-arrow {
+      transition: transform $so-transition-normal;
+    }
+
+    // Fallback caret using ::after
+    &:not(:has(.#{$so-prefix}dropdown-arrow))::after {
+      content: '';
+      display: inline-block;
+      width: 0;
+      height: 0;
+      margin-left: spacing('1');
+      vertical-align: middle;
+      border-top: 5px solid;
+      border-right: 4px solid transparent;
+      border-left: 4px solid transparent;
+      transition: transform $so-transition-normal;
+    }
+  }
+
+  // Open state - arrow rotation
+  .#{$so-prefix}dropdown.#{$so-prefix}open,
+  .#{$so-prefix}dropdown.show {
+    .#{$so-prefix}dropdown-arrow {
+      transform: rotate(180deg);
+    }
+
+    .#{$so-prefix}dropdown-toggle::after {
+      transform: rotate(180deg);
+    }
+  }
+}
+
+// ============================================
+// MEGA MENU
+// ============================================
+
+.#{$so-prefix}component-navbar-mega {
+  position: static;
+
+  .#{$so-prefix}dropdown-menu {
+    left: 0;
+    right: 0;
+    width: 100%;
+    padding: spacing('4');
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+    box-shadow: shadow('lg');
+  }
+}
+
+// ============================================
+// OFFCANVAS MOBILE MENU
+// Extends modal backdrop pattern from .so-modal-backdrop
+// ============================================
+
+.#{$so-prefix}component-navbar-offcanvas {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  width: 280px;
+  max-width: 100%;
+  background: css-var('card-bg');
+  box-shadow: shadow('xl');
+  z-index: z-index('modal');
+  overflow-y: auto;
+  transition: transform $so-transition-slow;
+
+  // Default is left side
+  left: 0;
+  right: auto;
+  transform: translateX(-100%);
+
+  &.#{$so-prefix}show {
+    transform: translateX(0);
+  }
+}
+
+// Explicit left-side offcanvas
+.#{$so-prefix}component-navbar-offcanvas-start {
+  left: 0;
+  right: auto;
+  transform: translateX(-100%);
+
+  &.#{$so-prefix}show {
+    transform: translateX(0);
+  }
+}
+
+// Right-side offcanvas
+.#{$so-prefix}component-navbar-offcanvas-end,
+.#{$so-prefix}component-navbar-offcanvas.offcanvas-end {
+  left: auto;
+  right: 0;
+  transform: translateX(100%);
+
+  &.#{$so-prefix}show {
+    transform: translateX(0);
+  }
+}
+
+// Full-width offcanvas (for tablets)
+.#{$so-prefix}component-navbar-offcanvas-full {
+  width: 100%;
+  max-width: 100%;
+}
+
+.#{$so-prefix}component-navbar-offcanvas-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: spacing('4');
+  border-bottom: 1px solid css-var('border-color');
+}
+
+.#{$so-prefix}component-navbar-offcanvas-title {
+  margin: 0;
+  font-size: font-size('lg');
+  font-weight: font-weight('medium');
+}
+
+// Close button - can use .so-btn .so-btn-ghost .so-btn-icon as alternative
+.#{$so-prefix}component-navbar-offcanvas-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: radius('full');
+  cursor: pointer;
+  color: css-var('text-secondary');
+  transition: background $so-transition-fast, color $so-transition-fast;
+
+  &:hover {
+    background: css-var('card-hover-bg');
+    color: css-var('text-primary');
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px alpha($so-primary, 0.15);
+  }
+}
+
+.#{$so-prefix}component-navbar-offcanvas-body {
+  padding: spacing('4');
+
+  // Nav inside offcanvas uses list-group-like styling
+  .#{$so-prefix}component-navbar-nav {
+    flex-direction: column;
+
+    .#{$so-prefix}component-navbar-link {
+      padding: spacing('3') spacing('4');
+      border-radius: radius('lg');
+    }
+  }
+
+  // Support for existing .so-list-group inside offcanvas
+  .#{$so-prefix}list-group {
+    margin: 0 spacing('-4');
+    border-radius: 0;
+
+    .#{$so-prefix}list-group-item {
+      border-left: 0;
+      border-right: 0;
+      border-radius: 0;
+
+      &:first-child {
+        border-top: 0;
+      }
+    }
+  }
+}
+
+// Offcanvas backdrop - extends .so-modal-backdrop pattern
+.#{$so-prefix}component-navbar-offcanvas-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba($so-black, 0.5);
+  z-index: z-index('modal-backdrop');
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity $so-transition-normal, visibility $so-transition-normal;
+
+  &.#{$so-prefix}show {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+// Allow using .so-modal-backdrop as navbar offcanvas backdrop
+.#{$so-prefix}modal-backdrop.#{$so-prefix}component-navbar-backdrop {
+  // Inherits all modal-backdrop styles
+}
+
+// ============================================
+// UTILITY ALIGNMENT CLASSES
+// ============================================
+
+.#{$so-prefix}component-navbar-nav-start {
+  margin-right: auto;
+}
+
+.#{$so-prefix}component-navbar-nav-end {
+  margin-left: auto;
+}
+
+.#{$so-prefix}component-navbar-nav-center {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+// ============================================
+// ANIMATED HAMBURGER MENU (CodePen RRoberts Style)
+// ============================================
+
+.#{$so-prefix}hamburger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition-property: opacity, filter;
+  transition-duration: 0.15s;
+  transition-timing-function: linear;
+  font: inherit;
+  color: inherit;
+  text-transform: none;
+  background-color: transparent;
+  border: 0;
+  margin: 0;
+  overflow: visible;
+  padding: spacing('2');
+
+  &:hover {
+    opacity: 0.7;
+  }
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.#{$so-prefix}hamburger-box {
+  width: 30px;
+  height: 24px;
+  display: inline-block;
+  position: relative;
+}
+
+.#{$so-prefix}hamburger-inner {
+  display: block;
+  top: 50%;
+  margin-top: -2px;
+
+  &,
+  &::before,
+  &::after {
+    width: 30px;
+    height: 3px;
+    background-color: currentColor;
+    border-radius: 2px;
+    position: absolute;
+    transition-property: transform, opacity;
+    transition-duration: 0.15s;
+    transition-timing-function: ease;
+  }
+
+  &::before,
+  &::after {
+    content: '';
+    display: block;
+  }
+
+  &::before {
+    top: -8px;
+  }
+
+  &::after {
+    bottom: -8px;
+  }
+}
+
+// Squeeze animation
+.#{$so-prefix}hamburger--squeeze {
+  .#{$so-prefix}hamburger-inner {
+    transition-duration: 0.075s;
+    transition-timing-function: cubic-bezier(0.55, 0.055, 0.675, 0.19);
+
+    &::before {
+      transition: top 0.075s 0.12s ease, opacity 0.075s ease;
+    }
+
+    &::after {
+      transition: bottom 0.075s 0.12s ease, transform 0.075s cubic-bezier(0.55, 0.055, 0.675, 0.19);
+    }
+  }
+
+  &.is-active .#{$so-prefix}hamburger-inner {
+    transform: rotate(45deg);
+    transition-delay: 0.12s;
+    transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+
+    &::before {
+      top: 0;
+      opacity: 0;
+      transition: top 0.075s ease, opacity 0.075s 0.12s ease;
+    }
+
+    &::after {
+      bottom: 0;
+      transform: rotate(-90deg);
+      transition: bottom 0.075s ease, transform 0.075s 0.12s cubic-bezier(0.215, 0.61, 0.355, 1);
+    }
+  }
+}
+
+// Spin animation
+.#{$so-prefix}hamburger--spin {
+  .#{$so-prefix}hamburger-inner {
+    transition-duration: 0.22s;
+    transition-timing-function: cubic-bezier(0.55, 0.055, 0.675, 0.19);
+
+    &::before {
+      transition: top 0.1s 0.25s ease-in, opacity 0.1s ease-in;
+    }
+
+    &::after {
+      transition: bottom 0.1s 0.25s ease-in, transform 0.22s cubic-bezier(0.55, 0.055, 0.675, 0.19);
+    }
+  }
+
+  &.is-active .#{$so-prefix}hamburger-inner {
+    transform: rotate(225deg);
+    transition-delay: 0.12s;
+    transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+
+    &::before {
+      top: 0;
+      opacity: 0;
+      transition: top 0.1s ease-out, opacity 0.1s 0.12s ease-out;
+    }
+
+    &::after {
+      bottom: 0;
+      transform: rotate(-90deg);
+      transition: bottom 0.1s ease-out, transform 0.22s 0.12s cubic-bezier(0.215, 0.61, 0.355, 1);
+    }
+  }
+}
+
+// Elastic animation
+.#{$so-prefix}hamburger--elastic {
+  .#{$so-prefix}hamburger-inner {
+    top: 2px;
+    transition-duration: 0.275s;
+    transition-timing-function: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+    &::before {
+      top: 8px;
+      transition: opacity 0.125s 0.275s ease;
+    }
+
+    &::after {
+      top: 16px;
+      transition: transform 0.275s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+  }
+
+  &.is-active .#{$so-prefix}hamburger-inner {
+    transform: translate3d(0, 8px, 0) rotate(135deg);
+    transition-delay: 0.075s;
+
+    &::before {
+      transition-delay: 0s;
+      opacity: 0;
+    }
+
+    &::after {
+      transform: translate3d(0, -16px, 0) rotate(-270deg);
+      transition-delay: 0.075s;
+    }
+  }
+}
+
+// Arrow animation (transforms to arrow)
+.#{$so-prefix}hamburger--arrow {
+  .#{$so-prefix}hamburger-inner {
+    &::before {
+      transition: top 0.1s 0.1s ease, transform 0.1s cubic-bezier(0.165, 0.84, 0.44, 1);
+    }
+
+    &::after {
+      transition: bottom 0.1s 0.1s ease, transform 0.1s cubic-bezier(0.165, 0.84, 0.44, 1);
+    }
+  }
+
+  &.is-active .#{$so-prefix}hamburger-inner {
+    &::before {
+      top: 0;
+      transform: translate3d(-5px, -7px, 0) rotate(-45deg) scale(0.7, 1);
+      transition: top 0.1s ease, transform 0.1s 0.1s cubic-bezier(0.895, 0.03, 0.685, 0.22);
+    }
+
+    &::after {
+      bottom: 0;
+      transform: translate3d(-5px, 7px, 0) rotate(45deg) scale(0.7, 1);
+      transition: bottom 0.1s ease, transform 0.1s 0.1s cubic-bezier(0.895, 0.03, 0.685, 0.22);
+    }
+  }
+}
+
+// Collapse animation
+.#{$so-prefix}hamburger--collapse {
+  .#{$so-prefix}hamburger-inner {
+    top: auto;
+    bottom: 0;
+    transition-duration: 0.13s;
+    transition-delay: 0.13s;
+    transition-timing-function: cubic-bezier(0.55, 0.055, 0.675, 0.19);
+
+    &::after {
+      top: -16px;
+      transition: top 0.2s 0.2s cubic-bezier(0.33333, 0.66667, 0.66667, 1),
+                  opacity 0.1s linear;
+    }
+
+    &::before {
+      transition: top 0.12s 0.2s cubic-bezier(0.33333, 0.66667, 0.66667, 1),
+                  transform 0.13s cubic-bezier(0.55, 0.055, 0.675, 0.19);
+    }
+  }
+
+  &.is-active .#{$so-prefix}hamburger-inner {
+    transform: translate3d(0, -8px, 0) rotate(-45deg);
+    transition-delay: 0.22s;
+    transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+
+    &::after {
+      top: 0;
+      opacity: 0;
+      transition: top 0.2s cubic-bezier(0.33333, 0, 0.66667, 0.33333),
+                  opacity 0.1s 0.22s linear;
+    }
+
+    &::before {
+      top: 0;
+      transform: rotate(-90deg);
+      transition: top 0.1s 0.16s cubic-bezier(0.33333, 0, 0.66667, 0.33333),
+                  transform 0.13s 0.25s cubic-bezier(0.215, 0.61, 0.355, 1);
+    }
+  }
+}
+
+// Size variants for hamburger
+.#{$so-prefix}hamburger--sm {
+  .#{$so-prefix}hamburger-box {
+    width: 24px;
+    height: 18px;
+  }
+
+  .#{$so-prefix}hamburger-inner,
+  .#{$so-prefix}hamburger-inner::before,
+  .#{$so-prefix}hamburger-inner::after {
+    width: 24px;
+    height: 2px;
+  }
+
+  .#{$so-prefix}hamburger-inner::before {
+    top: -6px;
+  }
+
+  .#{$so-prefix}hamburger-inner::after {
+    bottom: -6px;
+  }
+}
+
+.#{$so-prefix}hamburger--lg {
+  .#{$so-prefix}hamburger-box {
+    width: 36px;
+    height: 30px;
+  }
+
+  .#{$so-prefix}hamburger-inner,
+  .#{$so-prefix}hamburger-inner::before,
+  .#{$so-prefix}hamburger-inner::after {
+    width: 36px;
+    height: 4px;
+  }
+
+  .#{$so-prefix}hamburger-inner::before {
+    top: -10px;
+  }
+
+  .#{$so-prefix}hamburger-inner::after {
+    bottom: -10px;
+  }
+}
+
+// ============================================
+// DARK MODE SUPPORT
+// ============================================
+
+[data-theme='dark'] {
+  .#{$so-prefix}component-navbar-light {
+    background: css-var('card-bg');
+    border-color: css-var('border-color');
+
+    .#{$so-prefix}component-navbar-brand {
+      color: css-var('text-heading');
+    }
+
+    .#{$so-prefix}component-navbar-link {
+      color: css-var('text-secondary');
+
+      &:hover {
+        color: css-var('text-primary');
+        background: css-var('card-hover-bg');
+      }
+
+      &.#{$so-prefix}active {
+        color: css-var('accent-primary');
+      }
+    }
+
+    .#{$so-prefix}component-navbar-toggler-icon,
+    .#{$so-prefix}component-navbar-toggler-icon::before,
+    .#{$so-prefix}component-navbar-toggler-icon::after {
+      background: css-var('text-primary');
+    }
+  }
+
+  .#{$so-prefix}component-navbar-offcanvas {
+    background: css-var('card-bg');
+
+    .#{$so-prefix}component-navbar-offcanvas-header {
+      border-color: css-var('border-color');
+    }
+  }
+}

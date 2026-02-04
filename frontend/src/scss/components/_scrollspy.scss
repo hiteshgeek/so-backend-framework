@@ -1,0 +1,332 @@
+// ============================================
+// SIXORBIT UI - SCROLLSPY
+// Automatic navigation highlighting based on scroll position
+// ============================================
+
+@use '../abstracts' as *;
+
+// ============================================
+// BASE SCROLLSPY NAV
+// ============================================
+
+.#{$so-prefix}scrollspy-nav {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: spacing('1');
+}
+
+.#{$so-prefix}scrollspy-link {
+  display: flex;
+  align-items: center;
+  padding: spacing('2') spacing('3');
+  color: css-var('text-muted');
+  text-decoration: none;
+  border-radius: css-var('border-radius');
+  transition: color $so-transition-fast,
+              background-color $so-transition-fast,
+              border-color $so-transition-fast;
+
+  &:hover {
+    color: css-var('text-color');
+    background-color: css-var('hover-bg');
+  }
+
+  &.#{$so-prefix}active {
+    color: $so-primary;
+    background-color: rgba($so-primary, 0.1);
+    font-weight: font-weight('medium');
+  }
+}
+
+// ============================================
+// BORDERED VARIANT (Left border indicator)
+// ============================================
+
+.#{$so-prefix}scrollspy-bordered {
+  border-left: 2px solid css-var('border-color');
+  padding-left: spacing('3');
+  gap: 0;
+
+  .#{$so-prefix}scrollspy-link {
+    position: relative;
+    padding: spacing('2') spacing('3');
+    margin-left: calc(-#{spacing('3')} - 2px);
+    border-left: 2px solid transparent;
+    border-radius: 0;
+    background: transparent;
+
+    &:hover {
+      background: transparent;
+      color: css-var('text-color');
+    }
+
+    &.#{$so-prefix}active {
+      color: $so-primary;
+      border-left-color: $so-primary;
+      background: transparent;
+    }
+  }
+}
+
+// ============================================
+// PILL VARIANT
+// ============================================
+
+.#{$so-prefix}scrollspy-pills {
+  .#{$so-prefix}scrollspy-link {
+    border-radius: css-var('border-radius-full');
+
+    &.#{$so-prefix}active {
+      background-color: $so-primary;
+      color: #fff;
+    }
+  }
+}
+
+// ============================================
+// UNDERLINE VARIANT
+// ============================================
+
+.#{$so-prefix}scrollspy-underline {
+  flex-direction: row;
+  gap: spacing('4');
+  border-bottom: 1px solid css-var('border-color');
+  padding-bottom: 0;
+
+  .#{$so-prefix}scrollspy-link {
+    padding: spacing('3') 0;
+    border-radius: 0;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    background: transparent;
+
+    &:hover {
+      background: transparent;
+      border-bottom-color: css-var('border-color');
+    }
+
+    &.#{$so-prefix}active {
+      background: transparent;
+      border-bottom-color: $so-primary;
+    }
+  }
+}
+
+// ============================================
+// STICKY VARIANT
+// ============================================
+
+.#{$so-prefix}scrollspy-sticky {
+  position: sticky;
+  top: spacing('4');
+  max-height: calc(100vh - #{spacing('8')});
+  overflow-y: auto;
+}
+
+// ============================================
+// NESTED/HIERARCHICAL SCROLLSPY
+// ============================================
+
+.#{$so-prefix}scrollspy-nested {
+  .#{$so-prefix}scrollspy-nav {
+    margin-left: spacing('4');
+    margin-top: spacing('1');
+    gap: 0;
+
+    .#{$so-prefix}scrollspy-link {
+      padding: spacing('1') spacing('3');
+      font-size: font-size('sm');
+    }
+  }
+}
+
+// ============================================
+// HORIZONTAL SCROLLSPY
+// ============================================
+
+.#{$so-prefix}scrollspy-horizontal {
+  flex-direction: row;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  gap: spacing('2');
+  padding-bottom: spacing('2');
+
+  // Hide scrollbar but keep functionality
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  .#{$so-prefix}scrollspy-link {
+    white-space: nowrap;
+  }
+}
+
+// ============================================
+// WITH ICONS
+// ============================================
+
+.#{$so-prefix}scrollspy-link {
+  .material-icons,
+  .#{$so-prefix}scrollspy-icon {
+    font-size: 1.125rem;
+    margin-right: spacing('2');
+    opacity: 0.7;
+  }
+
+  &.#{$so-prefix}active {
+    .material-icons,
+    .#{$so-prefix}scrollspy-icon {
+      opacity: 1;
+    }
+  }
+}
+
+// ============================================
+// WITH NUMBERS
+// ============================================
+
+.#{$so-prefix}scrollspy-numbered {
+  counter-reset: scrollspy-counter;
+
+  .#{$so-prefix}scrollspy-link {
+    counter-increment: scrollspy-counter;
+
+    &::before {
+      content: counter(scrollspy-counter) ".";
+      margin-right: spacing('2');
+      font-weight: font-weight('medium');
+      color: css-var('text-muted');
+      min-width: 1.5rem;
+    }
+
+    &.#{$so-prefix}active::before {
+      color: inherit;
+    }
+  }
+}
+
+// ============================================
+// COLOR VARIANTS
+// ============================================
+
+@each $color-name, $color-value in $so-colors {
+  .#{$so-prefix}scrollspy-#{$color-name} {
+    .#{$so-prefix}scrollspy-link {
+      &.#{$so-prefix}active {
+        color: $color-value;
+        background-color: rgba($color-value, 0.1);
+      }
+    }
+
+    &.#{$so-prefix}scrollspy-bordered .#{$so-prefix}scrollspy-link.#{$so-prefix}active {
+      border-left-color: $color-value;
+      background: transparent;
+    }
+
+    &.#{$so-prefix}scrollspy-pills .#{$so-prefix}scrollspy-link.#{$so-prefix}active {
+      background-color: $color-value;
+      color: #fff;
+    }
+
+    &.#{$so-prefix}scrollspy-underline .#{$so-prefix}scrollspy-link.#{$so-prefix}active {
+      border-bottom-color: $color-value;
+      background: transparent;
+    }
+  }
+}
+
+// ============================================
+// SIZE VARIANTS
+// ============================================
+
+.#{$so-prefix}scrollspy-sm {
+  .#{$so-prefix}scrollspy-link {
+    padding: spacing('1') spacing('2');
+    font-size: font-size('sm');
+  }
+}
+
+.#{$so-prefix}scrollspy-lg {
+  .#{$so-prefix}scrollspy-link {
+    padding: spacing('3') spacing('4');
+    font-size: font-size('lg');
+  }
+}
+
+// ============================================
+// PROGRESS INDICATOR
+// ============================================
+
+.#{$so-prefix}scrollspy-progress {
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background-color: css-var('border-color');
+    border-radius: 3px;
+  }
+
+  .#{$so-prefix}scrollspy-progress-bar {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 3px;
+    height: 0;
+    background-color: $so-primary;
+    border-radius: 3px;
+    transition: height $so-transition-fast;
+  }
+
+  .#{$so-prefix}scrollspy-link {
+    padding-left: spacing('4');
+  }
+}
+
+// ============================================
+// SCROLLSPY TARGET SECTIONS
+// ============================================
+
+[data-so-scrollspy-section] {
+  scroll-margin-top: spacing('4');
+}
+
+// ============================================
+// DARK MODE SUPPORT
+// ============================================
+
+[data-theme='dark'] {
+  .#{$so-prefix}scrollspy-link {
+    color: css-var('text-muted');
+
+    &:hover {
+      color: css-var('text-color');
+      background-color: css-var('hover-bg');
+    }
+
+    &.#{$so-prefix}active {
+      color: $so-primary;
+      background-color: rgba($so-primary, 0.15);
+    }
+  }
+
+  .#{$so-prefix}scrollspy-bordered {
+    border-left-color: css-var('border-color');
+
+    .#{$so-prefix}scrollspy-link.#{$so-prefix}active {
+      background: transparent;
+    }
+  }
+
+  .#{$so-prefix}scrollspy-underline {
+    border-bottom-color: css-var('border-color');
+  }
+}

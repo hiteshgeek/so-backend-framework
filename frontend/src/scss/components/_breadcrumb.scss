@@ -1,0 +1,348 @@
+// ============================================
+// SIXORBIT UI - BREADCRUMB
+// Navigation path indicator
+// ============================================
+
+@use 'sass:color';
+@use '../abstracts' as *;
+
+// ============================================
+// BASE BREADCRUMB
+// ============================================
+
+.#{$so-prefix}breadcrumb {
+  --breadcrumb-padding-y: #{spacing('2')};
+  --breadcrumb-padding-x: 0;
+  --breadcrumb-margin-bottom: #{spacing('4')};
+  --breadcrumb-bg: transparent;
+  --breadcrumb-border-radius: #{css-var('border-radius')};
+  --breadcrumb-divider-color: #{css-var('text-muted')};
+  --breadcrumb-item-padding-x: #{spacing('2')};
+  --breadcrumb-item-active-color: #{css-var('text-muted')};
+
+  display: flex;
+  flex-wrap: wrap;
+  padding: var(--breadcrumb-padding-y) var(--breadcrumb-padding-x);
+  margin-bottom: var(--breadcrumb-margin-bottom);
+  font-size: font-size('sm');
+  list-style: none;
+  background-color: var(--breadcrumb-bg);
+  border-radius: var(--breadcrumb-border-radius);
+}
+
+.#{$so-prefix}breadcrumb-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0; // Override global list styling
+
+  // Add divider before items (except first)
+  + .#{$so-prefix}breadcrumb-item {
+    padding-left: var(--breadcrumb-item-padding-x);
+
+    &::before {
+      float: left;
+      padding-right: var(--breadcrumb-item-padding-x);
+      color: var(--breadcrumb-divider-color);
+      content: var(--breadcrumb-divider, "/");
+    }
+  }
+
+  // Active state
+  &.#{$so-prefix}active {
+    color: var(--breadcrumb-item-active-color);
+  }
+
+  a {
+    color: $so-primary;
+    text-decoration: none;
+    transition: color $so-transition-fast;
+
+    &:hover {
+      color: color.adjust($so-primary, $lightness: -10%);
+      text-decoration: underline;
+    }
+  }
+}
+
+// ============================================
+// DIVIDER VARIANTS
+// ============================================
+
+// Chevron divider
+.#{$so-prefix}breadcrumb-chevron {
+  --breadcrumb-divider: "›";
+}
+
+// Arrow divider
+.#{$so-prefix}breadcrumb-arrow {
+  --breadcrumb-divider: "→";
+}
+
+// Slash divider (default)
+.#{$so-prefix}breadcrumb-slash {
+  --breadcrumb-divider: "/";
+}
+
+// Pipe divider
+.#{$so-prefix}breadcrumb-pipe {
+  --breadcrumb-divider: "|";
+}
+
+// Dot divider
+.#{$so-prefix}breadcrumb-dot {
+  --breadcrumb-divider: "•";
+}
+
+// Custom icon divider (uses Material Icons)
+.#{$so-prefix}breadcrumb-icon {
+  .#{$so-prefix}breadcrumb-item + .#{$so-prefix}breadcrumb-item::before {
+    font-family: 'Material Icons';
+    content: "chevron_right";
+    font-size: 1rem;
+    vertical-align: middle;
+    line-height: 1;
+  }
+}
+
+// ============================================
+// WITH BACKGROUND
+// ============================================
+
+.#{$so-prefix}breadcrumb-filled {
+  --breadcrumb-padding-y: #{spacing('3')};
+  --breadcrumb-padding-x: #{spacing('4')};
+  --breadcrumb-bg: #{css-var('card-bg')};
+  border: 1px solid css-var('border-color');
+}
+
+// Color variants for filled
+@each $color-name, $color-value in $so-colors {
+  .#{$so-prefix}breadcrumb-#{$color-name} {
+    --breadcrumb-bg: #{rgba($color-value, 0.1)};
+    --breadcrumb-divider-color: #{$color-value};
+
+    .#{$so-prefix}breadcrumb-item {
+      a {
+        color: $color-value;
+
+        &:hover {
+          color: color.adjust($color-value, $lightness: -10%);
+        }
+      }
+
+      &.#{$so-prefix}active {
+        color: color.adjust($color-value, $lightness: -20%);
+      }
+    }
+  }
+}
+
+// ============================================
+// WITH ICONS
+// ============================================
+
+.#{$so-prefix}breadcrumb-item {
+  .material-icons,
+  .#{$so-prefix}breadcrumb-icon {
+    font-size: 1rem;
+    margin-right: spacing('1');
+    vertical-align: middle;
+  }
+
+  // Home icon for first item
+  &:first-child .material-icons {
+    margin-right: spacing('1');
+  }
+}
+
+// ============================================
+// SIZE VARIANTS
+// ============================================
+
+.#{$so-prefix}breadcrumb-sm {
+  font-size: font-size('xs');
+
+  .#{$so-prefix}breadcrumb-item .material-icons {
+    font-size: 0.875rem;
+  }
+}
+
+.#{$so-prefix}breadcrumb-lg {
+  font-size: font-size('base');
+
+  .#{$so-prefix}breadcrumb-item .material-icons {
+    font-size: 1.25rem;
+  }
+}
+
+// ============================================
+// PILL STYLE
+// ============================================
+
+.#{$so-prefix}breadcrumb-pills {
+  .#{$so-prefix}breadcrumb-item {
+    + .#{$so-prefix}breadcrumb-item::before {
+      display: none;
+    }
+
+    a,
+    &.#{$so-prefix}active {
+      display: inline-block;
+      padding: spacing('1') spacing('3');
+      border-radius: radius('full');
+      background-color: css-var('hover-bg');
+    }
+
+    a:hover {
+      background-color: css-var('active-bg');
+      text-decoration: none;
+    }
+
+    &.#{$so-prefix}active {
+      background-color: $so-primary;
+      color: #fff;
+    }
+
+    + .#{$so-prefix}breadcrumb-item {
+      margin-left: spacing('1');
+    }
+  }
+}
+
+// ============================================
+// STEPPED STYLE (with numbers)
+// ============================================
+
+.#{$so-prefix}breadcrumb-stepped {
+  counter-reset: breadcrumb-counter;
+
+  .#{$so-prefix}breadcrumb-item {
+    counter-increment: breadcrumb-counter;
+
+    + .#{$so-prefix}breadcrumb-item::before {
+      display: none;
+    }
+
+    &::after {
+      content: counter(breadcrumb-counter);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 1.5rem;
+      height: 1.5rem;
+      margin-left: spacing('2');
+      font-size: font-size('xs');
+      font-weight: font-weight('semibold');
+      color: css-var('text-muted');
+      background-color: css-var('hover-bg');
+      border-radius: 50%;
+      order: -1;
+      margin-right: spacing('2');
+      margin-left: 0;
+    }
+
+    &.#{$so-prefix}active::after {
+      color: #fff;
+      background-color: $so-primary;
+    }
+
+    + .#{$so-prefix}breadcrumb-item {
+      margin-left: spacing('4');
+
+      &::before {
+        content: '';
+        position: absolute;
+        left: calc(-#{spacing('4')} / 2 - 0.5rem);
+        top: 50%;
+        width: calc(#{spacing('4')} - 0.5rem);
+        height: 2px;
+        background-color: css-var('border-color');
+      }
+    }
+  }
+}
+
+// ============================================
+// TRUNCATED BREADCRUMB
+// ============================================
+
+.#{$so-prefix}breadcrumb-truncate {
+  flex-wrap: nowrap;
+  overflow: hidden;
+
+  .#{$so-prefix}breadcrumb-item {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
+    flex-shrink: 1;
+
+    &:last-child {
+      flex-shrink: 0;
+    }
+  }
+}
+
+// ============================================
+// RESPONSIVE COLLAPSE
+// ============================================
+
+.#{$so-prefix}breadcrumb-collapse {
+  @include media-down(md) {
+    .#{$so-prefix}breadcrumb-item {
+      display: none;
+
+      &:first-child,
+      &:last-child,
+      &.#{$so-prefix}breadcrumb-ellipsis {
+        display: flex;
+      }
+    }
+  }
+}
+
+.#{$so-prefix}breadcrumb-ellipsis {
+  &::before {
+    content: "..." !important;
+    padding: 0 spacing('2');
+    color: css-var('text-muted');
+  }
+
+  // Hide the default divider
+  + .#{$so-prefix}breadcrumb-item::before {
+    content: var(--breadcrumb-divider, "/") !important;
+  }
+}
+
+// ============================================
+// DARK MODE SUPPORT
+// ============================================
+
+[data-theme='dark'] {
+  .#{$so-prefix}breadcrumb {
+    --breadcrumb-divider-color: #{css-var('text-muted')};
+    --breadcrumb-item-active-color: #{css-var('text-muted')};
+  }
+
+  .#{$so-prefix}breadcrumb-filled {
+    --breadcrumb-bg: #{css-var('card-bg')};
+    border-color: css-var('border-color');
+  }
+
+  .#{$so-prefix}breadcrumb-pills {
+    .#{$so-prefix}breadcrumb-item {
+      a,
+      &.#{$so-prefix}active {
+        background-color: css-var('hover-bg');
+      }
+
+      a:hover {
+        background-color: css-var('active-bg');
+      }
+
+      &.#{$so-prefix}active {
+        background-color: $so-primary;
+      }
+    }
+  }
+}

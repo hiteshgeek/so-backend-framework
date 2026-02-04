@@ -1,0 +1,288 @@
+// ============================================
+// SIXORBIT UI - FLEXBOX GRID SYSTEM
+// Bootstrap-compatible 12-column grid
+// ============================================
+
+@use 'sass:math';
+@use 'sass:map';
+@use '../abstracts' as *;
+@use 'grid-config' as config;
+
+// ============================================
+// MIXINS FOR GRID GENERATION
+// ============================================
+
+/// Generate column classes for a specific breakpoint
+/// @param {String} $breakpoint - Breakpoint name (empty for base)
+/// @param {Number} $columns - Number of columns
+@mixin make-grid-columns($breakpoint: '', $columns: config.$grid-columns) {
+  $infix: '';
+  @if $breakpoint != '' {
+    $infix: '-#{$breakpoint}';
+  }
+
+  // Auto-width column
+  .#{$so-prefix}col#{$infix} {
+    flex: 1 0 0%;
+  }
+
+  // Auto-sizing column
+  .#{$so-prefix}col#{$infix}-auto {
+    flex: 0 0 auto;
+    width: auto;
+  }
+
+  // Fixed-width columns (1-12)
+  @for $i from 1 through $columns {
+    .#{$so-prefix}col#{$infix}-#{$i} {
+      flex: 0 0 auto;
+      width: math.percentage(math.div($i, $columns));
+    }
+  }
+
+  // Offset classes (0-11)
+  @for $i from 0 through ($columns - 1) {
+    .#{$so-prefix}offset#{$infix}-#{$i} {
+      @if $i > 0 {
+        margin-left: math.percentage(math.div($i, $columns));
+      } @else {
+        margin-left: 0;
+      }
+    }
+  }
+}
+
+/// Generate row-cols classes
+/// @param {String} $breakpoint - Breakpoint name
+/// @param {Number} $max-cols - Maximum row columns
+@mixin make-row-columns($breakpoint: '', $max-cols: config.$grid-row-columns) {
+  $infix: '';
+  @if $breakpoint != '' {
+    $infix: '-#{$breakpoint}';
+  }
+
+  @for $i from 1 through $max-cols {
+    .#{$so-prefix}row-cols#{$infix}-#{$i} > * {
+      flex: 0 0 auto;
+      width: math.percentage(math.div(1, $i));
+    }
+  }
+
+  // Auto row columns
+  .#{$so-prefix}row-cols#{$infix}-auto > * {
+    flex: 0 0 auto;
+    width: auto;
+  }
+}
+
+/// Generate gutter classes
+/// @param {String} $breakpoint - Breakpoint name
+@mixin make-gutters($breakpoint: '') {
+  $infix: '';
+  @if $breakpoint != '' {
+    $infix: '-#{$breakpoint}';
+  }
+
+  @each $size, $value in config.$grid-gutter-widths {
+    // Both directions
+    .#{$so-prefix}g#{$infix}-#{$size},
+    .#{$so-prefix}gx#{$infix}-#{$size} {
+      --#{$so-css-var-prefix}-gutter-x: #{$value};
+    }
+
+    .#{$so-prefix}g#{$infix}-#{$size},
+    .#{$so-prefix}gy#{$infix}-#{$size} {
+      --#{$so-css-var-prefix}-gutter-y: #{$value};
+    }
+  }
+}
+
+/// Generate order classes
+/// @param {String} $breakpoint - Breakpoint name
+@mixin make-order-classes($breakpoint: '') {
+  $infix: '';
+  @if $breakpoint != '' {
+    $infix: '-#{$breakpoint}';
+  }
+
+  // Numeric orders 0-5
+  @for $i from 0 through 5 {
+    .#{$so-prefix}order#{$infix}-#{$i} {
+      order: $i !important;
+    }
+  }
+
+  // First and last
+  .#{$so-prefix}order#{$infix}-first {
+    order: -1 !important;
+  }
+
+  .#{$so-prefix}order#{$infix}-last {
+    order: 6 !important;
+  }
+}
+
+// ============================================
+// ROW COMPONENT
+// ============================================
+
+.#{$so-prefix}row {
+  --#{$so-css-var-prefix}-gutter-x: 1.5rem;
+  --#{$so-css-var-prefix}-gutter-y: 0;
+
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: calc(-1 * var(--#{$so-css-var-prefix}-gutter-y));
+  margin-right: calc(-0.5 * var(--#{$so-css-var-prefix}-gutter-x));
+  margin-left: calc(-0.5 * var(--#{$so-css-var-prefix}-gutter-x));
+
+  > * {
+    flex-shrink: 0;
+    width: 100%;
+    max-width: 100%;
+    padding-right: calc(var(--#{$so-css-var-prefix}-gutter-x) * 0.5);
+    padding-left: calc(var(--#{$so-css-var-prefix}-gutter-x) * 0.5);
+    margin-top: var(--#{$so-css-var-prefix}-gutter-y);
+  }
+}
+
+// ============================================
+// BASE COLUMN CLASSES (NO BREAKPOINT)
+// ============================================
+
+@include make-grid-columns();
+@include make-row-columns();
+@include make-gutters();
+@include make-order-classes();
+
+// ============================================
+// RESPONSIVE COLUMN CLASSES
+// ============================================
+
+@each $breakpoint, $min-width in config.$grid-breakpoints {
+  @if $breakpoint != 'xs' {
+    @media (min-width: $min-width) {
+      @include make-grid-columns($breakpoint);
+      @include make-row-columns($breakpoint);
+      @include make-gutters($breakpoint);
+      @include make-order-classes($breakpoint);
+    }
+  }
+}
+
+// ============================================
+// ALIGNMENT UTILITIES FOR GRID
+// ============================================
+
+// Align items in row (vertical)
+.#{$so-prefix}row.#{$so-prefix}align-items-start {
+  align-items: flex-start !important;
+}
+
+.#{$so-prefix}row.#{$so-prefix}align-items-center {
+  align-items: center !important;
+}
+
+.#{$so-prefix}row.#{$so-prefix}align-items-end {
+  align-items: flex-end !important;
+}
+
+.#{$so-prefix}row.#{$so-prefix}align-items-baseline {
+  align-items: baseline !important;
+}
+
+.#{$so-prefix}row.#{$so-prefix}align-items-stretch {
+  align-items: stretch !important;
+}
+
+// Justify content in row (horizontal)
+.#{$so-prefix}row.#{$so-prefix}justify-content-start {
+  justify-content: flex-start !important;
+}
+
+.#{$so-prefix}row.#{$so-prefix}justify-content-center {
+  justify-content: center !important;
+}
+
+.#{$so-prefix}row.#{$so-prefix}justify-content-end {
+  justify-content: flex-end !important;
+}
+
+.#{$so-prefix}row.#{$so-prefix}justify-content-between {
+  justify-content: space-between !important;
+}
+
+.#{$so-prefix}row.#{$so-prefix}justify-content-around {
+  justify-content: space-around !important;
+}
+
+.#{$so-prefix}row.#{$so-prefix}justify-content-evenly {
+  justify-content: space-evenly !important;
+}
+
+// Align self for individual columns
+.#{$so-prefix}align-self-start {
+  align-self: flex-start !important;
+}
+
+.#{$so-prefix}align-self-center {
+  align-self: center !important;
+}
+
+.#{$so-prefix}align-self-end {
+  align-self: flex-end !important;
+}
+
+.#{$so-prefix}align-self-baseline {
+  align-self: baseline !important;
+}
+
+.#{$so-prefix}align-self-stretch {
+  align-self: stretch !important;
+}
+
+// ============================================
+// NO GUTTERS UTILITY
+// ============================================
+
+.#{$so-prefix}row.#{$so-prefix}no-gutters,
+.#{$so-prefix}row.#{$so-prefix}g-0 {
+  --#{$so-css-var-prefix}-gutter-x: 0;
+  --#{$so-css-var-prefix}-gutter-y: 0;
+  margin-right: 0;
+  margin-left: 0;
+
+  > * {
+    padding-right: 0;
+    padding-left: 0;
+  }
+}
+
+// ============================================
+// RESPONSIVE GUTTER SCALING
+// ============================================
+
+.#{$so-prefix}row.#{$so-prefix}row-responsive-gap {
+  --#{$so-css-var-prefix}-gutter-x: 0.75rem;
+  --#{$so-css-var-prefix}-gutter-y: 0.75rem;
+
+  @media (min-width: 576px) {
+    --#{$so-css-var-prefix}-gutter-x: 1rem;
+    --#{$so-css-var-prefix}-gutter-y: 1rem;
+  }
+
+  @media (min-width: 768px) {
+    --#{$so-css-var-prefix}-gutter-x: 1.25rem;
+    --#{$so-css-var-prefix}-gutter-y: 1.25rem;
+  }
+
+  @media (min-width: 992px) {
+    --#{$so-css-var-prefix}-gutter-x: 1.5rem;
+    --#{$so-css-var-prefix}-gutter-y: 1.5rem;
+  }
+
+  @media (min-width: 1200px) {
+    --#{$so-css-var-prefix}-gutter-x: 2rem;
+    --#{$so-css-var-prefix}-gutter-y: 2rem;
+  }
+}

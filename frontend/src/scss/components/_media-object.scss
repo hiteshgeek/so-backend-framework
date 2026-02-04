@@ -1,0 +1,394 @@
+// ============================================
+// SIXORBIT UI - MEDIA OBJECT
+// Classic media object pattern for flexible layouts
+// ============================================
+
+@use '../abstracts' as *;
+
+// ============================================
+// BASE MEDIA OBJECT
+// ============================================
+
+.#{$so-prefix}media {
+  display: flex;
+  align-items: flex-start;
+  gap: spacing('4');
+}
+
+// ============================================
+// MEDIA (Image/Icon side)
+// ============================================
+
+.#{$so-prefix}media-left,
+.#{$so-prefix}media-right {
+  flex-shrink: 0;
+
+  img {
+    display: block;
+    max-width: none;
+  }
+}
+
+.#{$so-prefix}media-left {
+  order: 0;
+}
+
+.#{$so-prefix}media-right {
+  order: 2;
+}
+
+// ============================================
+// MEDIA BODY (Content side)
+// ============================================
+
+.#{$so-prefix}media-body {
+  flex: 1;
+  min-width: 0; // Prevents flex item from overflowing
+  order: 1;
+}
+
+// ============================================
+// MEDIA HEADING
+// ============================================
+
+.#{$so-prefix}media-heading {
+  font-size: font-size('base');
+  font-weight: font-weight('semibold');
+  color: css-var('text-primary');
+  margin: 0 0 spacing('1');
+}
+
+.#{$so-prefix}media-subheading {
+  font-size: font-size('sm');
+  color: css-var('text-secondary');
+  margin: 0;
+}
+
+// ============================================
+// MEDIA TEXT
+// ============================================
+
+.#{$so-prefix}media-text {
+  font-size: font-size('sm');
+  color: css-var('text-secondary');
+  margin: spacing('2') 0 0;
+  line-height: line-height('relaxed');
+}
+
+// ============================================
+// MEDIA META (Time, actions, etc.)
+// ============================================
+
+.#{$so-prefix}media-meta {
+  font-size: font-size('xs');
+  color: css-var('text-muted');
+  margin-top: spacing('2');
+  display: flex;
+  align-items: center;
+  gap: spacing('3');
+}
+
+.#{$so-prefix}media-actions {
+  display: flex;
+  align-items: center;
+  gap: spacing('2');
+  margin-top: spacing('3');
+}
+
+// ============================================
+// ALIGNMENT VARIANTS
+// ============================================
+
+// Middle align
+.#{$so-prefix}media-middle {
+  align-items: center;
+}
+
+// Bottom align
+.#{$so-prefix}media-bottom {
+  align-items: flex-end;
+}
+
+// Stretch (full height)
+.#{$so-prefix}media-stretch {
+  align-items: stretch;
+}
+
+// ============================================
+// NESTED MEDIA OBJECTS
+// ============================================
+
+.#{$so-prefix}media-nested {
+  margin-top: spacing('4');
+  padding-top: spacing('4');
+  border-top: 1px solid css-var('border-color');
+}
+
+// Thread-style nesting
+.#{$so-prefix}media-thread {
+  .#{$so-prefix}media-nested {
+    margin-left: spacing('8');
+    border-top: none;
+    padding-top: 0;
+    position: relative;
+
+    // Thread line
+    &::before {
+      content: '';
+      position: absolute;
+      left: calc(spacing('4') * -1 - 8px);
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: css-var('border-color');
+    }
+  }
+}
+
+// ============================================
+// SIZE VARIANTS
+// ============================================
+
+// Small media object
+.#{$so-prefix}media-sm {
+  gap: spacing('3');
+
+  .#{$so-prefix}media-heading {
+    font-size: font-size('sm');
+  }
+
+  .#{$so-prefix}media-text {
+    font-size: font-size('xs');
+  }
+}
+
+// Large media object
+.#{$so-prefix}media-lg {
+  gap: spacing('5');
+
+  .#{$so-prefix}media-heading {
+    font-size: font-size('lg');
+  }
+
+  .#{$so-prefix}media-text {
+    font-size: font-size('base');
+  }
+}
+
+// ============================================
+// AVATAR MEDIA
+// ============================================
+
+.#{$so-prefix}media-avatar {
+  .#{$so-prefix}media-left img,
+  .#{$so-prefix}media-right img {
+    width: 48px;
+    height: 48px;
+    border-radius: radius('full');
+    object-fit: cover;
+  }
+
+  &.#{$so-prefix}media-sm {
+    .#{$so-prefix}media-left img,
+    .#{$so-prefix}media-right img {
+      width: 32px;
+      height: 32px;
+    }
+  }
+
+  &.#{$so-prefix}media-lg {
+    .#{$so-prefix}media-left img,
+    .#{$so-prefix}media-right img {
+      width: 64px;
+      height: 64px;
+    }
+  }
+}
+
+// ============================================
+// ICON MEDIA
+// ============================================
+
+.#{$so-prefix}media-icon {
+  .#{$so-prefix}media-left,
+  .#{$so-prefix}media-right {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: radius('lg');
+    background: css-var('card-hover-bg');
+    color: css-var('text-secondary');
+
+    .material-icons {
+      font-size: 24px;
+    }
+  }
+
+  &.#{$so-prefix}media-sm {
+    .#{$so-prefix}media-left,
+    .#{$so-prefix}media-right {
+      width: 36px;
+      height: 36px;
+
+      .material-icons {
+        font-size: 20px;
+      }
+    }
+  }
+
+  &.#{$so-prefix}media-lg {
+    .#{$so-prefix}media-left,
+    .#{$so-prefix}media-right {
+      width: 64px;
+      height: 64px;
+
+      .material-icons {
+        font-size: 32px;
+      }
+    }
+  }
+}
+
+// Icon color variants
+.#{$so-prefix}media-icon-primary {
+  .#{$so-prefix}media-left,
+  .#{$so-prefix}media-right {
+    background: alpha($so-primary, 0.1);
+    color: css-var('accent-primary');
+  }
+}
+
+.#{$so-prefix}media-icon-success {
+  .#{$so-prefix}media-left,
+  .#{$so-prefix}media-right {
+    background: alpha($so-success, 0.1);
+    color: css-var('accent-success');
+  }
+}
+
+.#{$so-prefix}media-icon-danger {
+  .#{$so-prefix}media-left,
+  .#{$so-prefix}media-right {
+    background: alpha($so-danger, 0.1);
+    color: css-var('accent-danger');
+  }
+}
+
+.#{$so-prefix}media-icon-warning {
+  .#{$so-prefix}media-left,
+  .#{$so-prefix}media-right {
+    background: alpha($so-warning, 0.1);
+    color: css-var('accent-warning');
+  }
+}
+
+.#{$so-prefix}media-icon-info {
+  .#{$so-prefix}media-left,
+  .#{$so-prefix}media-right {
+    background: alpha($so-info, 0.1);
+    color: css-var('accent-info');
+  }
+}
+
+// ============================================
+// MEDIA LIST
+// ============================================
+
+.#{$so-prefix}media-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+
+  > li {
+    padding: spacing('4') 0;
+    border-bottom: 1px solid css-var('border-color');
+
+    &:first-child {
+      padding-top: 0;
+    }
+
+    &:last-child {
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+  }
+}
+
+// Compact media list
+.#{$so-prefix}media-list-compact {
+  > li {
+    padding: spacing('2') 0;
+  }
+}
+
+// ============================================
+// INTERACTIVE MEDIA
+// ============================================
+
+.#{$so-prefix}media-interactive {
+  padding: spacing('3');
+  margin: calc(spacing('3') * -1);
+  border-radius: radius('lg');
+  cursor: pointer;
+  transition: background $so-transition-fast;
+
+  &:hover {
+    background: css-var('card-hover-bg');
+  }
+
+  &:active {
+    background: css-var('border-color');
+  }
+}
+
+// ============================================
+// CARD MEDIA (Horizontal card layout)
+// ============================================
+
+.#{$so-prefix}media-card {
+  background: css-var('card-bg');
+  border: 1px solid css-var('border-color');
+  border-radius: radius('xl');
+  padding: spacing('4');
+
+  .#{$so-prefix}media-left img {
+    border-radius: radius('lg');
+    width: 120px;
+    height: 90px;
+    object-fit: cover;
+  }
+}
+
+// ============================================
+// RESPONSIVE STACKING
+// ============================================
+
+@media (max-width: 576px) {
+  .#{$so-prefix}media-responsive {
+    flex-direction: column;
+    align-items: stretch;
+
+    .#{$so-prefix}media-left,
+    .#{$so-prefix}media-right {
+      order: 0;
+      margin-bottom: spacing('3');
+    }
+
+    .#{$so-prefix}media-left img,
+    .#{$so-prefix}media-right img {
+      width: 100%;
+      max-height: 200px;
+      object-fit: cover;
+    }
+
+    &.#{$so-prefix}media-avatar {
+      .#{$so-prefix}media-left img,
+      .#{$so-prefix}media-right img {
+        width: 64px;
+        max-height: none;
+      }
+    }
+  }
+}

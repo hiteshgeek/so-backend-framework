@@ -1,0 +1,352 @@
+// ============================================
+// SIXORBIT UI - EMPTY STATES
+// Placeholder content for empty views
+// ============================================
+
+@use '../abstracts' as *;
+
+// ============================================
+// BASE EMPTY STATE
+// ============================================
+
+.#{$so-prefix}empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: spacing('8') spacing('4');
+  min-height: 300px;
+}
+
+// ============================================
+// EMPTY STATE ICON
+// ============================================
+
+.#{$so-prefix}empty-state-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  margin-bottom: spacing('4');
+  border-radius: radius('full');
+  background: css-var('card-hover-bg');
+  color: css-var('text-muted');
+
+  .material-icons {
+    font-size: 40px;
+  }
+
+  img,
+  svg {
+    max-width: 60px;
+    max-height: 60px;
+  }
+}
+
+// Larger icon variant
+.#{$so-prefix}empty-state-icon-lg {
+  width: 120px;
+  height: 120px;
+
+  .material-icons {
+    font-size: 64px;
+  }
+
+  img,
+  svg {
+    max-width: 80px;
+    max-height: 80px;
+  }
+}
+
+// ============================================
+// EMPTY STATE TITLE
+// ============================================
+
+.#{$so-prefix}empty-state-title {
+  font-size: font-size('xl');
+  font-weight: font-weight('semibold');
+  color: css-var('text-primary');
+  margin: 0 0 spacing('2');
+}
+
+// ============================================
+// EMPTY STATE TEXT
+// ============================================
+
+.#{$so-prefix}empty-state-text {
+  font-size: font-size('base');
+  color: css-var('text-secondary');
+  margin: 0 0 spacing('5');
+  max-width: 400px;
+  line-height: line-height('relaxed');
+}
+
+// ============================================
+// EMPTY STATE ACTIONS
+// ============================================
+
+.#{$so-prefix}empty-state-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: spacing('3');
+  justify-content: center;
+}
+
+// ============================================
+// SIZE VARIANTS
+// ============================================
+
+// Small empty state
+.#{$so-prefix}empty-state-sm {
+  padding: spacing('5') spacing('3');
+  min-height: 200px;
+
+  .#{$so-prefix}empty-state-icon {
+    width: 56px;
+    height: 56px;
+    margin-bottom: spacing('3');
+
+    .material-icons {
+      font-size: 28px;
+    }
+  }
+
+  .#{$so-prefix}empty-state-title {
+    font-size: font-size('base');
+    margin-bottom: spacing('1');
+  }
+
+  .#{$so-prefix}empty-state-text {
+    font-size: font-size('sm');
+    margin-bottom: spacing('4');
+    max-width: 300px;
+  }
+}
+
+// Large empty state
+.#{$so-prefix}empty-state-lg {
+  padding: spacing('12') spacing('6');
+  min-height: 400px;
+
+  .#{$so-prefix}empty-state-icon {
+    width: 120px;
+    height: 120px;
+    margin-bottom: spacing('6');
+
+    .material-icons {
+      font-size: 64px;
+    }
+  }
+
+  .#{$so-prefix}empty-state-title {
+    font-size: font-size('2xl');
+  }
+
+  .#{$so-prefix}empty-state-text {
+    font-size: font-size('lg');
+    max-width: 500px;
+  }
+}
+
+// ============================================
+// COMPACT (Inline) EMPTY STATE
+// ============================================
+
+.#{$so-prefix}empty-state-compact {
+  flex-direction: row;
+  text-align: left;
+  padding: spacing('4');
+  min-height: auto;
+  gap: spacing('4');
+
+  .#{$so-prefix}empty-state-icon {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 0;
+
+    .material-icons {
+      font-size: 24px;
+    }
+  }
+
+  .#{$so-prefix}empty-state-content {
+    flex: 1;
+  }
+
+  .#{$so-prefix}empty-state-title {
+    font-size: font-size('base');
+  }
+
+  .#{$so-prefix}empty-state-text {
+    font-size: font-size('sm');
+    margin-bottom: 0;
+    max-width: none;
+  }
+
+  .#{$so-prefix}empty-state-actions {
+    justify-content: flex-start;
+    margin-top: spacing('3');
+  }
+}
+
+// ============================================
+// WITH CARD STYLING
+// ============================================
+
+.#{$so-prefix}empty-state-card {
+  background: css-var('card-bg');
+  border: 1px solid css-var('border-color');
+  border-radius: radius('xl');
+}
+
+// Dashed border variant
+.#{$so-prefix}empty-state-dashed {
+  border: 2px dashed css-var('border-color');
+  background: transparent;
+}
+
+// ============================================
+// CONTEXTUAL VARIANTS
+// ============================================
+
+// Search empty state
+.#{$so-prefix}empty-state-search {
+  .#{$so-prefix}empty-state-icon {
+    background: alpha($so-info, 0.1);
+    color: css-var('accent-info');
+  }
+}
+
+// Error/Danger empty state
+.#{$so-prefix}empty-state-error,
+.#{$so-prefix}empty-state-danger {
+  .#{$so-prefix}empty-state-icon {
+    background: alpha($so-danger, 0.1);
+    color: css-var('accent-danger');
+  }
+}
+
+// Success empty state
+.#{$so-prefix}empty-state-success {
+  .#{$so-prefix}empty-state-icon {
+    background: alpha($so-success, 0.1);
+    color: css-var('accent-success');
+  }
+}
+
+// Warning empty state
+.#{$so-prefix}empty-state-warning {
+  .#{$so-prefix}empty-state-icon {
+    background: alpha($so-warning, 0.1);
+    color: css-var('accent-warning');
+  }
+}
+
+// Info empty state
+.#{$so-prefix}empty-state-info {
+  .#{$so-prefix}empty-state-icon {
+    background: alpha($so-info, 0.1);
+    color: css-var('accent-info');
+  }
+}
+
+// No permissions / Forbidden empty state
+.#{$so-prefix}empty-state-forbidden,
+.#{$so-prefix}empty-state-no-permission {
+  .#{$so-prefix}empty-state-icon {
+    background: alpha($so-grey-600, 0.1);
+    color: css-var('text-muted');
+  }
+}
+
+// ============================================
+// ILLUSTRATION EMPTY STATE
+// ============================================
+
+.#{$so-prefix}empty-state-illustration {
+  .#{$so-prefix}empty-state-icon {
+    width: auto;
+    height: auto;
+    background: transparent;
+    border-radius: 0;
+
+    img,
+    svg {
+      max-width: 200px;
+      max-height: 150px;
+    }
+  }
+}
+
+// ============================================
+// TABLE EMPTY STATE
+// ============================================
+
+.#{$so-prefix}table-empty-state {
+  padding: spacing('8') spacing('4');
+
+  td {
+    text-align: center;
+  }
+}
+
+// ============================================
+// LOADING STATE (Transitional)
+// ============================================
+
+.#{$so-prefix}empty-state-loading {
+  .#{$so-prefix}empty-state-icon {
+    animation: so-empty-state-pulse 2s ease-in-out infinite;
+  }
+}
+
+@keyframes so-empty-state-pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(0.95);
+  }
+}
+
+// ============================================
+// RESPONSIVE
+// ============================================
+
+@media (max-width: 576px) {
+  .#{$so-prefix}empty-state {
+    padding: spacing('6') spacing('3');
+    min-height: 250px;
+  }
+
+  .#{$so-prefix}empty-state-icon {
+    width: 64px;
+    height: 64px;
+
+    .material-icons {
+      font-size: 32px;
+    }
+  }
+
+  .#{$so-prefix}empty-state-title {
+    font-size: font-size('lg');
+  }
+
+  .#{$so-prefix}empty-state-text {
+    font-size: font-size('sm');
+  }
+
+  .#{$so-prefix}empty-state-compact {
+    flex-direction: column;
+    text-align: center;
+
+    .#{$so-prefix}empty-state-actions {
+      justify-content: center;
+    }
+  }
+}

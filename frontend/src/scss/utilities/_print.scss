@@ -1,0 +1,378 @@
+// ============================================
+// SIXORBIT UI - PRINT STYLES
+// Optimized styles for printing
+// ============================================
+
+@use '../abstracts' as *;
+
+// ============================================
+// PRINT VISIBILITY UTILITIES
+// ============================================
+
+// Show only when printing
+.#{$so-prefix}print-only {
+  display: none !important;
+
+  @media print {
+    display: block !important;
+  }
+}
+
+.#{$so-prefix}print-only-inline {
+  display: none !important;
+
+  @media print {
+    display: inline !important;
+  }
+}
+
+.#{$so-prefix}print-only-flex {
+  display: none !important;
+
+  @media print {
+    display: flex !important;
+  }
+}
+
+// Hide when printing
+.#{$so-prefix}print-hide {
+  @media print {
+    display: none !important;
+  }
+}
+
+// ============================================
+// PAGE BREAK CONTROLS
+// ============================================
+
+.#{$so-prefix}print-break-before {
+  @media print {
+    page-break-before: always;
+    break-before: page;
+  }
+}
+
+.#{$so-prefix}print-break-after {
+  @media print {
+    page-break-after: always;
+    break-after: page;
+  }
+}
+
+.#{$so-prefix}print-break-avoid {
+  @media print {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+}
+
+.#{$so-prefix}print-break-inside-auto {
+  @media print {
+    page-break-inside: auto;
+    break-inside: auto;
+  }
+}
+
+// ============================================
+// PRINT-SPECIFIC SIZING
+// ============================================
+
+.#{$so-prefix}print-full-width {
+  @media print {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+}
+
+.#{$so-prefix}print-w-auto {
+  @media print {
+    width: auto !important;
+  }
+}
+
+// ============================================
+// PRINT TEXT UTILITIES
+// ============================================
+
+.#{$so-prefix}print-text-black {
+  @media print {
+    color: #000 !important;
+  }
+}
+
+.#{$so-prefix}print-bg-white {
+  @media print {
+    background-color: #fff !important;
+  }
+}
+
+.#{$so-prefix}print-bg-transparent {
+  @media print {
+    background-color: transparent !important;
+  }
+}
+
+// ============================================
+// GLOBAL PRINT STYLES
+// ============================================
+
+@media print {
+  // Reset background colors for better printing
+  *,
+  *::before,
+  *::after {
+    // Preserve background colors if needed
+    // -webkit-print-color-adjust: exact;
+    // print-color-adjust: exact;
+  }
+
+  // Basic page setup
+  @page {
+    margin: 1cm;
+    size: A4;
+  }
+
+  // Body reset
+  body {
+    background: #fff !important;
+    color: #000 !important;
+    font-size: 12pt;
+    line-height: 1.5;
+  }
+
+  // ============================================
+  // HIDE INTERACTIVE ELEMENTS
+  // ============================================
+
+  // Navigation and sidebars
+  .#{$so-prefix}sidebar,
+  .#{$so-prefix}sidebar-toggle,
+  .#{$so-prefix}navbar,
+  .#{$so-prefix}header,
+  .#{$so-prefix}offcanvas,
+  .#{$so-prefix}modal-backdrop {
+    display: none !important;
+  }
+
+  // Buttons (except print button)
+  .#{$so-prefix}btn:not(.#{$so-prefix}print-keep) {
+    display: none !important;
+  }
+
+  // Form controls (hide unless specifically needed)
+  .#{$so-prefix}form-control,
+  .#{$so-prefix}checkbox,
+  .#{$so-prefix}radio,
+  .#{$so-prefix}switch,
+  .#{$so-prefix}select {
+    // Show value but make non-interactive
+    border: 1px solid #ccc !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  // Dropdowns
+  .#{$so-prefix}dropdown-menu {
+    display: none !important;
+  }
+
+  // Tooltips and popovers
+  .#{$so-prefix}tooltip,
+  .#{$so-prefix}popover {
+    display: none !important;
+  }
+
+  // Loading states
+  .#{$so-prefix}spinner,
+  .#{$so-prefix}spinner-overlay {
+    display: none !important;
+  }
+
+  // ============================================
+  // OPTIMIZE CONTENT FOR PRINT
+  // ============================================
+
+  // Links - show URL
+  a[href]:not(.#{$so-prefix}print-link-hide)::after {
+    content: " (" attr(href) ")";
+    font-size: 0.8em;
+    color: #666;
+    word-break: break-all;
+  }
+
+  // Don't show URL for internal links or buttons
+  a[href^="#"]::after,
+  a[href^="javascript:"]::after,
+  .#{$so-prefix}btn::after {
+    content: none !important;
+  }
+
+  // Abbreviations - show full text
+  abbr[title]::after {
+    content: " (" attr(title) ")";
+  }
+
+  // ============================================
+  // CARDS AND CONTAINERS
+  // ============================================
+
+  .#{$so-prefix}card {
+    border: 1px solid #ddd !important;
+    box-shadow: none !important;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  .#{$so-prefix}card-header,
+  .#{$so-prefix}card-footer {
+    background: #f5f5f5 !important;
+    border-color: #ddd !important;
+  }
+
+  // ============================================
+  // TABLES
+  // ============================================
+
+  .#{$so-prefix}table {
+    border-collapse: collapse !important;
+
+    th,
+    td {
+      border: 1px solid #ddd !important;
+      background: transparent !important;
+    }
+
+    th {
+      background: #f5f5f5 !important;
+    }
+
+    // Repeat headers on each page
+    thead {
+      display: table-header-group;
+    }
+
+    // Keep rows together
+    tr {
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+  }
+
+  // ============================================
+  // IMAGES
+  // ============================================
+
+  img {
+    max-width: 100% !important;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  // ============================================
+  // CODE BLOCKS
+  // ============================================
+
+  .#{$so-prefix}code-block {
+    background: #f5f5f5 !important;
+    border: 1px solid #ddd !important;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  .#{$so-prefix}code-block-content {
+    white-space: pre-wrap !important;
+    word-wrap: break-word !important;
+    color: #000 !important;
+  }
+
+  // Hide copy buttons
+  .#{$so-prefix}code-block-copy {
+    display: none !important;
+  }
+
+  // ============================================
+  // ALERTS AND BADGES
+  // ============================================
+
+  .#{$so-prefix}alert {
+    border: 2px solid currentColor !important;
+    background: transparent !important;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  .#{$so-prefix}badge {
+    border: 1px solid currentColor !important;
+    background: transparent !important;
+  }
+
+  // ============================================
+  // EXPAND COLLAPSED CONTENT
+  // ============================================
+
+  .#{$so-prefix}collapse:not(.#{$so-prefix}show) {
+    display: block !important;
+    height: auto !important;
+    visibility: visible !important;
+  }
+
+  .#{$so-prefix}accordion-body {
+    display: block !important;
+  }
+
+  // ============================================
+  // REMOVE SHADOWS AND EFFECTS
+  // ============================================
+
+  * {
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  // ============================================
+  // MAIN CONTENT AREA
+  // ============================================
+
+  .#{$so-prefix}main {
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+  }
+
+  .#{$so-prefix}container,
+  .#{$so-prefix}container-fluid {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 !important;
+  }
+}
+
+// ============================================
+// PRINT COLOR PRESERVATION
+// ============================================
+
+.#{$so-prefix}print-color {
+  @media print {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+}
+
+// ============================================
+// PRINT-SPECIFIC LAYOUTS
+// ============================================
+
+@media print {
+  // Two-column print layout
+  .#{$so-prefix}print-columns-2 {
+    column-count: 2;
+    column-gap: 2cm;
+  }
+
+  // Three-column print layout
+  .#{$so-prefix}print-columns-3 {
+    column-count: 3;
+    column-gap: 1.5cm;
+  }
+}

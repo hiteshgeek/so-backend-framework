@@ -1,0 +1,553 @@
+// ============================================
+// SIXORBIT UI - SKELETON LOADERS
+// Loading placeholder animations
+// ============================================
+
+@use '../abstracts' as *;
+
+// ============================================
+// SKELETON ANIMATION
+// ============================================
+
+@keyframes so-skeleton-wave {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+@keyframes so-skeleton-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
+
+// ============================================
+// BASE SKELETON
+// ============================================
+
+.#{$so-prefix}skeleton {
+  background: linear-gradient(
+    90deg,
+    css-var('border-color') 25%,
+    css-var('card-hover-bg') 50%,
+    css-var('border-color') 75%
+  );
+  background-size: 200% 100%;
+  animation: so-skeleton-wave 1.5s ease-in-out infinite;
+  border-radius: radius('sm');
+}
+
+// ============================================
+// ANIMATION VARIANTS
+// ============================================
+
+// Pulse animation (fading in/out)
+.#{$so-prefix}skeleton-pulse {
+  animation: so-skeleton-pulse 1.5s ease-in-out infinite;
+  background: css-var('border-color');
+}
+
+// No animation (static placeholder)
+.#{$so-prefix}skeleton-static {
+  animation: none;
+  background: css-var('border-color');
+}
+
+// ============================================
+// SKELETON LOADING CONTAINER
+// Wrapper that enables animation for children
+// ============================================
+
+.#{$so-prefix}skeleton-loading {
+  pointer-events: none;
+}
+
+// ============================================
+// SHAPE VARIANTS
+// ============================================
+
+// Text line placeholder
+.#{$so-prefix}skeleton-text {
+  height: 1em;
+  width: 100%;
+  margin-bottom: spacing('2');
+  border-radius: radius('sm');
+
+  &:last-child {
+    width: 60%;
+    margin-bottom: 0;
+  }
+}
+
+// Title placeholder
+.#{$so-prefix}skeleton-title {
+  height: 1.5em;
+  width: 50%;
+  margin-bottom: spacing('3');
+  border-radius: radius('sm');
+}
+
+// Circle shape
+.#{$so-prefix}skeleton-circle {
+  border-radius: radius('full');
+  flex-shrink: 0;
+}
+
+// Rectangle shape
+.#{$so-prefix}skeleton-rect {
+  border-radius: radius('lg');
+}
+
+// Rounded rectangle
+.#{$so-prefix}skeleton-rounded {
+  border-radius: radius('md');
+}
+
+// ============================================
+// PRESET COMPONENTS
+// ============================================
+
+// Avatar placeholder - circular shape
+.#{$so-prefix}skeleton-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: radius('full');
+  flex-shrink: 0;
+
+  // Size variants
+  &.#{$so-prefix}skeleton-avatar-xs {
+    width: 24px;
+    height: 24px;
+  }
+
+  &.#{$so-prefix}skeleton-avatar-sm {
+    width: 32px;
+    height: 32px;
+  }
+
+  &.#{$so-prefix}skeleton-avatar-lg {
+    width: 48px;
+    height: 48px;
+  }
+
+  &.#{$so-prefix}skeleton-avatar-xl {
+    width: 64px;
+    height: 64px;
+  }
+
+  &.#{$so-prefix}skeleton-avatar-2xl {
+    width: 80px;
+    height: 80px;
+  }
+}
+
+// Image placeholder
+.#{$so-prefix}skeleton-img {
+  height: 200px;
+  border-radius: radius('lg') radius('lg') 0 0;
+  width: 100%;
+}
+
+// Button placeholder
+.#{$so-prefix}skeleton-btn {
+  height: 36px;
+  width: 80px;
+  border-radius: radius('md');
+
+  &.#{$so-prefix}skeleton-btn-sm {
+    height: 32px;
+    width: 70px;
+  }
+
+  &.#{$so-prefix}skeleton-btn-lg {
+    height: 44px;
+    width: 100px;
+  }
+}
+
+// Input field placeholder
+.#{$so-prefix}skeleton-input {
+  height: 42px;
+  width: 100%;
+  border-radius: radius('md');
+}
+
+// ============================================
+// CARD SKELETON PRESET
+// Complete card loading placeholder
+// ============================================
+
+.#{$so-prefix}skeleton-card {
+  @include card;
+  overflow: hidden;
+
+  .#{$so-prefix}skeleton-card-img {
+    height: 180px;
+    background: linear-gradient(
+      90deg,
+      css-var('border-color') 25%,
+      css-var('card-hover-bg') 50%,
+      css-var('border-color') 75%
+    );
+    background-size: 200% 100%;
+    animation: so-skeleton-wave 1.5s ease-in-out infinite;
+  }
+
+  .#{$so-prefix}skeleton-card-body {
+    padding: spacing('4');
+  }
+
+  .#{$so-prefix}skeleton-card-title {
+    height: 1.25em;
+    width: 70%;
+    margin-bottom: spacing('3');
+    background: linear-gradient(
+      90deg,
+      css-var('border-color') 25%,
+      css-var('card-hover-bg') 50%,
+      css-var('border-color') 75%
+    );
+    background-size: 200% 100%;
+    animation: so-skeleton-wave 1.5s ease-in-out infinite;
+    border-radius: radius('sm');
+  }
+
+  .#{$so-prefix}skeleton-card-text {
+    height: 0.9em;
+    width: 100%;
+    margin-bottom: spacing('2');
+    background: linear-gradient(
+      90deg,
+      css-var('border-color') 25%,
+      css-var('card-hover-bg') 50%,
+      css-var('border-color') 75%
+    );
+    background-size: 200% 100%;
+    animation: so-skeleton-wave 1.5s ease-in-out infinite;
+    border-radius: radius('sm');
+
+    &:last-child {
+      width: 50%;
+      margin-bottom: 0;
+    }
+  }
+
+  .#{$so-prefix}skeleton-card-btn {
+    height: 36px;
+    width: 100px;
+    margin-top: spacing('3');
+    background: linear-gradient(
+      90deg,
+      css-var('border-color') 25%,
+      css-var('card-hover-bg') 50%,
+      css-var('border-color') 75%
+    );
+    background-size: 200% 100%;
+    animation: so-skeleton-wave 1.5s ease-in-out infinite;
+    border-radius: radius('md');
+  }
+
+  // Card without image
+  &.#{$so-prefix}skeleton-card-text-only {
+    .#{$so-prefix}skeleton-card-img {
+      display: none;
+    }
+  }
+
+  // Horizontal card variant
+  &.#{$so-prefix}skeleton-card-horizontal {
+    display: flex;
+
+    .#{$so-prefix}skeleton-card-img {
+      width: 200px;
+      height: auto;
+      min-height: 150px;
+      flex-shrink: 0;
+    }
+
+    .#{$so-prefix}skeleton-card-body {
+      flex: 1;
+    }
+  }
+}
+
+// ============================================
+// TABLE ROW SKELETON PRESET
+// Loading placeholder for table rows
+// ============================================
+
+.#{$so-prefix}skeleton-table-row {
+  display: table-row;
+
+  td, .#{$so-prefix}skeleton-table-cell {
+    display: table-cell;
+    padding: spacing('3');
+    vertical-align: middle;
+    border-bottom: 1px solid css-var('border-color');
+  }
+
+  .#{$so-prefix}skeleton-table-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: radius('full');
+    background: linear-gradient(
+      90deg,
+      css-var('border-color') 25%,
+      css-var('card-hover-bg') 50%,
+      css-var('border-color') 75%
+    );
+    background-size: 200% 100%;
+    animation: so-skeleton-wave 1.5s ease-in-out infinite;
+  }
+
+  .#{$so-prefix}skeleton-table-text {
+    height: 1em;
+    width: 80%;
+    background: linear-gradient(
+      90deg,
+      css-var('border-color') 25%,
+      css-var('card-hover-bg') 50%,
+      css-var('border-color') 75%
+    );
+    background-size: 200% 100%;
+    animation: so-skeleton-wave 1.5s ease-in-out infinite;
+    border-radius: radius('sm');
+  }
+
+  .#{$so-prefix}skeleton-table-badge {
+    height: 24px;
+    width: 60px;
+    background: linear-gradient(
+      90deg,
+      css-var('border-color') 25%,
+      css-var('card-hover-bg') 50%,
+      css-var('border-color') 75%
+    );
+    background-size: 200% 100%;
+    animation: so-skeleton-wave 1.5s ease-in-out infinite;
+    border-radius: radius('full');
+  }
+}
+
+// Table skeleton container (for multiple rows)
+.#{$so-prefix}skeleton-table {
+  display: table;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+// ============================================
+// LIST ITEM SKELETON PRESET
+// Loading placeholder for list items
+// ============================================
+
+.#{$so-prefix}skeleton-list-item {
+  display: flex;
+  align-items: center;
+  gap: spacing('3');
+  padding: spacing('3') spacing('4');
+  border-bottom: 1px solid css-var('border-color');
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  .#{$so-prefix}skeleton-list-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: radius('full');
+    flex-shrink: 0;
+    background: linear-gradient(
+      90deg,
+      css-var('border-color') 25%,
+      css-var('card-hover-bg') 50%,
+      css-var('border-color') 75%
+    );
+    background-size: 200% 100%;
+    animation: so-skeleton-wave 1.5s ease-in-out infinite;
+  }
+
+  .#{$so-prefix}skeleton-list-content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .#{$so-prefix}skeleton-list-title {
+    height: 1em;
+    width: 40%;
+    margin-bottom: spacing('2');
+    background: linear-gradient(
+      90deg,
+      css-var('border-color') 25%,
+      css-var('card-hover-bg') 50%,
+      css-var('border-color') 75%
+    );
+    background-size: 200% 100%;
+    animation: so-skeleton-wave 1.5s ease-in-out infinite;
+    border-radius: radius('sm');
+  }
+
+  .#{$so-prefix}skeleton-list-subtitle {
+    height: 0.85em;
+    width: 70%;
+    background: linear-gradient(
+      90deg,
+      css-var('border-color') 25%,
+      css-var('card-hover-bg') 50%,
+      css-var('border-color') 75%
+    );
+    background-size: 200% 100%;
+    animation: so-skeleton-wave 1.5s ease-in-out infinite;
+    border-radius: radius('sm');
+  }
+
+  .#{$so-prefix}skeleton-list-action {
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+    background: linear-gradient(
+      90deg,
+      css-var('border-color') 25%,
+      css-var('card-hover-bg') 50%,
+      css-var('border-color') 75%
+    );
+    background-size: 200% 100%;
+    animation: so-skeleton-wave 1.5s ease-in-out infinite;
+    border-radius: radius('md');
+  }
+
+  // Without avatar variant
+  &.#{$so-prefix}skeleton-list-item-no-avatar {
+    .#{$so-prefix}skeleton-list-avatar {
+      display: none;
+    }
+
+    .#{$so-prefix}skeleton-list-title {
+      width: 30%;
+    }
+
+    .#{$so-prefix}skeleton-list-subtitle {
+      width: 60%;
+    }
+  }
+
+  // Compact variant
+  &.#{$so-prefix}skeleton-list-item-compact {
+    padding: spacing('2') spacing('3');
+
+    .#{$so-prefix}skeleton-list-avatar {
+      width: 32px;
+      height: 32px;
+    }
+  }
+}
+
+// ============================================
+// STATS CARD SKELETON
+// Dashboard widget placeholder
+// ============================================
+
+.#{$so-prefix}skeleton-stats {
+  @include card;
+  padding: spacing('4');
+
+  .#{$so-prefix}skeleton-stats-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: spacing('3');
+  }
+
+  .#{$so-prefix}skeleton-stats-label {
+    height: 0.85em;
+    width: 60%;
+    background: linear-gradient(
+      90deg,
+      css-var('border-color') 25%,
+      css-var('card-hover-bg') 50%,
+      css-var('border-color') 75%
+    );
+    background-size: 200% 100%;
+    animation: so-skeleton-wave 1.5s ease-in-out infinite;
+    border-radius: radius('sm');
+  }
+
+  .#{$so-prefix}skeleton-stats-icon {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(
+      90deg,
+      css-var('border-color') 25%,
+      css-var('card-hover-bg') 50%,
+      css-var('border-color') 75%
+    );
+    background-size: 200% 100%;
+    animation: so-skeleton-wave 1.5s ease-in-out infinite;
+    border-radius: radius('lg');
+  }
+
+  .#{$so-prefix}skeleton-stats-value {
+    height: 2em;
+    width: 50%;
+    margin-bottom: spacing('2');
+    background: linear-gradient(
+      90deg,
+      css-var('border-color') 25%,
+      css-var('card-hover-bg') 50%,
+      css-var('border-color') 75%
+    );
+    background-size: 200% 100%;
+    animation: so-skeleton-wave 1.5s ease-in-out infinite;
+    border-radius: radius('sm');
+  }
+
+  .#{$so-prefix}skeleton-stats-change {
+    height: 0.75em;
+    width: 70%;
+    background: linear-gradient(
+      90deg,
+      css-var('border-color') 25%,
+      css-var('card-hover-bg') 50%,
+      css-var('border-color') 75%
+    );
+    background-size: 200% 100%;
+    animation: so-skeleton-wave 1.5s ease-in-out infinite;
+    border-radius: radius('sm');
+  }
+}
+
+// ============================================
+// PARAGRAPH SKELETON
+// Multiple lines of text placeholder
+// ============================================
+
+.#{$so-prefix}skeleton-paragraph {
+  .#{$so-prefix}skeleton-line {
+    height: 1em;
+    margin-bottom: spacing('2');
+    background: linear-gradient(
+      90deg,
+      css-var('border-color') 25%,
+      css-var('card-hover-bg') 50%,
+      css-var('border-color') 75%
+    );
+    background-size: 200% 100%;
+    animation: so-skeleton-wave 1.5s ease-in-out infinite;
+    border-radius: radius('sm');
+
+    &:nth-child(1) { width: 100%; }
+    &:nth-child(2) { width: 95%; }
+    &:nth-child(3) { width: 90%; }
+    &:nth-child(4) { width: 60%; }
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}

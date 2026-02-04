@@ -1,0 +1,548 @@
+{
+    "quickActions": [
+        {
+            "id": "qa-1",
+            "title": "New Sales Invoice",
+            "path": "Finance > Sales Invoice > Add",
+            "icon": "add_circle",
+            "color": "blue",
+            "href": "#create-sales-invoice"
+        },
+        {
+            "id": "qa-2",
+            "title": "New Purchase Order",
+            "path": "Office > Purchase Order > Add",
+            "icon": "add_circle",
+            "color": "green",
+            "href": "#create-purchase-order"
+        },
+        {
+            "id": "qa-3",
+            "title": "Add Customer",
+            "path": "Sales > Customer > Add",
+            "icon": "person_add",
+            "color": "orange",
+            "href": "#add-customer"
+        },
+        {
+            "id": "qa-4",
+            "title": "Create Receipt",
+            "path": "Finance > Receipt > Add",
+            "icon": "call_received",
+            "color": "blue",
+            "href": "#create-receipt"
+        }
+    ],
+    "menus": [
+        {
+            "id": "menu-si-1",
+            "title": "Create Sales Invoice",
+            "path": "Finance > Sales Invoice > Add",
+            "icon": "receipt_long",
+            "color": "blue",
+            "href": "#create-sales-invoice",
+            "category": "menus"
+        },
+        {
+            "id": "menu-si-2",
+            "title": "Sales Invoice List",
+            "path": "Finance > Sales Invoice > List",
+            "icon": "receipt",
+            "color": "blue",
+            "href": "#sales-invoice-list",
+            "category": "menus"
+        },
+        {
+            "id": "menu-pi-1",
+            "title": "Create Purchase Invoice",
+            "path": "Finance > Purchase Invoice > Add",
+            "icon": "request_quote",
+            "color": "green",
+            "href": "#create-purchase-invoice",
+            "category": "menus"
+        },
+        {
+            "id": "menu-pi-2",
+            "title": "Purchase Invoice List",
+            "path": "Finance > Purchase Invoice > List",
+            "icon": "request_quote",
+            "color": "green",
+            "href": "#purchase-invoice-list",
+            "category": "menus"
+        },
+        {
+            "id": "menu-rc-1",
+            "title": "Create Receipt",
+            "path": "Finance > Receipt > Add",
+            "icon": "call_received",
+            "color": "blue",
+            "href": "#create-receipt",
+            "category": "menus"
+        },
+        {
+            "id": "menu-pm-1",
+            "title": "Create Payment",
+            "path": "Finance > Payment > Add",
+            "icon": "payments",
+            "color": "red",
+            "href": "#create-payment",
+            "category": "menus"
+        },
+        {
+            "id": "menu-cn-1",
+            "title": "Credit Note",
+            "path": "Finance > Credit Note",
+            "icon": "note_add",
+            "color": "orange",
+            "href": "#credit-note",
+            "category": "menus"
+        },
+        {
+            "id": "menu-dn-1",
+            "title": "Debit Note",
+            "path": "Finance > Debit Note",
+            "icon": "sticky_note_2",
+            "color": "orange",
+            "href": "#debit-note",
+            "category": "menus"
+        },
+        {
+            "id": "menu-bs-1",
+            "title": "Balance Sheet",
+            "path": "Finance > Reports > Balance Sheet",
+            "icon": "assessment",
+            "color": "blue",
+            "href": "balance-sheet.html",
+            "category": "menus"
+        },
+        {
+            "id": "menu-pl-1",
+            "title": "Profit & Loss",
+            "path": "Finance > Reports > Profit & Loss",
+            "icon": "analytics",
+            "color": "green",
+            "href": "profit-loss.html",
+            "category": "menus"
+        },
+        {
+            "id": "menu-tb-1",
+            "title": "Trial Balance",
+            "path": "Finance > Reports > Trial Balance",
+            "icon": "account_balance",
+            "color": "blue",
+            "href": "trial-balance.html",
+            "category": "menus"
+        },
+        {
+            "id": "menu-cf-1",
+            "title": "Cash Flow Summary",
+            "path": "Finance > Reports > Cash Flow Summary",
+            "icon": "account_balance_wallet",
+            "color": "green",
+            "href": "cash-flow-summary.html",
+            "category": "menus"
+        },
+        {
+            "id": "menu-po-1",
+            "title": "Create Purchase Order",
+            "path": "Office > Purchase Order > Add",
+            "icon": "shopping_cart",
+            "color": "green",
+            "href": "#create-purchase-order",
+            "category": "menus"
+        },
+        {
+            "id": "menu-po-2",
+            "title": "Purchase Order List",
+            "path": "Office > Purchase Order > List",
+            "icon": "shopping_cart",
+            "color": "green",
+            "href": "#purchase-order-list",
+            "category": "menus"
+        },
+        {
+            "id": "menu-st-1",
+            "title": "Stock Transfer",
+            "path": "Office > Stock Transfer",
+            "icon": "swap_horiz",
+            "color": "blue",
+            "href": "#stock-transfer",
+            "category": "menus"
+        },
+        {
+            "id": "menu-sr-1",
+            "title": "Stock Report",
+            "path": "Office > Reports > Stock Report",
+            "icon": "inventory_2",
+            "color": "orange",
+            "href": "#stock-report",
+            "category": "menus"
+        },
+        {
+            "id": "menu-so-1",
+            "title": "Create Sales Order",
+            "path": "Sales > Sales Order > Add",
+            "icon": "shopping_bag",
+            "color": "blue",
+            "href": "#create-sales-order",
+            "category": "menus"
+        },
+        {
+            "id": "menu-qt-1",
+            "title": "Create Quotation",
+            "path": "Sales > Quotation > Add",
+            "icon": "description",
+            "color": "blue",
+            "href": "#create-quotation",
+            "category": "menus"
+        },
+        {
+            "id": "menu-ld-1",
+            "title": "Lead List",
+            "path": "Sales > Leads > List",
+            "icon": "leaderboard",
+            "color": "green",
+            "href": "#lead-list",
+            "category": "menus"
+        },
+        {
+            "id": "menu-cust-1",
+            "title": "Customer List",
+            "path": "Sales > Customer > List",
+            "icon": "people",
+            "color": "blue",
+            "href": "#customer-list",
+            "category": "menus"
+        },
+        {
+            "id": "menu-vend-1",
+            "title": "Vendor List",
+            "path": "Office > Vendor > List",
+            "icon": "storefront",
+            "color": "green",
+            "href": "#vendor-list",
+            "category": "menus"
+        },
+        {
+            "id": "menu-ledger-1",
+            "title": "Ledger List",
+            "path": "Finance > Account > Ledgers",
+            "icon": "account_tree",
+            "color": "orange",
+            "href": "#ledger-list",
+            "category": "menus"
+        }
+    ],
+    "customers": [
+        {
+            "id": "cust-1",
+            "title": "LATHA MOHAN",
+            "mobile": "9876543210",
+            "gstin": "29AABCT1234F1ZP",
+            "city": "Bangalore",
+            "walletBalance": 15000,
+            "icon": "person",
+            "color": "blue",
+            "category": "customers"
+        },
+        {
+            "id": "cust-2",
+            "title": "RAJESH KUMAR",
+            "mobile": "9876543211",
+            "gstin": "27AABCT5678G2ZQ",
+            "city": "Mumbai",
+            "walletBalance": -5000,
+            "icon": "person",
+            "color": "blue",
+            "category": "customers"
+        },
+        {
+            "id": "cust-3",
+            "title": "PRIYA SHARMA",
+            "mobile": "9876543212",
+            "gstin": "07AABCT9012H3ZR",
+            "city": "Delhi",
+            "walletBalance": 25000,
+            "icon": "person",
+            "color": "blue",
+            "category": "customers"
+        },
+        {
+            "id": "cust-4",
+            "title": "AMIT PATEL",
+            "mobile": "9876543213",
+            "gstin": "24AABCT3456I4ZS",
+            "city": "Ahmedabad",
+            "walletBalance": 0,
+            "icon": "person",
+            "color": "blue",
+            "category": "customers"
+        },
+        {
+            "id": "cust-5",
+            "title": "SUNITA REDDY",
+            "mobile": "9876543214",
+            "gstin": "36AABCT7890J5ZT",
+            "city": "Hyderabad",
+            "walletBalance": 45000,
+            "icon": "person",
+            "color": "blue",
+            "category": "customers"
+        },
+        {
+            "id": "cust-6",
+            "title": "VIKRAM SINGH",
+            "mobile": "9876543215",
+            "gstin": "09AABCT2345K6ZU",
+            "city": "Jaipur",
+            "walletBalance": -12500,
+            "icon": "person",
+            "color": "blue",
+            "category": "customers"
+        },
+        {
+            "id": "cust-7",
+            "title": "MEERA NAIR",
+            "mobile": "9876543216",
+            "gstin": "32AABCT6789L7ZV",
+            "city": "Chennai",
+            "walletBalance": 8500,
+            "icon": "person",
+            "color": "blue",
+            "category": "customers"
+        },
+        {
+            "id": "cust-8",
+            "title": "RAVI VERMA",
+            "mobile": "9876543217",
+            "gstin": "33AABCT0123M8ZW",
+            "city": "Kolkata",
+            "walletBalance": 32000,
+            "icon": "person",
+            "color": "blue",
+            "category": "customers"
+        },
+        {
+            "id": "cust-9",
+            "title": "ANANYA KRISHNAN",
+            "mobile": "9876543218",
+            "gstin": "32AABCT4567N9ZX",
+            "city": "Kochi",
+            "walletBalance": 18500,
+            "icon": "person",
+            "color": "blue",
+            "category": "customers"
+        },
+        {
+            "id": "cust-10",
+            "title": "DEEPAK GUPTA",
+            "mobile": "9876543219",
+            "gstin": "09AABCT8901O0ZY",
+            "city": "Lucknow",
+            "walletBalance": -7500,
+            "icon": "person",
+            "color": "blue",
+            "category": "customers"
+        }
+    ],
+    "vendors": [
+        {
+            "id": "vend-1",
+            "title": "ABC Suppliers Pvt Ltd",
+            "mobile": "9988776655",
+            "gstin": "29AABCS1234A1ZA",
+            "city": "Bangalore",
+            "walletBalance": -125000,
+            "icon": "storefront",
+            "color": "green",
+            "category": "vendors"
+        },
+        {
+            "id": "vend-2",
+            "title": "XYZ Trading Co",
+            "mobile": "9988776656",
+            "gstin": "27AABCS5678B2ZB",
+            "city": "Mumbai",
+            "walletBalance": -85000,
+            "icon": "storefront",
+            "color": "green",
+            "category": "vendors"
+        },
+        {
+            "id": "vend-3",
+            "title": "Global Electronics",
+            "mobile": "9988776657",
+            "gstin": "07AABCS9012C3ZC",
+            "city": "Delhi",
+            "walletBalance": 0,
+            "icon": "storefront",
+            "color": "green",
+            "category": "vendors"
+        },
+        {
+            "id": "vend-4",
+            "title": "Tech Solutions India",
+            "mobile": "9988776658",
+            "gstin": "24AABCS3456D4ZD",
+            "city": "Pune",
+            "walletBalance": -45000,
+            "icon": "storefront",
+            "color": "green",
+            "category": "vendors"
+        },
+        {
+            "id": "vend-5",
+            "title": "Prime Distributors",
+            "mobile": "9988776659",
+            "gstin": "36AABCS7890E5ZE",
+            "city": "Hyderabad",
+            "walletBalance": -200000,
+            "icon": "storefront",
+            "color": "green",
+            "category": "vendors"
+        },
+        {
+            "id": "vend-6",
+            "title": "Metro Wholesale",
+            "mobile": "9988776660",
+            "gstin": "09AABCS2345F6ZF",
+            "city": "Chennai",
+            "walletBalance": -15000,
+            "icon": "storefront",
+            "color": "green",
+            "category": "vendors"
+        },
+        {
+            "id": "vend-7",
+            "title": "Sunrise Imports",
+            "mobile": "9988776661",
+            "gstin": "27AABCS6789G7ZG",
+            "city": "Mumbai",
+            "walletBalance": -320000,
+            "icon": "storefront",
+            "color": "green",
+            "category": "vendors"
+        },
+        {
+            "id": "vend-8",
+            "title": "Digital World Traders",
+            "mobile": "9988776662",
+            "gstin": "29AABCS0123H8ZH",
+            "city": "Bangalore",
+            "walletBalance": -78000,
+            "icon": "storefront",
+            "color": "green",
+            "category": "vendors"
+        }
+    ],
+    "ledgers": [
+        {
+            "id": "led-1",
+            "title": "Cash Account",
+            "group": "Cash-in-Hand",
+            "walletBalance": 150000,
+            "icon": "account_balance_wallet",
+            "color": "orange",
+            "category": "ledgers"
+        },
+        {
+            "id": "led-2",
+            "title": "HDFC Bank Account",
+            "group": "Bank Accounts",
+            "walletBalance": 2500000,
+            "icon": "account_balance",
+            "color": "orange",
+            "category": "ledgers"
+        },
+        {
+            "id": "led-3",
+            "title": "ICICI Bank Account",
+            "group": "Bank Accounts",
+            "walletBalance": 1800000,
+            "icon": "account_balance",
+            "color": "orange",
+            "category": "ledgers"
+        },
+        {
+            "id": "led-4",
+            "title": "Sales Account",
+            "group": "Sales Accounts",
+            "walletBalance": 5200000,
+            "icon": "trending_up",
+            "color": "green",
+            "category": "ledgers"
+        },
+        {
+            "id": "led-5",
+            "title": "Purchase Account",
+            "group": "Purchase Accounts",
+            "walletBalance": -3500000,
+            "icon": "trending_down",
+            "color": "red",
+            "category": "ledgers"
+        },
+        {
+            "id": "led-6",
+            "title": "Rent Expense",
+            "group": "Indirect Expenses",
+            "walletBalance": -120000,
+            "icon": "home",
+            "color": "red",
+            "category": "ledgers"
+        },
+        {
+            "id": "led-7",
+            "title": "Salary Expense",
+            "group": "Indirect Expenses",
+            "walletBalance": -450000,
+            "icon": "payments",
+            "color": "red",
+            "category": "ledgers"
+        },
+        {
+            "id": "led-8",
+            "title": "GST Input",
+            "group": "Duties & Taxes",
+            "walletBalance": 85000,
+            "icon": "receipt",
+            "color": "blue",
+            "category": "ledgers"
+        },
+        {
+            "id": "led-9",
+            "title": "GST Output",
+            "group": "Duties & Taxes",
+            "walletBalance": -125000,
+            "icon": "receipt_long",
+            "color": "blue",
+            "category": "ledgers"
+        },
+        {
+            "id": "led-10",
+            "title": "Capital Account",
+            "group": "Capital Account",
+            "walletBalance": 1000000,
+            "icon": "account_balance",
+            "color": "purple",
+            "category": "ledgers"
+        },
+        {
+            "id": "led-11",
+            "title": "SBI Bank Account",
+            "group": "Bank Accounts",
+            "walletBalance": 980000,
+            "icon": "account_balance",
+            "color": "orange",
+            "category": "ledgers"
+        },
+        {
+            "id": "led-12",
+            "title": "Electricity Expense",
+            "group": "Indirect Expenses",
+            "walletBalance": -35000,
+            "icon": "bolt",
+            "color": "red",
+            "category": "ledgers"
+        }
+    ]
+}

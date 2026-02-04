@@ -1,0 +1,123 @@
+// ============================================
+// SIXORBIT UI - DISPLAY UTILITIES
+// Display property classes
+// ============================================
+
+@use '../abstracts' as *;
+
+// Display values
+$displays: (
+  none,
+  inline,
+  inline-block,
+  block,
+  grid,
+  inline-grid,
+  table,
+  table-row,
+  table-cell,
+  flex,
+  inline-flex,
+  contents
+);
+
+// Breakpoints
+$breakpoints: (
+  sm: 576px,
+  md: 768px,
+  lg: 1024px,
+  xl: 1200px,
+  xxl: 1400px
+);
+
+// ============================================
+// BASE DISPLAY CLASSES
+// ============================================
+
+@each $display in $displays {
+  .#{$so-prefix}d-#{$display} {
+    display: $display !important;
+  }
+}
+
+// ============================================
+// RESPONSIVE DISPLAY CLASSES
+// ============================================
+
+@each $breakpoint, $min-width in $breakpoints {
+  @media (min-width: $min-width) {
+    @each $display in $displays {
+      .#{$so-prefix}d-#{$breakpoint}-#{$display} {
+        display: $display !important;
+      }
+    }
+  }
+}
+
+// ============================================
+// PRINT DISPLAY CLASSES
+// ============================================
+
+@media print {
+  @each $display in $displays {
+    .#{$so-prefix}d-print-#{$display} {
+      display: $display !important;
+    }
+  }
+}
+
+// ============================================
+// VISIBILITY UTILITIES
+// ============================================
+
+.#{$so-prefix}visible {
+  visibility: visible !important;
+}
+
+.#{$so-prefix}invisible {
+  visibility: hidden !important;
+}
+
+// Visually hidden but accessible to screen readers
+.#{$so-prefix}visually-hidden,
+.#{$so-prefix}sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+// Visually hidden unless focused
+.#{$so-prefix}visually-hidden-focusable:not(:focus):not(:focus-within) {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+// ============================================
+// RESPONSIVE VISIBILITY
+// ============================================
+
+// Hide on specific breakpoints and up
+@each $breakpoint, $min-width in $breakpoints {
+  @media (min-width: $min-width) {
+    .#{$so-prefix}visible-#{$breakpoint} {
+      visibility: visible !important;
+    }
+
+    .#{$so-prefix}invisible-#{$breakpoint} {
+      visibility: hidden !important;
+    }
+  }
+}

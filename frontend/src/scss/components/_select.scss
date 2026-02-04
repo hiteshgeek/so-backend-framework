@@ -1,0 +1,894 @@
+// ============================================
+// SIXORBIT UI - CUSTOM SELECT COMPONENT
+// Modern, feature-rich select replacement
+// ============================================
+
+@use 'sass:color';
+@use '../abstracts' as *;
+
+// ============================================
+// BASE SELECT CONTAINER
+// ============================================
+
+.#{$so-prefix}select {
+  position: relative;
+  display: block;
+  width: 100%;
+
+  // Disabled state
+  &.#{$so-prefix}select-disabled {
+    opacity: 0.6;
+    pointer-events: none;
+
+    .#{$so-prefix}select-trigger {
+      cursor: not-allowed;
+      background-color: css-var('form-disabled-bg');
+    }
+  }
+
+  // Open state
+  &.#{$so-prefix}select-open {
+    .#{$so-prefix}select-dropdown {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .#{$so-prefix}select-arrow {
+      transform: translateY(-50%) rotate(180deg);
+    }
+  }
+
+  // Loading state
+  &.#{$so-prefix}select-loading {
+    .#{$so-prefix}select-arrow {
+      animation: so-select-spin 1s linear infinite;
+    }
+  }
+}
+
+@keyframes so-select-spin {
+  from { transform: translateY(-50%) rotate(0deg); }
+  to { transform: translateY(-50%) rotate(360deg); }
+}
+
+// ============================================
+// TRIGGER (Clickable area)
+// ============================================
+
+.#{$so-prefix}select-trigger {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: spacing('2');
+  width: 100%;
+  min-height: $so-form-height-md;
+  padding: spacing('2') spacing('10') spacing('2') spacing('3');
+  font-size: font-size('base');
+  font-family: inherit;
+  color: css-var('form-text');
+  background-color: css-var('form-bg');
+  border: 1px solid css-var('form-border');
+  border-radius: radius('base');
+  box-sizing: border-box;
+  cursor: pointer;
+  outline: none;
+  transition: border-color $so-transition-base, box-shadow $so-transition-base;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+
+  &:hover:not([disabled]) {
+    border-color: css-var('form-border-hover');
+  }
+
+  &:focus {
+    border-color: css-var('form-border-focus');
+    box-shadow: 0 0 0 3px alpha($so-primary, 0.1);
+  }
+
+  @include dark-mode {
+    &:focus {
+      box-shadow: 0 0 0 3px alpha($so-purple, 0.15);
+    }
+  }
+}
+
+// Value display
+.#{$so-prefix}select-value {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// Placeholder
+.#{$so-prefix}select-placeholder {
+  flex: 1;
+  color: css-var('text-muted');
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// Arrow icon
+.#{$so-prefix}select-arrow {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: css-var('text-secondary');
+  pointer-events: none;
+  transition: transform $so-transition-base;
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  box-shadow: none !important;
+  outline: none !important;
+
+  .material-icons {
+    font-size: 20px;
+    line-height: 1;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    background: transparent !important;
+  }
+}
+
+// Clear button
+.#{$so-prefix}select-clear {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  margin-right: spacing('1');
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  color: css-var('text-secondary');
+  transition: background $so-transition-base, color $so-transition-base;
+
+  &:hover {
+    background: css-var('card-hover-bg');
+    color: css-var('text-primary');
+  }
+
+  .material-icons {
+    font-size: 16px;
+  }
+}
+
+// ============================================
+// CHIPS (Multi-select display)
+// ============================================
+
+.#{$so-prefix}select-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: spacing('1');
+  flex: 1;
+  min-height: 24px;
+  align-items: center;
+}
+
+.#{$so-prefix}select-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  font-size: font-size('xs');
+  color: css-var('text-primary');
+  background: css-var('card-hover-bg');
+  border-radius: radius('sm');
+  max-width: 150px;
+
+  span:first-child {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+.#{$so-prefix}select-chip-remove {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  color: css-var('text-secondary');
+  transition: background $so-transition-base, color $so-transition-base;
+
+  &:hover {
+    background: alpha($so-danger, 0.15);
+    color: css-var('accent-danger');
+  }
+
+  .material-icons {
+    font-size: 14px;
+  }
+}
+
+// Overflow indicator for chips-overflow mode
+.#{$so-prefix}select-overflow {
+  font-size: font-size('xs');
+  color: css-var('text-secondary');
+  white-space: nowrap;
+}
+
+// ============================================
+// DROPDOWN PANEL
+// ============================================
+
+.#{$so-prefix}select-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: z-index('dropdown');
+  margin-top: 4px;
+  background: css-var('dropdown-bg');
+  border: 1px solid css-var('dropdown-border');
+  border-radius: radius('base');
+  box-shadow: shadow('lg');
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-8px);
+  transition: opacity 0.15s ease, transform 0.15s ease, visibility 0.15s;
+
+  @include dark-mode {
+    box-shadow: shadow-dark('lg');
+  }
+}
+
+// ============================================
+// SEARCH INPUT
+// ============================================
+
+.#{$so-prefix}select-search {
+  display: flex;
+  align-items: center;
+  padding: spacing('2') spacing('3');
+  border-bottom: 1px solid css-var('dropdown-divider');
+
+  .material-icons {
+    color: css-var('text-secondary');
+    font-size: 20px;
+    margin-right: spacing('2');
+  }
+}
+
+.#{$so-prefix}select-search-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: font-size('sm');
+  color: css-var('form-text');
+
+  &::placeholder {
+    color: css-var('text-muted');
+  }
+}
+
+// ============================================
+// ACTIONS BAR (Select All / None)
+// ============================================
+
+.#{$so-prefix}select-actions {
+  display: flex;
+  align-items: center;
+  gap: spacing('2');
+  padding: spacing('2') spacing('3');
+  border-bottom: 1px solid css-var('dropdown-divider');
+  font-size: font-size('xs');
+}
+
+.#{$so-prefix}select-action {
+  padding: 0;
+  background: none;
+  border: none;
+  color: css-var('accent-primary');
+  cursor: pointer;
+  font-size: inherit;
+  font-weight: font-weight('medium');
+  transition: color $so-transition-base;
+
+  &:hover {
+    color: color.adjust($so-primary, $lightness: -10%);
+    text-decoration: underline;
+  }
+
+  @include dark-mode {
+    &:hover {
+      color: color.adjust($so-purple, $lightness: 10%);
+    }
+  }
+}
+
+.#{$so-prefix}select-action-separator {
+  color: css-var('text-muted');
+}
+
+// ============================================
+// OPTIONS LIST
+// ============================================
+
+.#{$so-prefix}select-options {
+  max-height: 280px;
+  overflow-y: auto;
+  padding: spacing('1') 0;
+
+  // Scrollbar styling
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: css-var('scrollbar-thumb');
+    border-radius: 3px;
+  }
+}
+
+// No results message
+.#{$so-prefix}select-no-results {
+  padding: spacing('3');
+  text-align: center;
+  color: css-var('text-muted');
+  font-size: font-size('sm');
+}
+
+// Loading message
+.#{$so-prefix}select-loading-text {
+  padding: spacing('3');
+  text-align: center;
+  color: css-var('text-secondary');
+  font-size: font-size('sm');
+}
+
+// ============================================
+// OPTION GROUPS
+// ============================================
+
+.#{$so-prefix}select-group {
+  &:not(:first-child) {
+    margin-top: spacing('1');
+    padding-top: spacing('1');
+
+    // Separator line before each group (except first)
+    &::before {
+      content: '';
+      display: block;
+      height: 1px;
+      margin: 0 spacing('3') spacing('1');
+      background: css-var('dropdown-divider');
+    }
+  }
+}
+
+.#{$so-prefix}select-group-label {
+  padding: spacing('2') spacing('3');
+  font-size: font-size('xs');
+  font-weight: font-weight('semibold');
+  color: css-var('text-secondary');
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background: css-var('card-hover-bg');
+  margin: 0 spacing('1');
+  border-radius: radius('sm');
+}
+
+// ============================================
+// INDIVIDUAL OPTION
+// ============================================
+
+.#{$so-prefix}select-option {
+  display: flex;
+  align-items: center;
+  gap: spacing('2');
+  padding: spacing('2') spacing('3');
+  cursor: pointer;
+  transition: background $so-transition-fast;
+
+  &:hover:not(.#{$so-prefix}disabled) {
+    background: css-var('dropdown-item-hover');
+  }
+
+  // Disabled option
+  &.#{$so-prefix}disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  // Focused (keyboard navigation)
+  &.#{$so-prefix}focused {
+    background: css-var('dropdown-item-hover');
+  }
+}
+
+// Option icon
+.#{$so-prefix}select-option-icon {
+  flex-shrink: 0;
+  color: css-var('text-secondary');
+
+  .material-icons {
+    font-size: 20px;
+  }
+}
+
+// Option content wrapper
+.#{$so-prefix}select-option-content {
+  flex: 1;
+  min-width: 0;
+}
+
+// Option text
+.#{$so-prefix}select-option-text {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// Option description
+.#{$so-prefix}select-option-desc {
+  display: block;
+  font-size: font-size('xs');
+  color: css-var('text-secondary');
+  margin-top: 2px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// Selection indicator (check icon)
+.#{$so-prefix}select-option-check {
+  flex-shrink: 0;
+  margin-left: auto; // Push to right
+  opacity: 0;
+  color: css-var('dropdown-item-active-text');
+  transition: opacity $so-transition-fast;
+
+  .material-icons {
+    font-size: 20px;
+  }
+}
+
+// ============================================
+// SELECTION STYLES
+// ============================================
+
+// Style: icon-bg (default) - Background + check icon
+.#{$so-prefix}select-option.#{$so-prefix}selected,
+.#{$so-prefix}select-style-icon-bg .#{$so-prefix}select-option.#{$so-prefix}selected {
+  background: css-var('dropdown-item-active');
+  color: css-var('dropdown-item-active-text');
+  font-weight: font-weight('medium');
+
+  .#{$so-prefix}select-option-check {
+    opacity: 1;
+  }
+}
+
+// Style: icon - Check icon only (no background)
+.#{$so-prefix}select-style-icon .#{$so-prefix}select-option.#{$so-prefix}selected {
+  background: transparent;
+  color: css-var('dropdown-item-active-text');
+  font-weight: font-weight('medium');
+
+  .#{$so-prefix}select-option-check {
+    opacity: 1;
+  }
+
+  &:hover {
+    background: css-var('dropdown-item-hover');
+  }
+}
+
+// Style: bg - Background only (no icon)
+.#{$so-prefix}select-style-bg .#{$so-prefix}select-option.#{$so-prefix}selected {
+  background: css-var('dropdown-item-active');
+  color: css-var('dropdown-item-active-text');
+  font-weight: font-weight('medium');
+
+  .#{$so-prefix}select-option-check {
+    display: none;
+  }
+}
+
+// Style: checkbox - Checkbox box (no background)
+.#{$so-prefix}select-style-checkbox {
+  .#{$so-prefix}select-option {
+    .#{$so-prefix}checkbox-box {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+      min-width: 20px;
+      border: 2px solid css-var('form-border');
+      border-radius: radius('sm');
+      background: css-var('card-bg');
+      margin-right: spacing('1');
+      transition: all $so-transition-base;
+      flex-shrink: 0;
+
+      .material-icons {
+        font-size: 16px;
+        color: $so-white;
+        opacity: 0;
+        transform: scale(0);
+        transition: all $so-transition-base;
+        line-height: 1;
+      }
+    }
+
+    &:hover:not(.#{$so-prefix}disabled) .#{$so-prefix}checkbox-box {
+      border-color: css-var('accent-primary');
+    }
+
+    // Override: no background on selected, only checkbox indicator
+    &.#{$so-prefix}selected {
+      background: transparent;
+      color: inherit;
+      font-weight: inherit;
+
+      .#{$so-prefix}checkbox-box {
+        background: css-var('accent-primary');
+        border-color: css-var('accent-primary');
+
+        .material-icons {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+    }
+
+    // Hide the check icon since we use checkbox
+    .#{$so-prefix}select-option-check {
+      display: none;
+    }
+  }
+}
+
+// Style: checkbox-bg - Checkbox with background
+.#{$so-prefix}select-style-checkbox-bg {
+  .#{$so-prefix}select-option {
+    .#{$so-prefix}checkbox-box {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+      min-width: 20px;
+      border: 2px solid css-var('form-border');
+      border-radius: radius('sm');
+      background: css-var('card-bg');
+      margin-right: spacing('1');
+      transition: all $so-transition-base;
+      flex-shrink: 0;
+
+      .material-icons {
+        font-size: 16px;
+        color: $so-white;
+        opacity: 0;
+        transform: scale(0);
+        transition: all $so-transition-base;
+        line-height: 1;
+      }
+    }
+
+    &:hover:not(.#{$so-prefix}disabled) .#{$so-prefix}checkbox-box {
+      border-color: css-var('accent-primary');
+    }
+
+    &.#{$so-prefix}selected {
+      background: css-var('dropdown-item-active');
+      color: css-var('dropdown-item-active-text');
+      font-weight: font-weight('medium');
+
+      .#{$so-prefix}checkbox-box {
+        background: css-var('accent-primary');
+        border-color: css-var('accent-primary');
+
+        .material-icons {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+    }
+
+    // Hide the check icon since we use checkbox
+    .#{$so-prefix}select-option-check {
+      display: none;
+    }
+  }
+}
+
+// Style: radio - Radio button (for single select)
+// Uses existing .so-radio-circle class from _checkboxes.scss
+.#{$so-prefix}select-style-radio {
+  .#{$so-prefix}select-option {
+    // Override margin for select context
+    .#{$so-prefix}radio-circle {
+      margin-top: 0;
+      margin-right: spacing('2');
+    }
+
+    &:hover:not(.#{$so-prefix}disabled) .#{$so-prefix}radio-circle {
+      border-color: css-var('accent-primary');
+    }
+
+    // Override: no background on selected, only radio indicator
+    &.#{$so-prefix}selected {
+      background: transparent;
+      color: inherit;
+      font-weight: inherit;
+
+      .#{$so-prefix}radio-circle {
+        border-color: css-var('accent-primary');
+
+        &::after {
+          transform: scale(1);
+        }
+      }
+    }
+
+    // Hide the check icon since we use radio
+    .#{$so-prefix}select-option-check {
+      display: none;
+    }
+  }
+}
+
+// Style: radio-bg - Radio button with background highlight
+// Uses existing .so-radio-circle class from _checkboxes.scss
+.#{$so-prefix}select-style-radio-bg {
+  .#{$so-prefix}select-option {
+    // Override margin for select context
+    .#{$so-prefix}radio-circle {
+      margin-top: 0;
+      margin-right: spacing('2');
+    }
+
+    &:hover:not(.#{$so-prefix}disabled) .#{$so-prefix}radio-circle {
+      border-color: css-var('accent-primary');
+    }
+
+    &.#{$so-prefix}selected {
+      background: css-var('dropdown-item-active');
+      color: css-var('dropdown-item-active-text');
+      font-weight: font-weight('medium');
+
+      .#{$so-prefix}radio-circle {
+        border-color: css-var('accent-primary');
+
+        &::after {
+          transform: scale(1);
+        }
+      }
+    }
+
+    // Hide the check icon since we use radio
+    .#{$so-prefix}select-option-check {
+      display: none;
+    }
+  }
+}
+
+// ============================================
+// SIZE VARIANTS
+// ============================================
+
+// Small
+.#{$so-prefix}select-sm {
+  .#{$so-prefix}select-trigger {
+    min-height: $so-form-height-sm;
+    padding: spacing('1') spacing('2') + 2px;
+    padding-right: 32px;
+    font-size: $so-form-font-size-sm;
+  }
+
+  .#{$so-prefix}select-arrow {
+    right: 8px;
+
+    .material-icons {
+      font-size: 18px;
+    }
+  }
+
+  .#{$so-prefix}select-chip {
+    padding: 1px 6px;
+    font-size: font-size('xs') - 0.0625rem;
+  }
+
+  .#{$so-prefix}select-dropdown {
+    font-size: $so-form-font-size-sm;
+  }
+
+  .#{$so-prefix}select-option {
+    padding: spacing('1') + 2px spacing('2') + 2px;
+  }
+}
+
+// Large
+.#{$so-prefix}select-lg {
+  .#{$so-prefix}select-trigger {
+    min-height: $so-form-height-lg;
+    padding: spacing('3') spacing('4');
+    padding-right: 44px;
+    font-size: $so-form-font-size-lg;
+  }
+
+  .#{$so-prefix}select-arrow {
+    right: 14px;
+
+    .material-icons {
+      font-size: 24px;
+    }
+  }
+
+  .#{$so-prefix}select-chip {
+    padding: 4px 10px;
+    font-size: font-size('sm');
+  }
+
+  .#{$so-prefix}select-dropdown {
+    font-size: $so-form-font-size-lg;
+  }
+
+  .#{$so-prefix}select-option {
+    padding: spacing('3') spacing('4');
+  }
+}
+
+// ============================================
+// CONTEXTUAL VARIANTS
+// ============================================
+
+@each $color, $value in (
+  'primary': $so-primary,
+  'secondary': $so-secondary,
+  'success': $so-success,
+  'danger': $so-danger,
+  'warning': $so-warning,
+  'info': $so-info,
+  'light': $so-grey-400,
+  'dark': $so-grey-900
+) {
+  .#{$so-prefix}select-#{$color} {
+    .#{$so-prefix}select-trigger {
+      border-color: $value;
+
+      &:focus {
+        border-color: $value;
+        box-shadow: 0 0 0 3px alpha($value, 0.2);
+      }
+    }
+
+    // Use contextual color for selection highlight
+    .#{$so-prefix}select-option.#{$so-prefix}selected {
+      background: alpha($value, 0.1);
+      color: $value;
+      font-weight: font-weight('medium');
+
+      .#{$so-prefix}select-option-check {
+        color: $value;
+      }
+    }
+
+    &.#{$so-prefix}select-style-checkbox,
+    &.#{$so-prefix}select-style-checkbox-bg {
+      .#{$so-prefix}select-option.#{$so-prefix}selected .#{$so-prefix}checkbox-box {
+        background: $value;
+        border-color: $value;
+      }
+    }
+
+    &.#{$so-prefix}select-style-radio,
+    &.#{$so-prefix}select-style-radio-bg {
+      .#{$so-prefix}select-option.#{$so-prefix}selected .#{$so-prefix}radio-circle {
+        border-color: $value;
+
+        &::after {
+          background: $value;
+        }
+      }
+    }
+  }
+}
+
+// ============================================
+// DISPLAY MODE MODIFIERS
+// ============================================
+
+// Text mode is default - no special styles needed
+
+// Chips mode - allow chips to wrap and scroll
+.#{$so-prefix}select-display-chips {
+  .#{$so-prefix}select-trigger {
+    flex-wrap: wrap;
+    height: auto;
+    min-height: $so-form-height-md;
+    max-height: 120px;
+    overflow-y: auto;
+    align-content: flex-start;
+  }
+
+  .#{$so-prefix}select-chips {
+    flex-wrap: wrap;
+  }
+}
+
+// Chips overflow mode - single line with overflow indicator
+.#{$so-prefix}select-display-chips-overflow {
+  .#{$so-prefix}select-chips {
+    flex-wrap: nowrap;
+    overflow: hidden;
+  }
+
+  .#{$so-prefix}select-chip {
+    flex-shrink: 0;
+  }
+}
+
+// ============================================
+// NOWRAP MODIFIER
+// Prevents text wrapping in dropdown options
+// ============================================
+
+.#{$so-prefix}select-nowrap {
+  .#{$so-prefix}select-dropdown {
+    width: max-content;
+    min-width: 100%;
+    max-width: none;
+  }
+
+  .#{$so-prefix}select-option {
+    white-space: nowrap;
+  }
+
+  .#{$so-prefix}select-option-content,
+  .#{$so-prefix}select-option-text {
+    white-space: nowrap;
+    overflow: visible;
+    text-overflow: clip;
+  }
+
+  .#{$so-prefix}select-group-label {
+    white-space: nowrap;
+  }
+}
+
+// ============================================
+// NATIVE SELECT ENHANCEMENT
+// Hidden native select when enhanced
+// ============================================
+
+select.#{$so-prefix}select-enhanced {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}

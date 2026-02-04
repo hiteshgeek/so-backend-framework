@@ -1,0 +1,25 @@
+{
+  "css": {
+    "sixorbit-base": "css/sixorbit-base.58ceb5f5.css",
+    "sixorbit-full": "css/sixorbit-full.df298719.css",
+    "ui-engine": "css/ui-engine.6fbbe3cc.css"
+  },
+  "js": {
+    "sixorbit-core": "js/sixorbit-core.03edea15.js",
+    "sixorbit-full": "js/sixorbit-full.ba1779a8.js",
+    "ui-engine": "js/ui-engine.351020ae.js"
+  },
+  "pages": {
+    "global": {
+      "css": "pages/global/global.3a991e40.css",
+      "js": "pages/global/global.01fc8072.js"
+    },
+    "auth": {
+      "css": "pages/auth/auth.84cd02c5.css",
+      "js": "pages/auth/auth.5d3c26bb.js"
+    }
+  },
+  "generated": "2026-02-04T06:18:31.368Z",
+  "mode": "development",
+  "version": "1.0.0"
+}

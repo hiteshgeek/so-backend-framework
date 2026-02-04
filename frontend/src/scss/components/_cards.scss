@@ -1,0 +1,869 @@
+// ============================================
+// SIXORBIT UI - CARDS
+// Card container components
+// ============================================
+
+@use "../abstracts" as *;
+
+// ============================================
+// BASE CARD
+// ============================================
+
+.#{$so-prefix}card {
+  @include card;
+  max-width: 100%;
+  min-width: 0; // Allow flex shrinking
+}
+
+// ============================================
+// CARD SECTIONS
+// ============================================
+
+.#{$so-prefix}card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: spacing("3");
+  padding: spacing("4");
+  border-bottom: 1px solid css-var("border-color");
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.#{$so-prefix}card-title {
+  font-size: font-size("md");
+  font-weight: font-weight("semibold");
+  color: css-var("text-heading");
+  margin: 0;
+}
+
+.#{$so-prefix}card-subtitle {
+  font-size: font-size("sm");
+  color: css-var("text-secondary");
+  margin-top: spacing("1");
+}
+
+.#{$so-prefix}card-body {
+  flex: 1 1 auto; // Grow to fill available space, pushing footer to bottom
+  padding: spacing("4");
+  min-width: 0; // Allow content to shrink and not overflow
+  max-width: 100%;
+}
+
+.#{$so-prefix}card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: spacing("2");
+  padding: spacing("3") spacing("4");
+  border-top: 1px solid css-var("border-color");
+  background: transparent;
+  border-radius: 0 0 radius("lg") radius("lg");
+  margin-top: auto; // Ensure footer sticks to bottom
+
+  &:first-child {
+    border-top: none;
+    border-radius: radius("lg") radius("lg") 0 0;
+  }
+}
+
+// ============================================
+// CARD VARIANTS
+// ============================================
+
+// Bordered Card (with border, no shadow)
+.#{$so-prefix}card-bordered {
+  border: 1px solid css-var("border-color");
+  box-shadow: none;
+}
+
+// Padded Card (adds padding directly to card)
+.#{$so-prefix}card-padded {
+  padding: spacing("4");
+}
+
+// Flat Card (no shadow, no border)
+.#{$so-prefix}card-flat {
+  box-shadow: none;
+  border: none;
+}
+
+// Elevated Card (more shadow)
+.#{$so-prefix}card-elevated {
+  box-shadow: css-var("shadow-lg");
+}
+
+// Clickable Card
+.#{$so-prefix}card-clickable {
+  cursor: pointer;
+  transition: all $so-transition-normal;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: css-var("shadow-lg");
+  }
+}
+
+// ============================================
+// CARD COLORS
+// ============================================
+
+.#{$so-prefix}card-primary {
+  background: css-var("accent-primary");
+  color: $so-white;
+
+  .#{$so-prefix}card-title,
+  .#{$so-prefix}card-subtitle {
+    color: $so-white;
+  }
+
+  .#{$so-prefix}card-subtitle {
+    opacity: 0.85;
+  }
+}
+
+.#{$so-prefix}card-success {
+  background: css-var("accent-success");
+  color: $so-white;
+
+  .#{$so-prefix}card-title,
+  .#{$so-prefix}card-subtitle {
+    color: $so-white;
+  }
+}
+
+.#{$so-prefix}card-danger {
+  background: css-var("accent-danger");
+  color: $so-white;
+
+  .#{$so-prefix}card-title,
+  .#{$so-prefix}card-subtitle {
+    color: $so-white;
+  }
+}
+
+.#{$so-prefix}card-warning {
+  background: css-var("accent-warning");
+  color: $so-grey-900;
+}
+
+// ============================================
+// CARD WITH IMAGE
+// ============================================
+
+.#{$so-prefix}card-img-top {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-radius: radius("lg") radius("lg") 0 0;
+}
+
+.#{$so-prefix}card-img-bottom {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-radius: 0 0 radius("lg") radius("lg");
+}
+
+// Card with image overlay - container
+.#{$so-prefix}card-has-overlay {
+  position: relative;
+  overflow: hidden;
+
+  > .#{$so-prefix}card-img {
+    display: block;
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    border-radius: radius("lg");
+  }
+
+  > .#{$so-prefix}card-overlay {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    padding: spacing("4");
+    background: linear-gradient(
+      to top,
+      rgba(0, 0, 0, 0.7) 0%,
+      rgba(0, 0, 0, 0.3) 50%,
+      transparent 100%
+    );
+    color: $so-white;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    border-radius: radius("lg");
+
+    .#{$so-prefix}card-title,
+    .#{$so-prefix}card-subtitle,
+    h4,
+    h5,
+    h6,
+    p {
+      color: $so-white;
+    }
+
+    .#{$so-prefix}card-body {
+      padding: 0;
+    }
+  }
+}
+
+// Legacy class name support
+.#{$so-prefix}card-img-overlay {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding: spacing("4");
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+  color: $so-white;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  border-radius: radius("lg");
+}
+
+// ============================================
+// CARD GROUP
+// ============================================
+
+.#{$so-prefix}card-group {
+  display: flex;
+  gap: spacing("4");
+
+  .#{$so-prefix}card {
+    flex: 1;
+  }
+}
+
+// ============================================
+// STATS CARD
+// ============================================
+
+.#{$so-prefix}stats-card {
+  @include card;
+  padding: spacing("4");
+
+  .#{$so-prefix}stats-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: radius("lg");
+    background: alpha($so-primary, 0.1);
+    color: css-var("accent-primary");
+    margin-bottom: spacing("3");
+
+    .material-icons {
+      font-size: 24px;
+    }
+  }
+
+  .#{$so-prefix}stats-value {
+    font-size: font-size("3xl");
+    font-weight: font-weight("semibold");
+    color: css-var("text-heading");
+    line-height: line-height("tight");
+  }
+
+  .#{$so-prefix}stats-label {
+    font-size: font-size("sm");
+    color: css-var("text-secondary");
+    margin-top: spacing("1");
+  }
+
+  .#{$so-prefix}stats-change {
+    display: inline-flex;
+    align-items: center;
+    gap: spacing("1");
+    font-size: font-size("xs");
+    margin-top: spacing("2");
+
+    &.positive {
+      color: css-var("accent-success");
+    }
+
+    &.negative {
+      color: css-var("accent-danger");
+    }
+
+    .material-icons {
+      font-size: 16px;
+    }
+  }
+}
+
+// Stats card color variants
+.#{$so-prefix}stats-card.success .#{$so-prefix}stats-icon {
+  background: alpha($so-success, 0.1);
+  color: css-var("accent-success");
+}
+
+.#{$so-prefix}stats-card.danger .#{$so-prefix}stats-icon {
+  background: alpha($so-danger, 0.1);
+  color: css-var("accent-danger");
+}
+
+.#{$so-prefix}stats-card.warning .#{$so-prefix}stats-icon {
+  background: alpha($so-warning, 0.1);
+  color: css-var("accent-warning");
+}
+
+// ============================================
+// PROFILE CARD
+// ============================================
+
+.#{$so-prefix}profile-card {
+  @include card;
+  text-align: center;
+  padding: spacing("6") spacing("4");
+
+  .#{$so-prefix}profile-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: radius("full");
+    object-fit: cover;
+    margin-bottom: spacing("3");
+  }
+
+  .#{$so-prefix}profile-name {
+    font-size: font-size("lg");
+    font-weight: font-weight("semibold");
+    color: css-var("text-heading");
+    margin-bottom: spacing("1");
+  }
+
+  .#{$so-prefix}profile-role {
+    font-size: font-size("sm");
+    color: css-var("text-secondary");
+    margin-bottom: spacing("4");
+  }
+
+  .#{$so-prefix}profile-stats {
+    display: flex;
+    justify-content: center;
+    gap: spacing("6");
+    padding-top: spacing("4");
+    border-top: 1px solid css-var("border-color");
+  }
+
+  .#{$so-prefix}profile-stat {
+    text-align: center;
+
+    .value {
+      font-size: font-size("xl");
+      font-weight: font-weight("semibold");
+      color: css-var("text-heading");
+    }
+
+    .label {
+      font-size: font-size("xs");
+      color: css-var("text-muted");
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+  }
+}
+
+// ============================================
+// CARD SPACING MODES
+// ============================================
+
+// Compact Card - minimal padding for dense layouts
+.#{$so-prefix}card-compact {
+  .#{$so-prefix}card-header {
+    padding: spacing("2") spacing("3");
+    gap: spacing("2");
+  }
+
+  .#{$so-prefix}card-body {
+    padding: spacing("3");
+  }
+
+  .#{$so-prefix}card-footer {
+    padding: spacing("2") spacing("3");
+  }
+}
+
+// Spacious Card - extra breathing room
+.#{$so-prefix}card-spacious {
+  .#{$so-prefix}card-header {
+    padding: spacing("5") spacing("6");
+    gap: spacing("4");
+  }
+
+  .#{$so-prefix}card-body {
+    padding: spacing("6");
+  }
+
+  .#{$so-prefix}card-footer {
+    padding: spacing("4") spacing("6");
+  }
+}
+
+// ============================================
+// CONTEXTUAL HEADER BACKGROUNDS
+// ============================================
+
+// Primary Header
+.#{$so-prefix}card-header-primary {
+  > .#{$so-prefix}card-header {
+    background: css-var("accent-primary");
+    border-bottom: none;
+    border-radius: radius("lg") radius("lg") 0 0;
+
+    .#{$so-prefix}card-title,
+    .#{$so-prefix}card-subtitle {
+      color: $so-white;
+    }
+
+    .#{$so-prefix}card-subtitle {
+      opacity: 0.85;
+    }
+  }
+}
+
+// Success Header
+.#{$so-prefix}card-header-success {
+  > .#{$so-prefix}card-header {
+    background: css-var("accent-success");
+    border-bottom: none;
+    border-radius: radius("lg") radius("lg") 0 0;
+
+    .#{$so-prefix}card-title,
+    .#{$so-prefix}card-subtitle {
+      color: $so-white;
+    }
+  }
+}
+
+// Danger Header
+.#{$so-prefix}card-header-danger {
+  > .#{$so-prefix}card-header {
+    background: css-var("accent-danger");
+    border-bottom: none;
+    border-radius: radius("lg") radius("lg") 0 0;
+
+    .#{$so-prefix}card-title,
+    .#{$so-prefix}card-subtitle {
+      color: $so-white;
+    }
+  }
+}
+
+// Warning Header
+.#{$so-prefix}card-header-warning {
+  > .#{$so-prefix}card-header {
+    background: css-var("accent-warning");
+    border-bottom: none;
+    border-radius: radius("lg") radius("lg") 0 0;
+
+    .#{$so-prefix}card-title,
+    .#{$so-prefix}card-subtitle {
+      color: $so-grey-900;
+    }
+  }
+}
+
+// Info Header
+.#{$so-prefix}card-header-info {
+  > .#{$so-prefix}card-header {
+    background: css-var("accent-info");
+    border-bottom: none;
+    border-radius: radius("lg") radius("lg") 0 0;
+
+    .#{$so-prefix}card-title,
+    .#{$so-prefix}card-subtitle {
+      color: $so-white;
+    }
+  }
+}
+
+// Secondary Header
+.#{$so-prefix}card-header-secondary {
+  > .#{$so-prefix}card-header {
+    background: css-var("accent-secondary");
+    border-bottom: none;
+    border-radius: radius("lg") radius("lg") 0 0;
+
+    .#{$so-prefix}card-title,
+    .#{$so-prefix}card-subtitle {
+      color: $so-white;
+    }
+  }
+}
+
+// Light Header
+.#{$so-prefix}card-header-light {
+  > .#{$so-prefix}card-header {
+    background: $so-grey-100;
+    border-bottom: none;
+    border-radius: radius("lg") radius("lg") 0 0;
+
+    .#{$so-prefix}card-title,
+    .#{$so-prefix}card-subtitle {
+      color: $so-grey-800;
+    }
+  }
+}
+
+// Dark Header
+.#{$so-prefix}card-header-dark {
+  > .#{$so-prefix}card-header {
+    background: $so-grey-900;
+    border-bottom: none;
+    border-radius: radius("lg") radius("lg") 0 0;
+
+    .#{$so-prefix}card-title,
+    .#{$so-prefix}card-subtitle {
+      color: $so-white;
+    }
+  }
+}
+
+// ============================================
+// SOFT/LIGHT CONTEXTUAL HEADERS
+// ============================================
+
+.#{$so-prefix}card-header-soft-primary {
+  > .#{$so-prefix}card-header {
+    background: alpha($so-primary, 0.1);
+    border-bottom-color: alpha($so-primary, 0.2);
+    border-radius: radius("lg") radius("lg") 0 0;
+
+    .#{$so-prefix}card-title {
+      color: css-var("accent-primary");
+    }
+  }
+}
+
+.#{$so-prefix}card-header-soft-success {
+  > .#{$so-prefix}card-header {
+    background: alpha($so-success, 0.1);
+    border-bottom-color: alpha($so-success, 0.2);
+    border-radius: radius("lg") radius("lg") 0 0;
+
+    .#{$so-prefix}card-title {
+      color: css-var("accent-success");
+    }
+  }
+}
+
+.#{$so-prefix}card-header-soft-danger {
+  > .#{$so-prefix}card-header {
+    background: alpha($so-danger, 0.1);
+    border-bottom-color: alpha($so-danger, 0.2);
+    border-radius: radius("lg") radius("lg") 0 0;
+
+    .#{$so-prefix}card-title {
+      color: css-var("accent-danger");
+    }
+  }
+}
+
+.#{$so-prefix}card-header-soft-warning {
+  > .#{$so-prefix}card-header {
+    background: alpha($so-warning, 0.1);
+    border-bottom-color: alpha($so-warning, 0.2);
+    border-radius: radius("lg") radius("lg") 0 0;
+
+    .#{$so-prefix}card-title {
+      color: css-var("accent-warning");
+    }
+  }
+}
+
+.#{$so-prefix}card-header-soft-info {
+  > .#{$so-prefix}card-header {
+    background: alpha($so-info, 0.1);
+    border-bottom-color: alpha($so-info, 0.2);
+    border-radius: radius("lg") radius("lg") 0 0;
+
+    .#{$so-prefix}card-title {
+      color: css-var("accent-info");
+    }
+  }
+}
+
+.#{$so-prefix}card-header-soft-secondary {
+  > .#{$so-prefix}card-header {
+    background: alpha($so-secondary, 0.1);
+    border-bottom-color: alpha($so-secondary, 0.2);
+    border-radius: radius("lg") radius("lg") 0 0;
+
+    .#{$so-prefix}card-title {
+      color: css-var("accent-secondary");
+    }
+  }
+}
+
+.#{$so-prefix}card-header-soft-light {
+  > .#{$so-prefix}card-header {
+    background: $so-grey-50;
+    border-bottom-color: $so-grey-200;
+    border-radius: radius("lg") radius("lg") 0 0;
+
+    .#{$so-prefix}card-title {
+      color: $so-grey-600;
+    }
+  }
+}
+
+.#{$so-prefix}card-header-soft-dark {
+  > .#{$so-prefix}card-header {
+    background: alpha($so-grey-900, 0.1);
+    border-bottom-color: alpha($so-grey-900, 0.2);
+    border-radius: radius("lg") radius("lg") 0 0;
+
+    .#{$so-prefix}card-title {
+      color: $so-grey-900;
+    }
+  }
+}
+
+// ============================================
+// BORDER COLOR VARIANTS
+// ============================================
+
+.#{$so-prefix}card-border-primary {
+  border: 1px solid css-var("accent-primary");
+  box-shadow: none;
+}
+
+.#{$so-prefix}card-border-success {
+  border: 1px solid css-var("accent-success");
+  box-shadow: none;
+}
+
+.#{$so-prefix}card-border-danger {
+  border: 1px solid css-var("accent-danger");
+  box-shadow: none;
+}
+
+.#{$so-prefix}card-border-warning {
+  border: 1px solid css-var("accent-warning");
+  box-shadow: none;
+}
+
+.#{$so-prefix}card-border-info {
+  border: 1px solid css-var("accent-info");
+  box-shadow: none;
+}
+
+.#{$so-prefix}card-border-secondary {
+  border: 1px solid css-var("accent-secondary");
+  box-shadow: none;
+}
+
+.#{$so-prefix}card-border-light {
+  border: 1px solid $so-grey-300;
+  box-shadow: none;
+}
+
+.#{$so-prefix}card-border-dark {
+  border: 1px solid $so-grey-900;
+  box-shadow: none;
+}
+
+// ============================================
+// HORIZONTAL CARD LAYOUT
+// ============================================
+
+.#{$so-prefix}card-horizontal {
+  display: flex;
+  flex-direction: row;
+
+  > .#{$so-prefix}card-img {
+    width: 200px;
+    min-width: 200px;
+    height: auto;
+    object-fit: cover;
+    border-radius: radius("lg") 0 0 radius("lg");
+  }
+
+  > .#{$so-prefix}card-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  // Stack on mobile
+  @media (max-width: 576px) {
+    flex-direction: column;
+
+    > .#{$so-prefix}card-img {
+      width: 100%;
+      min-width: auto;
+      max-height: 200px;
+      border-radius: radius("lg") radius("lg") 0 0;
+    }
+  }
+}
+
+// ============================================
+// CARD HEADER WITH AVATAR
+// ============================================
+
+.#{$so-prefix}card-header-avatar {
+  display: flex;
+  align-items: center;
+  gap: spacing("3");
+
+  // Use the reusable .so-avatar component for card avatars
+  // Legacy support: .so-card-avatar maps to .so-avatar styles
+  .#{$so-prefix}card-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: radius("full");
+    object-fit: cover;
+    flex-shrink: 0;
+  }
+
+  // When using .so-avatar directly in card header
+  .#{$so-prefix}avatar {
+    flex-shrink: 0;
+  }
+
+  .#{$so-prefix}card-header-content {
+    flex: 1;
+    min-width: 0;
+
+    .#{$so-prefix}card-title {
+      margin: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .#{$so-prefix}card-subtitle {
+      margin-top: spacing("1");
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+}
+
+// ============================================
+// CARD ACTION AREAS
+// ============================================
+
+// Full clickable card area
+.#{$so-prefix}card-action-area {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  transition: background $so-transition-fast;
+  border-radius: radius("lg");
+
+  &:hover {
+    background: css-var("card-hover-bg");
+  }
+
+  &:active {
+    background: alpha($so-primary, 0.1);
+  }
+
+  &:focus-visible,
+  &.#{$so-prefix}focus-visible {
+    outline: 2px solid css-var("accent-primary");
+    outline-offset: 2px;
+  }
+}
+
+// Discrete actions at bottom
+.#{$so-prefix}card-actions {
+  display: flex;
+  align-items: center;
+  gap: spacing("2");
+  padding: spacing("2") spacing("4");
+
+  &-start {
+    justify-content: flex-start;
+  }
+
+  &-end {
+    justify-content: flex-end;
+  }
+
+  &-between {
+    justify-content: space-between;
+  }
+
+  &-center {
+    justify-content: center;
+  }
+}
+
+// ============================================
+// CARD LOADING STATE
+// Note: Skeleton styles moved to _skeleton.scss
+// ============================================
+
+.#{$so-prefix}card-loading,
+.#{$so-prefix}card[data-loading="true"],
+.#{$so-prefix}card[data-loading] {
+  position: relative;
+  pointer-events: none;
+
+  // Overlay effect
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: css-var("card-bg");
+    opacity: 0.7;
+    z-index: 10;
+    border-radius: radius("lg");
+  }
+
+  // Spinner
+  &::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 24px;
+    height: 24px;
+    margin: -12px 0 0 -12px;
+    border: 3px solid css-var("border-color");
+    border-top-color: css-var("accent-primary");
+    border-radius: 50%;
+    animation: so-card-spin 0.8s linear infinite;
+    z-index: 11;
+  }
+}
+
+// Disable loading when data-loading="false"
+.#{$so-prefix}card[data-loading="false"] {
+  pointer-events: auto;
+
+  &::before,
+  &::after {
+    content: none;
+  }
+}
+
+@keyframes so-card-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

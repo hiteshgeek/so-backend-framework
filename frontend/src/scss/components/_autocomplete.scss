@@ -1,0 +1,712 @@
+// ============================================
+// SIXORBIT UI - AUTOCOMPLETE COMPONENT
+// Autocomplete/Token Input Styles
+// ============================================
+
+@use 'sass:color';
+@use '../abstracts' as *;
+
+// ============================================
+// BASE AUTOCOMPLETE CONTAINER
+// ============================================
+
+.#{$so-prefix}autocomplete {
+  position: relative;
+  display: block;
+  width: 100%;
+
+  // Disabled state
+  &.#{$so-prefix}autocomplete-disabled {
+    opacity: 0.6;
+    pointer-events: none;
+
+    .#{$so-prefix}autocomplete-container {
+      cursor: not-allowed;
+      background-color: css-var('form-disabled-bg');
+    }
+  }
+
+  // Open state
+  &.#{$so-prefix}autocomplete-open {
+    .#{$so-prefix}autocomplete-dropdown {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .#{$so-prefix}autocomplete-arrow .material-icons {
+      transform: rotate(180deg);
+    }
+  }
+
+  // Focused state
+  &.#{$so-prefix}autocomplete-focused {
+    .#{$so-prefix}autocomplete-container {
+      border-color: css-var('form-border-focus');
+      box-shadow: 0 0 0 3px alpha($so-primary, 0.1);
+
+      @include dark-mode {
+        box-shadow: 0 0 0 3px alpha($so-purple, 0.15);
+      }
+    }
+  }
+
+  // Loading state
+  &.#{$so-prefix}autocomplete-loading {
+    .#{$so-prefix}autocomplete-arrow {
+      opacity: 0.5;
+    }
+  }
+
+  // Error state
+  &.#{$so-prefix}autocomplete-error {
+    .#{$so-prefix}autocomplete-container {
+      border-color: css-var('danger');
+    }
+  }
+}
+
+// ============================================
+// CONTAINER (Input wrapper)
+// ============================================
+
+.#{$so-prefix}autocomplete-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: spacing('2');
+  width: 100%;
+  min-height: $so-form-height-md;
+  padding: spacing('2') spacing('10') spacing('2') spacing('3');
+  font-size: font-size('base');
+  font-family: inherit;
+  color: css-var('form-text');
+  background-color: css-var('form-bg');
+  border: 1px solid css-var('form-border');
+  border-radius: radius('base');
+  box-sizing: border-box;
+  cursor: text;
+  outline: none;
+  transition: border-color $so-transition-base, box-shadow $so-transition-base;
+
+  &:hover:not([disabled]) {
+    border-color: css-var('form-border-hover');
+  }
+}
+
+// ============================================
+// INPUT FIELD
+// ============================================
+
+.#{$so-prefix}autocomplete-input {
+  flex: 1;
+  min-width: 60px;
+  padding: 0;
+  font-size: inherit;
+  font-family: inherit;
+  color: inherit;
+  background: transparent;
+  border: none;
+  outline: none;
+
+  &::placeholder {
+    color: css-var('form-placeholder');
+    opacity: 1;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+  }
+}
+
+// ============================================
+// TOKENS CONTAINER (Multiple mode)
+// ============================================
+
+.#{$so-prefix}autocomplete-tokens {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: spacing('2');
+  flex: 1;
+  min-width: 0;
+  width: 100%;
+  min-height: 40px;
+  padding: spacing('2') spacing('3'); // 8px 12px - same as standard input
+  line-height: line-height('normal'); // 1.4
+}
+
+// ============================================
+// INDIVIDUAL TOKEN/CHIP
+// ============================================
+
+.#{$so-prefix}autocomplete-token {
+  // Minimal styles - let .so-chip handle most styling
+  max-width: 200px;
+  white-space: nowrap;
+
+  // Token text
+  &-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  // Overflow indicator ("+N more")
+  &-overflow {
+    background-color: transparent;
+    border: 1px dashed css-var('gray-300');
+    color: css-var('text-muted');
+    cursor: default;
+
+    @include dark-mode {
+      border-color: css-var('gray-600');
+    }
+
+    &:hover {
+      background-color: transparent;
+    }
+  }
+}
+
+// Selected text display (text mode)
+.#{$so-prefix}autocomplete-selected-text {
+  color: css-var('text');
+  font-size: font-size('sm');
+}
+
+// ============================================
+// CLEAR BUTTON
+// ============================================
+
+.#{$so-prefix}autocomplete-clear {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  right: spacing('10');
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: css-var('text-muted');
+  transition: color $so-transition-base;
+  z-index: 2;
+
+  &:hover {
+    color: css-var('danger');
+  }
+
+  .material-icons {
+    font-size: 18px;
+  }
+}
+
+// ============================================
+// ARROW ICON
+// ============================================
+
+.#{$so-prefix}autocomplete-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  right: spacing('3');
+  top: 50%;
+  transform: translateY(-50%);
+  color: css-var('text-muted');
+  pointer-events: none;
+  transition: transform $so-transition-base;
+
+  .material-icons {
+    font-size: 20px;
+    transition: transform $so-transition-base;
+  }
+}
+
+// ============================================
+// DROPDOWN PANEL
+// ============================================
+
+.#{$so-prefix}autocomplete-dropdown {
+  position: absolute;
+  top: calc(100% + #{spacing('1')});
+  left: 0;
+  right: 0;
+  max-height: 280px;
+  background-color: css-var('dropdown-bg');
+  border: 1px solid css-var('dropdown-border');
+  border-radius: radius('base');
+  box-shadow: css-var('shadow-lg');
+  z-index: 9999; // High z-index to ensure dropdown appears above all content
+  overflow: hidden;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: opacity $so-transition-base, visibility $so-transition-base, transform $so-transition-base;
+
+  @include dark-mode {
+    background-color: css-var('gray-800');
+    border-color: css-var('gray-700');
+  }
+}
+
+// ============================================
+// LOADING INDICATOR
+// ============================================
+
+.#{$so-prefix}autocomplete-loading {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: spacing('2');
+  padding: spacing('3');
+  color: css-var('text-muted');
+  font-size: font-size('sm');
+}
+
+// ============================================
+// OPTIONS CONTAINER
+// ============================================
+
+.#{$so-prefix}autocomplete-options {
+  max-height: 280px;
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  // Custom scrollbar
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: css-var('gray-300');
+    border-radius: radius('full');
+
+    @include dark-mode {
+      background: css-var('gray-600');
+    }
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: css-var('gray-400');
+
+    @include dark-mode {
+      background: css-var('gray-500');
+    }
+  }
+}
+
+// ============================================
+// INDIVIDUAL OPTION
+// ============================================
+
+.#{$so-prefix}autocomplete-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: spacing('2-5') spacing('3');
+  font-size: font-size('base');
+  color: css-var('dropdown-text');
+  cursor: pointer;
+  transition: background-color $so-transition-fast;
+  user-select: none;
+
+  &:hover:not(.#{$so-prefix}autocomplete-option-disabled) {
+    background-color: css-var('dropdown-hover');
+
+    @include dark-mode {
+      background-color: css-var('gray-700');
+    }
+  }
+
+  &-text {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &-check {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    margin-left: spacing('2');
+    color: css-var('primary');
+
+    .material-icons {
+      font-size: 18px;
+    }
+  }
+
+  // Selected state
+  &.#{$so-prefix}selected {
+    background: css-var('dropdown-item-active');
+    color: css-var('dropdown-item-active-text');
+    font-weight: font-weight('medium');
+
+    .#{$so-prefix}autocomplete-option-check {
+      display: flex;
+    }
+
+    &:hover {
+      background: css-var('dropdown-item-active');
+    }
+  }
+
+  // Focused state (keyboard navigation)
+  &-focused {
+    background-color: css-var('dropdown-item-hover');
+
+    @include dark-mode {
+      background-color: css-var('gray-700');
+    }
+  }
+
+  // Disabled state
+  &-disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+}
+
+// Highlight matched text in options
+.#{$so-prefix}autocomplete-option mark {
+  background: rgba(115, 103, 240, 0.2);
+  color: css-var('accent-primary');
+  padding: 0 2px;
+  border-radius: 2px;
+  font-weight: 600;
+
+  @include dark-mode {
+    background: rgba(115, 103, 240, 0.3);
+  }
+}
+
+// ============================================
+// GROUP HEADER
+// ============================================
+
+.#{$so-prefix}autocomplete-group-header {
+  padding: spacing('2') spacing('3') spacing('1') spacing('3');
+  font-size: font-size('sm');
+  font-weight: 600;
+  color: css-var('text-muted');
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background-color: css-var('gray-50');
+
+  @include dark-mode {
+    background-color: css-var('gray-900');
+  }
+
+  &:not(:first-child) {
+    border-top: 1px solid css-var('gray-200');
+
+    @include dark-mode {
+      border-top-color: css-var('gray-700');
+    }
+  }
+}
+
+// ============================================
+// NO RESULTS MESSAGE
+// ============================================
+
+.#{$so-prefix}autocomplete-no-results {
+  display: none;
+  padding: spacing('4') spacing('3');
+  text-align: center;
+  color: css-var('text-muted');
+  font-size: font-size('sm');
+}
+
+// ============================================
+// SIZE VARIANTS
+// ============================================
+
+// Small
+.#{$so-prefix}autocomplete-sm {
+  .#{$so-prefix}autocomplete-container {
+    min-height: $so-form-height-sm;
+    padding: spacing('1-5') spacing('9') spacing('1-5') spacing('2');
+    font-size: font-size('sm');
+  }
+
+  .#{$so-prefix}autocomplete-input {
+    font-size: font-size('sm');
+  }
+
+  .#{$so-prefix}autocomplete-token {
+    padding: spacing('0-5') spacing('1-5');
+    font-size: font-size('xs');
+  }
+
+  .#{$so-prefix}autocomplete-option {
+    padding: spacing('2') spacing('2-5');
+    font-size: font-size('sm');
+  }
+
+  .#{$so-prefix}autocomplete-clear,
+  .#{$so-prefix}autocomplete-arrow {
+    right: spacing('2');
+  }
+
+  .#{$so-prefix}autocomplete-clear {
+    right: spacing('8');
+  }
+}
+
+// Large
+.#{$so-prefix}autocomplete-lg {
+  .#{$so-prefix}autocomplete-container {
+    min-height: $so-form-height-lg;
+    padding: spacing('3') spacing('11') spacing('3') spacing('4');
+    font-size: font-size('lg');
+  }
+
+  .#{$so-prefix}autocomplete-input {
+    font-size: font-size('lg');
+  }
+
+  .#{$so-prefix}autocomplete-token {
+    padding: spacing('1-5') spacing('2-5');
+    font-size: font-size('base');
+  }
+
+  .#{$so-prefix}autocomplete-option {
+    padding: spacing('3') spacing('4');
+    font-size: font-size('lg');
+  }
+
+  .#{$so-prefix}autocomplete-clear,
+  .#{$so-prefix}autocomplete-arrow {
+    right: spacing('4');
+  }
+
+  .#{$so-prefix}autocomplete-clear {
+    right: spacing('12');
+  }
+}
+
+// ============================================
+// COLOR VARIANTS
+// ============================================
+
+@each $name, $color in (
+  'primary': $so-primary,
+  'secondary': $so-secondary,
+  'success': $so-success,
+  'danger': $so-danger,
+  'warning': $so-warning,
+  'info': $so-info,
+  'dark': $so-dark,
+  'light': $so-light
+) {
+  .#{$so-prefix}autocomplete-#{$name} {
+    &.#{$so-prefix}autocomplete-focused {
+      .#{$so-prefix}autocomplete-container {
+        border-color: $color;
+        box-shadow: 0 0 0 3px alpha($color, 0.1);
+
+        @include dark-mode {
+          box-shadow: 0 0 0 3px alpha($color, 0.15);
+        }
+      }
+    }
+
+    .#{$so-prefix}autocomplete-option.#{$so-prefix}selected {
+      background: alpha($color, 0.1);
+      color: $color;
+      font-weight: font-weight('medium');
+
+      &:hover {
+        background: alpha($color, 0.15);
+      }
+
+      @include dark-mode {
+        background: alpha($color, 0.2);
+
+        &:hover {
+          background: alpha($color, 0.25);
+        }
+      }
+    }
+
+    .#{$so-prefix}autocomplete-option mark {
+      background: alpha($color, 0.2);
+      color: $color;
+
+      @include dark-mode {
+        background: alpha($color, 0.3);
+      }
+    }
+
+    .#{$so-prefix}autocomplete-option-check {
+      color: $color;
+    }
+  }
+}
+
+// ============================================
+// DISPLAY MODES (Multiple)
+// ============================================
+
+// Chips mode (default) - wrapping tokens
+.#{$so-prefix}autocomplete-display-chips {
+  .#{$so-prefix}autocomplete-tokens {
+    flex-wrap: wrap;
+  }
+}
+
+// Chips overflow mode - single line with "+N more"
+.#{$so-prefix}autocomplete-display-chips-overflow {
+  .#{$so-prefix}autocomplete-tokens {
+    flex-wrap: nowrap;
+    overflow: hidden;
+  }
+
+  .#{$so-prefix}autocomplete-token {
+    flex-shrink: 0;
+  }
+}
+
+// Text mode - "3 items selected"
+.#{$so-prefix}autocomplete-display-text {
+  .#{$so-prefix}autocomplete-tokens {
+    flex-wrap: nowrap;
+    overflow: hidden;
+  }
+
+  .#{$so-prefix}autocomplete-selected-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+// ============================================
+// MULTIPLE MODE
+// ============================================
+
+.#{$so-prefix}autocomplete-multiple {
+  .#{$so-prefix}autocomplete-container {
+    padding: 0 spacing('10') 0 0; // Remove vertical padding, keep right padding for buttons
+    align-items: flex-start;
+  }
+
+  // Size variants for tokens container
+  &.#{$so-prefix}autocomplete-sm {
+    .#{$so-prefix}autocomplete-tokens {
+      min-height: $so-form-height-sm;
+      padding: spacing('1-5') spacing('2'); // Match sm input padding
+    }
+    .#{$so-prefix}autocomplete-container {
+      padding-right: spacing('9');
+    }
+  }
+
+  &.#{$so-prefix}autocomplete-lg {
+    .#{$so-prefix}autocomplete-tokens {
+      min-height: $so-form-height-lg;
+      padding: spacing('3') spacing('4'); // Match lg input padding
+    }
+    .#{$so-prefix}autocomplete-container {
+      padding-right: spacing('11');
+    }
+  }
+}
+
+// ============================================
+// RESPONSIVE DESIGN
+// ============================================
+
+@media (max-width: 640px) {
+  .#{$so-prefix}autocomplete-token {
+    max-width: 120px;
+  }
+
+  .#{$so-prefix}autocomplete-dropdown {
+    max-height: 200px;
+  }
+
+  .#{$so-prefix}autocomplete-options {
+    max-height: 200px;
+  }
+}
+
+// ============================================
+// DARK MODE ADJUSTMENTS
+// ============================================
+
+@include dark-mode {
+  .#{$so-prefix}autocomplete-container {
+    background-color: css-var('gray-800');
+    border-color: css-var('gray-700');
+    color: css-var('gray-100');
+
+    &:hover:not([disabled]) {
+      border-color: css-var('gray-600');
+    }
+  }
+
+  .#{$so-prefix}autocomplete-input {
+    &::placeholder {
+      color: css-var('gray-500');
+    }
+  }
+
+  .#{$so-prefix}autocomplete-option {
+    color: css-var('gray-200');
+  }
+}
+
+// ============================================
+// ACCESSIBILITY
+// ============================================
+
+// High contrast mode support
+@media (prefers-contrast: high) {
+  .#{$so-prefix}autocomplete-container {
+    border-width: 2px;
+  }
+
+  .#{$so-prefix}autocomplete-option-focused {
+    outline: 2px solid css-var('primary');
+    outline-offset: -2px;
+  }
+}
+
+// Reduced motion support
+@media (prefers-reduced-motion: reduce) {
+  .#{$so-prefix}autocomplete-dropdown {
+    transition: none;
+  }
+
+  .#{$so-prefix}autocomplete-arrow .material-icons {
+    transition: none;
+  }
+}
+
+// ============================================
+// PRINT STYLES
+// ============================================
+
+@media print {
+  .#{$so-prefix}autocomplete-dropdown,
+  .#{$so-prefix}autocomplete-clear,
+  .#{$so-prefix}autocomplete-arrow {
+    display: none !important;
+  }
+
+  .#{$so-prefix}autocomplete-container {
+    border: 1px solid #000;
+  }
+}

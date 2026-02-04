@@ -1,0 +1,66 @@
+// ============================================
+// SIXORBIT UI - GRID CONFIGURATION
+// Shared configuration for grid system
+// ============================================
+
+@use 'sass:map';
+
+// ============================================
+// BREAKPOINTS (Bootstrap 5 Standard)
+// ============================================
+
+$grid-breakpoints: (
+  xs: 0,
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px,
+  xxl: 1400px
+) !default;
+
+// ============================================
+// CONTAINER MAX-WIDTHS
+// ============================================
+
+$container-max-widths: (
+  sm: 540px,
+  md: 720px,
+  lg: 960px,
+  xl: 1140px,
+  xxl: 1320px
+) !default;
+
+// ============================================
+// GRID SETTINGS
+// ============================================
+
+$grid-columns: 12 !default;
+$grid-row-columns: 6 !default;
+$container-padding-x: 0.75rem !default;
+
+// ============================================
+// GUTTER SIZES
+// ============================================
+
+$grid-gutter-widths: (
+  0: 0,
+  1: 0.25rem,   // 4px
+  2: 0.5rem,    // 8px
+  3: 1rem,      // 16px
+  4: 1.5rem,    // 24px (default)
+  5: 3rem       // 48px
+) !default;
+
+// ============================================
+// CSS GRID GAP SIZES
+// ============================================
+
+$grid-gap-sizes: (
+  0: 0,
+  1: 0.25rem,
+  2: 0.5rem,
+  3: 1rem,
+  4: 1.5rem,
+  5: 3rem,
+  6: 4rem
+) !default;

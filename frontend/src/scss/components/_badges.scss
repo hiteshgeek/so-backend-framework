@@ -1,0 +1,1485 @@
+// ============================================
+// SIXORBIT UI - TAGS & AVATARS
+// Badges, Pills, Labels, Chips, Avatars
+// ============================================
+
+@use 'sass:color';
+@use 'sass:list';
+@use '../abstracts' as *;
+
+// ============================================
+// BASE BADGE
+// ============================================
+
+.#{$so-prefix}badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: spacing('1');
+  height: 22px;
+  padding: 0 spacing('2');
+  font-size: font-size('xs');
+  font-weight: font-weight('medium');
+  line-height: 1;
+  white-space: nowrap;
+  border-radius: radius('full');
+  transition: all $so-transition-base;
+}
+
+// ============================================
+// BADGE VARIANTS
+// ============================================
+
+// Primary Badge
+.#{$so-prefix}badge-primary {
+  background: css-var('accent-primary');
+  color: $so-white;
+}
+
+// Secondary Badge
+.#{$so-prefix}badge-secondary {
+  background: css-var('card-hover-bg');
+  color: css-var('text-secondary');
+}
+
+// Success Badge
+.#{$so-prefix}badge-success {
+  background: css-var('accent-success');
+  color: $so-white;
+}
+
+// Danger Badge
+.#{$so-prefix}badge-danger {
+  background: css-var('accent-danger');
+  color: $so-white;
+}
+
+// Warning Badge
+.#{$so-prefix}badge-warning {
+  background: css-var('accent-warning');
+  color: $so-grey-900;
+}
+
+// Info Badge
+.#{$so-prefix}badge-info {
+  background: css-var('accent-info');
+  color: $so-white;
+}
+
+// Light Badge
+.#{$so-prefix}badge-light {
+  background: $so-grey-100;
+  color: $so-grey-800;
+}
+
+// Dark Badge
+.#{$so-prefix}badge-dark {
+  background: $so-grey-900;
+  color: $so-white;
+}
+
+// ============================================
+// SOFT/LIGHT VARIANTS
+// ============================================
+
+.#{$so-prefix}badge-soft-primary {
+  background: alpha($so-primary, 0.15);
+  color: css-var('accent-primary');
+}
+
+.#{$so-prefix}badge-soft-success {
+  background: alpha($so-success, 0.15);
+  color: css-var('accent-success');
+}
+
+.#{$so-prefix}badge-soft-danger {
+  background: alpha($so-danger, 0.15);
+  color: css-var('accent-danger');
+}
+
+.#{$so-prefix}badge-soft-warning {
+  background: alpha($so-warning, 0.15);
+  color: css-var('accent-warning');
+}
+
+.#{$so-prefix}badge-soft-info {
+  background: alpha($so-info, 0.15);
+  color: css-var('accent-info');
+}
+
+.#{$so-prefix}badge-soft-secondary {
+  background: alpha($so-secondary, 0.15);
+  color: $so-secondary;
+}
+
+.#{$so-prefix}badge-soft-light {
+  background: $so-grey-50;
+  color: $so-grey-600;
+}
+
+.#{$so-prefix}badge-soft-dark {
+  background: alpha($so-grey-900, 0.15);
+  color: $so-grey-900;
+}
+
+// ============================================
+// OUTLINE VARIANTS
+// ============================================
+
+.#{$so-prefix}badge-outline-primary {
+  background: transparent;
+  border: 1px solid css-var('accent-primary');
+  color: css-var('accent-primary');
+}
+
+.#{$so-prefix}badge-outline-success {
+  background: transparent;
+  border: 1px solid css-var('accent-success');
+  color: css-var('accent-success');
+}
+
+.#{$so-prefix}badge-outline-danger {
+  background: transparent;
+  border: 1px solid css-var('accent-danger');
+  color: css-var('accent-danger');
+}
+
+.#{$so-prefix}badge-outline-warning {
+  background: transparent;
+  border: 1px solid css-var('accent-warning');
+  color: css-var('accent-warning');
+}
+
+.#{$so-prefix}badge-outline-info {
+  background: transparent;
+  border: 1px solid css-var('accent-info');
+  color: css-var('accent-info');
+}
+
+.#{$so-prefix}badge-outline-secondary {
+  background: transparent;
+  border: 1px solid $so-secondary;
+  color: $so-secondary;
+}
+
+.#{$so-prefix}badge-outline-light {
+  background: transparent;
+  border: 1px solid $so-grey-400;
+  color: $so-grey-600;
+}
+
+.#{$so-prefix}badge-outline-dark {
+  background: transparent;
+  border: 1px solid $so-grey-900;
+  color: $so-grey-900;
+}
+
+// ============================================
+// BADGE SIZES
+// ============================================
+
+// Small Badge
+.#{$so-prefix}badge-sm {
+  height: 18px;
+  padding: 0 spacing('1') + 2px;
+  font-size: 10px;
+}
+
+// Large Badge
+.#{$so-prefix}badge-lg {
+  height: 28px;
+  padding: 0 spacing('3');
+  font-size: font-size('sm');
+}
+
+// ============================================
+// DOT BADGE (Indicator)
+// ============================================
+
+.#{$so-prefix}badge-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  padding: 0;
+  border-radius: radius('full');
+  background: css-var('accent-primary');
+}
+
+.#{$so-prefix}badge-dot.#{$so-prefix}badge-success {
+  background: css-var('accent-success');
+}
+
+.#{$so-prefix}badge-dot.#{$so-prefix}badge-danger {
+  background: css-var('accent-danger');
+}
+
+.#{$so-prefix}badge-dot.#{$so-prefix}badge-warning {
+  background: css-var('accent-warning');
+}
+
+.#{$so-prefix}badge-dot.#{$so-prefix}badge-info {
+  background: css-var('accent-info');
+}
+
+.#{$so-prefix}badge-dot.#{$so-prefix}badge-secondary {
+  background: $so-secondary;
+}
+
+.#{$so-prefix}badge-dot.#{$so-prefix}badge-light {
+  background: $so-grey-400;
+}
+
+.#{$so-prefix}badge-dot.#{$so-prefix}badge-dark {
+  background: $so-grey-900;
+}
+
+// ============================================
+// BADGE PULSE ANIMATION
+// ============================================
+
+.#{$so-prefix}badge-pulse {
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: inherit;
+    background: inherit;
+    animation: so-badge-pulse 1.5s ease-out infinite;
+  }
+}
+
+@keyframes so-badge-pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(1.8);
+    opacity: 0;
+  }
+}
+
+// Dot badge pulse variant
+.#{$so-prefix}badge-dot.#{$so-prefix}badge-pulse::after {
+  animation: so-badge-dot-pulse 1.5s ease-out infinite;
+}
+
+@keyframes so-badge-dot-pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(2.5);
+    opacity: 0;
+  }
+}
+
+// ============================================
+// BADGE WITH ICON
+// ============================================
+
+.#{$so-prefix}badge .material-icons {
+  font-size: 14px;
+}
+
+.#{$so-prefix}badge-sm .material-icons {
+  font-size: 12px;
+}
+
+.#{$so-prefix}badge-lg .material-icons {
+  font-size: 16px;
+}
+
+// ============================================
+// STATUS BADGE (for availability indicators)
+// ============================================
+
+.#{$so-prefix}status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: spacing('1') + 2px;
+  font-size: font-size('sm');
+  color: css-var('text-secondary');
+
+  &::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border-radius: radius('full');
+    background: css-var('text-muted');
+  }
+
+  &.online::before {
+    background: css-var('accent-success');
+  }
+
+  &.away::before {
+    background: css-var('accent-warning');
+  }
+
+  &.busy::before {
+    background: css-var('accent-danger');
+  }
+
+  &.offline::before {
+    background: css-var('text-muted');
+  }
+}
+
+// ============================================
+// COUNT BADGE (for notifications)
+// ============================================
+
+.#{$so-prefix}badge-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 spacing('1') + 2px;
+  font-size: 11px;
+  font-weight: font-weight('semibold');
+  background: css-var('accent-danger');
+  color: $so-white;
+  border-radius: radius('full');
+}
+
+.#{$so-prefix}badge-count.#{$so-prefix}badge-sm {
+  min-width: 16px;
+  height: 16px;
+  font-size: 10px;
+  padding: 0 4px;
+}
+
+// Badge count contextual colors
+.#{$so-prefix}badge-count.#{$so-prefix}badge-primary {
+  background: css-var('accent-primary');
+  color: $so-white;
+}
+
+.#{$so-prefix}badge-count.#{$so-prefix}badge-secondary {
+  background: $so-secondary;
+  color: $so-white;
+}
+
+.#{$so-prefix}badge-count.#{$so-prefix}badge-success {
+  background: css-var('accent-success');
+  color: $so-white;
+}
+
+.#{$so-prefix}badge-count.#{$so-prefix}badge-danger {
+  background: css-var('accent-danger');
+  color: $so-white;
+}
+
+.#{$so-prefix}badge-count.#{$so-prefix}badge-warning {
+  background: css-var('accent-warning');
+  color: $so-grey-900;
+}
+
+.#{$so-prefix}badge-count.#{$so-prefix}badge-info {
+  background: css-var('accent-info');
+  color: $so-white;
+}
+
+.#{$so-prefix}badge-count.#{$so-prefix}badge-light {
+  background: $so-grey-200;
+  color: $so-grey-800;
+}
+
+.#{$so-prefix}badge-count.#{$so-prefix}badge-dark {
+  background: $so-grey-900;
+  color: $so-white;
+}
+
+// Position relative container for badge overlay
+.#{$so-prefix}badge-wrapper {
+  position: relative;
+  display: inline-flex;
+
+  .#{$so-prefix}badge-count {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+  }
+
+  // Dot badge positioning (hint badge)
+  .#{$so-prefix}badge-dot {
+    position: absolute;
+    top: -2px;
+    right: -2px;
+  }
+
+  // Badge position variants for count
+  &.#{$so-prefix}badge-top-left .#{$so-prefix}badge-count {
+    top: -6px;
+    left: -6px;
+    right: auto;
+  }
+
+  &.#{$so-prefix}badge-top-right .#{$so-prefix}badge-count {
+    top: -6px;
+    right: -6px;
+    left: auto;
+  }
+
+  &.#{$so-prefix}badge-bottom-left .#{$so-prefix}badge-count {
+    bottom: -6px;
+    left: -6px;
+    top: auto;
+    right: auto;
+  }
+
+  &.#{$so-prefix}badge-bottom-right .#{$so-prefix}badge-count {
+    bottom: -6px;
+    right: -6px;
+    top: auto;
+    left: auto;
+  }
+
+  // Badge position variants for dot
+  &.#{$so-prefix}badge-top-left .#{$so-prefix}badge-dot {
+    top: -2px;
+    left: -2px;
+    right: auto;
+  }
+
+  &.#{$so-prefix}badge-top-right .#{$so-prefix}badge-dot {
+    top: -2px;
+    right: -2px;
+    left: auto;
+  }
+
+  &.#{$so-prefix}badge-bottom-left .#{$so-prefix}badge-dot {
+    bottom: -2px;
+    left: -2px;
+    top: auto;
+    right: auto;
+  }
+
+  &.#{$so-prefix}badge-bottom-right .#{$so-prefix}badge-dot {
+    bottom: -2px;
+    right: -2px;
+    top: auto;
+    left: auto;
+  }
+}
+
+// ============================================
+// SECTION 2: PILLS
+// Fully rounded tag variants
+// ============================================
+
+.#{$so-prefix}pill {
+  display: inline-flex;
+  align-items: center;
+  gap: spacing('1');
+  height: 26px;
+  padding: 0 spacing('3');
+  font-size: font-size('xs');
+  font-weight: font-weight('medium');
+  line-height: 1;
+  white-space: nowrap;
+  border-radius: 9999px;
+  transition: all $so-transition-base;
+
+  .material-icons {
+    font-size: 16px;
+  }
+}
+
+// Pill color variants (solid)
+.#{$so-prefix}pill-primary {
+  background: $so-primary;
+  color: $so-white;
+}
+
+.#{$so-prefix}pill-secondary {
+  background: $so-secondary;
+  color: $so-white;
+}
+
+.#{$so-prefix}pill-success {
+  background: $so-success;
+  color: $so-white;
+}
+
+.#{$so-prefix}pill-danger {
+  background: $so-danger;
+  color: $so-white;
+}
+
+.#{$so-prefix}pill-warning {
+  background: $so-warning;
+  color: $so-grey-900;
+}
+
+.#{$so-prefix}pill-info {
+  background: $so-info;
+  color: $so-white;
+}
+
+.#{$so-prefix}pill-light {
+  background: $so-grey-100;
+  color: $so-grey-800;
+}
+
+.#{$so-prefix}pill-dark {
+  background: $so-grey-900;
+  color: $so-white;
+}
+
+// Pill soft variants
+.#{$so-prefix}pill-soft-primary {
+  background: alpha($so-primary, 0.15);
+  color: css-var('accent-primary');
+}
+
+.#{$so-prefix}pill-soft-secondary {
+  background: alpha($so-secondary, 0.15);
+  color: $so-secondary;
+}
+
+.#{$so-prefix}pill-soft-success {
+  background: alpha($so-success, 0.15);
+  color: css-var('accent-success');
+}
+
+.#{$so-prefix}pill-soft-danger {
+  background: alpha($so-danger, 0.15);
+  color: css-var('accent-danger');
+}
+
+.#{$so-prefix}pill-soft-warning {
+  background: alpha($so-warning, 0.15);
+  color: css-var('accent-warning');
+}
+
+.#{$so-prefix}pill-soft-info {
+  background: alpha($so-info, 0.15);
+  color: css-var('accent-info');
+}
+
+.#{$so-prefix}pill-soft-light {
+  background: alpha($so-grey-200, 0.15);
+  color: $so-grey-600;
+}
+
+.#{$so-prefix}pill-soft-dark {
+  background: alpha($so-grey-900, 0.15);
+  color: $so-grey-900;
+}
+
+// Pill outline variants
+@each $name, $color in (
+  'primary': css-var('accent-primary'),
+  'secondary': $so-secondary,
+  'success': css-var('accent-success'),
+  'danger': css-var('accent-danger'),
+  'warning': css-var('accent-warning'),
+  'info': css-var('accent-info'),
+  'light': $so-grey-400,
+  'dark': $so-grey-900
+) {
+  .#{$so-prefix}pill-outline-#{$name} {
+    background: transparent;
+    border: 1px solid $color;
+    color: $color;
+  }
+}
+
+// Pill sizes
+.#{$so-prefix}pill-sm {
+  height: 22px;
+  padding: 0 spacing('2');
+  font-size: 11px;
+
+  .material-icons {
+    font-size: 14px;
+  }
+}
+
+.#{$so-prefix}pill-lg {
+  height: 32px;
+  padding: 0 spacing('4');
+  font-size: font-size('sm');
+
+  .material-icons {
+    font-size: 18px;
+  }
+}
+
+// Pill close button
+.#{$so-prefix}pill-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  margin-left: spacing('1');
+  margin-right: -(spacing('1'));
+  padding: 0;
+  border: none;
+  background: transparent;
+  border-radius: radius('full');
+  cursor: pointer;
+  opacity: 0.6;
+  transition: $so-transition-base;
+
+  &:hover {
+    opacity: 1;
+    background: alpha($so-black, 0.1);
+  }
+
+  .material-icons {
+    font-size: 14px;
+  }
+}
+
+// ============================================
+// SECTION 3: LABELS
+// Square-cornered text labels
+// ============================================
+
+.#{$so-prefix}label {
+  display: inline-flex;
+  align-items: center;
+  gap: spacing('1');
+  height: 22px;
+  padding: 0 spacing('2');
+  font-size: font-size('xs');
+  font-weight: font-weight('semibold');
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  line-height: 1;
+  white-space: nowrap;
+  border-radius: radius('sm');
+  transition: all $so-transition-base;
+
+  .material-icons {
+    font-size: 14px;
+  }
+}
+
+// Label color variants (solid)
+.#{$so-prefix}label-primary {
+  background: $so-primary;
+  color: $so-white;
+}
+
+.#{$so-prefix}label-secondary {
+  background: $so-secondary;
+  color: $so-white;
+}
+
+.#{$so-prefix}label-success {
+  background: $so-success;
+  color: $so-white;
+}
+
+.#{$so-prefix}label-danger {
+  background: $so-danger;
+  color: $so-white;
+}
+
+.#{$so-prefix}label-warning {
+  background: $so-warning;
+  color: $so-grey-900;
+}
+
+.#{$so-prefix}label-info {
+  background: $so-info;
+  color: $so-white;
+}
+
+.#{$so-prefix}label-light {
+  background: $so-grey-100;
+  color: $so-grey-800;
+}
+
+.#{$so-prefix}label-dark {
+  background: $so-grey-900;
+  color: $so-white;
+}
+
+// Label soft variants
+.#{$so-prefix}label-soft-primary {
+  background: alpha($so-primary, 0.15);
+  color: css-var('accent-primary');
+}
+
+.#{$so-prefix}label-soft-secondary {
+  background: alpha($so-secondary, 0.15);
+  color: $so-secondary;
+}
+
+.#{$so-prefix}label-soft-success {
+  background: alpha($so-success, 0.15);
+  color: css-var('accent-success');
+}
+
+.#{$so-prefix}label-soft-danger {
+  background: alpha($so-danger, 0.15);
+  color: css-var('accent-danger');
+}
+
+.#{$so-prefix}label-soft-warning {
+  background: alpha($so-warning, 0.15);
+  color: css-var('accent-warning');
+}
+
+.#{$so-prefix}label-soft-info {
+  background: alpha($so-info, 0.15);
+  color: css-var('accent-info');
+}
+
+.#{$so-prefix}label-soft-light {
+  background: alpha($so-grey-200, 0.15);
+  color: $so-grey-600;
+}
+
+.#{$so-prefix}label-soft-dark {
+  background: alpha($so-grey-900, 0.15);
+  color: $so-grey-900;
+}
+
+// Label sizes
+.#{$so-prefix}label-sm {
+  height: 18px;
+  padding: 0 spacing('1') + 2px;
+  font-size: 10px;
+
+  .material-icons {
+    font-size: 12px;
+  }
+}
+
+.#{$so-prefix}label-lg {
+  height: 28px;
+  padding: 0 spacing('3');
+  font-size: font-size('xs');
+
+  .material-icons {
+    font-size: 16px;
+  }
+}
+
+// ============================================
+// SECTION 4: CHIPS
+// Interactive tag elements
+// ============================================
+
+.#{$so-prefix}chip {
+  display: inline-flex;
+  align-items: center;
+  gap: spacing('2');
+  height: 32px;
+  padding: 0 spacing('3');
+  font-size: font-size('sm');
+  font-weight: font-weight('medium');
+  line-height: 1;
+  white-space: nowrap;
+  border-radius: radius('full');
+  border: 1px solid transparent;
+  cursor: default;
+  transition: all $so-transition-base;
+  background: css-var('card-hover-bg');
+  color: css-var('text-primary');
+
+  .material-icons {
+    font-size: 18px;
+  }
+}
+
+// Chip avatar
+.#{$so-prefix}chip-avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: radius('full');
+  object-fit: cover;
+  margin-left: -(spacing('2'));
+}
+
+// Chip check icon (for selectable)
+.#{$so-prefix}chip-check {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  margin-left: -(spacing('1'));
+
+  .material-icons {
+    font-size: 16px;
+  }
+}
+
+// Chip close button
+.#{$so-prefix}chip-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  margin-right: -(spacing('1'));
+  padding: 0;
+  border: none;
+  background: transparent;
+  border-radius: radius('full');
+  cursor: pointer;
+  opacity: 0.6;
+  transition: $so-transition-base;
+  color: inherit;
+
+  &:hover {
+    opacity: 1;
+    background: alpha($so-black, 0.1);
+  }
+
+  .material-icons {
+    font-size: 14px;
+  }
+}
+
+// Chip color variants (solid)
+.#{$so-prefix}chip-primary {
+  background: $so-primary;
+  color: $so-white;
+
+  .#{$so-prefix}chip-close:hover {
+    background: alpha($so-white, 0.2);
+  }
+}
+
+.#{$so-prefix}chip-secondary {
+  background: $so-secondary;
+  color: $so-white;
+
+  .#{$so-prefix}chip-close:hover {
+    background: alpha($so-white, 0.2);
+  }
+}
+
+.#{$so-prefix}chip-success {
+  background: $so-success;
+  color: $so-white;
+
+  .#{$so-prefix}chip-close:hover {
+    background: alpha($so-white, 0.2);
+  }
+}
+
+.#{$so-prefix}chip-danger {
+  background: $so-danger;
+  color: $so-white;
+
+  .#{$so-prefix}chip-close:hover {
+    background: alpha($so-white, 0.2);
+  }
+}
+
+.#{$so-prefix}chip-warning {
+  background: $so-warning;
+  color: $so-grey-900;
+
+  .#{$so-prefix}chip-close:hover {
+    background: alpha($so-black, 0.1);
+  }
+}
+
+.#{$so-prefix}chip-info {
+  background: $so-info;
+  color: $so-white;
+
+  .#{$so-prefix}chip-close:hover {
+    background: alpha($so-white, 0.2);
+  }
+}
+
+.#{$so-prefix}chip-light {
+  background: $so-grey-100;
+  color: $so-grey-800;
+
+  .#{$so-prefix}chip-close:hover {
+    background: alpha($so-black, 0.1);
+  }
+}
+
+.#{$so-prefix}chip-dark {
+  background: $so-grey-900;
+  color: $so-white;
+
+  .#{$so-prefix}chip-close:hover {
+    background: alpha($so-white, 0.2);
+  }
+}
+
+// Chip soft variants
+.#{$so-prefix}chip-soft-primary {
+  background: alpha($so-primary, 0.15);
+  color: css-var('accent-primary');
+}
+
+.#{$so-prefix}chip-soft-secondary {
+  background: alpha($so-secondary, 0.15);
+  color: $so-secondary;
+}
+
+.#{$so-prefix}chip-soft-success {
+  background: alpha($so-success, 0.15);
+  color: css-var('accent-success');
+}
+
+.#{$so-prefix}chip-soft-danger {
+  background: alpha($so-danger, 0.15);
+  color: css-var('accent-danger');
+}
+
+.#{$so-prefix}chip-soft-warning {
+  background: alpha($so-warning, 0.15);
+  color: css-var('accent-warning');
+}
+
+.#{$so-prefix}chip-soft-info {
+  background: alpha($so-info, 0.15);
+  color: css-var('accent-info');
+}
+
+.#{$so-prefix}chip-soft-light {
+  background: alpha($so-grey-200, 0.15);
+  color: $so-grey-600;
+}
+
+.#{$so-prefix}chip-soft-dark {
+  background: alpha($so-grey-900, 0.15);
+  color: $so-grey-900;
+}
+
+// Chip outline variants
+@each $name, $color in (
+  'primary': $so-primary,
+  'secondary': $so-secondary,
+  'success': $so-success,
+  'danger': $so-danger,
+  'warning': $so-warning,
+  'info': $so-info,
+  'light': $so-grey-400,
+  'dark': $so-grey-900
+) {
+  .#{$so-prefix}chip-outline-#{$name} {
+    background: transparent;
+    border-color: $color;
+    color: $color;
+
+    &.#{$so-prefix}chip-selected {
+      background: alpha($color, 0.1);
+    }
+  }
+}
+
+// Chip sizes
+.#{$so-prefix}chip-sm {
+  height: 26px;
+  padding: 0 spacing('2');
+  font-size: font-size('xs');
+
+  .material-icons {
+    font-size: 14px;
+  }
+
+  .#{$so-prefix}chip-avatar {
+    width: 20px;
+    height: 20px;
+  }
+
+  .#{$so-prefix}chip-close {
+    width: 16px;
+    height: 16px;
+
+    .material-icons {
+      font-size: 12px;
+    }
+  }
+
+  .#{$so-prefix}chip-check .material-icons {
+    font-size: 14px;
+  }
+}
+
+.#{$so-prefix}chip-lg {
+  height: 40px;
+  padding: 0 spacing('4');
+  font-size: font-size('base');
+
+  .material-icons {
+    font-size: 22px;
+  }
+
+  .#{$so-prefix}chip-avatar {
+    width: 32px;
+    height: 32px;
+  }
+
+  .#{$so-prefix}chip-close {
+    width: 22px;
+    height: 22px;
+
+    .material-icons {
+      font-size: 18px;
+    }
+  }
+
+  .#{$so-prefix}chip-check .material-icons {
+    font-size: 20px;
+  }
+}
+
+// Selectable chip
+.#{$so-prefix}chip-selectable {
+  cursor: pointer;
+  user-select: none;
+
+  &:hover {
+    background: css-var('card-hover-bg');
+  }
+
+  input[type="checkbox"] {
+    display: none;
+  }
+
+  &.#{$so-prefix}chip-selected,
+  &:has(input:checked) {
+    .#{$so-prefix}chip-check {
+      display: inline-flex;
+    }
+  }
+}
+
+// Disabled chip
+.#{$so-prefix}chip-disabled,
+.#{$so-prefix}chip[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+// ============================================
+// SECTION 5: AVATARS
+// User representation with images/initials
+// ============================================
+
+.#{$so-prefix}avatar {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: radius('full');
+  background: css-var('card-hover-bg');
+  color: css-var('text-secondary');
+  font-weight: font-weight('semibold');
+  font-size: font-size('sm');
+  overflow: hidden;
+  flex-shrink: 0;
+  vertical-align: middle;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .material-icons {
+    font-size: 20px;
+  }
+}
+
+// Avatar sizes
+.#{$so-prefix}avatar-xs {
+  width: 24px;
+  height: 24px;
+  font-size: 10px;
+
+  .material-icons {
+    font-size: 14px;
+  }
+}
+
+.#{$so-prefix}avatar-sm {
+  width: 32px;
+  height: 32px;
+  font-size: 12px;
+
+  .material-icons {
+    font-size: 16px;
+  }
+}
+
+.#{$so-prefix}avatar-lg {
+  width: 48px;
+  height: 48px;
+  font-size: 16px;
+
+  .material-icons {
+    font-size: 24px;
+  }
+}
+
+.#{$so-prefix}avatar-xl {
+  width: 64px;
+  height: 64px;
+  font-size: 20px;
+
+  .material-icons {
+    font-size: 32px;
+  }
+}
+
+.#{$so-prefix}avatar-2xl {
+  width: 80px;
+  height: 80px;
+  font-size: 24px;
+
+  .material-icons {
+    font-size: 40px;
+  }
+}
+
+// Avatar square variant
+.#{$so-prefix}avatar-square {
+  border-radius: radius('lg');
+}
+
+// Avatar ring (border)
+.#{$so-prefix}avatar-ring {
+  box-shadow: 0 0 0 3px css-var('card-bg'), 0 0 0 5px css-var('border-color');
+}
+
+// Avatar ring color variants
+@each $name, $color in (
+  'primary': $so-primary,
+  'secondary': $so-secondary,
+  'success': $so-success,
+  'danger': $so-danger,
+  'warning': $so-warning,
+  'info': $so-info,
+  'light': $so-grey-300,
+  'dark': $so-grey-900
+) {
+  .#{$so-prefix}avatar-ring-#{$name} {
+    box-shadow: 0 0 0 3px css-var('card-bg'), 0 0 0 5px $color;
+  }
+}
+
+// Avatar color variants (for initials/icons)
+@each $name, $bg, $text in (
+  'primary': $so-primary $so-white,
+  'secondary': $so-secondary $so-white,
+  'success': $so-success $so-white,
+  'danger': $so-danger $so-white,
+  'warning': $so-warning $so-grey-900,
+  'info': $so-info $so-white,
+  'light': $so-grey-200 $so-grey-700,
+  'dark': $so-grey-900 $so-white
+) {
+  .#{$so-prefix}avatar-#{$name} {
+    background: $bg;
+    color: $text;
+  }
+}
+
+// Avatar status indicator
+.#{$so-prefix}avatar-status {
+  overflow: visible;
+
+  // Ensure image still clips to circle/square
+  img {
+    border-radius: inherit;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 10px;
+    height: 10px;
+    border-radius: radius('full');
+    border: 2px solid css-var('card-bg');
+    background: css-var('text-muted');
+    z-index: 1;
+  }
+
+  // Adjust status position for different sizes
+  &.#{$so-prefix}avatar-xs::after {
+    width: 6px;
+    height: 6px;
+    bottom: -1px;
+    right: -1px;
+    border-width: 1px;
+  }
+
+  &.#{$so-prefix}avatar-sm::after {
+    width: 8px;
+    height: 8px;
+    bottom: -1px;
+    right: -1px;
+  }
+
+  &.#{$so-prefix}avatar-lg::after {
+    width: 12px;
+    height: 12px;
+    bottom: 0;
+    right: 0;
+  }
+
+  &.#{$so-prefix}avatar-xl::after {
+    width: 14px;
+    height: 14px;
+    bottom: 2px;
+    right: 2px;
+    border-width: 3px;
+  }
+
+  &.#{$so-prefix}avatar-2xl::after {
+    width: 16px;
+    height: 16px;
+    bottom: 4px;
+    right: 4px;
+    border-width: 3px;
+  }
+}
+
+// Status semantic variants (common use cases)
+.#{$so-prefix}avatar-status-online::after {
+  background: $so-success;
+}
+
+.#{$so-prefix}avatar-status-away::after {
+  background: $so-warning;
+}
+
+.#{$so-prefix}avatar-status-busy::after {
+  background: $so-danger;
+}
+
+.#{$so-prefix}avatar-status-offline::after {
+  background: css-var('text-muted');
+}
+
+// Status contextual color variants (all 8 colors)
+.#{$so-prefix}avatar-status-primary::after {
+  background: $so-primary;
+}
+
+.#{$so-prefix}avatar-status-secondary::after {
+  background: $so-secondary;
+}
+
+.#{$so-prefix}avatar-status-success::after {
+  background: $so-success;
+}
+
+.#{$so-prefix}avatar-status-danger::after {
+  background: $so-danger;
+}
+
+.#{$so-prefix}avatar-status-warning::after {
+  background: $so-warning;
+}
+
+.#{$so-prefix}avatar-status-info::after {
+  background: $so-info;
+}
+
+.#{$so-prefix}avatar-status-light::after {
+  background: $so-grey-300;
+}
+
+.#{$so-prefix}avatar-status-dark::after {
+  background: $so-grey-900;
+}
+
+// Avatar status position variants (default is bottom-right)
+.#{$so-prefix}avatar-status-top-left::after {
+  top: 0;
+  left: 0;
+  bottom: auto;
+  right: auto;
+}
+
+.#{$so-prefix}avatar-status-top-right::after {
+  top: 0;
+  right: 0;
+  bottom: auto;
+  left: auto;
+}
+
+.#{$so-prefix}avatar-status-bottom-left::after {
+  bottom: 0;
+  left: 0;
+  top: auto;
+  right: auto;
+}
+
+.#{$so-prefix}avatar-status-bottom-right::after {
+  bottom: 0;
+  right: 0;
+  top: auto;
+  left: auto;
+}
+
+// Adjust position for xs size
+.#{$so-prefix}avatar-xs.#{$so-prefix}avatar-status-top-left::after {
+  top: -1px;
+  left: -1px;
+}
+
+.#{$so-prefix}avatar-xs.#{$so-prefix}avatar-status-top-right::after {
+  top: -1px;
+  right: -1px;
+}
+
+.#{$so-prefix}avatar-xs.#{$so-prefix}avatar-status-bottom-left::after {
+  bottom: -1px;
+  left: -1px;
+}
+
+// Adjust position for sm size
+.#{$so-prefix}avatar-sm.#{$so-prefix}avatar-status-top-left::after {
+  top: -1px;
+  left: -1px;
+}
+
+.#{$so-prefix}avatar-sm.#{$so-prefix}avatar-status-top-right::after {
+  top: -1px;
+  right: -1px;
+}
+
+.#{$so-prefix}avatar-sm.#{$so-prefix}avatar-status-bottom-left::after {
+  bottom: -1px;
+  left: -1px;
+}
+
+// Adjust position for xl size
+.#{$so-prefix}avatar-xl.#{$so-prefix}avatar-status-top-left::after {
+  top: 2px;
+  left: 2px;
+}
+
+.#{$so-prefix}avatar-xl.#{$so-prefix}avatar-status-top-right::after {
+  top: 2px;
+  right: 2px;
+}
+
+.#{$so-prefix}avatar-xl.#{$so-prefix}avatar-status-bottom-left::after {
+  bottom: 2px;
+  left: 2px;
+}
+
+// Adjust position for 2xl size
+.#{$so-prefix}avatar-2xl.#{$so-prefix}avatar-status-top-left::after {
+  top: 4px;
+  left: 4px;
+}
+
+.#{$so-prefix}avatar-2xl.#{$so-prefix}avatar-status-top-right::after {
+  top: 4px;
+  right: 4px;
+}
+
+.#{$so-prefix}avatar-2xl.#{$so-prefix}avatar-status-bottom-left::after {
+  bottom: 4px;
+  left: 4px;
+}
+
+// ============================================
+// SECTION 6: AVATAR GROUPS
+// Multiple avatar layouts
+// ============================================
+
+// Base avatar group
+.#{$so-prefix}avatar-group {
+  display: inline-flex;
+}
+
+// Stacked (overlapping horizontal)
+.#{$so-prefix}avatar-group-stacked {
+  .#{$so-prefix}avatar {
+    margin-left: -12px;
+    box-shadow: 0 0 0 2px css-var('card-bg');
+
+    &:first-child {
+      margin-left: 0;
+    }
+
+    // Bring hovered avatar to front
+    &:hover {
+      z-index: 1;
+    }
+  }
+
+  // Adjust overlap for different sizes
+  &.#{$so-prefix}avatar-group-xs .#{$so-prefix}avatar {
+    margin-left: -8px;
+
+    &:first-child {
+      margin-left: 0;
+    }
+  }
+
+  &.#{$so-prefix}avatar-group-sm .#{$so-prefix}avatar {
+    margin-left: -10px;
+
+    &:first-child {
+      margin-left: 0;
+    }
+  }
+
+  &.#{$so-prefix}avatar-group-lg .#{$so-prefix}avatar {
+    margin-left: -16px;
+
+    &:first-child {
+      margin-left: 0;
+    }
+  }
+}
+
+// Vertical list
+.#{$so-prefix}avatar-group-vertical {
+  flex-direction: column;
+  gap: spacing('2');
+}
+
+// Grid layout
+.#{$so-prefix}avatar-group-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(40px, max-content));
+  gap: spacing('2');
+
+  // Adjust grid for different sizes
+  &.#{$so-prefix}avatar-group-xs {
+    grid-template-columns: repeat(auto-fill, minmax(24px, max-content));
+  }
+
+  &.#{$so-prefix}avatar-group-sm {
+    grid-template-columns: repeat(auto-fill, minmax(32px, max-content));
+  }
+
+  &.#{$so-prefix}avatar-group-lg {
+    grid-template-columns: repeat(auto-fill, minmax(48px, max-content));
+  }
+}
+
+// Avatar count/more indicator
+.#{$so-prefix}avatar-more {
+  background: css-var('card-hover-bg');
+  color: css-var('text-secondary');
+  font-weight: font-weight('medium');
+  font-size: font-size('xs');
+}

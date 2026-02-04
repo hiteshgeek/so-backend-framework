@@ -1,0 +1,15 @@
+// ============================================
+// SIDEBAR STYLES
+// Imports framework sidebar base + drawer
+// Add page-specific customizations below if needed
+// ============================================
+
+@use "../../../scss/layout/sidebar";
+@use "../../../scss/layout/sidebar-drawer";
+
+// Page-specific overrides (if any)
+// Example:
+// @use "../../../scss/abstracts" as *;
+// .#{$so-prefix}sidebar {
+//   // Custom styles for this page
+// }

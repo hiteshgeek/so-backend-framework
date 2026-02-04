@@ -1,0 +1,5508 @@
+/**
+ * DataTable Plugin Styles
+ * Framework-agnostic styling for DataTable plugin
+ * Version: 1.0.0
+ * Uses common sixorbit-common.css for consistent UI elements
+ */
+
+/* ============================================
+   CSS VARIABLES - Light Mode (Default)
+   ============================================ */
+:root {
+    /* Background Colors */
+    --dt-bg-primary: #ffffff;
+    --dt-bg-secondary: #f8f9fa;
+    --dt-bg-tertiary: #f1f3f4;
+    --dt-bg-hover: #f1f3f4;
+    --dt-bg-active: #e8f0fe;
+
+    /* Border Colors */
+    --dt-border-primary: #e8eaed;
+    --dt-border-secondary: #dadce0;
+
+    /* Text Colors - Vuexy inspired */
+    --dt-text-primary: #5d596c;
+    --dt-text-secondary: #6e6b7b;
+    --dt-text-muted: #b9b9c3;
+
+    /* Accent Colors */
+    --dt-accent-primary: #1a73e8;
+    --dt-accent-primary-bg: rgba(26, 115, 232, 0.15);
+    --dt-accent-success: #34a853;
+    --dt-accent-success-bg: rgba(52, 168, 83, 0.15);
+    --dt-accent-danger: #ea4335;
+    --dt-accent-danger-bg: rgba(234, 67, 53, 0.15);
+    --dt-accent-warning: #f9ab00;
+    --dt-accent-warning-bg: rgba(249, 171, 0, 0.15);
+    --dt-accent-info: #4285f4;
+    --dt-accent-info-bg: rgba(66, 133, 244, 0.15);
+
+    /* Shadow */
+    --dt-shadow: 0 1px 2px 0 rgba(60,64,67,0.3), 0 1px 3px 1px rgba(60,64,67,0.15);
+    --dt-shadow-hover: 0 1px 2px 0 rgba(60,64,67,0.3);
+    --dt-shadow-dropdown: 0 2px 8px rgba(60,64,67,0.3), 0 4px 12px rgba(60,64,67,0.15);
+
+    /* Table Specific */
+    --dt-row-odd-bg: #ffffff;
+    --dt-row-even-bg: #f8f9fa;
+    --dt-row-selected-bg: rgba(26, 115, 232, 0.1);
+    --dt-header-bg: #f8f9fa;
+    --dt-footer-bg: #f8f9fa;
+
+    /* Dialog/Overlay */
+    --dt-overlay-bg: rgba(0, 0, 0, 0.5);
+    --dt-dialog-bg: #ffffff;
+}
+
+/* ============================================
+   CSS VARIABLES - Dark Mode (Vuexy Style)
+   To customize dark mode, simply change these values
+   ============================================ */
+[data-theme="dark"] {
+    /* Background Colors */
+    --dt-bg-primary: #2f3349;
+    --dt-bg-secondary: #25293c;
+    --dt-bg-tertiary: #3b4056;
+    --dt-bg-hover: #3b4056;
+    --dt-bg-active: #3f3580;
+
+    /* Border Colors */
+    --dt-border-primary: #3b4056;
+    --dt-border-secondary: #474d64;
+
+    /* Text Colors */
+    --dt-text-primary: #d0d4e4;
+    --dt-text-secondary: #a3a8b8;
+    --dt-text-muted: #6c7293;
+
+    /* Accent Colors (Vuexy Purple) */
+    --dt-accent-primary: #7367f0;
+    --dt-accent-primary-bg: #3f3580;
+    --dt-accent-success: #28c76f;
+    --dt-accent-success-bg: rgba(40, 199, 111, 0.15);
+    --dt-accent-danger: #ea5455;
+    --dt-accent-danger-bg: rgba(234, 84, 85, 0.15);
+    --dt-accent-warning: #ff9f43;
+    --dt-accent-warning-bg: rgba(255, 159, 67, 0.15);
+    --dt-accent-info: #00cfe8;
+    --dt-accent-info-bg: rgba(0, 207, 232, 0.15);
+
+    /* Shadow */
+    --dt-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.25);
+    --dt-shadow-hover: 0 1px 2px 0 rgba(0, 0, 0, 0.25);
+    --dt-shadow-dropdown: 0 4px 16px rgba(0, 0, 0, 0.4);
+
+    /* Table Specific */
+    --dt-row-odd-bg: #2f3349;
+    --dt-row-even-bg: #25293c;
+    --dt-row-selected-bg: #3f3580;
+    --dt-header-bg: #25293c;
+    --dt-footer-bg: #25293c;
+
+    /* Dialog/Overlay */
+    --dt-overlay-bg: rgba(37, 41, 60, 0.5);
+    --dt-dialog-bg: #2f3349;
+}
+
+/* Container */
+.dt-statement {
+    font-family: 'Google Sans', 'Google Sans Text', 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+    max-width: 100%;
+    margin: 0 auto;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* Card Container */
+.dt-card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 1px 2px 0 rgba(60,64,67,0.3), 0 1px 3px 1px rgba(60,64,67,0.15);
+    overflow: hidden;
+    border: 1px solid #e8eaed;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Toolbar */
+.dt-toolbar {
+    padding: 14px 16px;
+    border-bottom: 1px solid #e8eaed;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+.dt-toolbar-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.dt-toolbar-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+/* Search */
+.dt-search {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #f8f9fa;
+    padding: 6px 12px;
+    border-radius: 4px;
+    border: 1px solid #dadce0;
+    min-width: 250px;
+}
+
+.dt-search .material-symbols-rounded {
+    font-size: 18px;
+    color: #5f6368;
+}
+
+.dt-search-input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    outline: none;
+    font-size: 13px;
+    color: #202124;
+    font-family: 'Google Sans', sans-serif;
+}
+
+.dt-search-input::placeholder {
+    color: #5f6368;
+}
+
+/* Control Buttons - matching Group Summary style */
+.dt-control-btn {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 12px;
+    background: white;
+    border: 1px solid #dadce0;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #202124;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.dt-control-btn:hover {
+    background: #f8f9fa;
+    box-shadow: 0 1px 2px 0 rgba(60,64,67,0.3);
+}
+
+.dt-control-btn.active {
+    background: #e8f0fe;
+    color: #1a73e8;
+    border-color: #1a73e8;
+}
+
+.dt-control-btn .material-symbols-rounded {
+    font-size: 18px;
+}
+
+.dt-control-btn-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 4px;
+    background: #e8eaed;
+    color: #5f6368;
+    border-radius: 9px;
+    font-size: 10px;
+    font-weight: 600;
+    margin-left: 2px;
+}
+
+.dt-control-btn.active .dt-control-btn-badge {
+    background: #1a73e8;
+    color: white;
+}
+
+/* Save Button */
+.dt-save-btn {
+    background: transparent !important;
+    color: #9aa0a6 !important;
+    border: 1px solid #dadce0 !important;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.dt-save-btn[disabled] {
+    background: transparent !important;
+    color: #9aa0a6 !important;
+    border: 1px solid #dadce0 !important;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.dt-save-btn[disabled] .material-symbols-rounded {
+    color: #9aa0a6;
+}
+
+.dt-save-btn.has-changes {
+    background: transparent !important;
+    color: #d93025 !important;
+    border: 1px solid #d93025 !important;
+    cursor: pointer;
+    opacity: 1;
+}
+
+.dt-save-btn.has-changes:hover {
+    background: #fce8e6 !important;
+    border-color: #d93025 !important;
+}
+
+.dt-save-btn.has-changes .material-symbols-rounded {
+    color: #d93025;
+}
+
+/* Save Notification */
+.dt-save-notification {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    background: #323232;
+    color: white;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 10000;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.3s ease;
+}
+
+.dt-save-notification.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.dt-save-notification .material-symbols-rounded {
+    font-size: 20px;
+    color: #4caf50;
+}
+
+/* Dropdown Menu - Floating style */
+.dt-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dt-dropdown-menu {
+    position: absolute;
+    top: calc(100% + 4px);
+    right: 0;
+    background: white;
+    border: 1px solid #dadce0;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(60,64,67,0.3), 0 4px 12px rgba(60,64,67,0.15);
+    min-width: 280px;
+    max-width: 500px;
+    z-index: 1000;
+    display: none;
+    max-height: 450px;
+    overflow: visible;
+    flex-direction: column;
+}
+
+.dt-dropdown-menu.show {
+    display: flex;
+}
+
+.dt-dropdown-header {
+    padding: 10px 12px;
+    border-bottom: 1px solid #e8eaed;
+    font-size: 12px;
+    font-weight: 500;
+    color: #202124;
+    flex-shrink: 0;
+}
+
+.dt-dropdown-header-count {
+    font-size: 11px;
+    color: #5f6368;
+    font-weight: 400;
+    margin-top: 2px;
+}
+
+.dt-dropdown-body {
+    padding: 4px 0;
+    overflow-y: auto;
+    overflow-x: visible;
+    flex: 1;
+    max-height: 400px;
+}
+
+.dt-dropdown-item {
+    padding: 6px 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-size: 12px;
+    color: #202124;
+    transition: background 0.15s;
+}
+
+.dt-dropdown-item:hover {
+    background: #f8f9fa;
+}
+
+.dt-dropdown-item .material-symbols-rounded {
+    font-size: 18px;
+    color: #5f6368;
+}
+
+/* Column item with pin controls */
+.dt-column-item {
+    justify-content: space-between;
+    gap: 8px;
+    cursor: grab;
+}
+
+.dt-column-item:active {
+    cursor: grabbing;
+}
+
+.dt-column-drag-handle {
+    font-size: 20px;
+    color: #9aa0a6;
+    cursor: grab;
+    flex-shrink: 0;
+    transition: color 0.15s;
+}
+
+.dt-column-item:hover .dt-column-drag-handle {
+    color: #5f6368;
+}
+
+.dt-column-item:active .dt-column-drag-handle {
+    cursor: grabbing;
+}
+
+.dt-column-name {
+    flex: 1;
+    min-width: 0;
+    font-size: 12px;
+    color: #202124;
+    font-weight: 400;
+}
+
+.dt-column-controls {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.dt-column-pin-controls {
+    display: flex;
+    gap: 4px;
+    flex-shrink: 0;
+}
+
+.dt-resize-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.15s;
+    color: #5f6368;
+}
+
+.dt-resize-btn .material-symbols-rounded {
+    font-size: 16px;
+}
+
+.dt-resize-btn:hover {
+    background: #f1f3f4;
+    border-color: #dadce0;
+    color: #1a73e8;
+}
+
+.dt-pin-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.15s;
+    color: #5f6368;
+}
+
+.dt-pin-btn .material-symbols-rounded {
+    font-size: 16px;
+    transform: rotate(0deg);
+    transition: transform 0.15s;
+}
+
+.dt-pin-btn:hover {
+    background: #f1f3f4;
+    border-color: #dadce0;
+}
+
+.dt-pin-btn.active {
+    background: #e8f0fe;
+    color: #1a73e8;
+    border-color: #1a73e8;
+}
+
+/* Wrap/Clip Dropdown */
+.dt-wrap-dropdown {
+    position: relative;
+    display: inline-flex;
+}
+
+.dt-wrap-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px 4px;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.15s;
+    color: #5f6368;
+    gap: 0;
+}
+
+.dt-wrap-btn .material-symbols-rounded {
+    font-size: 16px;
+}
+
+.dt-wrap-btn .dt-wrap-arrow {
+    font-size: 18px;
+    margin-left: -4px;
+}
+
+.dt-wrap-btn:hover {
+    background: #f1f3f4;
+    border-color: #dadce0;
+}
+
+.dt-wrap-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: white;
+    border: 1px solid #dadce0;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(60,64,67,0.15);
+    min-width: 90px;
+    z-index: 1100;
+    display: none;
+    padding: 4px 0;
+}
+
+.dt-wrap-menu.show {
+    display: block;
+}
+
+.dt-wrap-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    cursor: pointer;
+    font-size: 12px;
+    color: #202124;
+    transition: background 0.15s;
+}
+
+.dt-wrap-option:hover {
+    background: #f1f3f4;
+}
+
+.dt-wrap-option.active {
+    background: #e8f0fe;
+    color: #1a73e8;
+}
+
+.dt-wrap-option .material-symbols-rounded {
+    font-size: 16px;
+}
+
+/* Vertical Alignment Dropdown in Toolbar */
+.dt-valign-dropdown {
+    position: relative;
+    display: inline-flex;
+}
+
+.dt-valign-dropdown .dt-valign-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 8px;
+    background: transparent;
+    border: 1px solid #dadce0;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.15s;
+    color: #5f6368;
+    gap: 0;
+}
+
+.dt-valign-dropdown .dt-valign-btn .material-symbols-rounded {
+    font-size: 20px;
+}
+
+.dt-valign-dropdown .dt-valign-btn .dt-valign-arrow {
+    font-size: 18px;
+    margin-left: -2px;
+}
+
+.dt-valign-dropdown .dt-valign-btn:hover {
+    background: #f1f3f4;
+    border-color: #dadce0;
+}
+
+.dt-valign-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: white;
+    border: 1px solid #dadce0;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(60,64,67,0.15);
+    min-width: 100px;
+    z-index: 1000;
+    display: none;
+    padding: 4px 0;
+}
+
+.dt-valign-menu.show {
+    display: block;
+}
+
+.dt-valign-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 13px;
+    color: #202124;
+    transition: background 0.15s;
+}
+
+.dt-valign-option:hover {
+    background: #f1f3f4;
+}
+
+.dt-valign-option.active {
+    background: #e8f0fe;
+    color: #1a73e8;
+}
+
+.dt-valign-option .material-symbols-rounded {
+    font-size: 18px;
+}
+
+.dt-pin-btn[data-pin-direction="left"] .material-symbols-rounded {
+    transform: rotate(-45deg);
+}
+
+.dt-pin-btn[data-pin-direction="right"] .material-symbols-rounded {
+    transform: rotate(45deg);
+}
+
+/* Gmail-Style Custom Checkbox */
+.dt-dropdown-item input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    width: 18px;
+    height: 18px;
+    border: 2px solid #dadce0;
+    border-radius: 2px;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.15s ease;
+    flex-shrink: 0;
+    background: white;
+}
+
+.dt-dropdown-item input[type="checkbox"]:hover {
+    border-color: #5f6368;
+    background: #f8f9fa;
+}
+
+.dt-dropdown-item input[type="checkbox"]:checked {
+    background: #1a73e8;
+    border-color: #1a73e8;
+}
+
+.dt-dropdown-item input[type="checkbox"]:checked::after {
+    content: '';
+    position: absolute;
+    left: 4px;
+    top: 1px;
+    width: 4px;
+    height: 8px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+.dt-dropdown-divider {
+    height: 1px;
+    background: #e8eaed;
+    margin: 4px 0;
+}
+
+.dt-dropdown-footer {
+    padding: 8px 12px;
+    border-top: 1px solid #e8eaed;
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    flex-shrink: 0;
+    background: white;
+    position: sticky;
+    bottom: 0;
+}
+
+.dt-dropdown-apply-btn {
+    padding: 6px 16px;
+    background: #1a73e8;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: 'Google Sans', sans-serif;
+    transition: background 0.2s;
+}
+
+.dt-dropdown-apply-btn:hover {
+    background: #1557b0;
+}
+
+/* Grouping Order Section */
+.dt-grouping-order {
+    padding: 8px 12px;
+    border-bottom: 1px solid #e8eaed;
+    background: #f8f9fa;
+    flex-shrink: 0;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+.dt-grouping-order-header {
+    font-size: 11px;
+    font-weight: 500;
+    color: #5f6368;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.dt-grouping-order-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-height: 32px;
+}
+
+.dt-grouping-order-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 8px;
+    background: white;
+    border: 1px solid #dadce0;
+    border-radius: 4px;
+    font-size: 12px;
+    cursor: move;
+    transition: all 0.2s;
+}
+
+.dt-grouping-order-item:hover {
+    background: #f8f9fa;
+    box-shadow: 0 1px 2px rgba(60, 64, 67, 0.2);
+}
+
+.dt-grouping-order-item.dragging {
+    opacity: 0.5;
+}
+
+.dt-grouping-order-item.drag-over {
+    border-color: #1a73e8;
+    background: #e8f0fe;
+}
+
+.dt-grouping-order-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    background: #1a73e8;
+    color: white;
+    border-radius: 50%;
+    font-size: 10px;
+    font-weight: 600;
+    flex-shrink: 0;
+}
+
+.dt-grouping-order-drag-handle {
+    font-size: 16px;
+    color: #5f6368;
+    cursor: move;
+}
+
+.dt-grouping-order-name {
+    flex: 1;
+    color: #202124;
+}
+
+.dt-grouping-order-remove {
+    font-size: 16px;
+    color: #5f6368;
+    cursor: pointer;
+    padding: 2px;
+    transition: color 0.2s;
+}
+
+.dt-grouping-order-remove:hover {
+    color: #d93025;
+}
+
+.dt-grouping-order-empty {
+    padding: 12px;
+    text-align: center;
+    color: #5f6368;
+    font-size: 11px;
+    font-style: italic;
+}
+
+
+/* Table Container */
+.dt-table-container {
+    background: white;
+    flex: 1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Multi-Row Operations Toolbar */
+.dt-row-operations {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #202124;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    z-index: 1001;
+    font-family: 'Google Sans', sans-serif;
+    min-width: 400px;
+}
+
+.dt-row-operations-left {
+    display: flex;
+    align-items: center;
+}
+
+.dt-row-operations-count {
+    font-size: 14px;
+    font-weight: 500;
+    color: #8ab4f8;
+}
+
+.dt-row-operations-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.dt-operation-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: 'Google Sans', sans-serif;
+    transition: all 0.2s;
+}
+
+.dt-operation-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.dt-operation-btn .material-symbols-rounded {
+    font-size: 18px;
+}
+
+.dt-operation-btn-close {
+    padding: 6px 10px;
+    background: transparent;
+    border: none;
+}
+
+.dt-operation-btn-close:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+/* More Button Container */
+.dt-operation-more-container {
+    position: relative;
+    display: inline-block;
+}
+
+/* More Dropdown Menu - Dark Theme, Opens Upward */
+.dt-operation-more-menu {
+    position: absolute;
+    bottom: calc(100% + 8px);
+    right: 0;
+    background: #2d2e30;
+    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5), 0 2px 8px rgba(0, 0, 0, 0.3);
+    min-width: 180px;
+    z-index: 10001;
+    padding: 4px 0;
+    font-family: 'Google Sans', 'Roboto', sans-serif;
+}
+
+.dt-operation-more-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 16px;
+    font-size: 14px;
+    color: #e8eaed;
+    cursor: pointer;
+    transition: background 0.15s;
+    white-space: nowrap;
+}
+
+.dt-operation-more-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.dt-operation-more-item .material-symbols-rounded {
+    font-size: 20px;
+    color: #9aa0a6;
+    flex-shrink: 0;
+}
+
+.dt-operation-more-item span:not(.material-symbols-rounded) {
+    flex: 1;
+    font-weight: 400;
+}
+
+/* Cell Selection Summary */
+.dt-selection-summary {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #202124;
+    color: white;
+    padding: 10px 16px;
+    border-radius: 4px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    z-index: 1000;
+    font-size: 13px;
+    font-family: 'Google Sans', sans-serif;
+}
+
+.dt-selection-summary-label {
+    font-weight: 500;
+}
+
+.dt-selection-summary-count {
+    color: #8ab4f8;
+    font-weight: 600;
+}
+
+.dt-selection-summary-sum {
+    color: #81c995;
+    font-weight: 600;
+}
+
+/* Tabulator Overrides for Material UI */
+.dt-statement .tabulator {
+    font-family: 'Google Sans', 'Roboto', sans-serif;
+    border: none;
+    background: white;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.dt-statement .tabulator-tableholder {
+    flex: 1;
+    overflow: auto;
+}
+
+.dt-statement .tabulator-header {
+    background: #f8f9fa !important;
+    border-bottom: 2px solid #e8eaed !important;
+}
+
+.dt-statement .tabulator-col {
+    background: #f8f9fa !important;
+    border-right: 1px solid #e8eaed !important;
+}
+
+.dt-statement .tabulator-col-title {
+    font-weight: 600 !important;
+    color: #202124 !important;
+    font-size: 12px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+}
+
+.dt-statement .tabulator-row {
+    border-bottom: 1px solid #f1f3f4;
+}
+
+.dt-statement .tabulator-row:hover {
+    background: #f1f3f4;
+}
+
+.dt-statement .tabulator-row.tabulator-selected {
+    background: #e8f0fe;
+}
+
+.dt-statement .tabulator-cell {
+    border-right: 1px solid #f1f3f4 !important;
+    padding: 8px 12px !important;
+    font-size: 13px !important;
+    color: #202124 !important;
+}
+
+/* Wrap content option - allow text to wrap instead of truncating */
+.dt-statement .tabulator-cell .dt-wrap-cell {
+    white-space: normal !important;
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
+    line-height: 1.4 !important;
+    display: block !important;
+    width: 100% !important;
+}
+
+/* Allow rows and cells to expand for wrapped content (exclude footer calcs row) */
+.dt-statement .tabulator-row:not(.tabulator-calcs) {
+    display: flex !important;
+    align-items: stretch !important;
+    min-height: 28px !important;
+    height: auto !important;
+}
+
+.dt-statement .tabulator-row:not(.tabulator-calcs) > .tabulator-cell {
+    display: flex !important;
+    align-items: center !important;
+    height: auto !important;
+    min-height: 100% !important;
+    overflow: hidden !important;
+}
+
+/* Handle horizontal alignment for flex cells - convert text-align to justify-content */
+.dt-statement .tabulator-row:not(.tabulator-calcs) > .tabulator-cell[style*="text-align: right"] {
+    justify-content: flex-end !important;
+}
+
+.dt-statement .tabulator-row:not(.tabulator-calcs) > .tabulator-cell[style*="text-align: center"] {
+    justify-content: center !important;
+}
+
+.dt-statement .tabulator-row:not(.tabulator-calcs) > .tabulator-cell[style*="text-align: left"] {
+    justify-content: flex-start !important;
+}
+
+/* Ensure resize handles don't have fixed height */
+.dt-statement .tabulator-col-resize-handle {
+    height: 100% !important;
+}
+
+/* Cells with wrapped content - allow overflow for wrapping */
+.dt-statement .tabulator-row:not(.tabulator-calcs) > .tabulator-cell:has(.dt-wrap-cell) {
+    overflow: visible !important;
+    align-items: flex-start !important;
+    padding-top: 8px !important;
+    padding-bottom: 8px !important;
+}
+
+/* Special columns (expand, checkbox, S.N., actions) - center content */
+.dt-statement .tabulator-row:not(.tabulator-calcs) > .tabulator-cell.dt-expand-column,
+.dt-statement .tabulator-row:not(.tabulator-calcs) > .tabulator-cell.row-selection-checkbox,
+.dt-statement .tabulator-row:not(.tabulator-calcs) > .tabulator-cell.serial-number-column,
+.dt-statement .tabulator-row:not(.tabulator-calcs) > .tabulator-cell.dt-actions-column,
+.dt-statement .tabulator-row:not(.tabulator-calcs) > .tabulator-cell.tabulator-row-handle {
+    justify-content: center !important;
+    background: inherit !important;
+}
+
+/* Vertical alignment options for cell content */
+/* Top alignment (default) */
+.dt-statement.valign-top .tabulator-row:not(.tabulator-calcs) > .tabulator-cell {
+    align-items: flex-start !important;
+    padding-top: 8px !important;
+}
+
+/* Middle alignment */
+.dt-statement.valign-middle .tabulator-row:not(.tabulator-calcs) > .tabulator-cell {
+    align-items: center !important;
+}
+
+/* Bottom alignment */
+.dt-statement.valign-bottom .tabulator-row:not(.tabulator-calcs) > .tabulator-cell {
+    align-items: flex-end !important;
+    padding-bottom: 8px !important;
+}
+
+/* Cell selection highlighting */
+.dt-statement .tabulator-cell.tabulator-range-selected {
+    background: #d2e3fc !important;
+    border: 1px solid #1a73e8 !important;
+}
+
+.dt-statement .tabulator-cell.tabulator-range-highlight {
+    background: #d2e3fc !important;
+    border: 1px solid #1a73e8 !important;
+}
+
+.dt-statement .tabulator-cell.tabulator-selected {
+    background: #d2e3fc !important;
+}
+
+/* Gmail-Style Row Selection Checkbox */
+.dt-statement .tabulator-row-handle-box,
+.dt-statement .tabulator-header .tabulator-row-handle-box,
+.dt-statement input[type="checkbox"].tabulator-row-handle-box,
+.dt-statement .tabulator-cell input[type="checkbox"],
+.dt-statement .tabulator-header input[type="checkbox"] {
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    width: 18px !important;
+    height: 18px !important;
+    border: 2px solid #dadce0 !important;
+    border-radius: 2px !important;
+    background: white !important;
+    cursor: pointer !important;
+    position: relative !important;
+    transition: all 0.15s ease !important;
+    margin: 0 !important;
+    display: block !important;
+    vertical-align: middle !important;
+}
+
+/* Center checkbox in header */
+.dt-statement .tabulator-col.row-selection-checkbox .tabulator-col-content {
+    justify-content: center !important;
+    text-align: center !important;
+    display: flex !important;
+    align-items: center !important;
+    padding-right: 12px !important;
+}
+
+/* Center checkbox in body cells */
+.dt-statement .tabulator-cell.row-selection-checkbox {
+    text-align: center !important;
+    vertical-align: middle !important;
+}
+
+.dt-statement .tabulator-col.row-selection-checkbox input[type="checkbox"],
+.dt-statement .tabulator-cell.row-selection-checkbox input[type="checkbox"] {
+    margin: 0 auto !important;
+}
+
+.dt-statement .tabulator-row-handle-box:hover,
+.dt-statement .tabulator-header .tabulator-row-handle-box:hover,
+.dt-statement input[type="checkbox"].tabulator-row-handle-box:hover,
+.dt-statement .tabulator-cell input[type="checkbox"]:hover,
+.dt-statement .tabulator-header input[type="checkbox"]:hover {
+    border-color: #5f6368 !important;
+    background: #f8f9fa !important;
+}
+
+.dt-statement .tabulator-row-handle-box.tabulator-selected,
+.dt-statement .tabulator-header .tabulator-row-handle-box.tabulator-selected,
+.dt-statement input[type="checkbox"].tabulator-row-handle-box:checked,
+.dt-statement .tabulator-cell input[type="checkbox"]:checked,
+.dt-statement .tabulator-header input[type="checkbox"]:checked {
+    background: #1a73e8 !important;
+    border-color: #1a73e8 !important;
+}
+
+.dt-statement .tabulator-row-handle-box.tabulator-selected::after,
+.dt-statement .tabulator-header .tabulator-row-handle-box.tabulator-selected::after,
+.dt-statement input[type="checkbox"].tabulator-row-handle-box:checked::after,
+.dt-statement .tabulator-cell input[type="checkbox"]:checked::after,
+.dt-statement .tabulator-header input[type="checkbox"]:checked::after {
+    content: '' !important;
+    position: absolute !important;
+    left: 4px !important;
+    top: 1px !important;
+    width: 4px !important;
+    height: 8px !important;
+    border: solid white !important;
+    border-width: 0 2px 2px 0 !important;
+    transform: rotate(45deg) !important;
+}
+
+/* Row selection styling */
+.dt-statement .tabulator-row.tabulator-selected {
+    background: #e8f0fe !important;
+}
+
+.dt-statement .tabulator-row.tabulator-selected:hover {
+    background: #d2e3fc !important;
+}
+
+/* Cell Spacing Options */
+.dt-statement.spacing-compact .tabulator-cell {
+    padding: 6px 12px !important;
+    font-size: 13px !important;
+    line-height: 1.3 !important;
+}
+
+.dt-statement.spacing-compact .tabulator-footer .tabulator-calcs-holder .tabulator-cell {
+    padding: 6px 12px !important;
+    font-size: 13px !important;
+}
+
+.dt-statement.spacing-normal .tabulator-cell {
+    padding: 8px 12px !important;
+    font-size: 13px !important;
+    line-height: 1.5 !important;
+}
+
+.dt-statement.spacing-normal .tabulator-footer .tabulator-calcs-holder .tabulator-cell {
+    padding: 8px 12px !important;
+    font-size: 13px !important;
+}
+
+.dt-statement.spacing-comfortable .tabulator-cell {
+    padding: 12px 16px !important;
+    font-size: 14px !important;
+    line-height: 1.6 !important;
+}
+
+.dt-statement.spacing-comfortable .tabulator-footer .tabulator-calcs-holder .tabulator-cell {
+    padding: 12px 16px !important;
+    font-size: 14px !important;
+}
+
+.dt-statement .tabulator-footer {
+    background: white;
+    border-top: 1px solid #e8eaed;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Footer Calc Row - Totals Row */
+.dt-statement .tabulator-footer .tabulator-calcs-holder {
+    background: linear-gradient(to bottom, #e8f0fe 0%, #f8f9fa 100%) !important;
+    border-top: 1px solid #4a90e2 !important;
+    padding: 0 !important;
+}
+
+.dt-statement .tabulator-footer .tabulator-calcs-holder .tabulator-row {
+    background: transparent !important;
+    font-weight: 600;
+    border: none;
+}
+
+.dt-statement .tabulator-footer .tabulator-calcs-holder .tabulator-cell {
+    background: transparent !important;
+    font-weight: 600 !important;
+    color: #202124 !important;
+    border-right: 1px solid #dadce0 !important;
+    padding: 12px 16px !important;
+}
+
+/* Frozen/Pinned columns in footer - maintain blue gradient background */
+.dt-statement .tabulator-footer .tabulator-calcs-holder .tabulator-cell.tabulator-frozen,
+.dt-statement .tabulator-footer .tabulator-calcs-holder .tabulator-cell.tabulator-frozen-left {
+    background: linear-gradient(to bottom, #e8f0fe 0%, #f0f4f9 100%) !important;
+    box-shadow: 2px 0 4px rgba(0, 0, 0, 0.1);
+    position: sticky !important;
+    z-index: 11 !important;
+}
+
+/* Right frozen columns in footer */
+.dt-statement .tabulator-footer .tabulator-calcs-holder .tabulator-cell.tabulator-frozen-right {
+    background: linear-gradient(to bottom, #e8f0fe 0%, #f0f4f9 100%) !important;
+    box-shadow: -2px 0 4px rgba(0, 0, 0, 0.1);
+    position: sticky !important;
+    z-index: 11 !important;
+}
+
+/* Modern Pagination Styling */
+.dt-statement .tabulator-footer .tabulator-paginator {
+    padding: 4px 12px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    gap: 8px !important;
+    flex-wrap: wrap !important;
+    background: white !important;
+}
+
+/* Hide default page size selector */
+.dt-statement .tabulator-footer .tabulator-page-size {
+    display: none !important;
+}
+
+/* Custom page size selector in toolbar */
+.dt-page-size-selector {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.dt-page-size-selector label {
+    font-size: 13px;
+    color: #5f6368;
+    font-weight: 500;
+}
+
+.dt-page-size-selector select {
+    padding: 5px 12px;
+    border: 1px solid #dadce0;
+    border-radius: 4px;
+    background: white;
+    color: #202124;
+    font-family: 'Google Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.dt-page-size-selector select:hover {
+    background: #f8f9fa;
+    box-shadow: 0 1px 2px 0 rgba(60,64,67,0.3);
+}
+
+.dt-statement .tabulator-footer .tabulator-pages {
+    display: flex !important;
+    align-items: center !important;
+    gap: 4px !important;
+}
+
+.dt-statement .tabulator-page {
+    border: 1px solid #dadce0 !important;
+    background: white !important;
+    color: #202124 !important;
+    margin: 0 !important;
+    border-radius: 4px !important;
+    font-family: 'Google Sans', sans-serif !important;
+    padding: 5px 12px !important;
+    font-size: 12px !important;
+    font-weight: 500 !important;
+    min-width: 36px !important;
+    text-align: center !important;
+    cursor: pointer !important;
+    transition: all 0.2s !important;
+}
+
+.dt-statement .tabulator-page:hover:not(.disabled) {
+    background: #f8f9fa !important;
+    box-shadow: 0 1px 2px rgba(60, 64, 67, 0.2) !important;
+}
+
+.dt-statement .tabulator-page.active {
+    background: #1a73e8 !important;
+    color: white !important;
+    border-color: #1a73e8 !important;
+    font-weight: 500 !important;
+}
+
+.dt-statement .tabulator-page.disabled {
+    opacity: 0.4 !important;
+    cursor: not-allowed !important;
+}
+
+.dt-statement .tabulator-footer .tabulator-page-counter {
+    font-size: 13px !important;
+    color: #5f6368 !important;
+    font-weight: 400 !important;
+}
+
+/* Hide Page Size label */
+.dt-statement .tabulator-footer .tabulator-paginator label {
+    display: none !important;
+}
+
+.dt-statement .tabulator-footer .tabulator-page-size label {
+    display: none !important;
+}
+
+/* Group Header - AG Grid Style */
+/* Base styles moved to column-aligned section below */
+
+.dt-statement .tabulator-group-toggle {
+    color: #1a73e8;
+    display: inline-flex;
+    align-items: center;
+    margin-right: 8px;
+    vertical-align: middle;
+    position: relative;
+    z-index: 3;
+}
+
+.dt-statement .tabulator-group .tabulator-arrow {
+    border-left-color: #1a73e8;
+    border-top-color: #1a73e8;
+    margin-top: 0;
+    vertical-align: middle;
+}
+
+.dt-group-count {
+    color: #5f6368;
+    font-weight: 400;
+    font-size: 12px;
+    margin-left: 4px;
+}
+
+/* Inline Group Totals - AG Grid Style (legacy) */
+.dt-group-header-container {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: nowrap;
+    width: 100%;
+}
+
+.dt-group-label {
+    font-weight: 500;
+    color: #202124;
+    font-size: 13px;
+    flex-shrink: 0;
+}
+
+.dt-group-totals {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    font-size: 11px;
+    margin-left: auto;
+}
+
+.dt-group-total-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 8px;
+    background: rgba(26, 115, 232, 0.08);
+    border-radius: 3px;
+    white-space: nowrap;
+}
+
+.dt-group-total-label {
+    color: #5f6368;
+    font-weight: 500;
+}
+
+.dt-group-total-value {
+    color: #1a73e8;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+}
+
+/* Column-Aligned Group Header Row - AG Grid Style */
+.dt-statement .tabulator-group {
+    background: #f8f9fa;
+    border-bottom: 1px solid #e8eaed;
+    padding: 0 !important;
+    position: relative;
+    min-height: 36px;
+    font-size: 13px;
+}
+
+/* Reset default Tabulator span styling in group rows */
+.dt-statement .tabulator-row.tabulator-group span {
+    margin-left: 0px;
+    color: #1a73e8;
+}
+
+/* Keep toggle arrow positioned properly */
+.dt-statement .tabulator-group > .tabulator-group-toggle {
+    position: absolute;
+    left: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
+}
+
+.dt-group-header-row {
+    position: relative;
+    display: block;
+    width: 100%;
+    min-height: 36px;
+    padding: 0;
+    margin-left: 0; /* Space handled by first cell padding */
+}
+
+.dt-group-cell {
+    display: flex;
+    align-items: center;
+    padding: 6px 12px;
+    box-sizing: border-box;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 13px;
+    border-right: 1px solid #e8eaed;
+    height: 36px;
+    background: #f8f9fa;
+}
+
+/* Toggle arrow space is handled in JS via alignGroupHeaderCells */
+
+.dt-group-cell:last-child {
+    border-right: none;
+}
+
+/* Group value in the grouped column */
+.dt-group-value {
+    font-weight: 600;
+    color: #1a73e8;
+    font-size: 13px;
+}
+
+/* Aggregate values in other columns */
+.dt-group-aggregate {
+    font-weight: 600;
+    color: #1a73e8;
+    font-size: 12px;
+    font-variant-numeric: tabular-nums;
+}
+
+/* S.N. cell in group rows */
+.dt-group-sn-cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 12px;
+    box-sizing: border-box;
+    font-size: 13px;
+    height: 36px;
+    color: #5f6368;
+    background: #f8f9fa;
+}
+
+/* Column Header Styling - AG Grid Style */
+.dt-statement .tabulator-col {
+    position: relative;
+}
+
+/* Resize handle icon */
+.dt-statement .tabulator-col.tabulator-col-resizable::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 60%;
+    background: linear-gradient(to right, transparent, #dadce0, transparent);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.dt-statement .tabulator-col.tabulator-col-resizable:hover::after {
+    opacity: 1;
+}
+
+.dt-statement .tabulator-col .tabulator-col-content {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    padding: 10px 12px !important;
+    flex-direction: row !important;
+    overflow: hidden !important;
+}
+
+/* Override for non-checkbox columns to ensure proper spacing */
+.dt-statement .tabulator-col:not(.row-selection-checkbox) .tabulator-col-content {
+    justify-content: flex-start !important;
+}
+
+/* Title holder - use flexbox to push sorter to the right (only for sortable, non-checkbox columns) */
+.dt-statement .tabulator-col.tabulator-sortable:not(.row-selection-checkbox) .tabulator-col-title-holder {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    width: 100% !important;
+    overflow: hidden !important;
+}
+
+/* Default title styles - non-sortable columns use full width */
+.dt-statement .tabulator-col-title {
+    line-height: 1.4 !important;
+    display: block !important;
+    overflow: hidden !important;
+    white-space: nowrap !important;
+    text-overflow: ellipsis !important;
+}
+
+/* Override Tabulator default padding-right: 25px for sortable columns */
+.dt-statement .tabulator-col.tabulator-sortable .tabulator-col-title {
+    padding-right: 0 !important;
+}
+
+/* Currently sorted column title - truncate earlier to make room for sort arrow (only when actively sorted: ascending or descending) */
+.dt-statement .tabulator-col.tabulator-sortable[aria-sort="ascending"]:not(.row-selection-checkbox) .tabulator-col-title,
+.dt-statement .tabulator-col.tabulator-sortable[aria-sort="descending"]:not(.row-selection-checkbox) .tabulator-col-title,
+.dt-statement .tabulator-col.tabulator-sortable[aria-sort="asc"]:not(.row-selection-checkbox) .tabulator-col-title,
+.dt-statement .tabulator-col.tabulator-sortable[aria-sort="desc"]:not(.row-selection-checkbox) .tabulator-col-title {
+    flex: 0 1 auto !important;
+    min-width: 0 !important;
+    max-width: calc(100% - 20px) !important;
+}
+
+/* Hide the popup button inside title */
+.dt-statement .tabulator-col-title .tabulator-header-popup-button {
+    display: none !important;
+}
+
+/* Hide sorter container by default for sortable columns */
+.dt-statement .tabulator-col.tabulator-sortable:not(.row-selection-checkbox) .tabulator-col-sorter {
+    display: none !important;
+}
+
+/* Show sorter container only for currently sorted columns (ascending/descending) - right aligned */
+.dt-statement .tabulator-col.tabulator-sortable[aria-sort="ascending"]:not(.row-selection-checkbox) .tabulator-col-sorter,
+.dt-statement .tabulator-col.tabulator-sortable[aria-sort="descending"]:not(.row-selection-checkbox) .tabulator-col-sorter,
+.dt-statement .tabulator-col.tabulator-sortable[aria-sort="asc"]:not(.row-selection-checkbox) .tabulator-col-sorter,
+.dt-statement .tabulator-col.tabulator-sortable[aria-sort="desc"]:not(.row-selection-checkbox) .tabulator-col-sorter {
+    display: flex !important;
+    align-items: center !important;
+    margin-left: auto !important;
+    padding-left: 4px !important;
+    flex-shrink: 0 !important;
+    width: 16px !important;
+}
+
+/* Checkbox column - reset to default styles */
+.dt-statement .tabulator-col.row-selection-checkbox .tabulator-col-title-holder {
+    display: block !important;
+    overflow: visible !important;
+}
+
+.dt-statement .tabulator-col.row-selection-checkbox .tabulator-col-title {
+    display: block !important;
+    overflow: visible !important;
+    max-width: none !important;
+    text-overflow: clip !important;
+}
+
+.dt-statement .tabulator-col.row-selection-checkbox .tabulator-col-sorter {
+    display: none !important;
+}
+
+/* Style the native Tabulator arrow - base styles */
+.dt-statement .tabulator-col .tabulator-arrow {
+    width: 0 !important;
+    height: 0 !important;
+    border-left: 5px solid transparent !important;
+    border-right: 5px solid transparent !important;
+    border-top: none !important;
+    border-bottom: none !important;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+/* Show arrow on ascending sort */
+.dt-statement .tabulator-col.tabulator-sortable[aria-sort="ascending"] .tabulator-arrow,
+.dt-statement .tabulator-col.tabulator-sortable[aria-sort="asc"] .tabulator-arrow {
+    border-bottom: 8px solid #202124 !important;
+    border-top: none !important;
+    opacity: 1 !important;
+}
+
+/* Show arrow on descending sort */
+.dt-statement .tabulator-col.tabulator-sortable[aria-sort="descending"] .tabulator-arrow,
+.dt-statement .tabulator-col.tabulator-sortable[aria-sort="desc"] .tabulator-arrow {
+    border-top: 8px solid #202124 !important;
+    border-bottom: none !important;
+    opacity: 1 !important;
+}
+
+/* Show faint arrow on hover when not sorted */
+.dt-statement .tabulator-col.tabulator-sortable:not([aria-sort]):hover .tabulator-arrow {
+    border-top: 8px solid #9aa0a6 !important;
+    border-bottom: none !important;
+    opacity: 0.5 !important;
+}
+
+/* Column Header Menu Button - Hidden (using right-click instead) */
+.dt-statement .tabulator-col .tabulator-header-menu-button,
+.dt-statement .tabulator-col .tabulator-header-popup-button {
+    display: none !important;
+}
+
+
+/* Header Menu Dropdown - Material Design Style */
+/* Note: Menu renders as popup at document level, so we need both scoped and global selectors */
+.dt-statement .tabulator-menu,
+.tabulator-popup-container.tabulator-menu {
+    background: #ffffff !important;
+    border: none !important;
+    border-radius: 8px !important;
+    box-shadow: 0 1px 2px 0 rgba(60,64,67,0.3), 0 2px 6px 2px rgba(60,64,67,0.15) !important;
+    padding: 8px 0 !important;
+    min-width: 240px !important;
+    font-family: 'Google Sans', 'Roboto', sans-serif !important;
+    z-index: 10000 !important;
+    overflow: hidden !important;
+}
+
+.dt-statement .tabulator-menu-item,
+.tabulator-popup-container.tabulator-menu .tabulator-menu-item {
+    padding: 4px 16px !important;
+    font-size: 14px !important;
+    color: #202124 !important;
+    cursor: pointer !important;
+    transition: background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    display: flex !important;
+    align-items: center !important;
+    white-space: nowrap !important;
+    position: relative !important;
+    font-weight: 400 !important;
+    line-height: 20px !important;
+    border-radius: 0 !important;
+}
+
+.dt-statement .tabulator-menu-item:hover,
+.tabulator-popup-container.tabulator-menu .tabulator-menu-item:hover {
+    background-color: rgba(60, 64, 67, 0.08) !important;
+}
+
+.dt-statement .tabulator-menu-item:active,
+.tabulator-popup-container.tabulator-menu .tabulator-menu-item:active {
+    background-color: rgba(60, 64, 67, 0.12) !important;
+}
+
+.dt-statement .tabulator-menu-item.tabulator-menu-item-disabled,
+.tabulator-popup-container.tabulator-menu .tabulator-menu-item.tabulator-menu-item-disabled {
+    opacity: 0.38 !important;
+    cursor: not-allowed !important;
+    pointer-events: none !important;
+}
+
+.dt-statement .tabulator-menu-item.tabulator-menu-item-disabled:hover,
+.tabulator-popup-container.tabulator-menu .tabulator-menu-item.tabulator-menu-item-disabled:hover {
+    background: transparent !important;
+}
+
+.dt-statement .tabulator-menu-separator,
+.tabulator-popup-container.tabulator-menu .tabulator-menu-separator {
+    height: 0 !important;
+    border-top: 1px solid #e8eaed !important;
+    margin: 4px 0 !important;
+}
+
+/* Submenu indicator - hide default arrow since we use explicit chevron icon */
+.dt-statement .tabulator-menu-item-submenu::after,
+.tabulator-popup-container.tabulator-menu .tabulator-menu-item-submenu::after {
+    display: none !important;
+}
+
+/* Submenu styling */
+.dt-statement .tabulator-menu .tabulator-menu,
+.tabulator-popup-container.tabulator-menu .tabulator-menu {
+    position: absolute !important;
+    left: 100% !important;
+    top: -8px !important;
+    margin-left: 4px !important;
+}
+
+/* Submenu item with selection indicator */
+.dt-statement .tabulator-menu-item.dt-menu-item-selected,
+.tabulator-popup-container.tabulator-menu .tabulator-menu-item.dt-menu-item-selected {
+    background: #e8f0fe !important;
+}
+
+.dt-statement .tabulator-menu-item.dt-menu-item-selected::before,
+.tabulator-popup-container.tabulator-menu .tabulator-menu-item.dt-menu-item-selected::before {
+    content: '' !important;
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    bottom: 0 !important;
+    width: 3px !important;
+    background: #1a73e8 !important;
+    border-radius: 0 2px 2px 0 !important;
+}
+
+/* Submenu items consistent padding for alignment */
+.dt-statement .tabulator-menu .tabulator-menu .tabulator-menu-item,
+.tabulator-popup-container.tabulator-menu .tabulator-menu .tabulator-menu-item {
+    padding-left: 12px !important;
+    padding-right: 32px !important;
+}
+
+/* Material Icons in menu items */
+.dt-statement .tabulator-menu-item .material-symbols-rounded,
+.tabulator-popup-container.tabulator-menu .tabulator-menu-item .material-symbols-rounded {
+    font-size: 18px !important;
+    color: #5f6368 !important;
+    margin-right: 8px !important;
+    vertical-align: middle !important;
+    display: inline-block !important;
+    flex-shrink: 0 !important;
+}
+
+/* Remove extra spacing from inline icons */
+.dt-statement .tabulator-menu-item > span.material-symbols-rounded:first-child,
+.tabulator-popup-container.tabulator-menu .tabulator-menu-item > span.material-symbols-rounded:first-child {
+    margin-left: 0 !important;
+}
+
+/* Serial Number Column Styling */
+.dt-statement .serial-number-column {
+    text-align: center !important;
+    font-weight: 500;
+    color: #5f6368;
+}
+
+/* Row Selector Checkbox Column - Vertical Centering */
+.dt-statement .tabulator-cell.tabulator-row-handle {
+    vertical-align: middle !important;
+    display: table-cell !important;
+}
+
+.dt-statement .tabulator-row-handle .tabulator-row-handle-box {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    height: 100% !important;
+}
+
+/* Row Expand/Collapse Styling */
+.dt-statement .dt-expand-column {
+    text-align: center !important;
+    padding: 2px 4px !important;
+    vertical-align: middle !important;
+}
+
+.dt-expand-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    background: white;
+    border: 1px solid #dadce0;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Google Sans', sans-serif;
+}
+
+.dt-expand-btn:hover {
+    background: #f8f9fa;
+    box-shadow: 0 1px 2px 0 rgba(60,64,67,0.3);
+    border-color: #1a73e8;
+}
+
+.dt-expand-btn .material-symbols-rounded {
+    font-size: 16px;
+    color: #5f6368;
+}
+
+.dt-expand-btn:hover .material-symbols-rounded {
+    color: #1a73e8;
+}
+
+/* Expanded Row Content */
+.dt-expand-row {
+    background: #ffffff;
+    border-bottom: 1px solid #e8eaed;
+    animation: expandRow 0.2s ease-out;
+}
+
+@keyframes expandRow {
+    from {
+        opacity: 0;
+        max-height: 0;
+    }
+    to {
+        opacity: 1;
+        max-height: 1000px;
+    }
+}
+
+/* Row with expanded state */
+.dt-statement .tabulator-row.dt-row-expanded {
+    background: #f8f9fa;
+    border-bottom: none;
+}
+
+.dt-statement .tabulator-row.dt-row-expanded .tabulator-cell {
+    background: #f8f9fa;
+    border-bottom: none;
+}
+
+/* Default Expand Row Content Styling */
+.dt-expand-content {
+    padding: 20px;
+    background: #ffffff;
+}
+
+.dt-expand-content h3 {
+    margin: 0 0 16px 0;
+    font-size: 16px;
+    font-weight: 500;
+    color: #202124;
+}
+
+.dt-expand-content .dt-detail-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.dt-expand-content .dt-detail-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.dt-expand-content .dt-detail-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: #5f6368;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.dt-expand-content .dt-detail-value {
+    font-size: 14px;
+    color: #202124;
+    font-weight: 400;
+}
+
+.dt-expand-content .dt-expand-actions {
+    display: flex;
+    gap: 8px;
+    padding-top: 12px;
+    border-top: 1px solid #e8eaed;
+}
+
+.dt-expand-content .dt-expand-action-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    background: white;
+    border: 1px solid #dadce0;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #1a73e8;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Google Sans', sans-serif;
+}
+
+.dt-expand-content .dt-expand-action-btn:hover {
+    background: #f8f9fa;
+    box-shadow: 0 1px 2px 0 rgba(60,64,67,0.3);
+    border-color: #1a73e8;
+}
+
+.dt-expand-content .dt-expand-action-btn .material-symbols-rounded {
+    font-size: 18px;
+}
+
+/* Frozen/Pinned Columns Styling */
+.dt-statement .tabulator-col.tabulator-frozen {
+    background: #fafafa !important;
+    box-shadow: 2px 0 4px rgba(0, 0, 0, 0.1);
+}
+
+.dt-statement .tabulator-cell.tabulator-frozen {
+    background: inherit;
+    box-shadow: 2px 0 4px rgba(0, 0, 0, 0.1);
+}
+
+.dt-statement .tabulator-col.tabulator-frozen-right {
+    background: #fafafa !important;
+    box-shadow: -2px 0 4px rgba(0, 0, 0, 0.1);
+}
+
+.dt-statement .tabulator-cell.tabulator-frozen-right {
+    background: inherit;
+    box-shadow: -2px 0 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Enable column resizing for frozen/pinned columns - Header level */
+.dt-statement .tabulator-header .tabulator-col.tabulator-frozen,
+.dt-statement .tabulator-header .tabulator-col.tabulator-frozen-right {
+    overflow: visible !important;
+}
+
+.dt-statement .tabulator-col.tabulator-frozen .tabulator-col-resize-handle,
+.dt-statement .tabulator-col.tabulator-frozen-right .tabulator-col-resize-handle,
+.dt-statement .tabulator-header .tabulator-col.tabulator-frozen .tabulator-col-resize-handle,
+.dt-statement .tabulator-header .tabulator-col.tabulator-frozen-right .tabulator-col-resize-handle {
+    display: block !important;
+    position: absolute !important;
+    right: 0 !important;
+    top: 0 !important;
+    width: 8px !important;
+    height: 100% !important;
+    cursor: col-resize !important;
+    z-index: 1000 !important;
+    background: transparent !important;
+    pointer-events: auto !important;
+}
+
+/* Ensure resize handle is visible on hover for frozen columns */
+.dt-statement .tabulator-col.tabulator-frozen.tabulator-col-resizable::after,
+.dt-statement .tabulator-col.tabulator-frozen-right.tabulator-col-resizable::after {
+    z-index: 999;
+}
+
+/* For right-frozen columns, put resize handle on left side */
+.dt-statement .tabulator-col.tabulator-frozen-right .tabulator-col-resize-handle,
+.dt-statement .tabulator-header .tabulator-col.tabulator-frozen-right .tabulator-col-resize-handle {
+    right: auto !important;
+    left: 0 !important;
+}
+
+/* Ensure frozen columns maintain resize capability after virtual scroll */
+.dt-statement .tabulator-tableholder .tabulator-col.tabulator-frozen,
+.dt-statement .tabulator-tableholder .tabulator-col.tabulator-frozen-right {
+    overflow: visible !important;
+}
+
+/* Frozen column resize handle hover effect */
+.dt-statement .tabulator-col.tabulator-frozen .tabulator-col-resize-handle:hover,
+.dt-statement .tabulator-col.tabulator-frozen-right .tabulator-col-resize-handle:hover {
+    background: rgba(26, 115, 232, 0.3) !important;
+}
+
+.dt-statement .tabulator-col.tabulator-frozen:hover {
+    background: #f0f0f0 !important;
+}
+
+.dt-statement .tabulator-col.tabulator-frozen-right:hover {
+    background: #f0f0f0 !important;
+}
+
+/* Frozen columns in selected rows - show selection color */
+.dt-statement .tabulator-row.tabulator-selected .tabulator-cell.tabulator-frozen,
+.dt-statement .tabulator-row.tabulator-selected .tabulator-cell.tabulator-frozen-left {
+    background: #e8f0fe !important;
+}
+
+.dt-statement .tabulator-row.tabulator-selected .tabulator-cell.tabulator-frozen-right {
+    background: #e8f0fe !important;
+}
+
+/* Frozen columns in selected rows on hover */
+.dt-statement .tabulator-row.tabulator-selected:hover .tabulator-cell.tabulator-frozen,
+.dt-statement .tabulator-row.tabulator-selected:hover .tabulator-cell.tabulator-frozen-left,
+.dt-statement .tabulator-row.tabulator-selected:hover .tabulator-cell.tabulator-frozen-right {
+    background: #d2e3fc !important;
+}
+
+/* Actions Column Styling */
+.dt-statement .dt-actions-column {
+    text-align: center !important;
+    padding: 2px 4px !important;
+    vertical-align: middle !important;
+}
+
+.dt-actions-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    background: transparent;
+    border: none;
+    border-radius: 50%;
+    font-size: 12px;
+    font-weight: 500;
+    color: #5f6368;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Google Sans', sans-serif;
+}
+
+.dt-actions-btn:hover {
+    background: #e8eaed;
+}
+
+.dt-actions-btn .material-symbols-rounded {
+    font-size: 18px;
+    color: #5f6368;
+}
+
+.dt-actions-btn:hover .material-symbols-rounded {
+    color: #202124;
+}
+
+/* Actions Dropdown Menu */
+.dt-actions-menu {
+    position: absolute;
+    background: white;
+    border: 1px solid #dadce0;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(60,64,67,0.3), 0 4px 12px rgba(60,64,67,0.15);
+    min-width: 180px;
+    max-width: 280px;
+    z-index: 10000;
+    padding: 3px 0;
+    font-family: 'Google Sans', 'Roboto', sans-serif;
+}
+
+.dt-actions-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    font-size: 13px;
+    color: #202124;
+    cursor: pointer;
+    transition: background 0.15s;
+    white-space: nowrap;
+}
+
+.dt-actions-menu-item:hover {
+    background: #f8f9fa;
+}
+
+.dt-actions-menu-item.disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.dt-actions-menu-item .material-symbols-rounded {
+    font-size: 18px;
+    color: #5f6368;
+    flex-shrink: 0;
+}
+
+.dt-actions-menu-item span:not(.material-symbols-rounded) {
+    flex: 1;
+    font-weight: 400;
+}
+
+/* Actions column in selected rows */
+.dt-statement .tabulator-row.tabulator-selected .dt-actions-column {
+    background: #e8f0fe !important;
+}
+
+.dt-statement .tabulator-row.tabulator-selected:hover .dt-actions-column {
+    background: #d2e3fc !important;
+}
+
+/* Highlight row when actions menu is open */
+.dt-statement .tabulator-row.dt-actions-menu-open {
+    background: #e8f0fe !important;
+}
+
+.dt-statement .tabulator-row.dt-actions-menu-open .tabulator-cell {
+    background: #e8f0fe !important;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .dt-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .dt-toolbar-left,
+    .dt-toolbar-right {
+        width: 100%;
+    }
+
+    .dt-search {
+        width: 100%;
+        min-width: 100%;
+    }
+
+    .dt-control-btn {
+        width: auto;
+    }
+
+    .dt-dropdown-menu {
+        right: auto;
+        left: 0;
+        width: calc(100% - 32px);
+        max-width: 360px;
+    }
+
+    .dt-statement .tabulator-cell {
+        font-size: 12px;
+        padding: 8px;
+    }
+}
+
+/* Ensure sticky header */
+.dt-statement .tabulator-header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+/* Ensure sticky footer */
+.dt-statement .tabulator-footer {
+    position: sticky;
+    bottom: 0;
+    z-index: 10;
+}
+
+/* Fullscreen Mode */
+.dt-statement.dt-fullscreen {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    max-width: none !important;
+    max-height: none !important;
+    z-index: 9999 !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+    background: white !important;
+}
+
+.dt-statement.dt-fullscreen .dt-card {
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+    height: 100% !important;
+}
+
+.dt-statement.dt-fullscreen .dt-table-container {
+    flex: 1 !important;
+    height: auto !important;
+}
+
+.dt-statement.dt-fullscreen .tabulator {
+    height: 100% !important;
+}
+
+/* Column Highlight on Hover in Column List */
+.dt-statement .tabulator-col.dt-column-highlight,
+.dt-statement .tabulator-cell.dt-column-highlight {
+    background-color: #e8f0fe !important;
+    transition: background-color 0.15s ease;
+}
+
+/* Print Styles */
+@media print {
+    .dt-toolbar {
+        display: none;
+    }
+
+    .dt-dropdown-menu {
+        display: none !important;
+    }
+
+    .dt-statement .tabulator {
+        border: 1px solid #000;
+    }
+}
+
+/* Export Modal Styles */
+.dt-export-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dt-export-modal-backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.dt-export-modal-content {
+    position: relative;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.24);
+    width: 90%;
+    max-width: 700px;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.dt-export-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    border-bottom: 1px solid #e8eaed;
+}
+
+.dt-export-modal-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+    font-size: 18px;
+    font-weight: 500;
+    color: #202124;
+}
+
+.dt-export-modal-title .material-symbols-rounded {
+    font-size: 24px;
+    color: #1a73e8;
+}
+
+.dt-export-modal-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: transparent;
+    border-radius: 50%;
+    cursor: pointer;
+    color: #5f6368;
+    transition: background 0.2s;
+}
+
+.dt-export-modal-close:hover {
+    background: #f1f3f4;
+}
+
+.dt-export-modal-body {
+    padding: 20px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.dt-export-filename-section {
+    margin-bottom: 20px;
+}
+
+.dt-export-filename-input-wrapper {
+    display: flex;
+    align-items: center;
+    border: 1px solid #dadce0;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.dt-export-filename-input {
+    flex: 1;
+    padding: 6px 10px;
+    border: none;
+    outline: none;
+    font-size: 13px;
+    color: #202124;
+    font-family: inherit;
+}
+
+.dt-export-filename-input:focus {
+    outline: none;
+}
+
+.dt-export-filename-input-wrapper:focus-within {
+    border-color: #1a73e8;
+    box-shadow: 0 0 0 1px #1a73e8;
+}
+
+.dt-export-filename-ext {
+    padding: 6px 10px;
+    background: #f1f3f4;
+    color: #5f6368;
+    font-size: 13px;
+    font-weight: 500;
+    border-left: 1px solid #dadce0;
+}
+
+.dt-export-format-section {
+    margin-bottom: 16px;
+}
+
+.dt-export-format-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.dt-export-additional-dropdown {
+    position: relative;
+}
+
+.dt-export-additional-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border: 1px solid #dadce0;
+    border-radius: 4px;
+    background: white;
+    font-size: 12px;
+    color: #202124;
+    cursor: pointer;
+    transition: all 0.2s;
+    min-height: 32px;
+}
+
+.dt-export-additional-btn:hover {
+    background: #f8f9fa;
+}
+
+.dt-export-additional-btn .material-symbols-rounded {
+    font-size: 18px;
+    color: #5f6368;
+}
+
+.dt-export-additional-btn.options-none {
+    border-color: #d93025;
+    background: #fce8e6;
+    color: #d93025;
+}
+
+.dt-export-additional-btn.options-none .material-symbols-rounded {
+    color: #d93025 !important;
+}
+
+.dt-export-additional-btn.options-some {
+    border-color: #e37400;
+    background: #fef7e0;
+    color: #b45309;
+}
+
+.dt-export-additional-btn.options-some .material-symbols-rounded {
+    color: #b45309 !important;
+}
+
+.dt-export-additional-btn.options-all {
+    border-color: #34a853;
+    background: #e6f4ea;
+    color: #34a853;
+}
+
+.dt-export-additional-btn.options-all .material-symbols-rounded {
+    color: #34a853 !important;
+}
+
+.dt-export-additional-arrow {
+    transition: transform 0.2s;
+}
+
+.dt-export-additional-dropdown.open .dt-export-additional-arrow {
+    transform: rotate(180deg);
+}
+
+.dt-export-additional-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 4px;
+    min-width: 320px;
+    max-width: 400px;
+    max-height: 280px;
+    overflow-y: auto;
+    background: white;
+    border: 1px solid #dadce0;
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 100;
+    padding: 6px 0;
+}
+
+/* Custom scrollbar for options menu */
+.dt-export-additional-menu::-webkit-scrollbar {
+    width: 6px;
+}
+
+.dt-export-additional-menu::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+.dt-export-additional-menu::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 3px;
+}
+
+.dt-export-additional-menu::-webkit-scrollbar-thumb:hover {
+    background: #a1a1a1;
+}
+
+.dt-export-additional-dropdown.open .dt-export-additional-menu {
+    display: block;
+}
+
+.dt-export-additional-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    font-size: 12px;
+    color: #202124;
+    cursor: pointer;
+    transition: background 0.15s, opacity 0.2s;
+}
+
+.dt-export-additional-item:hover {
+    background: #f8f9fa;
+}
+
+.dt-export-additional-item input[type="checkbox"] {
+    margin: 0;
+    cursor: pointer;
+}
+
+.dt-export-freeze-select,
+.dt-export-freeze-input {
+    padding: 3px 6px;
+    border: 1px solid #dadce0;
+    border-radius: 4px;
+    font-size: 12px;
+    color: #202124;
+    background: white;
+    cursor: pointer;
+    margin-left: auto;
+}
+
+.dt-export-freeze-input {
+    width: 50px;
+    text-align: center;
+}
+
+.dt-export-freeze-input::-webkit-inner-spin-button,
+.dt-export-freeze-input::-webkit-outer-spin-button {
+    opacity: 1;
+}
+
+/* Export Options Count Badge */
+.dt-export-options-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 600;
+    margin-left: 6px;
+    padding: 2px 6px;
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.08);
+    min-width: 28px;
+}
+
+/* Count badge color states */
+.dt-export-additional-btn.options-none .dt-export-options-count {
+    background: rgba(217, 48, 37, 0.15);
+    color: #d93025;
+}
+
+.dt-export-additional-btn.options-some .dt-export-options-count {
+    background: rgba(227, 116, 0, 0.15);
+    color: #b45309;
+}
+
+.dt-export-additional-btn.options-all .dt-export-options-count {
+    background: rgba(52, 168, 83, 0.15);
+    color: #34a853;
+}
+
+/* Export Options Group Header */
+.dt-export-options-group {
+    margin-bottom: 4px;
+}
+
+.dt-export-options-group:last-child {
+    margin-bottom: 0;
+}
+
+.dt-export-options-group-header {
+    padding: 4px 12px;
+    font-size: 10px;
+    font-weight: 600;
+    color: #5f6368;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    background: #f8f9fa;
+    border-bottom: 1px solid #e8eaed;
+    margin-bottom: 2px;
+}
+
+.dt-export-options-group:not(:first-child) .dt-export-options-group-header {
+    margin-top: 4px;
+    border-top: 1px solid #e8eaed;
+}
+
+/* Export Text Input */
+.dt-export-text-input {
+    padding: 3px 6px;
+    border: 1px solid #dadce0;
+    border-radius: 4px;
+    font-size: 12px;
+    color: #202124;
+    background: white;
+    margin-left: auto;
+    width: 80px;
+}
+
+.dt-export-text-input:focus {
+    outline: none;
+    border-color: #1a73e8;
+}
+
+.dt-export-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: #202124;
+    margin-bottom: 10px;
+}
+
+.dt-export-format-options {
+    display: flex;
+    gap: 12px;
+}
+
+.dt-export-format-option {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border: 1px solid #dadce0;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 12px;
+    color: #202124;
+    min-height: 32px;
+}
+
+.dt-export-format-option:hover {
+    background: #f8f9fa;
+}
+
+.dt-export-format-option input[type="radio"] {
+    margin: 0;
+}
+
+.dt-export-format-option input[type="radio"]:checked + .dt-export-format-icon {
+    color: #1a73e8;
+}
+
+.dt-export-format-option:has(input:checked) {
+    border-color: #1a73e8;
+    background: #e8f0fe;
+}
+
+.dt-export-format-icon {
+    font-size: 18px;
+    color: #5f6368;
+}
+
+.dt-export-columns-section {
+    background: #fff;
+}
+
+.dt-export-columns-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.dt-export-columns-toolbar .dt-export-label {
+    margin-bottom: 0;
+}
+
+.dt-export-columns-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.dt-export-columns-count {
+    font-size: 12px;
+    color: #5f6368;
+    padding: 4px 10px;
+    background: #f1f3f4;
+    border-radius: 12px;
+}
+
+.dt-export-select-all-btn,
+.dt-export-select-none-btn {
+    padding: 4px 12px;
+    border: 1px solid #dadce0;
+    border-radius: 4px;
+    background: white;
+    color: #5f6368;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.dt-export-select-all-btn:hover,
+.dt-export-select-none-btn:hover {
+    background: #f1f3f4;
+    border-color: #c4c7c9;
+}
+
+.dt-export-columns-table {
+    border: 1px solid #e8eaed;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.dt-export-columns-header {
+    display: grid;
+    grid-template-columns: 50px 1fr 80px minmax(180px, auto) 80px;
+    gap: 12px;
+    padding: 8px 16px;
+    background: #f8f9fa;
+    border-bottom: 1px solid #e8eaed;
+    font-size: 11px;
+    font-weight: 600;
+    color: #5f6368;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    align-items: center;
+}
+
+/* Ensure all header cells have consistent font-weight */
+.dt-export-columns-header > div {
+    font-weight: 600;
+}
+
+.dt-export-columns-list {
+    max-height: 320px;
+    overflow-y: auto;
+}
+
+.dt-export-column-row {
+    display: grid;
+    grid-template-columns: 50px 1fr 80px minmax(180px, auto) 80px;
+    gap: 12px;
+    padding: 6px 16px;
+    border-bottom: 1px solid #f1f3f4;
+    align-items: center;
+    font-size: 13px;
+    color: #202124;
+    transition: background 0.15s;
+}
+
+.dt-export-column-row:last-child {
+    border-bottom: none;
+}
+
+.dt-export-column-row:hover {
+    background: #f8f9fa;
+}
+
+.dt-export-col-check {
+    display: flex;
+    justify-content: center;
+}
+
+.dt-export-col-check input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: #1a73e8;
+}
+
+.dt-export-col-name {
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.dt-export-col-type {
+    display: flex;
+    justify-content: center;
+}
+
+.dt-export-type-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.dt-export-type-text {
+    background: #f1f3f4;
+    color: #5f6368;
+}
+
+.dt-export-type-number {
+    background: #e3f2fd;
+    color: #1565c0;
+}
+
+.dt-export-type-currency {
+    background: #e8f5e9;
+    color: #2e7d32;
+}
+
+.dt-export-type-date {
+    background: #fff3e0;
+    color: #ef6c00;
+}
+
+.dt-export-col-format {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.dt-export-format-group {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.dt-export-format-select {
+    padding: 5px 8px;
+    border: 1px solid #dadce0;
+    border-radius: 4px;
+    background: white;
+    font-size: 11px;
+    color: #202124;
+    cursor: pointer;
+    transition: border-color 0.15s;
+}
+
+.dt-export-format-select:hover {
+    border-color: #1a73e8;
+}
+
+.dt-export-format-select:focus {
+    outline: none;
+    border-color: #1a73e8;
+    box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.2);
+}
+
+.dt-export-format-text {
+    color: #9aa0a6;
+    font-size: 12px;
+}
+
+.dt-export-col-align {
+    display: flex;
+    justify-content: center;
+}
+
+.dt-export-align-btns {
+    display: inline-flex;
+    border: 1px solid #dadce0;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.dt-export-align-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 26px;
+    padding: 0;
+    border: none;
+    border-right: 1px solid #dadce0;
+    background: white;
+    color: #5f6368;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.dt-export-align-btn:last-child {
+    border-right: none;
+}
+
+.dt-export-align-btn .material-symbols-rounded {
+    font-size: 16px;
+}
+
+.dt-export-align-btn:hover {
+    background: #f1f3f4;
+}
+
+.dt-export-align-btn.active {
+    background: #e8f0fe;
+    color: #1a73e8;
+}
+
+.dt-export-modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    padding: 16px 20px;
+    border-top: 1px solid #e8eaed;
+    background: #f8f9fa;
+}
+
+.dt-export-btn-cancel {
+    padding: 10px 24px;
+    border: 1px solid #dadce0;
+    border-radius: 6px;
+    background: white;
+    color: #5f6368;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.dt-export-btn-cancel:hover {
+    background: #f1f3f4;
+    border-color: #c4c7c9;
+}
+
+.dt-export-btn-download {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 24px;
+    border: none;
+    border-radius: 6px;
+    background: #1a73e8;
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.dt-export-btn-download:hover {
+    background: #1557b0;
+}
+
+.dt-export-btn-download .material-symbols-rounded {
+    font-size: 18px;
+}
+
+/* ==============================================
+   Column Color Styling
+   ============================================== */
+
+/* Column color classes - header styling */
+.dt-statement .tabulator-col.dt-col-blue { background: #e3f2fd !important; }
+.dt-statement .tabulator-col.dt-col-green { background: #e8f5e9 !important; }
+.dt-statement .tabulator-col.dt-col-red { background: #ffebee !important; }
+.dt-statement .tabulator-col.dt-col-orange { background: #fff3e0 !important; }
+.dt-statement .tabulator-col.dt-col-purple { background: #f3e5f5 !important; }
+.dt-statement .tabulator-col.dt-col-teal { background: #e0f2f1 !important; }
+.dt-statement .tabulator-col.dt-col-pink { background: #fce4ec !important; }
+.dt-statement .tabulator-col.dt-col-indigo { background: #e8eaf6 !important; }
+.dt-statement .tabulator-col.dt-col-cyan { background: #e0f7fa !important; }
+.dt-statement .tabulator-col.dt-col-amber { background: #fff8e1 !important; }
+.dt-statement .tabulator-col.dt-col-lime { background: #f0f4c3 !important; }
+.dt-statement .tabulator-col.dt-col-brown { background: #efebe9 !important; }
+.dt-statement .tabulator-col.dt-col-gray { background: #f5f5f5 !important; }
+
+/* Column color classes - cell styling */
+.dt-statement .tabulator-cell.dt-col-blue { background: #e3f2fd !important; }
+.dt-statement .tabulator-cell.dt-col-green { background: #e8f5e9 !important; }
+.dt-statement .tabulator-cell.dt-col-red { background: #ffebee !important; }
+.dt-statement .tabulator-cell.dt-col-orange { background: #fff3e0 !important; }
+.dt-statement .tabulator-cell.dt-col-purple { background: #f3e5f5 !important; }
+.dt-statement .tabulator-cell.dt-col-teal { background: #e0f2f1 !important; }
+.dt-statement .tabulator-cell.dt-col-pink { background: #fce4ec !important; }
+.dt-statement .tabulator-cell.dt-col-indigo { background: #e8eaf6 !important; }
+.dt-statement .tabulator-cell.dt-col-cyan { background: #e0f7fa !important; }
+.dt-statement .tabulator-cell.dt-col-amber { background: #fff8e1 !important; }
+.dt-statement .tabulator-cell.dt-col-lime { background: #f0f4c3 !important; }
+.dt-statement .tabulator-cell.dt-col-brown { background: #efebe9 !important; }
+.dt-statement .tabulator-cell.dt-col-gray { background: #f5f5f5 !important; }
+
+/* Hover state for colored cells - slightly darker */
+.dt-statement .tabulator-row:hover .tabulator-cell.dt-col-blue { background: #bbdefb !important; }
+.dt-statement .tabulator-row:hover .tabulator-cell.dt-col-green { background: #c8e6c9 !important; }
+.dt-statement .tabulator-row:hover .tabulator-cell.dt-col-red { background: #ffcdd2 !important; }
+.dt-statement .tabulator-row:hover .tabulator-cell.dt-col-orange { background: #ffe0b2 !important; }
+.dt-statement .tabulator-row:hover .tabulator-cell.dt-col-purple { background: #e1bee7 !important; }
+.dt-statement .tabulator-row:hover .tabulator-cell.dt-col-teal { background: #b2dfdb !important; }
+.dt-statement .tabulator-row:hover .tabulator-cell.dt-col-pink { background: #f8bbd9 !important; }
+.dt-statement .tabulator-row:hover .tabulator-cell.dt-col-indigo { background: #c5cae9 !important; }
+.dt-statement .tabulator-row:hover .tabulator-cell.dt-col-cyan { background: #b2ebf2 !important; }
+.dt-statement .tabulator-row:hover .tabulator-cell.dt-col-amber { background: #ffecb3 !important; }
+.dt-statement .tabulator-row:hover .tabulator-cell.dt-col-lime { background: #e6ee9c !important; }
+.dt-statement .tabulator-row:hover .tabulator-cell.dt-col-brown { background: #d7ccc8 !important; }
+.dt-statement .tabulator-row:hover .tabulator-cell.dt-col-gray { background: #eeeeee !important; }
+
+/* Selected row with colored cells */
+.dt-statement .tabulator-row.tabulator-selected .tabulator-cell.dt-col-blue { background: #90caf9 !important; }
+.dt-statement .tabulator-row.tabulator-selected .tabulator-cell.dt-col-green { background: #a5d6a7 !important; }
+.dt-statement .tabulator-row.tabulator-selected .tabulator-cell.dt-col-red { background: #ef9a9a !important; }
+.dt-statement .tabulator-row.tabulator-selected .tabulator-cell.dt-col-orange { background: #ffcc80 !important; }
+.dt-statement .tabulator-row.tabulator-selected .tabulator-cell.dt-col-purple { background: #ce93d8 !important; }
+.dt-statement .tabulator-row.tabulator-selected .tabulator-cell.dt-col-teal { background: #80cbc4 !important; }
+.dt-statement .tabulator-row.tabulator-selected .tabulator-cell.dt-col-pink { background: #f48fb1 !important; }
+.dt-statement .tabulator-row.tabulator-selected .tabulator-cell.dt-col-indigo { background: #9fa8da !important; }
+.dt-statement .tabulator-row.tabulator-selected .tabulator-cell.dt-col-cyan { background: #80deea !important; }
+.dt-statement .tabulator-row.tabulator-selected .tabulator-cell.dt-col-amber { background: #ffe082 !important; }
+.dt-statement .tabulator-row.tabulator-selected .tabulator-cell.dt-col-lime { background: #dce775 !important; }
+.dt-statement .tabulator-row.tabulator-selected .tabulator-cell.dt-col-brown { background: #bcaaa4 !important; }
+.dt-statement .tabulator-row.tabulator-selected .tabulator-cell.dt-col-gray { background: #e0e0e0 !important; }
+
+/* Footer cells with column colors */
+.dt-statement .tabulator-footer .tabulator-calcs-holder .tabulator-cell.dt-col-blue { background: linear-gradient(to bottom, #bbdefb 0%, #e3f2fd 100%) !important; }
+.dt-statement .tabulator-footer .tabulator-calcs-holder .tabulator-cell.dt-col-green { background: linear-gradient(to bottom, #c8e6c9 0%, #e8f5e9 100%) !important; }
+.dt-statement .tabulator-footer .tabulator-calcs-holder .tabulator-cell.dt-col-red { background: linear-gradient(to bottom, #ffcdd2 0%, #ffebee 100%) !important; }
+.dt-statement .tabulator-footer .tabulator-calcs-holder .tabulator-cell.dt-col-orange { background: linear-gradient(to bottom, #ffe0b2 0%, #fff3e0 100%) !important; }
+.dt-statement .tabulator-footer .tabulator-calcs-holder .tabulator-cell.dt-col-purple { background: linear-gradient(to bottom, #e1bee7 0%, #f3e5f5 100%) !important; }
+.dt-statement .tabulator-footer .tabulator-calcs-holder .tabulator-cell.dt-col-teal { background: linear-gradient(to bottom, #b2dfdb 0%, #e0f2f1 100%) !important; }
+.dt-statement .tabulator-footer .tabulator-calcs-holder .tabulator-cell.dt-col-pink { background: linear-gradient(to bottom, #f8bbd9 0%, #fce4ec 100%) !important; }
+.dt-statement .tabulator-footer .tabulator-calcs-holder .tabulator-cell.dt-col-indigo { background: linear-gradient(to bottom, #c5cae9 0%, #e8eaf6 100%) !important; }
+.dt-statement .tabulator-footer .tabulator-calcs-holder .tabulator-cell.dt-col-cyan { background: linear-gradient(to bottom, #b2ebf2 0%, #e0f7fa 100%) !important; }
+.dt-statement .tabulator-footer .tabulator-calcs-holder .tabulator-cell.dt-col-amber { background: linear-gradient(to bottom, #ffecb3 0%, #fff8e1 100%) !important; }
+.dt-statement .tabulator-footer .tabulator-calcs-holder .tabulator-cell.dt-col-lime { background: linear-gradient(to bottom, #e6ee9c 0%, #f0f4c3 100%) !important; }
+.dt-statement .tabulator-footer .tabulator-calcs-holder .tabulator-cell.dt-col-brown { background: linear-gradient(to bottom, #d7ccc8 0%, #efebe9 100%) !important; }
+.dt-statement .tabulator-footer .tabulator-calcs-holder .tabulator-cell.dt-col-gray { background: linear-gradient(to bottom, #eeeeee 0%, #f5f5f5 100%) !important; }
+
+/* ============================================
+   DARK MODE STYLES - Using CSS Variables
+   All colors reference variables defined at the top
+   To customize, simply change the variables in :root or [data-theme="dark"]
+   ============================================ */
+
+/* Dark mode - Card & Container */
+[data-theme="dark"] .dt-card {
+    background: var(--dt-bg-primary);
+    border-color: var(--dt-border-primary);
+    box-shadow: var(--dt-shadow);
+}
+
+/* Dark mode - Toolbar */
+[data-theme="dark"] .dt-toolbar {
+    background: var(--dt-bg-primary);
+    border-bottom-color: var(--dt-border-primary);
+}
+
+/* Dark mode - Search */
+[data-theme="dark"] .dt-search {
+    background: var(--dt-bg-secondary);
+    border-color: var(--dt-border-primary);
+}
+
+[data-theme="dark"] .dt-search .material-symbols-rounded {
+    color: var(--dt-text-secondary);
+}
+
+[data-theme="dark"] .dt-search-input {
+    color: var(--dt-text-primary);
+}
+
+[data-theme="dark"] .dt-search-input::placeholder {
+    color: var(--dt-text-muted);
+}
+
+/* Dark mode - Control Buttons */
+[data-theme="dark"] .dt-control-btn {
+    background: var(--dt-bg-primary);
+    border-color: var(--dt-border-primary);
+    color: var(--dt-text-primary);
+}
+
+[data-theme="dark"] .dt-control-btn:hover {
+    background: var(--dt-bg-hover);
+    box-shadow: var(--dt-shadow-hover);
+}
+
+[data-theme="dark"] .dt-control-btn.active {
+    background: var(--dt-accent-primary-bg);
+    color: var(--dt-accent-primary);
+    border-color: var(--dt-accent-primary);
+}
+
+[data-theme="dark"] .dt-control-btn .material-symbols-rounded {
+    color: var(--dt-text-secondary);
+}
+
+[data-theme="dark"] .dt-control-btn.active .material-symbols-rounded {
+    color: var(--dt-accent-primary);
+}
+
+[data-theme="dark"] .dt-control-btn-badge {
+    background: var(--dt-bg-tertiary);
+    color: var(--dt-text-secondary);
+}
+
+[data-theme="dark"] .dt-control-btn.active .dt-control-btn-badge {
+    background: var(--dt-accent-primary);
+    color: #ffffff;
+}
+
+/* Dark mode - Dropdown Apply Button */
+[data-theme="dark"] .dt-dropdown-apply-btn {
+    background: #7367f0 !important;
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] .dt-dropdown-apply-btn:hover {
+    background: #5a4fa5 !important;
+}
+
+/* Dark mode - Page Size Selector */
+[data-theme="dark"] .dt-page-size-selector label {
+    color: var(--dt-text-secondary);
+}
+
+[data-theme="dark"] .dt-page-size-selector select {
+    background: var(--dt-bg-primary);
+    border-color: var(--dt-border-primary);
+    color: var(--dt-text-primary);
+}
+
+/* Dark mode - Tabulator Table */
+[data-theme="dark"] .dt-statement .tabulator {
+    background: var(--dt-bg-primary);
+    border-color: var(--dt-border-primary);
+}
+
+[data-theme="dark"] .dt-statement .tabulator-header {
+    background: var(--dt-header-bg);
+    border-bottom-color: var(--dt-border-primary);
+}
+
+[data-theme="dark"] .dt-statement .tabulator-header .tabulator-col {
+    background: var(--dt-header-bg);
+    border-right-color: var(--dt-border-primary);
+}
+
+[data-theme="dark"] .dt-statement .tabulator-header .tabulator-col .tabulator-col-content {
+    color: var(--dt-text-primary);
+}
+
+[data-theme="dark"] .dt-statement .tabulator-header .tabulator-col .tabulator-col-title {
+    color: var(--dt-text-primary);
+}
+
+[data-theme="dark"] .dt-statement .tabulator-header .tabulator-col:hover {
+    background: var(--dt-bg-hover);
+}
+
+[data-theme="dark"] .dt-statement .tabulator-header .tabulator-col.tabulator-sortable[aria-sort="asc"],
+[data-theme="dark"] .dt-statement .tabulator-header .tabulator-col.tabulator-sortable[aria-sort="desc"] {
+    background: var(--dt-bg-hover);
+}
+
+/* Dark mode - Table Rows */
+[data-theme="dark"] .dt-statement .tabulator-tableholder {
+    background: var(--dt-bg-primary);
+}
+
+[data-theme="dark"] .dt-statement .tabulator-row {
+    background: var(--dt-row-odd-bg);
+    border-bottom-color: var(--dt-border-primary);
+}
+
+[data-theme="dark"] .dt-statement .tabulator-row:nth-child(even) {
+    background: var(--dt-row-even-bg);
+}
+
+[data-theme="dark"] .dt-statement .tabulator-row:hover {
+    background: var(--dt-bg-hover) !important;
+}
+
+[data-theme="dark"] .dt-statement .tabulator-row .tabulator-cell {
+    border-right-color: var(--dt-border-primary);
+    color: var(--dt-text-primary);
+}
+
+[data-theme="dark"] .dt-statement .tabulator-row.tabulator-selected {
+    background: var(--dt-row-selected-bg) !important;
+}
+
+[data-theme="dark"] .dt-statement .tabulator-row.tabulator-selected:hover {
+    background: rgba(115, 103, 240, 0.25) !important;
+}
+
+/* Dark mode - Footer */
+[data-theme="dark"] .dt-statement .tabulator-footer {
+    background: var(--dt-footer-bg);
+    border-top-color: var(--dt-border-primary);
+}
+
+[data-theme="dark"] .dt-statement .tabulator-footer .tabulator-calcs-holder {
+    background: var(--dt-footer-bg);
+    border-bottom-color: var(--dt-border-primary);
+}
+
+[data-theme="dark"] .dt-statement .tabulator-footer .tabulator-calcs-holder .tabulator-row {
+    background: var(--dt-footer-bg);
+}
+
+[data-theme="dark"] .dt-statement .tabulator-footer .tabulator-calcs-holder .tabulator-cell {
+    color: var(--dt-text-primary);
+    border-right-color: var(--dt-border-primary);
+}
+
+/* Dark mode - Pagination */
+[data-theme="dark"] .dt-statement .tabulator-paginator {
+    color: var(--dt-text-primary);
+}
+
+[data-theme="dark"] .dt-statement .tabulator-page {
+    background: var(--dt-bg-primary);
+    border-color: var(--dt-border-primary);
+    color: var(--dt-text-primary);
+}
+
+[data-theme="dark"] .dt-statement .tabulator-page:hover:not(.disabled):not(.active) {
+    background: var(--dt-bg-hover);
+}
+
+[data-theme="dark"] .dt-statement .tabulator-page.active {
+    background: var(--dt-accent-primary);
+    color: #ffffff;
+    border-color: var(--dt-accent-primary);
+}
+
+[data-theme="dark"] .dt-statement .tabulator-page.disabled {
+    opacity: 0.5;
+}
+
+/* Dark mode - Cell Selection */
+[data-theme="dark"] .dt-statement .tabulator-cell.dt-cell-selected {
+    background: var(--dt-accent-primary-bg) !important;
+    box-shadow: inset 0 0 0 1px var(--dt-accent-primary);
+}
+
+/* Dark mode - Selection Info Footer */
+[data-theme="dark"] .dt-selection-info {
+    background: var(--dt-bg-secondary);
+    border-top-color: var(--dt-border-primary);
+    color: var(--dt-text-primary);
+}
+
+[data-theme="dark"] .dt-selection-sum {
+    background: var(--dt-accent-success-bg);
+    color: var(--dt-accent-success);
+}
+
+/* Dark mode - Dropdowns */
+[data-theme="dark"] .dt-dropdown {
+    background: var(--dt-bg-primary);
+    border-color: var(--dt-border-primary);
+    box-shadow: var(--dt-shadow-dropdown);
+}
+
+[data-theme="dark"] .dt-dropdown-header {
+    border-bottom-color: var(--dt-border-primary);
+    color: var(--dt-text-primary);
+}
+
+[data-theme="dark"] .dt-dropdown-search {
+    background: var(--dt-bg-secondary);
+    border-color: var(--dt-border-primary);
+    color: var(--dt-text-primary);
+}
+
+[data-theme="dark"] .dt-dropdown-search::placeholder {
+    color: var(--dt-text-muted);
+}
+
+[data-theme="dark"] .dt-dropdown-item {
+    color: var(--dt-text-primary);
+}
+
+[data-theme="dark"] .dt-dropdown-item:hover {
+    background: var(--dt-bg-hover);
+}
+
+[data-theme="dark"] .dt-dropdown-item.selected {
+    background: var(--dt-accent-primary-bg);
+    color: var(--dt-accent-primary);
+}
+
+[data-theme="dark"] .dt-dropdown-footer {
+    border-top-color: var(--dt-border-primary);
+    background: var(--dt-bg-primary) !important;
+}
+
+/* Dark mode - Column dropdown icons */
+[data-theme="dark"] .dt-dropdown-item .material-symbols-rounded {
+    color: #a3a8b8 !important;
+}
+
+/* Dark mode - Column Menu (Right-click context menu) */
+[data-theme="dark"] .dt-column-menu,
+[data-theme="dark"] .tabulator-menu,
+[data-theme="dark"] .tabulator-edit-select-list {
+    background: var(--dt-bg-primary);
+    border-color: var(--dt-border-primary);
+    box-shadow: var(--dt-shadow-dropdown);
+}
+
+[data-theme="dark"] .dt-column-menu-item,
+[data-theme="dark"] .tabulator-menu-item {
+    color: var(--dt-text-primary);
+}
+
+[data-theme="dark"] .dt-column-menu-item:hover,
+[data-theme="dark"] .tabulator-menu-item:hover {
+    background: var(--dt-bg-hover);
+}
+
+[data-theme="dark"] .tabulator-menu-item .material-symbols-rounded,
+[data-theme="dark"] .tabulator-menu-item .material-icons {
+    color: var(--dt-text-secondary);
+}
+
+[data-theme="dark"] .tabulator-menu-separator {
+    border-top-color: var(--dt-border-primary);
+}
+
+/* Dark mode - Group Headers */
+[data-theme="dark"] .dt-statement .tabulator-row.tabulator-group {
+    background: var(--dt-bg-secondary);
+    border-bottom-color: var(--dt-border-primary);
+}
+
+[data-theme="dark"] .dt-statement .tabulator-row.tabulator-group .tabulator-group-header {
+    color: var(--dt-text-primary);
+}
+
+/* Dark mode - Grouping Order Drag-to-Reorder Segment */
+[data-theme="dark"] .dt-grouping-order {
+    border-bottom-color: var(--dt-border-primary);
+    background: var(--dt-bg-secondary);
+}
+
+[data-theme="dark"] .dt-grouping-order-header {
+    color: var(--dt-text-muted);
+}
+
+[data-theme="dark"] .dt-grouping-order-item {
+    background: var(--dt-bg-primary);
+    border-color: var(--dt-border-primary);
+    color: var(--dt-text-primary);
+}
+
+[data-theme="dark"] .dt-grouping-order-item:hover {
+    background: var(--dt-bg-hover);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .dt-grouping-order-item.drag-over {
+    border-color: var(--dt-accent-primary);
+    background: var(--dt-accent-primary-bg);
+}
+
+[data-theme="dark"] .dt-grouping-order-number {
+    background: var(--dt-accent-primary);
+    color: #ffffff;
+}
+
+[data-theme="dark"] .dt-grouping-order-drag-handle {
+    color: var(--dt-text-secondary);
+}
+
+[data-theme="dark"] .dt-grouping-order-name {
+    color: var(--dt-text-primary);
+}
+
+[data-theme="dark"] .dt-grouping-order-remove {
+    color: var(--dt-text-secondary);
+}
+
+[data-theme="dark"] .dt-grouping-order-remove:hover {
+    color: #ff6b6b;
+}
+
+[data-theme="dark"] .dt-grouping-order-empty {
+    color: var(--dt-text-muted);
+}
+
+/* Dark mode - Expand Content */
+[data-theme="dark"] .dt-expand-content {
+    background: var(--dt-bg-secondary);
+    border-color: var(--dt-border-primary);
+    color: var(--dt-text-primary);
+}
+
+[data-theme="dark"] .dt-expand-content h3 {
+    color: var(--dt-text-primary);
+}
+
+[data-theme="dark"] .dt-detail-label {
+    color: var(--dt-text-secondary);
+}
+
+[data-theme="dark"] .dt-detail-value {
+    color: var(--dt-text-primary);
+}
+
+[data-theme="dark"] .dt-expand-action-btn {
+    background: var(--dt-bg-tertiary);
+    color: var(--dt-text-primary);
+    border-color: var(--dt-bg-tertiary);
+}
+
+[data-theme="dark"] .dt-expand-action-btn:hover {
+    background: var(--dt-border-secondary);
+}
+
+/* Dark mode - Action Menu */
+[data-theme="dark"] .dt-action-menu {
+    background: var(--dt-bg-primary);
+    border-color: var(--dt-border-primary);
+    box-shadow: var(--dt-shadow-dropdown);
+}
+
+[data-theme="dark"] .dt-action-item {
+    color: var(--dt-text-primary);
+}
+
+[data-theme="dark"] .dt-action-item:hover {
+    background: var(--dt-bg-hover);
+}
+
+[data-theme="dark"] .dt-action-item .material-symbols-rounded {
+    color: var(--dt-text-secondary);
+}
+
+/* Dark mode - Export Dialog */
+[data-theme="dark"] .dt-export-dialog {
+    background: var(--dt-dialog-bg);
+    border-color: var(--dt-border-primary);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+}
+
+[data-theme="dark"] .dt-export-dialog-header {
+    background: var(--dt-bg-secondary);
+    border-bottom-color: var(--dt-border-primary);
+    color: var(--dt-text-primary);
+}
+
+[data-theme="dark"] .dt-export-dialog-close {
+    color: var(--dt-text-secondary);
+}
+
+[data-theme="dark"] .dt-export-dialog-close:hover {
+    background: var(--dt-bg-hover);
+    color: var(--dt-text-primary);
+}
+
+[data-theme="dark"] .dt-export-option-group h4 {
+    color: var(--dt-text-secondary);
+}
+
+[data-theme="dark"] .dt-export-option label {
+    color: var(--dt-text-primary);
+}
+
+[data-theme="dark"] .dt-export-option input[type="number"],
+[data-theme="dark"] .dt-export-option input[type="text"] {
+    background: var(--dt-bg-secondary);
+    border-color: var(--dt-border-primary);
+    color: var(--dt-text-primary);
+}
+
+[data-theme="dark"] .dt-export-dialog-footer {
+    background: var(--dt-bg-secondary);
+    border-top-color: var(--dt-border-primary);
+}
+
+/* Dark mode - Column Colors (muted for dark theme - Vuexy style) */
+[data-theme="dark"] .dt-statement .tabulator-cell.dt-col-blue { background: rgba(115, 103, 240, 0.1); }
+[data-theme="dark"] .dt-statement .tabulator-cell.dt-col-green { background: rgba(40, 199, 111, 0.1); }
+[data-theme="dark"] .dt-statement .tabulator-cell.dt-col-red { background: rgba(234, 84, 85, 0.1); }
+[data-theme="dark"] .dt-statement .tabulator-cell.dt-col-orange { background: rgba(255, 159, 67, 0.1); }
+[data-theme="dark"] .dt-statement .tabulator-cell.dt-col-purple { background: rgba(115, 103, 240, 0.1); }
+[data-theme="dark"] .dt-statement .tabulator-cell.dt-col-teal { background: rgba(0, 207, 232, 0.1); }
+[data-theme="dark"] .dt-statement .tabulator-cell.dt-col-pink { background: rgba(255, 143, 177, 0.1); }
+[data-theme="dark"] .dt-statement .tabulator-cell.dt-col-indigo { background: rgba(115, 103, 240, 0.1); }
+[data-theme="dark"] .dt-statement .tabulator-cell.dt-col-cyan { background: rgba(0, 207, 232, 0.1); }
+[data-theme="dark"] .dt-statement .tabulator-cell.dt-col-amber { background: rgba(255, 224, 130, 0.1); }
+[data-theme="dark"] .dt-statement .tabulator-cell.dt-col-lime { background: rgba(220, 231, 117, 0.1); }
+[data-theme="dark"] .dt-statement .tabulator-cell.dt-col-brown { background: rgba(188, 170, 164, 0.1); }
+[data-theme="dark"] .dt-statement .tabulator-cell.dt-col-gray { background: rgba(158, 158, 158, 0.1); }
+
+/* Dark mode - Column Colors on Hover */
+[data-theme="dark"] .dt-statement .tabulator-row:hover .tabulator-cell.dt-col-blue { background: #4a3f8f !important; }
+[data-theme="dark"] .dt-statement .tabulator-row:hover .tabulator-cell.dt-col-green { background: rgba(40, 199, 111, 0.2) !important; }
+[data-theme="dark"] .dt-statement .tabulator-row:hover .tabulator-cell.dt-col-red { background: rgba(234, 84, 85, 0.2) !important; }
+[data-theme="dark"] .dt-statement .tabulator-row:hover .tabulator-cell.dt-col-orange { background: rgba(255, 159, 67, 0.2) !important; }
+[data-theme="dark"] .dt-statement .tabulator-row:hover .tabulator-cell.dt-col-purple { background: #4a3f8f !important; }
+[data-theme="dark"] .dt-statement .tabulator-row:hover .tabulator-cell.dt-col-teal { background: rgba(0, 207, 232, 0.2) !important; }
+[data-theme="dark"] .dt-statement .tabulator-row:hover .tabulator-cell.dt-col-pink { background: rgba(255, 143, 177, 0.2) !important; }
+[data-theme="dark"] .dt-statement .tabulator-row:hover .tabulator-cell.dt-col-indigo { background: #4a3f8f !important; }
+[data-theme="dark"] .dt-statement .tabulator-row:hover .tabulator-cell.dt-col-cyan { background: rgba(0, 207, 232, 0.2) !important; }
+[data-theme="dark"] .dt-statement .tabulator-row:hover .tabulator-cell.dt-col-amber { background: rgba(255, 224, 130, 0.2) !important; }
+[data-theme="dark"] .dt-statement .tabulator-row:hover .tabulator-cell.dt-col-lime { background: rgba(220, 231, 117, 0.2) !important; }
+[data-theme="dark"] .dt-statement .tabulator-row:hover .tabulator-cell.dt-col-brown { background: rgba(188, 170, 164, 0.2) !important; }
+[data-theme="dark"] .dt-statement .tabulator-row:hover .tabulator-cell.dt-col-gray { background: rgba(158, 158, 158, 0.2) !important; }
+
+/* Dark mode - Selected Row with Column Colors */
+[data-theme="dark"] .dt-statement .tabulator-row.tabulator-selected .tabulator-cell.dt-col-blue { background: rgba(115, 103, 240, 0.25) !important; }
+[data-theme="dark"] .dt-statement .tabulator-row.tabulator-selected .tabulator-cell.dt-col-green { background: rgba(40, 199, 111, 0.25) !important; }
+[data-theme="dark"] .dt-statement .tabulator-row.tabulator-selected .tabulator-cell.dt-col-red { background: rgba(234, 84, 85, 0.25) !important; }
+[data-theme="dark"] .dt-statement .tabulator-row.tabulator-selected .tabulator-cell.dt-col-orange { background: rgba(255, 159, 67, 0.25) !important; }
+[data-theme="dark"] .dt-statement .tabulator-row.tabulator-selected .tabulator-cell.dt-col-purple { background: rgba(115, 103, 240, 0.25) !important; }
+[data-theme="dark"] .dt-statement .tabulator-row.tabulator-selected .tabulator-cell.dt-col-teal { background: rgba(0, 207, 232, 0.25) !important; }
+[data-theme="dark"] .dt-statement .tabulator-row.tabulator-selected .tabulator-cell.dt-col-pink { background: rgba(255, 143, 177, 0.25) !important; }
+[data-theme="dark"] .dt-statement .tabulator-row.tabulator-selected .tabulator-cell.dt-col-indigo { background: rgba(115, 103, 240, 0.25) !important; }
+[data-theme="dark"] .dt-statement .tabulator-row.tabulator-selected .tabulator-cell.dt-col-cyan { background: rgba(0, 207, 232, 0.25) !important; }
+[data-theme="dark"] .dt-statement .tabulator-row.tabulator-selected .tabulator-cell.dt-col-amber { background: rgba(255, 224, 130, 0.25) !important; }
+[data-theme="dark"] .dt-statement .tabulator-row.tabulator-selected .tabulator-cell.dt-col-lime { background: rgba(220, 231, 117, 0.25) !important; }
+[data-theme="dark"] .dt-statement .tabulator-row.tabulator-selected .tabulator-cell.dt-col-brown { background: rgba(188, 170, 164, 0.25) !important; }
+[data-theme="dark"] .dt-statement .tabulator-row.tabulator-selected .tabulator-cell.dt-col-gray { background: rgba(158, 158, 158, 0.25) !important; }
+
+/* Dark mode - Footer Column Colors */
+[data-theme="dark"] .dt-statement .tabulator-footer .tabulator-calcs-holder .tabulator-cell.dt-col-blue { background: #3f3580 !important; }
+[data-theme="dark"] .dt-statement .tabulator-footer .tabulator-calcs-holder .tabulator-cell.dt-col-green { background: rgba(40, 199, 111, 0.15) !important; }
+[data-theme="dark"] .dt-statement .tabulator-footer .tabulator-calcs-holder .tabulator-cell.dt-col-red { background: rgba(234, 84, 85, 0.15) !important; }
+[data-theme="dark"] .dt-statement .tabulator-footer .tabulator-calcs-holder .tabulator-cell.dt-col-orange { background: rgba(255, 159, 67, 0.15) !important; }
+[data-theme="dark"] .dt-statement .tabulator-footer .tabulator-calcs-holder .tabulator-cell.dt-col-purple { background: #3f3580 !important; }
+[data-theme="dark"] .dt-statement .tabulator-footer .tabulator-calcs-holder .tabulator-cell.dt-col-teal { background: rgba(0, 207, 232, 0.15) !important; }
+[data-theme="dark"] .dt-statement .tabulator-footer .tabulator-calcs-holder .tabulator-cell.dt-col-pink { background: rgba(255, 143, 177, 0.15) !important; }
+[data-theme="dark"] .dt-statement .tabulator-footer .tabulator-calcs-holder .tabulator-cell.dt-col-indigo { background: #3f3580 !important; }
+[data-theme="dark"] .dt-statement .tabulator-footer .tabulator-calcs-holder .tabulator-cell.dt-col-cyan { background: rgba(0, 207, 232, 0.15) !important; }
+[data-theme="dark"] .dt-statement .tabulator-footer .tabulator-calcs-holder .tabulator-cell.dt-col-amber { background: rgba(255, 224, 130, 0.15) !important; }
+[data-theme="dark"] .dt-statement .tabulator-footer .tabulator-calcs-holder .tabulator-cell.dt-col-lime { background: rgba(220, 231, 117, 0.15) !important; }
+[data-theme="dark"] .dt-statement .tabulator-footer .tabulator-calcs-holder .tabulator-cell.dt-col-brown { background: rgba(188, 170, 164, 0.15) !important; }
+[data-theme="dark"] .dt-statement .tabulator-footer .tabulator-calcs-holder .tabulator-cell.dt-col-gray { background: rgba(158, 158, 158, 0.15) !important; }
+
+/* Dark mode - Scrollbar */
+[data-theme="dark"] .dt-statement .tabulator-tableholder::-webkit-scrollbar-track {
+    background: #25293c;
+}
+
+[data-theme="dark"] .dt-statement .tabulator-tableholder::-webkit-scrollbar-thumb {
+    background: #4a5168;
+    border-color: #25293c;
+}
+
+[data-theme="dark"] .dt-statement .tabulator-tableholder::-webkit-scrollbar-thumb:hover {
+    background: #5a6278;
+}
+
+/* Dark mode - Resize Handle */
+[data-theme="dark"] .dt-statement .tabulator-header .tabulator-col .tabulator-col-resize-handle {
+    background: #3b4056;
+}
+
+/* Dark mode - Loading Overlay */
+[data-theme="dark"] .dt-statement .tabulator-loading {
+    background: rgba(37, 41, 60, 0.9);
+    color: #d0d4e4;
+}
+
+/* Dark mode - Sort Arrow */
+[data-theme="dark"] .dt-statement .tabulator-header .tabulator-col.tabulator-sortable .tabulator-arrow {
+    border-bottom-color: #a3a8b8;
+}
+
+[data-theme="dark"] .dt-statement .tabulator-header .tabulator-col.tabulator-sortable[aria-sort="asc"] .tabulator-arrow {
+    border-bottom-color: #7367f0;
+}
+
+[data-theme="dark"] .dt-statement .tabulator-header .tabulator-col.tabulator-sortable[aria-sort="desc"] .tabulator-arrow {
+    border-top-color: #7367f0;
+}
+
+/* Dark mode - Checkbox styling */
+[data-theme="dark"] .dt-statement .tabulator-row .tabulator-cell input[type="checkbox"] {
+    accent-color: #7367f0;
+}
+
+/* Dark mode - Row Expand Icon */
+[data-theme="dark"] .dt-expand-icon {
+    color: #a3a8b8;
+}
+
+[data-theme="dark"] .dt-expand-icon:hover {
+    color: #7367f0;
+    background: rgba(115, 103, 240, 0.1);
+}
+
+/* Dark mode - Info and Status texts */
+[data-theme="dark"] .dt-info-text {
+    color: #a3a8b8;
+}
+
+/* Dark mode - Tooltip */
+[data-theme="dark"] .dt-tooltip {
+    background: #3b4056;
+    color: #d0d4e4;
+    border-color: #4a5168;
+}
+
+/* Dark mode - Dropdown Menu (Column selector, etc.) */
+[data-theme="dark"] .dt-dropdown-menu {
+    background: #2f3349;
+    border-color: #3b4056;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="dark"] .dt-dropdown-header {
+    background: #25293c;
+    border-bottom-color: #3b4056;
+    color: #d0d4e4;
+}
+
+[data-theme="dark"] .dt-dropdown-header-count {
+    color: #a3a8b8;
+}
+
+[data-theme="dark"] .dt-dropdown-body {
+    background: #2f3349;
+}
+
+[data-theme="dark"] .dt-column-item {
+    color: #d0d4e4;
+}
+
+[data-theme="dark"] .dt-column-item:hover {
+    background: #3b4056;
+}
+
+[data-theme="dark"] .dt-column-drag-handle {
+    color: #a3a8b8;
+}
+
+[data-theme="dark"] .dt-column-item:hover .dt-column-drag-handle {
+    color: #d0d4e4;
+}
+
+[data-theme="dark"] .dt-column-name {
+    color: #d0d4e4;
+}
+
+[data-theme="dark"] .dt-pin-btn {
+    color: #a3a8b8;
+}
+
+[data-theme="dark"] .dt-pin-btn:hover {
+    background: #3b4056;
+    border-color: #4a5168;
+}
+
+[data-theme="dark"] .dt-pin-btn.active {
+    background: #3f3580;
+    color: #7367f0;
+    border-color: #7367f0;
+}
+
+[data-theme="dark"] .dt-resize-btn {
+    color: #a3a8b8;
+}
+
+[data-theme="dark"] .dt-resize-btn:hover {
+    background: #3b4056;
+    border-color: #4a5168;
+    color: #7367f0;
+}
+
+/* Dark mode - Wrap/Clip Menu */
+[data-theme="dark"] .dt-wrap-btn {
+    color: #a3a8b8;
+}
+
+[data-theme="dark"] .dt-wrap-btn:hover {
+    background: #3b4056;
+    border-color: #4a5168;
+}
+
+[data-theme="dark"] .dt-wrap-menu {
+    background: #2f3349;
+    border-color: #3b4056;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .dt-wrap-option {
+    color: #d0d4e4;
+}
+
+[data-theme="dark"] .dt-wrap-option:hover {
+    background: #3b4056;
+}
+
+[data-theme="dark"] .dt-wrap-option.active {
+    background: #3f3580;
+    color: #7367f0;
+}
+
+/* Dark mode - Vertical Alignment Dropdown */
+[data-theme="dark"] .dt-valign-dropdown .dt-valign-btn {
+    color: #a3a8b8;
+    border-color: #3b4056;
+}
+
+[data-theme="dark"] .dt-valign-dropdown .dt-valign-btn:hover {
+    background: #3b4056;
+}
+
+[data-theme="dark"] .dt-valign-menu {
+    background: #2f3349;
+    border-color: #3b4056;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .dt-valign-option {
+    color: #d0d4e4;
+}
+
+[data-theme="dark"] .dt-valign-option:hover {
+    background: #3b4056;
+}
+
+[data-theme="dark"] .dt-valign-option.active {
+    background: #3f3580;
+    color: #7367f0;
+}
+
+[data-theme="dark"] .dt-valign-option .material-symbols-rounded {
+    color: #a3a8b8;
+}
+
+[data-theme="dark"] .dt-valign-option.active .material-symbols-rounded {
+    color: #7367f0;
+}
+
+/* Dark mode - Row Expand/Plus Icon */
+[data-theme="dark"] .dt-statement .tabulator-row .tabulator-cell .dt-row-expand-btn,
+[data-theme="dark"] .dt-expand-btn {
+    color: #a3a8b8;
+    background: transparent;
+}
+
+[data-theme="dark"] .dt-statement .tabulator-row .tabulator-cell .dt-row-expand-btn:hover,
+[data-theme="dark"] .dt-expand-btn:hover {
+    color: #7367f0;
+    background: rgba(115, 103, 240, 0.1);
+}
+
+/* Dark mode - Checkbox styling */
+[data-theme="dark"] .dt-statement .tabulator-header .tabulator-col input[type="checkbox"],
+[data-theme="dark"] .dt-statement .tabulator-row .tabulator-cell input[type="checkbox"] {
+    accent-color: #7367f0;
+    background: #2f3349;
+    border-color: #4a5168;
+}
+
+/* Dark mode - Export Dialog (enhanced) */
+[data-theme="dark"] .dt-export-dialog-overlay {
+    background: rgba(37, 41, 60, 0.8);
+}
+
+[data-theme="dark"] .dt-export-dialog {
+    background: #2f3349;
+    border-color: #3b4056;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+}
+
+[data-theme="dark"] .dt-export-dialog-header {
+    background: #25293c;
+    border-bottom-color: #3b4056;
+    color: #d0d4e4;
+}
+
+[data-theme="dark"] .dt-export-dialog-title {
+    color: #d0d4e4;
+}
+
+[data-theme="dark"] .dt-export-dialog-close {
+    color: #a3a8b8;
+}
+
+[data-theme="dark"] .dt-export-dialog-close:hover {
+    background: #3b4056;
+    color: #d0d4e4;
+}
+
+[data-theme="dark"] .dt-export-dialog-body {
+    background: #2f3349;
+}
+
+[data-theme="dark"] .dt-export-field-label {
+    color: #a3a8b8;
+}
+
+[data-theme="dark"] .dt-export-field input[type="text"],
+[data-theme="dark"] .dt-export-filename-input {
+    background: #25293c;
+    border-color: #3b4056;
+    color: #d0d4e4;
+}
+
+[data-theme="dark"] .dt-export-field input[type="text"]:focus,
+[data-theme="dark"] .dt-export-filename-input:focus {
+    border-color: #7367f0;
+}
+
+[data-theme="dark"] .dt-export-format-btn {
+    background: #25293c;
+    border-color: #3b4056;
+    color: #d0d4e4;
+}
+
+[data-theme="dark"] .dt-export-format-btn:hover {
+    background: #3b4056;
+}
+
+[data-theme="dark"] .dt-export-format-btn.active {
+    background: #3f3580;
+    border-color: #7367f0;
+    color: #7367f0;
+}
+
+[data-theme="dark"] .dt-export-options-btn {
+    background: #25293c;
+    border-color: #3b4056;
+    color: #d0d4e4;
+}
+
+[data-theme="dark"] .dt-export-options-btn:hover {
+    background: #3b4056;
+}
+
+[data-theme="dark"] .dt-export-section-title {
+    color: #a3a8b8;
+}
+
+[data-theme="dark"] .dt-export-columns-header {
+    background: #25293c;
+    border-bottom-color: #3b4056;
+    color: #a3a8b8;
+}
+
+[data-theme="dark"] .dt-export-columns-list {
+    background: #2f3349;
+}
+
+[data-theme="dark"] .dt-export-column-item {
+    border-bottom-color: #3b4056;
+    color: #d0d4e4;
+}
+
+[data-theme="dark"] .dt-export-column-item:hover {
+    background: #3b4056;
+}
+
+[data-theme="dark"] .dt-export-column-type {
+    background: #3f3580;
+    color: #7367f0;
+}
+
+[data-theme="dark"] .dt-export-column-type.date {
+    background: rgba(40, 199, 111, 0.15);
+    color: #28c76f;
+}
+
+[data-theme="dark"] .dt-export-column-type.currency {
+    background: rgba(255, 159, 67, 0.15);
+    color: #ff9f43;
+}
+
+[data-theme="dark"] .dt-export-column-type.number {
+    background: #3f3580;
+    color: #7367f0;
+}
+
+[data-theme="dark"] .dt-export-column-select {
+    background: #25293c;
+    border-color: #3b4056;
+    color: #d0d4e4;
+}
+
+[data-theme="dark"] .dt-export-align-btn {
+    color: #a3a8b8;
+    background: transparent;
+    border-color: transparent;
+}
+
+[data-theme="dark"] .dt-export-align-btn:hover {
+    background: #3b4056;
+}
+
+[data-theme="dark"] .dt-export-align-btn.active {
+    color: #7367f0;
+    background: #3f3580;
+}
+
+[data-theme="dark"] .dt-export-dialog-footer {
+    background: #25293c;
+    border-top-color: #3b4056;
+}
+
+[data-theme="dark"] .dt-export-btn-cancel {
+    background: transparent;
+    border-color: #3b4056;
+    color: #d0d4e4;
+}
+
+[data-theme="dark"] .dt-export-btn-cancel:hover {
+    background: #3b4056;
+}
+
+[data-theme="dark"] .dt-export-btn-download {
+    background: #7367f0;
+    color: #ffffff;
+}
+
+[data-theme="dark"] .dt-export-btn-download:hover {
+    background: #9e95f5;
+}
+
+/* Dark mode - Pagination Footer */
+[data-theme="dark"] .dt-statement .tabulator-footer {
+    background: #25293c;
+    border-top-color: #3b4056;
+}
+
+[data-theme="dark"] .dt-statement .tabulator-footer .tabulator-paginator {
+    background: #25293c;
+    color: #d0d4e4;
+}
+
+[data-theme="dark"] .dt-statement .tabulator-footer .tabulator-paginator label {
+    color: #a3a8b8;
+}
+
+[data-theme="dark"] .dt-statement .tabulator-page-counter {
+    color: #a3a8b8;
+}
+
+[data-theme="dark"] .dt-statement .tabulator-page {
+    background: #2f3349;
+    border-color: #3b4056;
+    color: #d0d4e4;
+}
+
+[data-theme="dark"] .dt-statement .tabulator-page:hover:not(.disabled):not(.active) {
+    background: #3b4056;
+}
+
+[data-theme="dark"] .dt-statement .tabulator-page.active {
+    background: #7367f0;
+    color: #ffffff;
+    border-color: #7367f0;
+}
+
+[data-theme="dark"] .dt-statement .tabulator-page.disabled {
+    color: #4a5168;
+    opacity: 0.6;
+}
+
+/* Dark mode - Serial Number Column */
+[data-theme="dark"] .dt-statement .tabulator-row .tabulator-cell.dt-serial-cell {
+    color: #a3a8b8;
+}
+
+/* ============================================
+   MATERIAL UI RIPPLE EFFECT FOR DATATABLE
+   ============================================ */
+.dt-control-btn,
+.dt-export-btn-download,
+.dt-export-btn-cancel,
+.dt-export-format-btn,
+.dt-action-item,
+.dt-dropdown-item,
+.dt-valign-option,
+.dt-wrap-option,
+.dt-expand-action-btn {
+    position: relative;
+    overflow: hidden;
+}
+
+.dt-control-btn::after,
+.dt-export-btn-download::after,
+.dt-export-btn-cancel::after,
+.dt-export-format-btn::after,
+.dt-action-item::after,
+.dt-dropdown-item::after,
+.dt-valign-option::after,
+.dt-wrap-option::after,
+.dt-expand-action-btn::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.1);
+    transform: translate(-50%, -50%);
+    transition: width 0.3s ease, height 0.3s ease, opacity 0.3s ease;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.dt-control-btn:active::after,
+.dt-export-btn-download:active::after,
+.dt-export-btn-cancel:active::after,
+.dt-export-format-btn:active::after,
+.dt-action-item:active::after,
+.dt-dropdown-item:active::after,
+.dt-valign-option:active::after,
+.dt-wrap-option:active::after,
+.dt-expand-action-btn:active::after {
+    width: 200%;
+    height: 200%;
+    opacity: 1;
+    transition: width 0s, height 0s, opacity 0s;
+}
+
+/* Light ripple for dark mode */
+[data-theme="dark"] .dt-control-btn::after,
+[data-theme="dark"] .dt-export-btn-cancel::after,
+[data-theme="dark"] .dt-export-format-btn::after,
+[data-theme="dark"] .dt-action-item::after,
+[data-theme="dark"] .dt-dropdown-item::after,
+[data-theme="dark"] .dt-valign-option::after,
+[data-theme="dark"] .dt-wrap-option::after,
+[data-theme="dark"] .dt-expand-action-btn::after {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+/* Primary button keeps dark ripple */
+.dt-export-btn-download::after {
+    background: rgba(0, 0, 0, 0.15);
+}
+
+/* ============================================
+   DARK MODE FIXES - Enhanced Styling (Vuexy)
+   ============================================ */
+
+/* Dark mode - Checkbox Complete Override */
+[data-theme="dark"] .dt-statement .tabulator-row-handle-box,
+[data-theme="dark"] .dt-statement .tabulator-header .tabulator-row-handle-box,
+[data-theme="dark"] .dt-statement input[type="checkbox"].tabulator-row-handle-box,
+[data-theme="dark"] .dt-statement .tabulator-cell input[type="checkbox"],
+[data-theme="dark"] .dt-statement .tabulator-header input[type="checkbox"] {
+    background: transparent !important;
+    border-color: #4a5168 !important;
+}
+
+[data-theme="dark"] .dt-statement .tabulator-row-handle-box:hover,
+[data-theme="dark"] .dt-statement .tabulator-header .tabulator-row-handle-box:hover,
+[data-theme="dark"] .dt-statement input[type="checkbox"].tabulator-row-handle-box:hover,
+[data-theme="dark"] .dt-statement .tabulator-cell input[type="checkbox"]:hover,
+[data-theme="dark"] .dt-statement .tabulator-header input[type="checkbox"]:hover {
+    border-color: #7367f0 !important;
+    background: rgba(115, 103, 240, 0.1) !important;
+}
+
+[data-theme="dark"] .dt-statement .tabulator-row-handle-box.tabulator-selected,
+[data-theme="dark"] .dt-statement .tabulator-header .tabulator-row-handle-box.tabulator-selected,
+[data-theme="dark"] .dt-statement input[type="checkbox"].tabulator-row-handle-box:checked,
+[data-theme="dark"] .dt-statement .tabulator-cell input[type="checkbox"]:checked,
+[data-theme="dark"] .dt-statement .tabulator-header input[type="checkbox"]:checked {
+    background: #7367f0 !important;
+    border-color: #7367f0 !important;
+}
+
+[data-theme="dark"] .dt-statement .tabulator-row-handle-box.tabulator-selected::after,
+[data-theme="dark"] .dt-statement .tabulator-header .tabulator-row-handle-box.tabulator-selected::after,
+[data-theme="dark"] .dt-statement input[type="checkbox"].tabulator-row-handle-box:checked::after,
+[data-theme="dark"] .dt-statement .tabulator-cell input[type="checkbox"]:checked::after,
+[data-theme="dark"] .dt-statement .tabulator-header input[type="checkbox"]:checked::after {
+    border-color: #ffffff !important;
+}
+
+/* Dark mode - Expand/Plus Button - Make icon visible */
+[data-theme="dark"] .dt-expand-btn,
+[data-theme="dark"] .dt-row-expand-btn,
+[data-theme="dark"] .dt-statement .tabulator-row .tabulator-cell .dt-row-expand-btn {
+    color: #a3a8b8 !important;
+    background: transparent !important;
+    border-color: #4a5168 !important;
+}
+
+[data-theme="dark"] .dt-expand-btn:hover,
+[data-theme="dark"] .dt-row-expand-btn:hover,
+[data-theme="dark"] .dt-statement .tabulator-row .tabulator-cell .dt-row-expand-btn:hover {
+    color: #7367f0 !important;
+    background: rgba(115, 103, 240, 0.1) !important;
+    border-color: #7367f0 !important;
+}
+
+[data-theme="dark"] .dt-expand-btn .material-symbols-rounded,
+[data-theme="dark"] .dt-expand-btn .material-icons,
+[data-theme="dark"] .dt-row-expand-btn .material-symbols-rounded,
+[data-theme="dark"] .dt-row-expand-btn .material-icons {
+    color: inherit !important;
+}
+
+/* Dark mode - Header Row */
+[data-theme="dark"] .dt-statement .tabulator-header {
+    background: #25293c !important;
+    border-bottom-color: #3b4056 !important;
+}
+
+[data-theme="dark"] .dt-statement .tabulator-header .tabulator-col {
+    background: #25293c !important;
+    border-right-color: #3b4056 !important;
+}
+
+[data-theme="dark"] .dt-statement .tabulator-header .tabulator-col .tabulator-col-title {
+    color: #d0d4e4 !important;
+}
+
+[data-theme="dark"] .dt-statement .tabulator-header .tabulator-col .tabulator-col-content {
+    color: #d0d4e4 !important;
+}
+
+[data-theme="dark"] .dt-statement .tabulator-header .tabulator-col:hover {
+    background: #3b4056 !important;
+}
+
+/* Dark mode - Table Body Rows - Ensure text visibility */
+[data-theme="dark"] .dt-statement .tabulator-tableholder {
+    background: #2f3349 !important;
+}
+
+[data-theme="dark"] .dt-statement .tabulator-row {
+    background: #2f3349 !important;
+    color: #d0d4e4 !important;
+}
+
+[data-theme="dark"] .dt-statement .tabulator-row:nth-child(even) {
+    background: #25293c !important;
+}
+
+[data-theme="dark"] .dt-statement .tabulator-row:hover {
+    background: #3b4056 !important;
+}
+
+[data-theme="dark"] .dt-statement .tabulator-row .tabulator-cell {
+    color: #d0d4e4 !important;
+    border-right-color: #3b4056 !important;
+}
+
+/* Dark mode - Footer Row (Total Row) */
+[data-theme="dark"] .dt-statement .tabulator-footer {
+    background: #25293c !important;
+    border-top-color: #3b4056 !important;
+}
+
+[data-theme="dark"] .dt-statement .tabulator-footer .tabulator-calcs-holder {
+    background: #25293c !important;
+    border-bottom-color: #3b4056 !important;
+}
+
+[data-theme="dark"] .dt-statement .tabulator-footer .tabulator-calcs-holder .tabulator-row {
+    background: #25293c !important;
+}
+
+[data-theme="dark"] .dt-statement .tabulator-footer .tabulator-calcs-holder .tabulator-cell {
+    color: #d0d4e4 !important;
+    border-right-color: #3b4056 !important;
+    font-weight: 600;
+}
+
+/* Dark mode - Footer text "Total" label */
+[data-theme="dark"] .dt-statement .tabulator-footer .tabulator-calcs-holder .tabulator-cell:first-child {
+    color: #a3a8b8 !important;
+}
+
+/* Dark mode - Pagination in Footer */
+[data-theme="dark"] .dt-statement .tabulator-footer .tabulator-paginator {
+    background: #25293c !important;
+    color: #d0d4e4 !important;
+}
+
+[data-theme="dark"] .dt-statement .tabulator-footer .tabulator-paginator label {
+    color: #a3a8b8 !important;
+}
+
+[data-theme="dark"] .dt-statement .tabulator-footer .tabulator-pages {
+    background: transparent !important;
+}
+
+[data-theme="dark"] .dt-statement .tabulator-page {
+    background: #2f3349 !important;
+    border-color: #3b4056 !important;
+    color: #d0d4e4 !important;
+}
+
+[data-theme="dark"] .dt-statement .tabulator-page:hover:not(.disabled):not(.active) {
+    background: #3b4056 !important;
+}
+
+[data-theme="dark"] .dt-statement .tabulator-page.active {
+    background: #7367f0 !important;
+    color: #ffffff !important;
+    border-color: #7367f0 !important;
+}
+
+[data-theme="dark"] .dt-statement .tabulator-page.disabled {
+    color: #4a5168 !important;
+    opacity: 0.6;
+}
+
+/* Dark mode - Page counter */
+[data-theme="dark"] .dt-statement .tabulator-page-counter {
+    color: #a3a8b8 !important;
+}
+
+/* Dark mode - Column Colors - Lighter backgrounds with visible text (Vuexy) */
+[data-theme="dark"] .dt-statement .tabulator-cell.dt-col-blue {
+    background: #3f3580 !important;
+    color: #7367f0 !important;
+}
+
+[data-theme="dark"] .dt-statement .tabulator-cell.dt-col-green {
+    background: rgba(40, 199, 111, 0.15) !important;
+    color: #28c76f !important;
+}
+
+[data-theme="dark"] .dt-statement .tabulator-cell.dt-col-red {
+    background: rgba(234, 84, 85, 0.15) !important;
+    color: #ea5455 !important;
+}
+
+[data-theme="dark"] .dt-statement .tabulator-cell.dt-col-orange {
+    background: rgba(255, 159, 67, 0.15) !important;
+    color: #ff9f43 !important;
+}
+
+[data-theme="dark"] .dt-statement .tabulator-cell.dt-col-purple {
+    background: #3f3580 !important;
+    color: #7367f0 !important;
+}
+
+[data-theme="dark"] .dt-statement .tabulator-cell.dt-col-teal {
+    background: rgba(0, 207, 232, 0.15) !important;
+    color: #00cfe8 !important;
+}
+
+[data-theme="dark"] .dt-statement .tabulator-cell.dt-col-pink {
+    background: rgba(255, 143, 177, 0.15) !important;
+    color: #ff8fb1 !important;
+}
+
+[data-theme="dark"] .dt-statement .tabulator-cell.dt-col-indigo {
+    background: #3f3580 !important;
+    color: #7367f0 !important;
+}
+
+[data-theme="dark"] .dt-statement .tabulator-cell.dt-col-cyan {
+    background: rgba(0, 207, 232, 0.15) !important;
+    color: #00cfe8 !important;
+}
+
+[data-theme="dark"] .dt-statement .tabulator-cell.dt-col-amber {
+    background: rgba(255, 224, 130, 0.15) !important;
+    color: #ffe082 !important;
+}
+
+[data-theme="dark"] .dt-statement .tabulator-cell.dt-col-lime {
+    background: rgba(220, 231, 117, 0.15) !important;
+    color: #dce775 !important;
+}
+
+[data-theme="dark"] .dt-statement .tabulator-cell.dt-col-brown {
+    background: rgba(188, 170, 164, 0.15) !important;
+    color: #bcaaa4 !important;
+}
+
+[data-theme="dark"] .dt-statement .tabulator-cell.dt-col-gray {
+    background: rgba(158, 158, 158, 0.15) !important;
+    color: #9e9e9e !important;
+}
+
+/* Dark mode - Footer column colors */
+[data-theme="dark"] .dt-statement .tabulator-footer .tabulator-calcs-holder .tabulator-cell.dt-col-blue {
+    background: #4a3f8f !important;
+    color: #7367f0 !important;
+}
+
+[data-theme="dark"] .dt-statement .tabulator-footer .tabulator-calcs-holder .tabulator-cell.dt-col-green {
+    background: rgba(40, 199, 111, 0.2) !important;
+    color: #28c76f !important;
+}
+
+/* Dark mode - Row hover with column colors */
+[data-theme="dark"] .dt-statement .tabulator-row:hover .tabulator-cell.dt-col-blue {
+    background: rgba(115, 103, 240, 0.25) !important;
+}
+
+[data-theme="dark"] .dt-statement .tabulator-row:hover .tabulator-cell.dt-col-green {
+    background: rgba(40, 199, 111, 0.25) !important;
+}
+
+/* Dark mode - Dropdown item checkbox */
+[data-theme="dark"] .dt-dropdown-item input[type="checkbox"] {
+    background: transparent !important;
+    border-color: #4a5168 !important;
+}
+
+[data-theme="dark"] .dt-dropdown-item input[type="checkbox"]:hover {
+    border-color: #7367f0 !important;
+    background: rgba(115, 103, 240, 0.1) !important;
+}
+
+[data-theme="dark"] .dt-dropdown-item input[type="checkbox"]:checked {
+    background: #7367f0 !important;
+    border-color: #7367f0 !important;
+}
+
+[data-theme="dark"] .dt-dropdown-item input[type="checkbox"]:checked::after {
+    border-color: #ffffff !important;
+}
+
+/* Dark mode - Export column checkbox */
+[data-theme="dark"] .dt-export-col-check input[type="checkbox"] {
+    accent-color: #7367f0;
+}
+
+/* Dark mode - Toolbar area */
+[data-theme="dark"] .dt-toolbar {
+    background: #25293c !important;
+    border-bottom-color: #3b4056 !important;
+}
+
+/* Dark mode - Serial number cell */
+[data-theme="dark"] .dt-statement .tabulator-row .tabulator-cell.dt-serial-cell {
+    color: #a3a8b8 !important;
+    background: transparent !important;
+}
+
+/* Dark mode - Row expanded state */
+[data-theme="dark"] .dt-statement .tabulator-row.dt-row-expanded {
+    background: var(--dt-bg-hover) !important;
+}
+
+[data-theme="dark"] .dt-statement .tabulator-row.dt-row-expanded .tabulator-cell {
+    background: var(--dt-bg-hover) !important;
+}
+
+/* ============================================
+   DARK MODE - Footer Static Columns Fix
+   (Plus, Checkbox, S.N., Pinned columns, Action)
+   ============================================ */
+
+/* Footer - Frozen/Pinned columns background */
+[data-theme="dark"] .dt-statement .tabulator-footer .tabulator-calcs-holder .tabulator-cell.tabulator-frozen {
+    background: var(--dt-footer-bg) !important;
+}
+
+/* Footer - Expand/Plus button cell */
+[data-theme="dark"] .dt-statement .tabulator-footer .tabulator-calcs-holder .tabulator-cell[tabulator-field="dt-expand"],
+[data-theme="dark"] .dt-statement .tabulator-footer .tabulator-calcs-holder .tabulator-cell.dt-expand-cell {
+    background: var(--dt-footer-bg) !important;
+}
+
+/* Footer - Checkbox/Selection cell */
+[data-theme="dark"] .dt-statement .tabulator-footer .tabulator-calcs-holder .tabulator-cell[tabulator-field="dt-select"],
+[data-theme="dark"] .dt-statement .tabulator-footer .tabulator-calcs-holder .tabulator-cell.dt-select-cell {
+    background: var(--dt-footer-bg) !important;
+}
+
+/* Footer - Serial number cell */
+[data-theme="dark"] .dt-statement .tabulator-footer .tabulator-calcs-holder .tabulator-cell[tabulator-field="dt-serial"],
+[data-theme="dark"] .dt-statement .tabulator-footer .tabulator-calcs-holder .tabulator-cell.dt-serial-cell {
+    background: var(--dt-footer-bg) !important;
+    color: var(--dt-text-secondary) !important;
+}
+
+/* Footer - Action column cell */
+[data-theme="dark"] .dt-statement .tabulator-footer .tabulator-calcs-holder .tabulator-cell[tabulator-field="dt-actions"],
+[data-theme="dark"] .dt-statement .tabulator-footer .tabulator-calcs-holder .tabulator-cell.dt-actions-cell {
+    background: var(--dt-footer-bg) !important;
+}
+
+/* Footer - First few static columns (by position) */
+[data-theme="dark"] .dt-statement .tabulator-footer .tabulator-calcs-holder .tabulator-row .tabulator-cell:nth-child(1),
+[data-theme="dark"] .dt-statement .tabulator-footer .tabulator-calcs-holder .tabulator-row .tabulator-cell:nth-child(2),
+[data-theme="dark"] .dt-statement .tabulator-footer .tabulator-calcs-holder .tabulator-row .tabulator-cell:nth-child(3) {
+    background: var(--dt-footer-bg) !important;
+}
+
+/* ============================================
+   DARK MODE - Export Modal Complete Styling
+   ============================================ */
+
+/* Export Modal Backdrop */
+[data-theme="dark"] .dt-export-modal-backdrop {
+    background: var(--dt-overlay-bg);
+}
+
+/* Export Modal Content */
+[data-theme="dark"] .dt-export-modal-content {
+    background: var(--dt-dialog-bg);
+    border-color: var(--dt-border-primary);
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5);
+}
+
+/* Export Modal Header */
+[data-theme="dark"] .dt-export-modal-header {
+    background: var(--dt-bg-secondary);
+    border-bottom-color: var(--dt-border-primary);
+}
+
+[data-theme="dark"] .dt-export-modal-title {
+    color: var(--dt-text-primary);
+}
+
+[data-theme="dark"] .dt-export-modal-title .material-symbols-rounded {
+    color: var(--dt-text-secondary);
+}
+
+[data-theme="dark"] .dt-export-modal-close {
+    color: var(--dt-text-secondary);
+}
+
+[data-theme="dark"] .dt-export-modal-close:hover {
+    background: var(--dt-bg-hover);
+    color: var(--dt-text-primary);
+}
+
+/* Export Modal Body */
+[data-theme="dark"] .dt-export-modal-body {
+    background: var(--dt-dialog-bg);
+}
+
+/* Export Filename Input */
+[data-theme="dark"] .dt-export-filename-input-wrapper {
+    background: var(--dt-bg-secondary);
+    border-color: var(--dt-border-primary);
+}
+
+[data-theme="dark"] .dt-export-filename-input {
+    background: transparent;
+    color: var(--dt-text-primary);
+}
+
+[data-theme="dark"] .dt-export-filename-input::placeholder {
+    color: var(--dt-text-muted);
+}
+
+[data-theme="dark"] .dt-export-filename-input-wrapper:focus-within {
+    border-color: var(--dt-accent-primary);
+}
+
+[data-theme="dark"] .dt-export-filename-ext {
+    background: var(--dt-bg-tertiary);
+    color: var(--dt-text-secondary);
+    border-left-color: var(--dt-border-primary);
+}
+
+/* Export Format Options (Radio buttons) */
+[data-theme="dark"] .dt-export-format-option {
+    background: var(--dt-bg-secondary);
+    border-color: var(--dt-border-primary);
+    color: var(--dt-text-primary);
+}
+
+[data-theme="dark"] .dt-export-format-option:hover {
+    background: var(--dt-bg-hover);
+}
+
+[data-theme="dark"] .dt-export-format-option:has(input:checked) {
+    background: var(--dt-accent-primary-bg);
+    border-color: var(--dt-accent-primary);
+}
+
+[data-theme="dark"] .dt-export-format-icon {
+    background: var(--dt-bg-tertiary);
+    color: var(--dt-text-secondary);
+}
+
+[data-theme="dark"] .dt-export-format-option:has(input:checked) .dt-export-format-icon {
+    background: var(--dt-accent-primary);
+    color: #ffffff;
+}
+
+[data-theme="dark"] .dt-export-format-label {
+    color: var(--dt-text-primary);
+}
+
+/* Export Additional Options Dropdown */
+[data-theme="dark"] .dt-export-additional-btn {
+    background: var(--dt-bg-secondary);
+    border-color: var(--dt-border-primary);
+    color: var(--dt-text-primary);
+}
+
+[data-theme="dark"] .dt-export-additional-btn:hover {
+    background: var(--dt-bg-hover);
+}
+
+[data-theme="dark"] .dt-export-additional-btn .material-symbols-rounded {
+    color: var(--dt-text-secondary);
+}
+
+[data-theme="dark"] .dt-export-additional-menu {
+    background: var(--dt-dialog-bg);
+    border-color: var(--dt-border-primary);
+    box-shadow: var(--dt-shadow-dropdown);
+}
+
+[data-theme="dark"] .dt-export-additional-item {
+    color: var(--dt-text-primary);
+}
+
+[data-theme="dark"] .dt-export-additional-item:hover {
+    background: var(--dt-bg-hover);
+}
+
+[data-theme="dark"] .dt-export-additional-item input[type="checkbox"] {
+    accent-color: var(--dt-accent-primary);
+}
+
+/* Export Options Group */
+[data-theme="dark"] .dt-export-options-group-header {
+    color: var(--dt-text-muted);
+    border-bottom-color: var(--dt-border-primary);
+}
+
+[data-theme="dark"] .dt-export-text-input,
+[data-theme="dark"] .dt-export-freeze-input,
+[data-theme="dark"] .dt-export-freeze-select {
+    background: var(--dt-bg-secondary);
+    border-color: var(--dt-border-primary);
+    color: var(--dt-text-primary);
+}
+
+[data-theme="dark"] .dt-export-text-input:focus,
+[data-theme="dark"] .dt-export-freeze-input:focus,
+[data-theme="dark"] .dt-export-freeze-select:focus {
+    border-color: var(--dt-accent-primary);
+}
+
+[data-theme="dark"] .dt-export-label {
+    color: var(--dt-text-secondary);
+}
+
+/* Export Options Count Badge */
+[data-theme="dark"] .dt-export-options-count {
+    background: var(--dt-bg-tertiary);
+    color: var(--dt-text-secondary);
+}
+
+[data-theme="dark"] .dt-export-additional-btn.options-some .dt-export-options-count {
+    background: var(--dt-accent-warning-bg);
+    color: var(--dt-accent-warning);
+}
+
+[data-theme="dark"] .dt-export-additional-btn.options-all .dt-export-options-count {
+    background: var(--dt-accent-primary-bg);
+    color: var(--dt-accent-primary);
+}
+
+/* Export Columns Section */
+[data-theme="dark"] .dt-export-columns-section-title {
+    color: var(--dt-text-muted);
+}
+
+[data-theme="dark"] .dt-export-columns-toolbar .dt-export-label {
+    color: var(--dt-text-primary);
+}
+
+[data-theme="dark"] .dt-export-columns-count {
+    color: var(--dt-text-secondary);
+    background: var(--dt-bg-tertiary);
+}
+
+[data-theme="dark"] .dt-export-select-all-btn,
+[data-theme="dark"] .dt-export-select-none-btn {
+    background: var(--dt-bg-secondary);
+    border-color: var(--dt-border-primary);
+    color: var(--dt-text-primary);
+}
+
+[data-theme="dark"] .dt-export-select-all-btn:hover,
+[data-theme="dark"] .dt-export-select-none-btn:hover {
+    background: var(--dt-bg-hover);
+    border-color: var(--dt-border-secondary);
+}
+
+[data-theme="dark"] .dt-export-columns-table {
+    border-color: var(--dt-border-primary);
+}
+
+[data-theme="dark"] .dt-export-columns-header {
+    background: var(--dt-bg-secondary);
+    border-bottom-color: var(--dt-border-primary);
+    color: var(--dt-text-secondary);
+}
+
+[data-theme="dark"] .dt-export-columns-list {
+    background: var(--dt-dialog-bg);
+}
+
+[data-theme="dark"] .dt-export-column-row {
+    border-bottom-color: var(--dt-border-primary);
+    color: var(--dt-text-primary);
+}
+
+[data-theme="dark"] .dt-export-column-row:hover {
+    background: var(--dt-bg-hover);
+}
+
+[data-theme="dark"] .dt-export-col-name {
+    color: var(--dt-text-primary);
+}
+
+[data-theme="dark"] .dt-export-column-item {
+    border-bottom-color: var(--dt-border-primary);
+    color: var(--dt-text-primary);
+}
+
+[data-theme="dark"] .dt-export-column-item:hover {
+    background: var(--dt-bg-hover);
+}
+
+[data-theme="dark"] .dt-export-column-type {
+    background: var(--dt-accent-primary-bg);
+    color: var(--dt-accent-primary);
+}
+
+[data-theme="dark"] .dt-export-column-type.date {
+    background: var(--dt-accent-success-bg);
+    color: var(--dt-accent-success);
+}
+
+[data-theme="dark"] .dt-export-column-type.currency {
+    background: var(--dt-accent-warning-bg);
+    color: var(--dt-accent-warning);
+}
+
+[data-theme="dark"] .dt-export-column-type.number {
+    background: var(--dt-accent-info-bg);
+    color: var(--dt-accent-info);
+}
+
+[data-theme="dark"] .dt-export-column-select {
+    background: var(--dt-bg-secondary);
+    border-color: var(--dt-border-primary);
+    color: var(--dt-text-primary);
+}
+
+[data-theme="dark"] .dt-export-align-btn {
+    color: var(--dt-text-secondary);
+}
+
+[data-theme="dark"] .dt-export-align-btn:hover {
+    background: var(--dt-bg-hover);
+}
+
+[data-theme="dark"] .dt-export-align-btn.active {
+    color: var(--dt-accent-primary);
+    background: var(--dt-accent-primary-bg);
+}
+
+/* Export Modal Footer */
+[data-theme="dark"] .dt-export-modal-footer {
+    background: var(--dt-bg-secondary);
+    border-top-color: var(--dt-border-primary);
+}
+
+[data-theme="dark"] .dt-export-btn-cancel {
+    background: transparent;
+    border-color: var(--dt-border-primary);
+    color: var(--dt-text-primary);
+}
+
+[data-theme="dark"] .dt-export-btn-cancel:hover {
+    background: var(--dt-bg-hover);
+}
+
+[data-theme="dark"] .dt-export-btn-download {
+    background: var(--dt-accent-primary);
+    color: #ffffff;
+}
+
+[data-theme="dark"] .dt-export-btn-download:hover {
+    background: #9e95f5;
+}
+
+/* ============================================
+   DARK MODE - Tabulator Context Menu (Right-Click)
+   ============================================ */
+
+[data-theme="dark"] .tabulator-popup-container {
+    background: var(--dt-dialog-bg);
+    border-color: var(--dt-border-primary);
+    box-shadow: var(--dt-shadow-dropdown);
+}
+
+[data-theme="dark"] .tabulator-popup {
+    background: var(--dt-dialog-bg);
+    border-color: var(--dt-border-primary);
+}
+
+[data-theme="dark"] .tabulator-menu {
+    background: var(--dt-dialog-bg);
+    border-color: var(--dt-border-primary);
+    box-shadow: var(--dt-shadow-dropdown);
+}
+
+[data-theme="dark"] .tabulator-menu-item {
+    color: var(--dt-text-primary);
+    background: transparent;
+}
+
+[data-theme="dark"] .tabulator-menu-item:not(.tabulator-menu-item-disabled):hover {
+    background: var(--dt-bg-hover);
+}
+
+[data-theme="dark"] .tabulator-menu-item-disabled {
+    color: var(--dt-text-muted);
+}
+
+[data-theme="dark"] .tabulator-menu-item .tabulator-menu-item-submenu {
+    color: var(--dt-text-secondary);
+}
+
+[data-theme="dark"] .tabulator-menu-separator {
+    border-top-color: var(--dt-border-primary);
+}
+
+/* Submenu */
+[data-theme="dark"] .tabulator-menu .tabulator-menu {
+    background: var(--dt-dialog-bg);
+    border-color: var(--dt-border-primary);
+}
+
+/* ============================================
+   DARK MODE - ADDITIONAL FIXES (Issue Resolution)
+   ============================================ */
+
+/* ===========================================
+   FIX 1: Selected Rows - Alternate Colors Background
+   Issue: Selected rows with alternate (even/odd) colors have white background
+   =========================================== */
+
+/* Selected row - base styling (both odd and even) */
+[data-theme="dark"] .dt-statement .tabulator-row.tabulator-selected,
+[data-theme="dark"] .dt-statement .tabulator-row.tabulator-selected:nth-child(odd),
+[data-theme="dark"] .dt-statement .tabulator-row.tabulator-selected:nth-child(even) {
+    background: #4a3f8f !important;
+}
+
+/* Selected row cells - ensure no white background */
+[data-theme="dark"] .dt-statement .tabulator-row.tabulator-selected .tabulator-cell,
+[data-theme="dark"] .dt-statement .tabulator-row.tabulator-selected:nth-child(odd) .tabulator-cell,
+[data-theme="dark"] .dt-statement .tabulator-row.tabulator-selected:nth-child(even) .tabulator-cell {
+    background: transparent !important;
+    color: #d0d4e4 !important;
+}
+
+/* Selected row on hover */
+[data-theme="dark"] .dt-statement .tabulator-row.tabulator-selected:hover,
+[data-theme="dark"] .dt-statement .tabulator-row.tabulator-selected:hover:nth-child(odd),
+[data-theme="dark"] .dt-statement .tabulator-row.tabulator-selected:hover:nth-child(even) {
+    background: #5a4fa5 !important;
+}
+
+[data-theme="dark"] .dt-statement .tabulator-row.tabulator-selected:hover .tabulator-cell {
+    background: transparent !important;
+}
+
+/* Frozen cells in selected rows */
+[data-theme="dark"] .dt-statement .tabulator-row.tabulator-selected .tabulator-cell.tabulator-frozen,
+[data-theme="dark"] .dt-statement .tabulator-row.tabulator-selected .tabulator-frozen {
+    background: #4a3f8f !important;
+}
+
+/* Additional selected row overrides - very specific to override any base styles */
+[data-theme="dark"] .tabulator .tabulator-row.tabulator-selected,
+[data-theme="dark"] .tabulator-row.tabulator-selected,
+[data-theme="dark"] .tabulator .tabulator-tableholder .tabulator-table .tabulator-row.tabulator-selected {
+    background: #4a3f8f !important;
+    background-color: #4a3f8f !important;
+}
+
+[data-theme="dark"] .tabulator .tabulator-row.tabulator-selected .tabulator-cell,
+[data-theme="dark"] .tabulator-row.tabulator-selected .tabulator-cell,
+[data-theme="dark"] .tabulator .tabulator-tableholder .tabulator-table .tabulator-row.tabulator-selected .tabulator-cell {
+    background: transparent !important;
+    background-color: transparent !important;
+    color: #d0d4e4 !important;
+}
+
+/* Frozen columns in selected rows - need stronger override */
+[data-theme="dark"] .tabulator .tabulator-row.tabulator-selected .tabulator-frozen,
+[data-theme="dark"] .tabulator .tabulator-row.tabulator-selected .tabulator-cell.tabulator-frozen,
+[data-theme="dark"] .tabulator .tabulator-row.tabulator-selected .tabulator-cell.tabulator-frozen-left,
+[data-theme="dark"] .tabulator .tabulator-row.tabulator-selected .tabulator-cell.tabulator-frozen-right,
+[data-theme="dark"] .tabulator-row.tabulator-selected .tabulator-frozen,
+[data-theme="dark"] .tabulator-row.tabulator-selected .tabulator-cell.tabulator-frozen,
+[data-theme="dark"] .dt-statement .tabulator-row.tabulator-selected .tabulator-cell.tabulator-frozen,
+[data-theme="dark"] .dt-statement .tabulator-row.tabulator-selected .tabulator-cell.tabulator-frozen-left,
+[data-theme="dark"] .dt-statement .tabulator-row.tabulator-selected .tabulator-cell.tabulator-frozen-right,
+[data-theme="dark"] .tabulator .tabulator-tableholder .tabulator-table .tabulator-row.tabulator-selected .tabulator-cell.tabulator-frozen,
+[data-theme="dark"] .tabulator .tabulator-tableholder .tabulator-table .tabulator-row.tabulator-selected .tabulator-cell.tabulator-frozen-left,
+[data-theme="dark"] .tabulator .tabulator-tableholder .tabulator-table .tabulator-row.tabulator-selected .tabulator-cell.tabulator-frozen-right {
+    background: #4a3f8f !important;
+    background-color: #4a3f8f !important;
+}
+
+/* Selected row hover state */
+[data-theme="dark"] .tabulator .tabulator-row.tabulator-selected:hover,
+[data-theme="dark"] .tabulator-row.tabulator-selected:hover {
+    background: #5a4fa5 !important;
+    background-color: #5a4fa5 !important;
+}
+
+[data-theme="dark"] .tabulator .tabulator-row.tabulator-selected:hover .tabulator-cell,
+[data-theme="dark"] .tabulator-row.tabulator-selected:hover .tabulator-cell {
+    background: transparent !important;
+    background-color: transparent !important;
+}
+
+[data-theme="dark"] .tabulator .tabulator-row.tabulator-selected:hover .tabulator-frozen,
+[data-theme="dark"] .tabulator-row.tabulator-selected:hover .tabulator-frozen,
+[data-theme="dark"] .tabulator .tabulator-row.tabulator-selected:hover .tabulator-cell.tabulator-frozen,
+[data-theme="dark"] .tabulator .tabulator-row.tabulator-selected:hover .tabulator-cell.tabulator-frozen-left,
+[data-theme="dark"] .tabulator .tabulator-row.tabulator-selected:hover .tabulator-cell.tabulator-frozen-right,
+[data-theme="dark"] .tabulator-row.tabulator-selected:hover .tabulator-cell.tabulator-frozen,
+[data-theme="dark"] .tabulator-row.tabulator-selected:hover .tabulator-cell.tabulator-frozen-left,
+[data-theme="dark"] .tabulator-row.tabulator-selected:hover .tabulator-cell.tabulator-frozen-right,
+[data-theme="dark"] .dt-statement .tabulator-row.tabulator-selected:hover .tabulator-cell.tabulator-frozen,
+[data-theme="dark"] .dt-statement .tabulator-row.tabulator-selected:hover .tabulator-cell.tabulator-frozen-left,
+[data-theme="dark"] .dt-statement .tabulator-row.tabulator-selected:hover .tabulator-cell.tabulator-frozen-right {
+    background: #5a4fa5 !important;
+    background-color: #5a4fa5 !important;
+}
+
+/* ===========================================
+   FIX 1b: Selected Rows - Specific Column Classes
+   Issue: Frozen columns (checkbox, serial, actions) still show light background
+   =========================================== */
+
+/* Row selection checkbox column in selected rows */
+[data-theme="dark"] .tabulator-row.tabulator-selected .row-selection-checkbox,
+[data-theme="dark"] .tabulator-row.tabulator-selected .tabulator-cell.row-selection-checkbox {
+    background: #4a3f8f !important;
+    background-color: #4a3f8f !important;
+}
+
+/* Serial number column in selected rows */
+[data-theme="dark"] .tabulator-row.tabulator-selected .serial-number-column,
+[data-theme="dark"] .tabulator-row.tabulator-selected .tabulator-cell.serial-number-column {
+    background: #4a3f8f !important;
+    background-color: #4a3f8f !important;
+    color: #d0d4e4 !important;
+}
+
+/* Actions column in selected rows */
+[data-theme="dark"] .tabulator-row.tabulator-selected .dt-actions-column,
+[data-theme="dark"] .tabulator-row.tabulator-selected .tabulator-cell.dt-actions-column {
+    background: #4a3f8f !important;
+    background-color: #4a3f8f !important;
+}
+
+/* All frozen cells with tabulator-frozen class in selected rows */
+[data-theme="dark"] .tabulator-row.tabulator-selected .tabulator-cell.tabulator-frozen,
+[data-theme="dark"] .tabulator-row.tabulator-selected .tabulator-cell.tabulator-frozen-left,
+[data-theme="dark"] .tabulator-row.tabulator-selected .tabulator-cell.tabulator-frozen-right {
+    background: #4a3f8f !important;
+    background-color: #4a3f8f !important;
+}
+
+/* Hover states for specific columns in selected rows */
+[data-theme="dark"] .tabulator-row.tabulator-selected:hover .row-selection-checkbox,
+[data-theme="dark"] .tabulator-row.tabulator-selected:hover .serial-number-column,
+[data-theme="dark"] .tabulator-row.tabulator-selected:hover .dt-actions-column,
+[data-theme="dark"] .tabulator-row.tabulator-selected:hover .tabulator-cell.tabulator-frozen,
+[data-theme="dark"] .tabulator-row.tabulator-selected:hover .tabulator-cell.tabulator-frozen-left,
+[data-theme="dark"] .tabulator-row.tabulator-selected:hover .tabulator-cell.tabulator-frozen-right {
+    background: #5a4fa5 !important;
+    background-color: #5a4fa5 !important;
+}
+
+/* Ensure text color is correct in all selected row cells */
+[data-theme="dark"] .tabulator-row.tabulator-selected .tabulator-cell,
+[data-theme="dark"] .tabulator-row.tabulator-selected .tabulator-cell * {
+    color: #d0d4e4 !important;
+}
+
+/* Checkbox styling in selected rows */
+[data-theme="dark"] .tabulator-row.tabulator-selected input[type="checkbox"] {
+    accent-color: #7367f0;
+}
+
+/* ===========================================
+   FIX 2: Action Dropdown - White Background
+   Issue: Action dropdown menu has white background
+   =========================================== */
+
+/* Action dropdown menu container */
+[data-theme="dark"] .dt-action-menu,
+[data-theme="dark"] .dt-actions-dropdown,
+[data-theme="dark"] .dt-action-dropdown,
+[data-theme="dark"] .dt-actions-menu,
+[data-theme="dark"] [class*="action-menu"],
+[data-theme="dark"] [class*="action-dropdown"] {
+    background: #2f3349 !important;
+    border-color: #3b4056 !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* Action dropdown items */
+[data-theme="dark"] .dt-action-item,
+[data-theme="dark"] .dt-action-menu-item,
+[data-theme="dark"] .dt-actions-menu-item,
+[data-theme="dark"] .dt-actions-item,
+[data-theme="dark"] [class*="action-item"] {
+    background: transparent !important;
+    color: #d0d4e4 !important;
+}
+
+[data-theme="dark"] .dt-action-item:hover,
+[data-theme="dark"] .dt-action-menu-item:hover,
+[data-theme="dark"] .dt-actions-menu-item:hover,
+[data-theme="dark"] .dt-actions-item:hover,
+[data-theme="dark"] [class*="action-item"]:hover {
+    background: #3b4056 !important;
+}
+
+/* Action item icons */
+[data-theme="dark"] .dt-action-item .material-symbols-rounded,
+[data-theme="dark"] .dt-action-item .material-icons,
+[data-theme="dark"] .dt-action-menu-item .material-symbols-rounded,
+[data-theme="dark"] .dt-action-menu-item .material-icons,
+[data-theme="dark"] .dt-actions-menu-item .material-symbols-rounded,
+[data-theme="dark"] .dt-actions-menu-item .material-icons {
+    color: #a3a8b8 !important;
+}
+
+/* Action button in cell */
+[data-theme="dark"] .dt-statement .tabulator-cell .dt-action-btn,
+[data-theme="dark"] .dt-statement .tabulator-cell .dt-actions-btn,
+[data-theme="dark"] .dt-statement .tabulator-cell [class*="action-btn"] {
+    background: transparent !important;
+    color: #a3a8b8 !important;
+}
+
+[data-theme="dark"] .dt-statement .tabulator-cell .dt-action-btn .material-symbols-rounded,
+[data-theme="dark"] .dt-statement .tabulator-cell .dt-actions-btn .material-symbols-rounded,
+[data-theme="dark"] .dt-statement .tabulator-cell [class*="action-btn"] .material-symbols-rounded {
+    color: #a3a8b8 !important;
+}
+
+[data-theme="dark"] .dt-statement .tabulator-cell .dt-action-btn:hover,
+[data-theme="dark"] .dt-statement .tabulator-cell .dt-actions-btn:hover {
+    background: #3f3580 !important;
+    color: #7367f0 !important;
+}
+
+[data-theme="dark"] .dt-statement .tabulator-cell .dt-action-btn:hover .material-symbols-rounded,
+[data-theme="dark"] .dt-statement .tabulator-cell .dt-actions-btn:hover .material-symbols-rounded {
+    color: #7367f0 !important;
+}
+
+/* Action button - general (not just in tabulator cells) */
+[data-theme="dark"] .dt-action-btn,
+[data-theme="dark"] .dt-actions-btn {
+    color: #a3a8b8 !important;
+}
+
+[data-theme="dark"] .dt-action-btn .material-symbols-rounded,
+[data-theme="dark"] .dt-actions-btn .material-symbols-rounded {
+    color: #a3a8b8 !important;
+}
+
+[data-theme="dark"] .dt-action-btn:hover,
+[data-theme="dark"] .dt-actions-btn:hover {
+    background: #3f3580 !important;
+    color: #7367f0 !important;
+}
+
+[data-theme="dark"] .dt-action-btn:hover .material-symbols-rounded,
+[data-theme="dark"] .dt-actions-btn:hover .material-symbols-rounded {
+    color: #7367f0 !important;
+}
+
+/* ===========================================
+   FIX 3: Row Highlight When Action Triggered
+   Issue: Row is highlighted with white background when action is triggered
+   =========================================== */
+
+/* Row active/focus state when action triggered */
+[data-theme="dark"] .dt-statement .tabulator-row.tabulator-row-active,
+[data-theme="dark"] .dt-statement .tabulator-row.dt-row-active,
+[data-theme="dark"] .dt-statement .tabulator-row.active,
+[data-theme="dark"] .dt-statement .tabulator-row[data-active="true"],
+[data-theme="dark"] .dt-statement .tabulator-row.tabulator-highlighted,
+[data-theme="dark"] .dt-statement .tabulator-row.dt-highlighted,
+[data-theme="dark"] .dt-statement .tabulator-row.highlighted,
+[data-theme="dark"] .dt-statement .tabulator-row:focus,
+[data-theme="dark"] .dt-statement .tabulator-row:focus-within {
+    background: #3f3580 !important;
+}
+
+/* Cells in active/highlighted row */
+[data-theme="dark"] .dt-statement .tabulator-row.tabulator-row-active .tabulator-cell,
+[data-theme="dark"] .dt-statement .tabulator-row.dt-row-active .tabulator-cell,
+[data-theme="dark"] .dt-statement .tabulator-row.active .tabulator-cell,
+[data-theme="dark"] .dt-statement .tabulator-row.tabulator-highlighted .tabulator-cell,
+[data-theme="dark"] .dt-statement .tabulator-row.dt-highlighted .tabulator-cell,
+[data-theme="dark"] .dt-statement .tabulator-row.highlighted .tabulator-cell,
+[data-theme="dark"] .dt-statement .tabulator-row:focus .tabulator-cell,
+[data-theme="dark"] .dt-statement .tabulator-row:focus-within .tabulator-cell {
+    background: transparent !important;
+    color: #d0d4e4 !important;
+}
+
+/* Frozen columns in active/highlighted rows - need solid background */
+[data-theme="dark"] .dt-statement .tabulator-row.tabulator-row-active .tabulator-cell.tabulator-frozen,
+[data-theme="dark"] .dt-statement .tabulator-row.tabulator-row-active .tabulator-cell.tabulator-frozen-left,
+[data-theme="dark"] .dt-statement .tabulator-row.tabulator-row-active .tabulator-cell.tabulator-frozen-right,
+[data-theme="dark"] .dt-statement .tabulator-row.dt-row-active .tabulator-cell.tabulator-frozen,
+[data-theme="dark"] .dt-statement .tabulator-row.dt-row-active .tabulator-cell.tabulator-frozen-left,
+[data-theme="dark"] .dt-statement .tabulator-row.dt-row-active .tabulator-cell.tabulator-frozen-right,
+[data-theme="dark"] .dt-statement .tabulator-row.active .tabulator-cell.tabulator-frozen,
+[data-theme="dark"] .dt-statement .tabulator-row.active .tabulator-cell.tabulator-frozen-left,
+[data-theme="dark"] .dt-statement .tabulator-row.active .tabulator-cell.tabulator-frozen-right,
+[data-theme="dark"] .dt-statement .tabulator-row.tabulator-highlighted .tabulator-cell.tabulator-frozen,
+[data-theme="dark"] .dt-statement .tabulator-row.tabulator-highlighted .tabulator-cell.tabulator-frozen-left,
+[data-theme="dark"] .dt-statement .tabulator-row.tabulator-highlighted .tabulator-cell.tabulator-frozen-right,
+[data-theme="dark"] .dt-statement .tabulator-row.dt-highlighted .tabulator-cell.tabulator-frozen,
+[data-theme="dark"] .dt-statement .tabulator-row.dt-highlighted .tabulator-cell.tabulator-frozen-left,
+[data-theme="dark"] .dt-statement .tabulator-row.dt-highlighted .tabulator-cell.tabulator-frozen-right,
+[data-theme="dark"] .dt-statement .tabulator-row.highlighted .tabulator-cell.tabulator-frozen,
+[data-theme="dark"] .dt-statement .tabulator-row.highlighted .tabulator-cell.tabulator-frozen-left,
+[data-theme="dark"] .dt-statement .tabulator-row.highlighted .tabulator-cell.tabulator-frozen-right,
+[data-theme="dark"] .dt-statement .tabulator-row:focus .tabulator-cell.tabulator-frozen,
+[data-theme="dark"] .dt-statement .tabulator-row:focus .tabulator-cell.tabulator-frozen-left,
+[data-theme="dark"] .dt-statement .tabulator-row:focus .tabulator-cell.tabulator-frozen-right,
+[data-theme="dark"] .dt-statement .tabulator-row:focus-within .tabulator-cell.tabulator-frozen,
+[data-theme="dark"] .dt-statement .tabulator-row:focus-within .tabulator-cell.tabulator-frozen-left,
+[data-theme="dark"] .dt-statement .tabulator-row:focus-within .tabulator-cell.tabulator-frozen-right {
+    background: #3f3580 !important;
+    background-color: #3f3580 !important;
+}
+
+/* Row with open action menu */
+[data-theme="dark"] .dt-statement .tabulator-row.dt-action-open,
+[data-theme="dark"] .dt-statement .tabulator-row.action-menu-open,
+[data-theme="dark"] .dt-statement .tabulator-row.dt-actions-menu-open,
+[data-theme="dark"] .dt-statement .tabulator-row[data-action-open="true"] {
+    background: #3a2f7a !important;
+}
+
+[data-theme="dark"] .dt-statement .tabulator-row.dt-action-open .tabulator-cell,
+[data-theme="dark"] .dt-statement .tabulator-row.action-menu-open .tabulator-cell,
+[data-theme="dark"] .dt-statement .tabulator-row.dt-actions-menu-open .tabulator-cell {
+    background: transparent !important;
+}
+
+/* Frozen columns in rows with open action menu - need solid background */
+[data-theme="dark"] .dt-statement .tabulator-row.dt-action-open .tabulator-cell.tabulator-frozen,
+[data-theme="dark"] .dt-statement .tabulator-row.dt-action-open .tabulator-cell.tabulator-frozen-left,
+[data-theme="dark"] .dt-statement .tabulator-row.dt-action-open .tabulator-cell.tabulator-frozen-right,
+[data-theme="dark"] .dt-statement .tabulator-row.action-menu-open .tabulator-cell.tabulator-frozen,
+[data-theme="dark"] .dt-statement .tabulator-row.action-menu-open .tabulator-cell.tabulator-frozen-left,
+[data-theme="dark"] .dt-statement .tabulator-row.action-menu-open .tabulator-cell.tabulator-frozen-right,
+[data-theme="dark"] .dt-statement .tabulator-row.dt-actions-menu-open .tabulator-cell.tabulator-frozen,
+[data-theme="dark"] .dt-statement .tabulator-row.dt-actions-menu-open .tabulator-cell.tabulator-frozen-left,
+[data-theme="dark"] .dt-statement .tabulator-row.dt-actions-menu-open .tabulator-cell.tabulator-frozen-right,
+[data-theme="dark"] .tabulator .tabulator-row.dt-action-open .tabulator-cell.tabulator-frozen,
+[data-theme="dark"] .tabulator .tabulator-row.dt-action-open .tabulator-cell.tabulator-frozen-left,
+[data-theme="dark"] .tabulator .tabulator-row.dt-action-open .tabulator-cell.tabulator-frozen-right,
+[data-theme="dark"] .tabulator .tabulator-row.action-menu-open .tabulator-cell.tabulator-frozen,
+[data-theme="dark"] .tabulator .tabulator-row.action-menu-open .tabulator-cell.tabulator-frozen-left,
+[data-theme="dark"] .tabulator .tabulator-row.action-menu-open .tabulator-cell.tabulator-frozen-right,
+[data-theme="dark"] .tabulator .tabulator-row.dt-actions-menu-open .tabulator-cell.tabulator-frozen,
+[data-theme="dark"] .tabulator .tabulator-row.dt-actions-menu-open .tabulator-cell.tabulator-frozen-left,
+[data-theme="dark"] .tabulator .tabulator-row.dt-actions-menu-open .tabulator-cell.tabulator-frozen-right {
+    background: #3a2f7a !important;
+    background-color: #3a2f7a !important;
+}
+
+/* Column Highlight on Hover in Column List - Dark Mode */
+[data-theme="dark"] .dt-statement .tabulator-col.dt-column-highlight,
+[data-theme="dark"] .dt-statement .tabulator-cell.dt-column-highlight {
+    background-color: #4a3f8f !important;
+}
+
+/* ===========================================
+   FIX 4: Header Right-Click Context Menu
+   Issue: Header right-click opens white background options
+   =========================================== */
+
+/* Tabulator context menu (header right-click) - with highest specificity */
+[data-theme="dark"] .tabulator-menu,
+[data-theme="dark"] .tabulator .tabulator-menu,
+[data-theme="dark"] body .tabulator-menu,
+[data-theme="dark"] html .tabulator-menu {
+    background: #2f3349 !important;
+    background-color: #2f3349 !important;
+    border: 1px solid #3b4056 !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* Tabulator menu items */
+[data-theme="dark"] .tabulator-menu-item,
+[data-theme="dark"] .tabulator .tabulator-menu-item,
+[data-theme="dark"] body .tabulator-menu-item {
+    background: transparent !important;
+    background-color: transparent !important;
+    color: #d0d4e4 !important;
+}
+
+[data-theme="dark"] .tabulator-menu-item:hover,
+[data-theme="dark"] .tabulator .tabulator-menu-item:hover,
+[data-theme="dark"] body .tabulator-menu-item:hover,
+[data-theme="dark"] .tabulator-menu-item:not(.tabulator-menu-item-disabled):hover {
+    background: #3b4056 !important;
+    background-color: #3b4056 !important;
+}
+
+/* Disabled menu item */
+[data-theme="dark"] .tabulator-menu-item.tabulator-menu-item-disabled,
+[data-theme="dark"] .tabulator-menu-item-disabled {
+    color: #6c7293 !important;
+    background: transparent !important;
+}
+
+/* Menu separator */
+[data-theme="dark"] .tabulator-menu-separator {
+    border-color: #3b4056 !important;
+    background: #3b4056 !important;
+}
+
+/* Submenu arrow */
+[data-theme="dark"] .tabulator-menu-item-submenu {
+    color: #a3a8b8 !important;
+}
+
+/* Popup container (parent of menu) */
+[data-theme="dark"] .tabulator-popup-container,
+[data-theme="dark"] body .tabulator-popup-container {
+    background: #2f3349 !important;
+    border-color: #3b4056 !important;
+}
+
+[data-theme="dark"] .tabulator-popup,
+[data-theme="dark"] body .tabulator-popup {
+    background: #2f3349 !important;
+    border-color: #3b4056 !important;
+}
+
+/* Edit list (dropdown in cells) */
+[data-theme="dark"] .tabulator-edit-select-list,
+[data-theme="dark"] body .tabulator-edit-select-list {
+    background: #2f3349 !important;
+    border-color: #3b4056 !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4) !important;
+}
+
+[data-theme="dark"] .tabulator-edit-select-list-item,
+[data-theme="dark"] body .tabulator-edit-select-list-item {
+    background: transparent !important;
+    color: #d0d4e4 !important;
+}
+
+[data-theme="dark"] .tabulator-edit-select-list-item:hover,
+[data-theme="dark"] .tabulator-edit-select-list-item.active,
+[data-theme="dark"] body .tabulator-edit-select-list-item:hover {
+    background: #3b4056 !important;
+}
+
+/* ===========================================
+   FIX 5: Header Column Cells for Colored Columns
+   Issue: Header cells for colored columns have base color only (need dark mode colors)
+   =========================================== */
+
+/* Header cells with color classes */
+[data-theme="dark"] .dt-statement .tabulator-header .tabulator-col.dt-col-blue,
+[data-theme="dark"] .dt-statement .tabulator-header .tabulator-col[class*="dt-col-blue"] {
+    background: #3f3580 !important;
+}
+
+[data-theme="dark"] .dt-statement .tabulator-header .tabulator-col.dt-col-blue .tabulator-col-title {
+    color: #7367f0 !important;
+}
+
+[data-theme="dark"] .dt-statement .tabulator-header .tabulator-col.dt-col-green,
+[data-theme="dark"] .dt-statement .tabulator-header .tabulator-col[class*="dt-col-green"] {
+    background: rgba(40, 199, 111, 0.15) !important;
+}
+
+[data-theme="dark"] .dt-statement .tabulator-header .tabulator-col.dt-col-green .tabulator-col-title {
+    color: #28c76f !important;
+}
+
+[data-theme="dark"] .dt-statement .tabulator-header .tabulator-col.dt-col-red,
+[data-theme="dark"] .dt-statement .tabulator-header .tabulator-col[class*="dt-col-red"] {
+    background: rgba(234, 84, 85, 0.15) !important;
+}
+
+[data-theme="dark"] .dt-statement .tabulator-header .tabulator-col.dt-col-red .tabulator-col-title {
+    color: #ea5455 !important;
+}
+
+[data-theme="dark"] .dt-statement .tabulator-header .tabulator-col.dt-col-orange,
+[data-theme="dark"] .dt-statement .tabulator-header .tabulator-col[class*="dt-col-orange"] {
+    background: rgba(255, 159, 67, 0.15) !important;
+}
+
+[data-theme="dark"] .dt-statement .tabulator-header .tabulator-col.dt-col-orange .tabulator-col-title {
+    color: #ff9f43 !important;
+}
+
+[data-theme="dark"] .dt-statement .tabulator-header .tabulator-col.dt-col-purple,
+[data-theme="dark"] .dt-statement .tabulator-header .tabulator-col[class*="dt-col-purple"] {
+    background: #3f3580 !important;
+}
+
+[data-theme="dark"] .dt-statement .tabulator-header .tabulator-col.dt-col-purple .tabulator-col-title {
+    color: #7367f0 !important;
+}
+
+[data-theme="dark"] .dt-statement .tabulator-header .tabulator-col.dt-col-teal,
+[data-theme="dark"] .dt-statement .tabulator-header .tabulator-col[class*="dt-col-teal"] {
+    background: rgba(0, 207, 232, 0.15) !important;
+}
+
+[data-theme="dark"] .dt-statement .tabulator-header .tabulator-col.dt-col-teal .tabulator-col-title {
+    color: #00cfe8 !important;
+}
+
+[data-theme="dark"] .dt-statement .tabulator-header .tabulator-col.dt-col-pink,
+[data-theme="dark"] .dt-statement .tabulator-header .tabulator-col[class*="dt-col-pink"] {
+    background: rgba(255, 143, 177, 0.15) !important;
+}
+
+[data-theme="dark"] .dt-statement .tabulator-header .tabulator-col.dt-col-pink .tabulator-col-title {
+    color: #ff8fb1 !important;
+}
+
+[data-theme="dark"] .dt-statement .tabulator-header .tabulator-col.dt-col-indigo,
+[data-theme="dark"] .dt-statement .tabulator-header .tabulator-col[class*="dt-col-indigo"] {
+    background: #3f3580 !important;
+}
+
+[data-theme="dark"] .dt-statement .tabulator-header .tabulator-col.dt-col-indigo .tabulator-col-title {
+    color: #7367f0 !important;
+}
+
+[data-theme="dark"] .dt-statement .tabulator-header .tabulator-col.dt-col-cyan,
+[data-theme="dark"] .dt-statement .tabulator-header .tabulator-col[class*="dt-col-cyan"] {
+    background: rgba(0, 207, 232, 0.15) !important;
+}
+
+[data-theme="dark"] .dt-statement .tabulator-header .tabulator-col.dt-col-cyan .tabulator-col-title {
+    color: #00cfe8 !important;
+}
+
+[data-theme="dark"] .dt-statement .tabulator-header .tabulator-col.dt-col-amber,
+[data-theme="dark"] .dt-statement .tabulator-header .tabulator-col[class*="dt-col-amber"] {
+    background: rgba(255, 224, 130, 0.15) !important;
+}
+
+[data-theme="dark"] .dt-statement .tabulator-header .tabulator-col.dt-col-amber .tabulator-col-title {
+    color: #ffe082 !important;
+}
+
+[data-theme="dark"] .dt-statement .tabulator-header .tabulator-col.dt-col-lime,
+[data-theme="dark"] .dt-statement .tabulator-header .tabulator-col[class*="dt-col-lime"] {
+    background: rgba(220, 231, 117, 0.15) !important;
+}
+
+[data-theme="dark"] .dt-statement .tabulator-header .tabulator-col.dt-col-lime .tabulator-col-title {
+    color: #dce775 !important;
+}
+
+[data-theme="dark"] .dt-statement .tabulator-header .tabulator-col.dt-col-brown,
+[data-theme="dark"] .dt-statement .tabulator-header .tabulator-col[class*="dt-col-brown"] {
+    background: rgba(188, 170, 164, 0.15) !important;
+}
+
+[data-theme="dark"] .dt-statement .tabulator-header .tabulator-col.dt-col-brown .tabulator-col-title {
+    color: #bcaaa4 !important;
+}
+
+[data-theme="dark"] .dt-statement .tabulator-header .tabulator-col.dt-col-gray,
+[data-theme="dark"] .dt-statement .tabulator-header .tabulator-col[class*="dt-col-gray"] {
+    background: rgba(158, 158, 158, 0.15) !important;
+}
+
+[data-theme="dark"] .dt-statement .tabulator-header .tabulator-col.dt-col-gray .tabulator-col-title {
+    color: #9e9e9e !important;
+}
+
+/* Hover state for colored header columns */
+[data-theme="dark"] .dt-statement .tabulator-header .tabulator-col.dt-col-blue:hover { background: rgba(115, 103, 240, 0.25) !important; }
+[data-theme="dark"] .dt-statement .tabulator-header .tabulator-col.dt-col-green:hover { background: rgba(40, 199, 111, 0.25) !important; }
+[data-theme="dark"] .dt-statement .tabulator-header .tabulator-col.dt-col-red:hover { background: rgba(234, 84, 85, 0.25) !important; }
+[data-theme="dark"] .dt-statement .tabulator-header .tabulator-col.dt-col-orange:hover { background: rgba(255, 159, 67, 0.25) !important; }
+[data-theme="dark"] .dt-statement .tabulator-header .tabulator-col.dt-col-purple:hover { background: rgba(115, 103, 240, 0.25) !important; }
+[data-theme="dark"] .dt-statement .tabulator-header .tabulator-col.dt-col-teal:hover { background: rgba(0, 207, 232, 0.25) !important; }
+[data-theme="dark"] .dt-statement .tabulator-header .tabulator-col.dt-col-pink:hover { background: rgba(255, 143, 177, 0.25) !important; }
+[data-theme="dark"] .dt-statement .tabulator-header .tabulator-col.dt-col-indigo:hover { background: rgba(115, 103, 240, 0.25) !important; }
+[data-theme="dark"] .dt-statement .tabulator-header .tabulator-col.dt-col-cyan:hover { background: rgba(0, 207, 232, 0.25) !important; }
+[data-theme="dark"] .dt-statement .tabulator-header .tabulator-col.dt-col-amber:hover { background: rgba(255, 224, 130, 0.25) !important; }
+[data-theme="dark"] .dt-statement .tabulator-header .tabulator-col.dt-col-lime:hover { background: rgba(220, 231, 117, 0.25) !important; }
+[data-theme="dark"] .dt-statement .tabulator-header .tabulator-col.dt-col-brown:hover { background: rgba(188, 170, 164, 0.25) !important; }
+[data-theme="dark"] .dt-statement .tabulator-header .tabulator-col.dt-col-gray:hover { background: rgba(158, 158, 158, 0.25) !important; }
+
+/* ===========================================
+   FIX 6: Export Popup Complete Override
+   Issue: Export popup still has white background elements
+   =========================================== */
+
+/* Export dialog - all variations with maximum specificity */
+[data-theme="dark"] .dt-export-dialog,
+[data-theme="dark"] .dt-export-modal,
+[data-theme="dark"] .dt-export-popup,
+[data-theme="dark"] [class*="export-dialog"],
+[data-theme="dark"] [class*="export-modal"],
+[data-theme="dark"] [class*="export-popup"],
+[data-theme="dark"] body .dt-export-dialog,
+[data-theme="dark"] body .dt-export-modal {
+    background: #2f3349 !important;
+    background-color: #2f3349 !important;
+    border-color: #3b4056 !important;
+    color: #d0d4e4 !important;
+}
+
+/* Export dialog header */
+[data-theme="dark"] .dt-export-dialog-header,
+[data-theme="dark"] .dt-export-modal-header,
+[data-theme="dark"] [class*="export-dialog-header"],
+[data-theme="dark"] [class*="export-modal-header"] {
+    background: #25293c !important;
+    background-color: #25293c !important;
+    border-bottom-color: #3b4056 !important;
+    color: #d0d4e4 !important;
+}
+
+/* Export dialog body */
+[data-theme="dark"] .dt-export-dialog-body,
+[data-theme="dark"] .dt-export-modal-body,
+[data-theme="dark"] [class*="export-dialog-body"],
+[data-theme="dark"] [class*="export-modal-body"] {
+    background: #2f3349 !important;
+    background-color: #2f3349 !important;
+    color: #d0d4e4 !important;
+}
+
+/* Export dialog footer */
+[data-theme="dark"] .dt-export-dialog-footer,
+[data-theme="dark"] .dt-export-modal-footer,
+[data-theme="dark"] [class*="export-dialog-footer"],
+[data-theme="dark"] [class*="export-modal-footer"] {
+    background: #25293c !important;
+    background-color: #25293c !important;
+    border-top-color: #3b4056 !important;
+}
+
+/* Export dialog all inner elements */
+[data-theme="dark"] .dt-export-dialog *,
+[data-theme="dark"] .dt-export-modal * {
+    border-color: #3b4056;
+}
+
+/* Export inputs and selects */
+[data-theme="dark"] .dt-export-dialog input,
+[data-theme="dark"] .dt-export-dialog select,
+[data-theme="dark"] .dt-export-dialog textarea,
+[data-theme="dark"] .dt-export-modal input,
+[data-theme="dark"] .dt-export-modal select,
+[data-theme="dark"] .dt-export-modal textarea {
+    background: #25293c !important;
+    background-color: #25293c !important;
+    border-color: #3b4056 !important;
+    color: #d0d4e4 !important;
+}
+
+[data-theme="dark"] .dt-export-dialog input::placeholder,
+[data-theme="dark"] .dt-export-modal input::placeholder {
+    color: #6c7293 !important;
+}
+
+/* Export labels */
+[data-theme="dark"] .dt-export-dialog label,
+[data-theme="dark"] .dt-export-modal label {
+    color: #a3a8b8 !important;
+}
+
+/* Export column list */
+[data-theme="dark"] .dt-export-columns-list,
+[data-theme="dark"] .dt-export-column-list,
+[data-theme="dark"] [class*="export-columns"] {
+    background: #2f3349 !important;
+    background-color: #2f3349 !important;
+}
+
+/* Export column items */
+[data-theme="dark"] .dt-export-column-item,
+[data-theme="dark"] .dt-export-col-item,
+[data-theme="dark"] [class*="export-column-item"] {
+    background: transparent !important;
+    background-color: transparent !important;
+    border-bottom-color: #3b4056 !important;
+    color: #d0d4e4 !important;
+}
+
+[data-theme="dark"] .dt-export-column-item:hover,
+[data-theme="dark"] .dt-export-col-item:hover {
+    background: #3b4056 !important;
+    background-color: #3b4056 !important;
+}
+
+/* Export format buttons */
+[data-theme="dark"] .dt-export-format-btn,
+[data-theme="dark"] .dt-export-format-option,
+[data-theme="dark"] [class*="export-format"] {
+    background: #25293c !important;
+    background-color: #25293c !important;
+    border-color: #3b4056 !important;
+    color: #d0d4e4 !important;
+}
+
+[data-theme="dark"] .dt-export-format-btn:hover,
+[data-theme="dark"] .dt-export-format-option:hover {
+    background: #3b4056 !important;
+    background-color: #3b4056 !important;
+}
+
+[data-theme="dark"] .dt-export-format-btn.active,
+[data-theme="dark"] .dt-export-format-option.active,
+[data-theme="dark"] .dt-export-format-option:has(input:checked) {
+    background: #3f3580 !important;
+    background-color: #3f3580 !important;
+    border-color: #7367f0 !important;
+    color: #7367f0 !important;
+}
+
+/* Export buttons */
+[data-theme="dark"] .dt-export-btn-cancel,
+[data-theme="dark"] [class*="export-btn-cancel"] {
+    background: transparent !important;
+    background-color: transparent !important;
+    border-color: #3b4056 !important;
+    color: #d0d4e4 !important;
+}
+
+[data-theme="dark"] .dt-export-btn-cancel:hover {
+    background: #3b4056 !important;
+    background-color: #3b4056 !important;
+}
+
+[data-theme="dark"] .dt-export-btn-download,
+[data-theme="dark"] .dt-export-btn-primary,
+[data-theme="dark"] [class*="export-btn-download"],
+[data-theme="dark"] [class*="export-btn-primary"] {
+    background: #7367f0 !important;
+    background-color: #7367f0 !important;
+    border-color: #7367f0 !important;
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] .dt-export-btn-download:hover,
+[data-theme="dark"] .dt-export-btn-primary:hover {
+    background: #9e95f5 !important;
+    background-color: #9e95f5 !important;
+}
+
+/* Export close button */
+[data-theme="dark"] .dt-export-dialog-close,
+[data-theme="dark"] .dt-export-modal-close,
+[data-theme="dark"] [class*="export-close"] {
+    color: #a3a8b8 !important;
+    background: transparent !important;
+}
+
+[data-theme="dark"] .dt-export-dialog-close:hover,
+[data-theme="dark"] .dt-export-modal-close:hover {
+    background: #3b4056 !important;
+    color: #d0d4e4 !important;
+}
+
+/* Export overlay/backdrop */
+[data-theme="dark"] .dt-export-dialog-overlay,
+[data-theme="dark"] .dt-export-modal-backdrop,
+[data-theme="dark"] .dt-export-overlay,
+[data-theme="dark"] [class*="export-overlay"],
+[data-theme="dark"] [class*="export-backdrop"] {
+    background: rgba(37, 41, 60, 0.85) !important;
+    background-color: rgba(37, 41, 60, 0.85) !important;
+}
+
+/* ===========================================
+   Additional: Ensure all white backgrounds are overridden
+   =========================================== */
+
+/* Generic catch-all for any remaining white backgrounds in dark mode */
+[data-theme="dark"] .dt-statement .tabulator-row .tabulator-cell[style*="background: white"],
+[data-theme="dark"] .dt-statement .tabulator-row .tabulator-cell[style*="background-color: white"],
+[data-theme="dark"] .dt-statement .tabulator-row .tabulator-cell[style*="background: #fff"],
+[data-theme="dark"] .dt-statement .tabulator-row .tabulator-cell[style*="background-color: #fff"],
+[data-theme="dark"] .dt-statement .tabulator-row .tabulator-cell[style*="background: rgb(255"],
+[data-theme="dark"] .dt-statement .tabulator-row .tabulator-cell[style*="background-color: rgb(255"] {
+    background: inherit !important;
+}

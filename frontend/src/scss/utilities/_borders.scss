@@ -1,0 +1,636 @@
+// ============================================
+// SIXORBIT UI - BORDER UTILITIES
+// Border, border-radius, and related utilities
+// ============================================
+
+@use '../abstracts' as *;
+
+// ============================================
+// BORDER
+// ============================================
+
+.#{$so-prefix}border {
+  border: 1px solid css-var('border-color') !important;
+}
+
+.#{$so-prefix}border-0 {
+  border: 0 !important;
+}
+
+// Individual sides
+.#{$so-prefix}border-top {
+  border-top: 1px solid css-var('border-color') !important;
+}
+
+.#{$so-prefix}border-top-0 {
+  border-top: 0 !important;
+}
+
+.#{$so-prefix}border-end {
+  border-right: 1px solid css-var('border-color') !important;
+}
+
+.#{$so-prefix}border-end-0 {
+  border-right: 0 !important;
+}
+
+.#{$so-prefix}border-bottom {
+  border-bottom: 1px solid css-var('border-color') !important;
+}
+
+.#{$so-prefix}border-bottom-0 {
+  border-bottom: 0 !important;
+}
+
+.#{$so-prefix}border-start {
+  border-left: 1px solid css-var('border-color') !important;
+}
+
+.#{$so-prefix}border-start-0 {
+  border-left: 0 !important;
+}
+
+// X and Y
+.#{$so-prefix}border-x {
+  border-left: 1px solid css-var('border-color') !important;
+  border-right: 1px solid css-var('border-color') !important;
+}
+
+.#{$so-prefix}border-x-0 {
+  border-left: 0 !important;
+  border-right: 0 !important;
+}
+
+.#{$so-prefix}border-y {
+  border-top: 1px solid css-var('border-color') !important;
+  border-bottom: 1px solid css-var('border-color') !important;
+}
+
+.#{$so-prefix}border-y-0 {
+  border-top: 0 !important;
+  border-bottom: 0 !important;
+}
+
+// ============================================
+// BORDER WIDTH
+// ============================================
+
+$border-widths: (
+  0: 0,
+  1: 1px,
+  2: 2px,
+  3: 3px,
+  4: 4px,
+  5: 5px
+);
+
+@each $name, $value in $border-widths {
+  .#{$so-prefix}border-#{$name} {
+    border-width: $value !important;
+  }
+}
+
+// ============================================
+// BORDER COLORS
+// ============================================
+
+$border-colors: (
+  'primary': $so-primary,
+  'secondary': $so-secondary,
+  'success': $so-success,
+  'danger': $so-danger,
+  'warning': $so-warning,
+  'info': $so-info,
+  'light': $so-grey-300,
+  'dark': $so-grey-800,
+  'white': $so-white,
+  'transparent': transparent
+);
+
+@each $name, $color in $border-colors {
+  .#{$so-prefix}border-#{$name} {
+    border-color: $color !important;
+  }
+}
+
+// Theme-aware border colors
+.#{$so-prefix}border-subtle {
+  border-color: css-var('border-color') !important;
+}
+
+.#{$so-prefix}border-emphasis {
+  border-color: css-var('border-dark') !important;
+}
+
+// ============================================
+// BORDER OPACITY
+// ============================================
+
+$border-opacities: (
+  10: 0.1,
+  25: 0.25,
+  50: 0.5,
+  75: 0.75,
+  100: 1
+);
+
+@each $name, $value in $border-opacities {
+  .#{$so-prefix}border-opacity-#{$name} {
+    --so-border-opacity: #{$value};
+  }
+}
+
+// ============================================
+// BORDER STYLE
+// ============================================
+
+.#{$so-prefix}border-solid {
+  border-style: solid !important;
+}
+
+.#{$so-prefix}border-dashed {
+  border-style: dashed !important;
+}
+
+.#{$so-prefix}border-dotted {
+  border-style: dotted !important;
+}
+
+.#{$so-prefix}border-double {
+  border-style: double !important;
+}
+
+.#{$so-prefix}border-hidden {
+  border-style: hidden !important;
+}
+
+.#{$so-prefix}border-none {
+  border-style: none !important;
+}
+
+// ============================================
+// BORDER RADIUS
+// ============================================
+
+.#{$so-prefix}rounded {
+  border-radius: radius('md') !important;
+}
+
+.#{$so-prefix}rounded-0 {
+  border-radius: 0 !important;
+}
+
+.#{$so-prefix}rounded-1 {
+  border-radius: radius('sm') !important;
+}
+
+.#{$so-prefix}rounded-2 {
+  border-radius: radius('md') !important;
+}
+
+.#{$so-prefix}rounded-3 {
+  border-radius: radius('lg') !important;
+}
+
+.#{$so-prefix}rounded-4 {
+  border-radius: radius('xl') !important;
+}
+
+.#{$so-prefix}rounded-5 {
+  border-radius: radius('2xl') !important;
+}
+
+// Named sizes
+.#{$so-prefix}rounded-none {
+  border-radius: 0 !important;
+}
+
+.#{$so-prefix}rounded-sm {
+  border-radius: radius('sm') !important;
+}
+
+.#{$so-prefix}rounded-md {
+  border-radius: radius('md') !important;
+}
+
+.#{$so-prefix}rounded-lg {
+  border-radius: radius('lg') !important;
+}
+
+.#{$so-prefix}rounded-xl {
+  border-radius: radius('xl') !important;
+}
+
+.#{$so-prefix}rounded-2xl {
+  border-radius: radius('2xl') !important;
+}
+
+.#{$so-prefix}rounded-3xl {
+  border-radius: 1.5rem !important;
+}
+
+.#{$so-prefix}rounded-full {
+  border-radius: 9999px !important;
+}
+
+.#{$so-prefix}rounded-circle {
+  border-radius: 50% !important;
+}
+
+.#{$so-prefix}rounded-pill {
+  border-radius: 50rem !important;
+}
+
+// Individual corners
+.#{$so-prefix}rounded-top {
+  border-top-left-radius: radius('md') !important;
+  border-top-right-radius: radius('md') !important;
+}
+
+.#{$so-prefix}rounded-top-0 {
+  border-top-left-radius: 0 !important;
+  border-top-right-radius: 0 !important;
+}
+
+.#{$so-prefix}rounded-end {
+  border-top-right-radius: radius('md') !important;
+  border-bottom-right-radius: radius('md') !important;
+}
+
+.#{$so-prefix}rounded-end-0 {
+  border-top-right-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+}
+
+.#{$so-prefix}rounded-bottom {
+  border-bottom-right-radius: radius('md') !important;
+  border-bottom-left-radius: radius('md') !important;
+}
+
+.#{$so-prefix}rounded-bottom-0 {
+  border-bottom-right-radius: 0 !important;
+  border-bottom-left-radius: 0 !important;
+}
+
+.#{$so-prefix}rounded-start {
+  border-bottom-left-radius: radius('md') !important;
+  border-top-left-radius: radius('md') !important;
+}
+
+.#{$so-prefix}rounded-start-0 {
+  border-bottom-left-radius: 0 !important;
+  border-top-left-radius: 0 !important;
+}
+
+// ============================================
+// DIVIDERS
+// ============================================
+
+.#{$so-prefix}divide-x > * + * {
+  border-left: 1px solid css-var('border-color');
+}
+
+.#{$so-prefix}divide-y > * + * {
+  border-top: 1px solid css-var('border-color');
+}
+
+.#{$so-prefix}divide-x-0 > * + * {
+  border-left-width: 0;
+}
+
+.#{$so-prefix}divide-y-0 > * + * {
+  border-top-width: 0;
+}
+
+.#{$so-prefix}divide-x-2 > * + * {
+  border-left-width: 2px;
+}
+
+.#{$so-prefix}divide-y-2 > * + * {
+  border-top-width: 2px;
+}
+
+// ============================================
+// OUTLINE
+// ============================================
+
+.#{$so-prefix}outline-none {
+  outline: 2px solid transparent !important;
+  outline-offset: 2px !important;
+}
+
+.#{$so-prefix}outline {
+  outline-style: solid !important;
+}
+
+.#{$so-prefix}outline-dashed {
+  outline-style: dashed !important;
+}
+
+.#{$so-prefix}outline-dotted {
+  outline-style: dotted !important;
+}
+
+.#{$so-prefix}outline-double {
+  outline-style: double !important;
+}
+
+// Outline widths
+.#{$so-prefix}outline-0 {
+  outline-width: 0 !important;
+}
+
+.#{$so-prefix}outline-1 {
+  outline-width: 1px !important;
+}
+
+.#{$so-prefix}outline-2 {
+  outline-width: 2px !important;
+}
+
+.#{$so-prefix}outline-4 {
+  outline-width: 4px !important;
+}
+
+.#{$so-prefix}outline-8 {
+  outline-width: 8px !important;
+}
+
+// Outline offset
+.#{$so-prefix}outline-offset-0 {
+  outline-offset: 0 !important;
+}
+
+.#{$so-prefix}outline-offset-1 {
+  outline-offset: 1px !important;
+}
+
+.#{$so-prefix}outline-offset-2 {
+  outline-offset: 2px !important;
+}
+
+.#{$so-prefix}outline-offset-4 {
+  outline-offset: 4px !important;
+}
+
+.#{$so-prefix}outline-offset-8 {
+  outline-offset: 8px !important;
+}
+
+// ============================================
+// RING (FOCUS RING)
+// ============================================
+
+.#{$so-prefix}ring {
+  box-shadow: 0 0 0 3px rgba($so-primary, 0.5) !important;
+}
+
+.#{$so-prefix}ring-0 {
+  box-shadow: 0 0 0 0 transparent !important;
+}
+
+.#{$so-prefix}ring-1 {
+  box-shadow: 0 0 0 1px rgba($so-primary, 0.5) !important;
+}
+
+.#{$so-prefix}ring-2 {
+  box-shadow: 0 0 0 2px rgba($so-primary, 0.5) !important;
+}
+
+.#{$so-prefix}ring-4 {
+  box-shadow: 0 0 0 4px rgba($so-primary, 0.5) !important;
+}
+
+.#{$so-prefix}ring-8 {
+  box-shadow: 0 0 0 8px rgba($so-primary, 0.5) !important;
+}
+
+// Ring inset
+.#{$so-prefix}ring-inset {
+  box-shadow: inset 0 0 0 3px rgba($so-primary, 0.5) !important;
+}
+
+// ============================================
+// SEPARATOR
+// Horizontal and vertical line separators
+// ============================================
+
+// Horizontal separator (default)
+.#{$so-prefix}separator {
+  display: block;
+  width: 100%;
+  height: 1px;
+  margin: spacing('2') 0;
+  background: css-var('border-color');
+  border: none;
+
+  // No margin variant
+  &.#{$so-prefix}separator-flush {
+    margin: 0;
+  }
+
+  // Size variants
+  &.#{$so-prefix}separator-sm {
+    margin: spacing('1') 0;
+  }
+
+  &.#{$so-prefix}separator-lg {
+    margin: spacing('4') 0;
+  }
+
+  &.#{$so-prefix}separator-xl {
+    margin: spacing('6') 0;
+  }
+
+  // Thickness variants
+  &.#{$so-prefix}separator-2 {
+    height: 2px;
+  }
+
+  &.#{$so-prefix}separator-3 {
+    height: 3px;
+  }
+
+  &.#{$so-prefix}separator-4 {
+    height: 4px;
+  }
+
+  // Style variants
+  &.#{$so-prefix}separator-dashed {
+    height: 0;
+    background: transparent;
+    border-top: 1px dashed css-var('border-color');
+  }
+
+  &.#{$so-prefix}separator-dotted {
+    height: 0;
+    background: transparent;
+    border-top: 1px dotted css-var('border-color');
+  }
+
+  // Color variants
+  &.#{$so-prefix}separator-primary {
+    background: $so-primary;
+  }
+
+  &.#{$so-prefix}separator-secondary {
+    background: $so-secondary;
+  }
+
+  &.#{$so-prefix}separator-success {
+    background: $so-success;
+  }
+
+  &.#{$so-prefix}separator-danger {
+    background: $so-danger;
+  }
+
+  &.#{$so-prefix}separator-warning {
+    background: $so-warning;
+  }
+
+  &.#{$so-prefix}separator-info {
+    background: $so-info;
+  }
+
+  &.#{$so-prefix}separator-light {
+    background: $so-grey-300;
+  }
+
+  &.#{$so-prefix}separator-dark {
+    background: $so-grey-800;
+  }
+
+  // Subtle (uses dropdown divider color for consistency)
+  &.#{$so-prefix}separator-subtle {
+    background: css-var('dropdown-divider');
+  }
+
+  // Opacity variants
+  &.#{$so-prefix}separator-muted {
+    opacity: 0.5;
+  }
+
+  // With text in middle (using flex parent)
+  &.#{$so-prefix}separator-text {
+    display: flex;
+    align-items: center;
+    height: auto;
+    background: transparent;
+
+    &::before,
+    &::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: css-var('border-color');
+    }
+
+    &::before {
+      margin-right: spacing('3');
+    }
+
+    &::after {
+      margin-left: spacing('3');
+    }
+  }
+}
+
+// Vertical separator
+.#{$so-prefix}separator-vertical {
+  display: inline-block;
+  width: 1px;
+  height: 100%;
+  min-height: 1rem;
+  margin: 0 spacing('2');
+  background: css-var('border-color');
+  vertical-align: middle;
+
+  // No margin variant
+  &.#{$so-prefix}separator-flush {
+    margin: 0;
+  }
+
+  // Size variants
+  &.#{$so-prefix}separator-sm {
+    margin: 0 spacing('1');
+  }
+
+  &.#{$so-prefix}separator-lg {
+    margin: 0 spacing('4');
+  }
+
+  // Thickness variants
+  &.#{$so-prefix}separator-2 {
+    width: 2px;
+  }
+
+  &.#{$so-prefix}separator-3 {
+    width: 3px;
+  }
+
+  // Color variants
+  &.#{$so-prefix}separator-primary {
+    background: $so-primary;
+  }
+
+  &.#{$so-prefix}separator-secondary {
+    background: $so-secondary;
+  }
+
+  &.#{$so-prefix}separator-success {
+    background: $so-success;
+  }
+
+  &.#{$so-prefix}separator-danger {
+    background: $so-danger;
+  }
+
+  &.#{$so-prefix}separator-warning {
+    background: $so-warning;
+  }
+
+  &.#{$so-prefix}separator-info {
+    background: $so-info;
+  }
+
+  &.#{$so-prefix}separator-light {
+    background: $so-grey-300;
+  }
+
+  &.#{$so-prefix}separator-dark {
+    background: $so-grey-800;
+  }
+
+  &.#{$so-prefix}separator-subtle {
+    background: css-var('dropdown-divider');
+  }
+
+  // With text in middle (requires flex parent with column direction)
+  &.#{$so-prefix}separator-text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: auto;
+    height: auto;
+    min-height: auto;
+    background: transparent;
+
+    &::before,
+    &::after {
+      content: '';
+      width: 1px;
+      flex: 1;
+      min-height: 1rem;
+      background: css-var('border-color');
+    }
+
+    &::before {
+      margin-bottom: spacing('2');
+    }
+
+    &::after {
+      margin-top: spacing('2');
+    }
+  }
+}

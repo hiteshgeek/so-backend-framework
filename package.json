@@ -1,0 +1,18 @@
+{
+  "name": "sixorbit-backend-framework",
+  "version": "1.0.0",
+  "description": "SixOrbit Backend Framework with integrated frontend",
+  "scripts": {
+    "frontend:build": "cd frontend && npm run build",
+    "frontend:dev": "cd frontend && npm run dev",
+    "frontend:watch": "cd frontend && npm run watch",
+    "frontend:install": "cd frontend && npm install"
+  },
+  "keywords": [
+    "sixorbit",
+    "framework",
+    "backend"
+  ],
+  "author": "SixOrbit",
+  "license": "ISC"
+}

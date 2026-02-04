@@ -1,0 +1,697 @@
+// ============================================
+// SIXORBIT UI - TOASTS
+// Toast notifications and snackbars
+// ============================================
+
+@use 'sass:color';
+@use '../abstracts' as *;
+
+// ============================================
+// TOAST CONTAINER
+// Fixed positioning for toast stacking
+// ============================================
+
+.#{$so-prefix}toast-container {
+    position: fixed;
+    z-index: z-index('toast');
+    padding: spacing('4');
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    gap: spacing('2');
+    max-height: 100vh;
+    overflow: hidden;
+
+    // Position variants
+    &.top-left {
+        top: 0;
+        left: 0;
+        align-items: flex-start;
+    }
+
+    &.top-right {
+        top: 0;
+        right: 0;
+        align-items: flex-end;
+    }
+
+    &.top-center {
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        align-items: center;
+    }
+
+    &.bottom-left {
+        bottom: 0;
+        left: 0;
+        align-items: flex-start;
+        flex-direction: column-reverse;
+    }
+
+    &.bottom-right {
+        bottom: 0;
+        right: 0;
+        align-items: flex-end;
+        flex-direction: column-reverse;
+    }
+
+    &.bottom-center {
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        align-items: center;
+        flex-direction: column-reverse;
+    }
+
+    // Center of screen
+    &.center {
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        align-items: center;
+        justify-content: center;
+        max-height: fit-content;
+    }
+
+    // Custom position (set via JavaScript with inline styles)
+    &.custom {
+        align-items: center;
+    }
+}
+
+// ============================================
+// TOAST BASE
+// ============================================
+
+.#{$so-prefix}toast {
+    position: relative;
+    pointer-events: auto;
+    width: 100%;
+    max-width: 350px;
+    min-width: 280px;
+    background: css-var('card-bg');
+    border-radius: radius('lg');
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15), 0 0 1px rgba(0, 0, 0, 0.1);
+    border: 1px solid css-var('border-color');
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+    transition: all $so-transition-slow;
+
+    // Show state
+    &.#{$so-prefix}show {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+
+    // Hiding state
+    &.#{$so-prefix}hiding {
+        opacity: 0;
+        transform: translateY(-20px) scale(0.95);
+    }
+
+    // Bottom positioned toasts animate from bottom
+    .#{$so-prefix}bottom-left &,
+    .#{$so-prefix}bottom-right &,
+    .#{$so-prefix}bottom-center & {
+        transform: translateY(20px) scale(0.95);
+
+        &.#{$so-prefix}show {
+            transform: translateY(0) scale(1);
+        }
+
+        &.#{$so-prefix}hiding {
+            transform: translateY(20px) scale(0.95);
+        }
+    }
+
+    // Center positioned toasts scale from center
+    .#{$so-prefix}center &,
+    .#{$so-prefix}custom & {
+        transform: scale(0.9);
+
+        &.#{$so-prefix}show {
+            transform: scale(1);
+        }
+
+        &.#{$so-prefix}hiding {
+            transform: scale(0.9);
+        }
+    }
+}
+
+// ============================================
+// TOAST HEADER
+// ============================================
+
+.#{$so-prefix}toast-header {
+    display: flex;
+    align-items: center;
+    gap: spacing('2');
+    padding: spacing('3');
+    border-bottom: 1px solid css-var('border-color');
+    background: css-var('card-hover-bg');
+
+    // Icon
+    .#{$so-prefix}toast-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 24px;
+        height: 24px;
+        border-radius: radius('md');
+        flex-shrink: 0;
+
+        .material-icons {
+            font-size: 16px;
+        }
+    }
+
+    // Title
+    .#{$so-prefix}toast-title {
+        flex: 1;
+        font-size: font-size('sm');
+        font-weight: font-weight('semibold');
+        color: css-var('text-heading');
+        margin: 0;
+    }
+
+    // Timestamp
+    .#{$so-prefix}toast-time {
+        font-size: font-size('xs');
+        color: css-var('text-muted');
+    }
+}
+
+// ============================================
+// TOAST BODY
+// ============================================
+
+.#{$so-prefix}toast-body {
+    padding: spacing('3');
+    font-size: font-size('sm');
+    color: css-var('text-secondary');
+    line-height: line-height('relaxed');
+
+    // Actions container
+    .#{$so-prefix}toast-actions {
+        display: flex;
+        gap: spacing('2');
+        margin-top: spacing('2');
+
+        .#{$so-prefix}btn {
+            padding: spacing('1') spacing('2');
+            font-size: font-size('xs');
+        }
+    }
+}
+
+// ============================================
+// TOAST CLOSE BUTTON
+// ============================================
+
+.#{$so-prefix}toast-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    background: transparent;
+    border: none;
+    border-radius: radius('sm');
+    cursor: pointer;
+    color: css-var('text-muted');
+    opacity: 0.7;
+    transition: all $so-transition-base;
+    flex-shrink: 0;
+
+    &:hover {
+        opacity: 1;
+        background: rgba(0, 0, 0, 0.05);
+        color: css-var('text-primary');
+    }
+
+    .material-icons {
+        font-size: 16px;
+    }
+}
+
+// ============================================
+// TOAST PROGRESS BAR
+// Auto-dismiss countdown indicator
+// Displayed as a horizontal line inside the toast
+// ============================================
+
+.#{$so-prefix}toast-progress-wrapper {
+    padding: 0 spacing('3') spacing('3');
+    margin-top: -(spacing('1'));
+}
+
+.#{$so-prefix}toast-progress {
+    height: 4px;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: radius('pill');
+    overflow: hidden;
+    position: relative;
+}
+
+.#{$so-prefix}toast-progress-bar {
+    height: 100%;
+    background: css-var('accent-primary');
+    border-radius: radius('pill');
+    transform-origin: left;
+    transition: transform linear;
+}
+
+// ============================================
+// SIMPLE TOAST (No header, compact)
+// ============================================
+
+.#{$so-prefix}toast-simple {
+    display: flex;
+    align-items: center;
+    gap: spacing('3');
+    padding: spacing('3') spacing('4');
+
+    .#{$so-prefix}toast-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        border-radius: radius('md');
+        flex-shrink: 0;
+
+        .material-icons {
+            font-size: 18px;
+        }
+    }
+
+    .#{$so-prefix}toast-content {
+        flex: 1;
+        min-width: 0;
+
+        .#{$so-prefix}toast-title {
+            font-size: font-size('sm');
+            font-weight: font-weight('semibold');
+            color: css-var('text-heading');
+            margin-bottom: spacing('1');
+        }
+
+        .#{$so-prefix}toast-message {
+            font-size: font-size('sm');
+            color: css-var('text-secondary');
+            line-height: line-height('normal');
+        }
+    }
+
+    .#{$so-prefix}toast-close {
+        margin-left: auto;
+    }
+}
+
+// ============================================
+// CONTEXTUAL VARIANTS
+// All 8 Bootstrap-like colors
+// ============================================
+
+// Primary
+.#{$so-prefix}toast-primary {
+    border-color: rgba($so-primary, 0.3);
+
+    .#{$so-prefix}toast-header {
+        background: rgba($so-primary, 0.08);
+        border-bottom-color: rgba($so-primary, 0.15);
+    }
+
+    .#{$so-prefix}toast-icon {
+        background: rgba($so-primary, 0.15);
+        color: css-var('accent-primary');
+    }
+
+    .#{$so-prefix}toast-progress-bar {
+        background: css-var('accent-primary');
+    }
+
+    &.#{$so-prefix}toast-simple {
+        background: rgba($so-primary, 0.08);
+    }
+}
+
+// Secondary
+.#{$so-prefix}toast-secondary {
+    border-color: rgba($so-secondary, 0.3);
+
+    .#{$so-prefix}toast-header {
+        background: rgba($so-secondary, 0.08);
+        border-bottom-color: rgba($so-secondary, 0.15);
+    }
+
+    .#{$so-prefix}toast-icon {
+        background: rgba($so-secondary, 0.15);
+        color: $so-secondary;
+    }
+
+    .#{$so-prefix}toast-progress-bar {
+        background: $so-secondary;
+    }
+
+    &.#{$so-prefix}toast-simple {
+        background: rgba($so-secondary, 0.08);
+    }
+}
+
+// Success
+.#{$so-prefix}toast-success {
+    border-color: rgba($so-success, 0.3);
+
+    .#{$so-prefix}toast-header {
+        background: rgba($so-success, 0.08);
+        border-bottom-color: rgba($so-success, 0.15);
+    }
+
+    .#{$so-prefix}toast-icon {
+        background: rgba($so-success, 0.15);
+        color: css-var('accent-success');
+    }
+
+    .#{$so-prefix}toast-progress-bar {
+        background: css-var('accent-success');
+    }
+
+    &.#{$so-prefix}toast-simple {
+        background: rgba($so-success, 0.08);
+    }
+}
+
+// Danger
+.#{$so-prefix}toast-danger,
+.#{$so-prefix}toast-error {
+    border-color: rgba($so-danger, 0.3);
+
+    .#{$so-prefix}toast-header {
+        background: rgba($so-danger, 0.08);
+        border-bottom-color: rgba($so-danger, 0.15);
+    }
+
+    .#{$so-prefix}toast-icon {
+        background: rgba($so-danger, 0.15);
+        color: css-var('accent-danger');
+    }
+
+    .#{$so-prefix}toast-progress-bar {
+        background: css-var('accent-danger');
+    }
+
+    &.#{$so-prefix}toast-simple {
+        background: rgba($so-danger, 0.08);
+    }
+}
+
+// Warning
+.#{$so-prefix}toast-warning {
+    border-color: rgba($so-warning, 0.3);
+
+    .#{$so-prefix}toast-header {
+        background: rgba($so-warning, 0.1);
+        border-bottom-color: rgba($so-warning, 0.2);
+    }
+
+    .#{$so-prefix}toast-icon {
+        background: rgba($so-warning, 0.2);
+        color: color.adjust($so-warning, $lightness: -10%);
+    }
+
+    .#{$so-prefix}toast-progress-bar {
+        background: css-var('accent-warning');
+    }
+
+    &.#{$so-prefix}toast-simple {
+        background: rgba($so-warning, 0.1);
+    }
+}
+
+// Info
+.#{$so-prefix}toast-info {
+    border-color: rgba($so-info, 0.3);
+
+    .#{$so-prefix}toast-header {
+        background: rgba($so-info, 0.08);
+        border-bottom-color: rgba($so-info, 0.15);
+    }
+
+    .#{$so-prefix}toast-icon {
+        background: rgba($so-info, 0.15);
+        color: css-var('accent-info');
+    }
+
+    .#{$so-prefix}toast-progress-bar {
+        background: css-var('accent-info');
+    }
+
+    &.#{$so-prefix}toast-simple {
+        background: rgba($so-info, 0.08);
+    }
+}
+
+// Light
+.#{$so-prefix}toast-light {
+    background: $so-grey-50;
+    border-color: $so-grey-300;
+
+    .#{$so-prefix}toast-header {
+        background: $so-grey-100;
+        border-bottom-color: $so-grey-200;
+    }
+
+    .#{$so-prefix}toast-icon {
+        background: $so-grey-200;
+        color: $so-grey-700;
+    }
+
+    .#{$so-prefix}toast-progress-bar {
+        background: $so-grey-500;
+    }
+
+    &.#{$so-prefix}toast-simple {
+        background: $so-grey-100;
+    }
+}
+
+// Dark
+.#{$so-prefix}toast-dark {
+    background: $so-grey-800;
+    border-color: $so-grey-700;
+    color: $so-white;
+
+    .#{$so-prefix}toast-header {
+        background: $so-grey-900;
+        border-bottom-color: $so-grey-700;
+    }
+
+    .#{$so-prefix}toast-title {
+        color: $so-white;
+    }
+
+    .#{$so-prefix}toast-time {
+        color: $so-grey-400;
+    }
+
+    .#{$so-prefix}toast-body {
+        color: $so-grey-300;
+    }
+
+    .#{$so-prefix}toast-icon {
+        background: $so-grey-700;
+        color: $so-white;
+    }
+
+    .#{$so-prefix}toast-close {
+        color: $so-grey-400;
+
+        &:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: $so-white;
+        }
+    }
+
+    .#{$so-prefix}toast-progress-bar {
+        background: $so-grey-400;
+    }
+
+    &.#{$so-prefix}toast-simple {
+        .#{$so-prefix}toast-title {
+            color: $so-white;
+        }
+
+        .#{$so-prefix}toast-message {
+            color: $so-grey-300;
+        }
+    }
+}
+
+// ============================================
+// DARK MODE ADJUSTMENTS
+// ============================================
+
+[data-theme="dark"] {
+    .#{$so-prefix}toast {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4), 0 0 1px rgba(0, 0, 0, 0.3);
+    }
+
+    .#{$so-prefix}toast-close:hover {
+        background: rgba(255, 255, 255, 0.1);
+    }
+
+    .#{$so-prefix}toast-primary {
+        .#{$so-prefix}toast-header {
+            background: rgba($so-primary, 0.12);
+        }
+
+        .#{$so-prefix}toast-icon {
+            background: rgba($so-primary, 0.2);
+        }
+
+        &.#{$so-prefix}toast-simple {
+            background: rgba($so-primary, 0.12);
+        }
+    }
+
+    .#{$so-prefix}toast-secondary {
+        .#{$so-prefix}toast-header {
+            background: rgba($so-secondary, 0.12);
+        }
+
+        .#{$so-prefix}toast-icon {
+            background: rgba($so-secondary, 0.2);
+            color: $so-grey-400;
+        }
+
+        &.#{$so-prefix}toast-simple {
+            background: rgba($so-secondary, 0.12);
+        }
+    }
+
+    .#{$so-prefix}toast-success {
+        .#{$so-prefix}toast-header {
+            background: rgba($so-success, 0.12);
+        }
+
+        .#{$so-prefix}toast-icon {
+            background: rgba($so-success, 0.2);
+        }
+
+        &.#{$so-prefix}toast-simple {
+            background: rgba($so-success, 0.12);
+        }
+    }
+
+    .#{$so-prefix}toast-danger,
+    .#{$so-prefix}toast-error {
+        .#{$so-prefix}toast-header {
+            background: rgba($so-danger, 0.12);
+        }
+
+        .#{$so-prefix}toast-icon {
+            background: rgba($so-danger, 0.2);
+        }
+
+        &.#{$so-prefix}toast-simple {
+            background: rgba($so-danger, 0.12);
+        }
+    }
+
+    .#{$so-prefix}toast-warning {
+        .#{$so-prefix}toast-header {
+            background: rgba($so-warning, 0.15);
+        }
+
+        .#{$so-prefix}toast-icon {
+            background: rgba($so-warning, 0.25);
+            color: color.adjust($so-warning, $lightness: 10%);
+        }
+
+        &.#{$so-prefix}toast-simple {
+            background: rgba($so-warning, 0.15);
+        }
+    }
+
+    .#{$so-prefix}toast-info {
+        .#{$so-prefix}toast-header {
+            background: rgba($so-info, 0.12);
+        }
+
+        .#{$so-prefix}toast-icon {
+            background: rgba($so-info, 0.2);
+        }
+
+        &.#{$so-prefix}toast-simple {
+            background: rgba($so-info, 0.12);
+        }
+    }
+
+    .#{$so-prefix}toast-light {
+        background: rgba($so-grey-100, 0.1);
+        border-color: rgba($so-grey-300, 0.3);
+
+        .#{$so-prefix}toast-header {
+            background: rgba($so-grey-100, 0.08);
+            border-bottom-color: rgba($so-grey-200, 0.2);
+        }
+
+        .#{$so-prefix}toast-icon {
+            background: rgba($so-grey-100, 0.15);
+            color: $so-grey-300;
+        }
+
+        &.#{$so-prefix}toast-simple {
+            background: rgba($so-grey-100, 0.1);
+        }
+    }
+
+    .#{$so-prefix}toast-dark {
+        background: $so-grey-900;
+        border-color: $so-grey-700;
+
+        .#{$so-prefix}toast-header {
+            background: $so-black;
+        }
+
+        .#{$so-prefix}toast-icon {
+            background: $so-grey-800;
+        }
+    }
+}
+
+// ============================================
+// RESPONSIVE ADJUSTMENTS
+// ============================================
+
+@include mobile {
+    .#{$so-prefix}toast-container {
+        padding: spacing('2');
+
+        &.top-center,
+        &.bottom-center {
+            width: 100%;
+            left: 0;
+            transform: none;
+            padding: spacing('2');
+        }
+
+        &.top-left,
+        &.top-right,
+        &.bottom-left,
+        &.bottom-right {
+            width: 100%;
+            left: 0;
+            right: 0;
+        }
+    }
+
+    .#{$so-prefix}toast {
+        max-width: none;
+        min-width: 0;
+    }
+}

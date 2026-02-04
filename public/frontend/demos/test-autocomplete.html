@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Autocomplete</title>
+    <link rel="stylesheet" href="../dist/css/sixorbit-full.css">
+    <style>
+        body {
+            padding: 40px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .test-section {
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Autocomplete Test</h1>
+
+    <div class="test-section">
+        <h3>1. Basic Autocomplete</h3>
+        <div class="so-autocomplete" id="test-basic"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>2. Multiple Selection</h3>
+        <div class="so-autocomplete" id="test-multiple"
+             data-so-autocomplete
+             data-so-multiple="true"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>3. With Data Attribute Init</h3>
+        <div class="so-autocomplete"
+             data-so-autocomplete
+             data-so-placeholder="Auto-initialized..."></div>
+    </div>
+
+    <script src="../dist/js/sixorbit-full.js"></script>
+    <script>
+        console.log('SOAutocomplete available:', typeof SOAutocomplete);
+
+        // Test 1: Basic autocomplete
+        try {
+            const basic = new SOAutocomplete('#test-basic', {
+                placeholder: 'Type to search...',
+                options: [
+                    { value: 'us', text: 'United States' },
+                    { value: 'uk', text: 'United Kingdom' },
+                    { value: 'ca', text: 'Canada' }
+                ]
+            });
+            console.log('Basic autocomplete created:', basic);
+        } catch (error) {
+            console.error('Error creating basic autocomplete:', error);
+        }
+
+        // Test 2: Multiple selection
+        try {
+            const multiple = new SOAutocomplete('#test-multiple', {
+                placeholder: 'Select multiple...',
+                options: [
+                    { value: 'js', text: 'JavaScript' },
+                    { value: 'py', text: 'Python' },
+                    { value: 'java', text: 'Java' }
+                ]
+            });
+            console.log('Multiple autocomplete created:', multiple);
+        } catch (error) {
+            console.error('Error creating multiple autocomplete:', error);
+        }
+    </script>
+</body>
+</html>

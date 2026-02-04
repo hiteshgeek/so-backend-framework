@@ -1,0 +1,538 @@
+// ============================================
+// SIXORBIT UI - INPUTS
+// Text inputs, textareas, and selects
+// ============================================
+
+@use '../abstracts' as *;
+
+// ============================================
+// FORM CONTROL (Bootstrap-aligned naming)
+// Unified class for inputs, textareas, and selects
+// ============================================
+
+.#{$so-prefix}form-control {
+  @include input-base;
+}
+
+// Textarea-specific styles
+textarea.#{$so-prefix}form-control,
+.#{$so-prefix}form-control[rows] {
+  height: auto;
+  min-height: 100px;
+  padding: spacing('2') spacing('3'); // Same as inputs: 8px 16px
+  resize: vertical;
+  line-height: line-height('relaxed');
+}
+
+// Form Control Sizes
+.#{$so-prefix}form-control-sm {
+  @include input-size($so-form-height-sm, spacing('2') + 2px, $so-form-font-size-sm);
+}
+
+.#{$so-prefix}form-control-lg {
+  @include input-size($so-form-height-lg, spacing('4'), $so-form-font-size-lg);
+}
+
+// Textarea size variants
+textarea.#{$so-prefix}form-control-sm,
+.#{$so-prefix}form-control-sm[rows] {
+  height: auto;
+  min-height: 80px;
+  padding: spacing('1') + 2px spacing('2') + 2px; // Match sm input padding
+}
+
+textarea.#{$so-prefix}form-control-lg,
+.#{$so-prefix}form-control-lg[rows] {
+  height: auto;
+  min-height: 120px;
+  padding: spacing('3') spacing('4'); // Match lg input padding
+}
+
+// Textarea resize modifiers
+.#{$so-prefix}resize-none {
+  resize: none !important;
+}
+
+.#{$so-prefix}resize-vertical {
+  resize: vertical !important;
+}
+
+.#{$so-prefix}resize-horizontal {
+  resize: horizontal !important;
+}
+
+.#{$so-prefix}resize-both {
+  resize: both !important;
+}
+
+// ============================================
+// CONTEXTUAL FORM CONTROL VARIANTS
+// ============================================
+
+// Primary
+.#{$so-prefix}form-control-primary {
+  border-color: css-var('accent-primary');
+
+  &:focus {
+    border-color: css-var('accent-primary');
+    box-shadow: 0 0 0 3px alpha($so-primary, 0.2);
+  }
+}
+
+// Secondary
+.#{$so-prefix}form-control-secondary {
+  border-color: $so-secondary;
+
+  &:focus {
+    border-color: $so-secondary;
+    box-shadow: 0 0 0 3px alpha($so-secondary, 0.2);
+  }
+}
+
+// Success
+.#{$so-prefix}form-control-success {
+  border-color: css-var('accent-success');
+
+  &:focus {
+    border-color: css-var('accent-success');
+    box-shadow: 0 0 0 3px alpha($so-success, 0.2);
+  }
+}
+
+// Danger
+.#{$so-prefix}form-control-danger {
+  border-color: css-var('accent-danger');
+
+  &:focus {
+    border-color: css-var('accent-danger');
+    box-shadow: 0 0 0 3px alpha($so-danger, 0.2);
+  }
+}
+
+// Warning
+.#{$so-prefix}form-control-warning {
+  border-color: css-var('accent-warning');
+
+  &:focus {
+    border-color: css-var('accent-warning');
+    box-shadow: 0 0 0 3px alpha($so-warning, 0.2);
+  }
+}
+
+// Info
+.#{$so-prefix}form-control-info {
+  border-color: css-var('accent-info');
+
+  &:focus {
+    border-color: css-var('accent-info');
+    box-shadow: 0 0 0 3px alpha($so-info, 0.2);
+  }
+}
+
+// Light
+.#{$so-prefix}form-control-light {
+  border-color: $so-grey-300;
+
+  &:focus {
+    border-color: $so-grey-400;
+    box-shadow: 0 0 0 3px alpha($so-grey-300, 0.2);
+  }
+}
+
+// Dark
+.#{$so-prefix}form-control-dark {
+  border-color: $so-grey-900;
+
+  &:focus {
+    border-color: $so-grey-900;
+    box-shadow: 0 0 0 3px alpha($so-grey-900, 0.2);
+  }
+}
+
+// ============================================
+// INPUT WITH ICON
+// ============================================
+
+.#{$so-prefix}input-wrapper {
+  position: relative;
+  display: block;
+
+  // Base icon styling (left positioned by default)
+  .#{$so-prefix}input-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: css-var('text-secondary');
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .material-icons {
+      font-size: 20px;
+    }
+  }
+
+  // Add left padding to input when wrapper has a left-positioned icon
+  &:has(.#{$so-prefix}input-icon):not(.icon-right) {
+    .#{$so-prefix}form-control {
+      padding-left: 40px;
+    }
+  }
+
+  // Icon on right side only (single icon)
+  &.icon-right {
+    .#{$so-prefix}form-control {
+      padding-right: 40px;
+    }
+
+    .#{$so-prefix}input-icon {
+      left: auto;
+      right: 12px;
+    }
+  }
+
+  // ============================================
+  // INPUT ACTION (Right-side clickable icon/button)
+  // Use for password toggles, clear buttons, etc.
+  // Works alongside left icon for dual-icon inputs
+  // ============================================
+
+  .#{$so-prefix}input-action {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: spacing('1');
+    background: transparent;
+    border: none;
+    border-radius: radius('md');
+    color: css-var('text-muted');
+    cursor: pointer;
+    pointer-events: auto;
+    transition: color $so-transition-base, background $so-transition-base;
+
+    &:hover {
+      color: css-var('text-primary');
+      background: css-var('card-hover-bg');
+    }
+
+    &:focus {
+      outline: none;
+      color: css-var('accent-primary');
+    }
+
+    .material-icons {
+      font-size: 20px;
+    }
+  }
+
+  // When has input-action, add right padding
+  &:has(.#{$so-prefix}input-action) {
+    .#{$so-prefix}form-control {
+      padding-right: 44px;
+    }
+  }
+
+  // Both left icon and right action (dual icons)
+  &:has(.#{$so-prefix}input-icon):has(.#{$so-prefix}input-action) {
+    .#{$so-prefix}form-control {
+      padding-left: 40px;
+      padding-right: 44px;
+    }
+  }
+
+  // Clear button
+  .#{$so-prefix}input-clear {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    background: transparent;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    color: css-var('text-secondary');
+    transition: background $so-transition-base;
+
+    &:hover {
+      background: css-var('card-hover-bg');
+    }
+
+    .material-icons {
+      font-size: 18px;
+    }
+  }
+
+  .#{$so-prefix}form-control:not(:placeholder-shown) ~ .#{$so-prefix}input-clear {
+    display: flex;
+  }
+}
+
+// ============================================
+// TEXTAREA AUTOSIZE (modifier class)
+// ============================================
+
+.#{$so-prefix}form-control-autosize {
+  overflow: hidden;
+  resize: none;
+  min-height: 80px;
+  max-height: 400px;
+}
+
+.#{$so-prefix}form-control-autosize-sm {
+  overflow: hidden;
+  resize: none;
+  min-height: 60px;
+  max-height: 200px;
+}
+
+.#{$so-prefix}form-control-autosize-lg {
+  overflow: hidden;
+  resize: none;
+  min-height: 120px;
+  max-height: 600px;
+}
+
+// ============================================
+// FORM GROUP
+// ============================================
+
+.#{$so-prefix}form-group {
+  margin-bottom: spacing('4');
+}
+
+.#{$so-prefix}form-label {
+  display: block;
+  margin-bottom: spacing('1') + 2px;
+  font-size: font-size('sm');
+  font-weight: font-weight('medium');
+  color: css-var('form-text');
+
+  &.#{$so-prefix}required::after {
+    content: ' *';
+    color: css-var('accent-danger');
+  }
+
+  // When label contains inline hint, use flexbox for vertical alignment
+  &:has(.#{$so-prefix}form-hint-inline) {
+    display: flex;
+    align-items: center;
+  }
+}
+
+.#{$so-prefix}form-hint {
+  display: flex;
+  align-items: flex-start;
+  gap: spacing('1');
+  margin-top: spacing('1');
+  font-size: font-size('xs') + 0.0625rem;
+  color: css-var('text-secondary');
+  line-height: line-height('relaxed');
+
+  .material-icons {
+    font-size: 14px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  // Character counter variant (right-aligned)
+  &.#{$so-prefix}form-hint-counter {
+    justify-content: flex-end;
+    color: css-var('text-muted');
+  }
+
+  // Inline hint (next to label)
+  &.#{$so-prefix}form-hint-inline {
+    display: inline-flex;
+    align-items: center;
+    margin-top: 0;
+    margin-left: spacing('2');
+
+    .material-icons {
+      margin-top: 0; // Reset margin for inline variant
+    }
+  }
+}
+
+// Note: Validation states (.has-error, .has-success, .has-warning, .has-info)
+// and validation messages (.so-form-error, .so-form-success, etc.)
+// are defined in _validation.scss for reusability
+
+// ============================================
+// INPUT GROUP
+// ============================================
+
+.#{$so-prefix}input-group {
+  display: flex;
+  align-items: stretch;
+
+  // Reset all children border-radius first
+  > * {
+    border-radius: 0;
+  }
+
+  // First child gets left radius
+  > *:first-child {
+    border-radius: radius('base') 0 0 radius('base');
+  }
+
+  // Last child gets right radius
+  > *:last-child {
+    border-radius: 0 radius('base') radius('base') 0;
+  }
+
+  // Only child gets full radius
+  > *:only-child {
+    border-radius: radius('base');
+  }
+
+  // Form control
+  .#{$so-prefix}form-control {
+    flex: 1;
+    min-width: 0;
+    margin-left: -1px;
+
+    &:first-child {
+      margin-left: 0;
+    }
+
+    &:focus {
+      z-index: 2;
+    }
+  }
+
+  // Buttons
+  .#{$so-prefix}btn {
+    flex-shrink: 0;
+    margin-left: -1px;
+    z-index: 1;
+
+    &:first-child {
+      margin-left: 0;
+    }
+
+    &:hover,
+    &:focus {
+      z-index: 3;
+    }
+
+    // Consecutive buttons - no double borders
+    + .#{$so-prefix}btn {
+      margin-left: -1px;
+    }
+  }
+
+  // Input addon (text, icons, etc.)
+  .#{$so-prefix}input-addon {
+    display: flex;
+    align-items: center;
+    gap: spacing('1');
+    padding: 0 spacing('3');
+    font-size: font-size('base');
+    color: css-var('text-secondary');
+    background: css-var('form-disabled-bg');
+    border: 1px solid css-var('form-border');
+    white-space: nowrap;
+    flex-shrink: 0;
+
+    .material-icons {
+      font-size: 20px;
+    }
+
+    // Consecutive addons
+    + .#{$so-prefix}input-addon {
+      margin-left: -1px;
+    }
+  }
+
+  // Select handling (native select with so-form-control)
+  select.#{$so-prefix}form-control {
+    flex-shrink: 0;
+  }
+
+  // Custom select component wrapper (from data-so-select)
+  .#{$so-prefix}select {
+    flex: 0 0 auto;
+    width: auto; // Override default width: 100%
+    min-width: 100px; // Minimum reasonable width
+    margin-left: -1px;
+
+    // Base trigger styles (must come before positional overrides)
+    .#{$so-prefix}select-trigger {
+      border-radius: 0;
+      min-height: 100%;
+      height: 100%;
+      width: 100%;
+    }
+
+    // Positional border-radius overrides
+    &:first-child {
+      margin-left: 0;
+
+      .#{$so-prefix}select-trigger {
+        border-radius: radius('base') 0 0 radius('base');
+      }
+    }
+
+    &:last-child .#{$so-prefix}select-trigger {
+      border-radius: 0 radius('base') radius('base') 0;
+    }
+
+    &:only-child .#{$so-prefix}select-trigger {
+      border-radius: radius('base');
+    }
+
+    // Consecutive custom selects
+    + .#{$so-prefix}select {
+      margin-left: -1px;
+    }
+  }
+
+  // Fix consecutive elements border overlap
+  > *:not(:first-child) {
+    margin-left: -1px;
+  }
+
+  // Ensure proper stacking for focus states
+  > *:focus,
+  > *:focus-within {
+    z-index: 2;
+  }
+
+  // Checkbox/Radio inside input group addon
+  .#{$so-prefix}input-addon {
+    // Native checkbox/radio (simple usage)
+    input[type="checkbox"],
+    input[type="radio"] {
+      margin: 0;
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+    }
+
+    // Label next to checkbox/radio
+    label {
+      margin: 0;
+      margin-left: spacing('1');
+      cursor: pointer;
+      font-size: font-size('sm');
+      white-space: nowrap;
+    }
+
+    // Framework switch component
+    .#{$so-prefix}switch {
+      margin: 0;
+    }
+  }
+}

@@ -1,0 +1,182 @@
+// ============================================
+// SIXORBIT UI - SPACING UTILITIES
+// Margin and Padding classes
+// ============================================
+
+@use 'sass:meta';
+@use '../abstracts' as *;
+
+// Spacing scale (matches Bootstrap 5)
+$spacers: (
+  0: 0,
+  1: 0.25rem,    // 4px
+  2: 0.5rem,     // 8px
+  3: 1rem,       // 16px
+  4: 1.5rem,     // 24px
+  5: 3rem,       // 48px
+  6: 4rem,       // 64px
+  7: 5rem,       // 80px
+  8: 6rem,       // 96px
+  auto: auto
+);
+
+// Additional pixel-based spacers for fine control
+$spacers-px: (
+  '4px': 4px,
+  '8px': 8px,
+  '12px': 12px,
+  '16px': 16px,
+  '20px': 20px,
+  '24px': 24px,
+  '32px': 32px,
+  '40px': 40px,
+  '48px': 48px,
+);
+
+// Properties map
+$spacing-properties: (
+  m: margin,
+  p: padding
+);
+
+// Directions map
+$spacing-directions: (
+  t: top,
+  b: bottom,
+  s: left,    // start (LTR)
+  e: right,   // end (LTR)
+  x: (left, right),
+  y: (top, bottom)
+);
+
+// ============================================
+// GENERATE SPACING UTILITIES
+// ============================================
+
+@each $prop-abbrev, $property in $spacing-properties {
+  // All sides: .so-m-0, .so-p-3, etc.
+  @each $size, $value in $spacers {
+    .#{$so-prefix}#{$prop-abbrev}-#{$size} {
+      #{$property}: $value !important;
+    }
+  }
+
+  // Individual sides: .so-mt-0, .so-pb-3, etc.
+  @each $dir-abbrev, $direction in $spacing-directions {
+    @each $size, $value in $spacers {
+      @if meta.type-of($direction) == 'list' {
+        // x and y directions (two sides)
+        .#{$so-prefix}#{$prop-abbrev}#{$dir-abbrev}-#{$size} {
+          @each $dir in $direction {
+            #{$property}-#{$dir}: $value !important;
+          }
+        }
+      } @else {
+        // Single side
+        .#{$so-prefix}#{$prop-abbrev}#{$dir-abbrev}-#{$size} {
+          #{$property}-#{$direction}: $value !important;
+        }
+      }
+    }
+  }
+}
+
+// ============================================
+// NEGATIVE MARGINS
+// ============================================
+
+@each $size, $value in $spacers {
+  @if $size != 0 and $size != auto {
+    // All sides
+    .#{$so-prefix}m-n#{$size} {
+      margin: -#{$value} !important;
+    }
+
+    // Individual sides
+    @each $dir-abbrev, $direction in $spacing-directions {
+      @if meta.type-of($direction) == 'list' {
+        .#{$so-prefix}m#{$dir-abbrev}-n#{$size} {
+          @each $dir in $direction {
+            margin-#{$dir}: -#{$value} !important;
+          }
+        }
+      } @else {
+        .#{$so-prefix}m#{$dir-abbrev}-n#{$size} {
+          margin-#{$direction}: -#{$value} !important;
+        }
+      }
+    }
+  }
+}
+
+// ============================================
+// GAP UTILITIES (for flexbox/grid)
+// ============================================
+
+@each $size, $value in $spacers {
+  @if $size != auto {
+    .#{$so-prefix}gap-#{$size} {
+      gap: $value !important;
+    }
+
+    .#{$so-prefix}row-gap-#{$size} {
+      row-gap: $value !important;
+    }
+
+    .#{$so-prefix}column-gap-#{$size} {
+      column-gap: $value !important;
+    }
+  }
+}
+
+// ============================================
+// RESPONSIVE SPACING
+// ============================================
+
+// Breakpoints
+$breakpoints: (
+  sm: 576px,
+  md: 768px,
+  lg: 1024px,
+  xl: 1200px,
+  xxl: 1400px
+);
+
+@each $breakpoint, $min-width in $breakpoints {
+  @media (min-width: $min-width) {
+    @each $prop-abbrev, $property in $spacing-properties {
+      // All sides
+      @each $size, $value in $spacers {
+        .#{$so-prefix}#{$prop-abbrev}-#{$breakpoint}-#{$size} {
+          #{$property}: $value !important;
+        }
+      }
+
+      // Individual sides
+      @each $dir-abbrev, $direction in $spacing-directions {
+        @each $size, $value in $spacers {
+          @if meta.type-of($direction) == 'list' {
+            .#{$so-prefix}#{$prop-abbrev}#{$dir-abbrev}-#{$breakpoint}-#{$size} {
+              @each $dir in $direction {
+                #{$property}-#{$dir}: $value !important;
+              }
+            }
+          } @else {
+            .#{$so-prefix}#{$prop-abbrev}#{$dir-abbrev}-#{$breakpoint}-#{$size} {
+              #{$property}-#{$direction}: $value !important;
+            }
+          }
+        }
+      }
+    }
+
+    // Gap
+    @each $size, $value in $spacers {
+      @if $size != auto {
+        .#{$so-prefix}gap-#{$breakpoint}-#{$size} {
+          gap: $value !important;
+        }
+      }
+    }
+  }
+}

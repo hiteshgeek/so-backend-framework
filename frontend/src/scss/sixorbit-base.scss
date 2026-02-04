@@ -1,0 +1,19 @@
+// ============================================
+// SIXORBIT UI - BASE STYLES
+// Core styles without section-specific components
+// ============================================
+
+// Abstracts (no CSS output - tools only)
+@use 'abstracts' as *;
+
+// Base styles
+@use 'base';
+
+// Core components
+@use 'components';
+
+// Layout
+@use 'layout';
+
+// Utility classes (should be last for highest specificity)
+@use 'utilities';

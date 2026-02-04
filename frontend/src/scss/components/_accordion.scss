@@ -1,0 +1,361 @@
+// ============================================
+// SIXORBIT UI - ACCORDION
+// Collapsible content panels
+// ============================================
+
+@use '../abstracts' as *;
+
+// ============================================
+// BASE ACCORDION
+// ============================================
+
+.#{$so-prefix}accordion {
+  --accordion-color: #{css-var('text-color')};
+  --accordion-bg: #{css-var('card-bg')};
+  --accordion-border-color: #{css-var('border-color')};
+  --accordion-border-width: 1px;
+  --accordion-border-radius: #{radius('lg')};
+  --accordion-btn-padding-y: #{spacing('4')};
+  --accordion-btn-padding-x: #{spacing('5')};
+  --accordion-body-padding-y: #{spacing('4')};
+  --accordion-body-padding-x: #{spacing('5')};
+  --accordion-active-color: #{$so-primary};
+  --accordion-active-bg: #{rgba($so-primary, 0.05)};
+  --accordion-icon-width: 1.25rem;
+  --accordion-icon-transform: rotate(-180deg);
+  --accordion-icon-transition: transform 0.2s ease-in-out;
+}
+
+.#{$so-prefix}accordion-item {
+  color: var(--accordion-color);
+  background-color: var(--accordion-bg);
+  border: var(--accordion-border-width) solid var(--accordion-border-color);
+
+  &:first-of-type {
+    border-top-left-radius: var(--accordion-border-radius);
+    border-top-right-radius: var(--accordion-border-radius);
+
+    > .#{$so-prefix}accordion-header .#{$so-prefix}accordion-button {
+      border-top-left-radius: calc(var(--accordion-border-radius) - var(--accordion-border-width));
+      border-top-right-radius: calc(var(--accordion-border-radius) - var(--accordion-border-width));
+    }
+  }
+
+  &:not(:first-of-type) {
+    border-top: 0;
+  }
+
+  &:last-of-type {
+    border-bottom-left-radius: var(--accordion-border-radius);
+    border-bottom-right-radius: var(--accordion-border-radius);
+
+    > .#{$so-prefix}accordion-header .#{$so-prefix}accordion-button.#{$so-prefix}collapsed {
+      border-bottom-left-radius: calc(var(--accordion-border-radius) - var(--accordion-border-width));
+      border-bottom-right-radius: calc(var(--accordion-border-radius) - var(--accordion-border-width));
+    }
+
+    > .#{$so-prefix}accordion-collapse {
+      border-bottom-left-radius: var(--accordion-border-radius);
+      border-bottom-right-radius: var(--accordion-border-radius);
+    }
+  }
+}
+
+.#{$so-prefix}accordion-header {
+  margin-bottom: 0;
+}
+
+.#{$so-prefix}accordion-button {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: var(--accordion-btn-padding-y) var(--accordion-btn-padding-x);
+  font-size: font-size('base');
+  font-weight: font-weight('medium');
+  color: var(--accordion-color);
+  text-align: left;
+  background-color: var(--accordion-bg);
+  border: 0;
+  border-radius: 0;
+  overflow-anchor: none;
+  cursor: pointer;
+  transition: color $so-transition-fast,
+              background-color $so-transition-fast,
+              box-shadow $so-transition-fast;
+
+  &:not(.#{$so-prefix}collapsed) {
+    color: var(--accordion-active-color);
+    background-color: var(--accordion-active-bg);
+    box-shadow: inset 0 calc(var(--accordion-border-width) * -1) 0 var(--accordion-border-color);
+
+    &::after {
+      transform: var(--accordion-icon-transform);
+    }
+  }
+
+  &::after {
+    flex-shrink: 0;
+    width: var(--accordion-icon-width);
+    height: var(--accordion-icon-width);
+    margin-left: auto;
+    content: '';
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23212529'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-size: var(--accordion-icon-width);
+    transition: var(--accordion-icon-transition);
+  }
+
+  &:hover {
+    z-index: 2;
+  }
+
+  &:focus {
+    z-index: 3;
+    outline: 0;
+    box-shadow: 0 0 0 3px rgba($so-primary, 0.25);
+  }
+}
+
+.#{$so-prefix}accordion-collapse {
+  overflow: hidden;
+  transition: height 0.35s ease;
+
+  &:not(.#{$so-prefix}show):not(.#{$so-prefix}collapsing) {
+    display: none;
+  }
+
+  &.#{$so-prefix}collapsing {
+    height: 0;
+  }
+}
+
+.#{$so-prefix}accordion-body {
+  padding: var(--accordion-body-padding-y) var(--accordion-body-padding-x);
+}
+
+// ============================================
+// FLUSH VARIANT (No outside borders)
+// ============================================
+
+.#{$so-prefix}accordion-flush {
+  --accordion-border-radius: 0;
+
+  .#{$so-prefix}accordion-item {
+    border-right: 0;
+    border-left: 0;
+    border-radius: 0;
+
+    &:first-child {
+      border-top: 0;
+    }
+
+    &:last-child {
+      border-bottom: 0;
+    }
+  }
+
+  .#{$so-prefix}accordion-button {
+    border-radius: 0 !important;
+  }
+
+  .#{$so-prefix}accordion-collapse {
+    border-radius: 0;
+  }
+}
+
+// ============================================
+// BORDERED LEFT VARIANT
+// ============================================
+
+.#{$so-prefix}accordion-bordered {
+  .#{$so-prefix}accordion-item {
+    border-left-width: 3px;
+
+    &:not(.#{$so-prefix}collapsed) {
+      border-left-color: $so-primary;
+    }
+  }
+
+  @each $color-name, $color-value in $so-colors {
+    &.#{$so-prefix}accordion-#{$color-name} {
+      .#{$so-prefix}accordion-item:not(.#{$so-prefix}collapsed),
+      .#{$so-prefix}accordion-item:has(.#{$so-prefix}accordion-button:not(.#{$so-prefix}collapsed)) {
+        border-left-color: $color-value;
+      }
+
+      .#{$so-prefix}accordion-button:not(.#{$so-prefix}collapsed) {
+        color: $color-value;
+        background-color: rgba($color-value, 0.05);
+      }
+    }
+  }
+}
+
+// ============================================
+// COLOR VARIANTS
+// ============================================
+
+@each $color-name, $color-value in $so-colors {
+  .#{$so-prefix}accordion-#{$color-name} {
+    --accordion-active-color: #{$color-value};
+    --accordion-active-bg: #{rgba($color-value, 0.05)};
+
+    .#{$so-prefix}accordion-button:focus {
+      box-shadow: 0 0 0 3px rgba($color-value, 0.25);
+    }
+  }
+}
+
+// ============================================
+// ICON VARIANTS
+// ============================================
+
+// Plus/Minus icon
+.#{$so-prefix}accordion-plus-minus {
+  .#{$so-prefix}accordion-button {
+    &::after {
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23212529'%3e%3cpath d='M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z'/%3e%3c/svg%3e");
+      transform: none;
+    }
+
+    &:not(.#{$so-prefix}collapsed)::after {
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23212529'%3e%3cpath d='M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8z'/%3e%3c/svg%3e");
+      transform: none;
+    }
+  }
+}
+
+// Arrow icon (right arrow rotates down)
+.#{$so-prefix}accordion-arrow {
+  .#{$so-prefix}accordion-button {
+    &::after {
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23212529'%3e%3cpath fill-rule='evenodd' d='M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
+      transform: rotate(0deg);
+    }
+
+    &:not(.#{$so-prefix}collapsed)::after {
+      transform: rotate(90deg);
+    }
+  }
+}
+
+// No icon
+.#{$so-prefix}accordion-no-icon {
+  .#{$so-prefix}accordion-button::after {
+    display: none;
+  }
+}
+
+// Icon on left
+.#{$so-prefix}accordion-icon-left {
+  .#{$so-prefix}accordion-button {
+    &::before {
+      flex-shrink: 0;
+      width: var(--accordion-icon-width);
+      height: var(--accordion-icon-width);
+      margin-right: spacing('3');
+      content: '';
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23212529'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
+      background-repeat: no-repeat;
+      background-size: var(--accordion-icon-width);
+      transition: var(--accordion-icon-transition);
+    }
+
+    &:not(.#{$so-prefix}collapsed)::before {
+      transform: var(--accordion-icon-transform);
+    }
+
+    &::after {
+      display: none;
+    }
+  }
+}
+
+// ============================================
+// SIZE VARIANTS
+// ============================================
+
+.#{$so-prefix}accordion-sm {
+  --accordion-btn-padding-y: #{spacing('2')};
+  --accordion-btn-padding-x: #{spacing('3')};
+  --accordion-body-padding-y: #{spacing('2')};
+  --accordion-body-padding-x: #{spacing('3')};
+  --accordion-icon-width: 1rem;
+
+  .#{$so-prefix}accordion-button {
+    font-size: font-size('sm');
+  }
+}
+
+.#{$so-prefix}accordion-lg {
+  --accordion-btn-padding-y: #{spacing('5')};
+  --accordion-btn-padding-x: #{spacing('6')};
+  --accordion-body-padding-y: #{spacing('5')};
+  --accordion-body-padding-x: #{spacing('6')};
+  --accordion-icon-width: 1.5rem;
+
+  .#{$so-prefix}accordion-button {
+    font-size: font-size('lg');
+  }
+}
+
+// ============================================
+// ALWAYS OPEN (Multiple open at once)
+// ============================================
+
+// No additional styles needed, handled by JS
+// Just add data-so-accordion-always-open attribute
+
+// ============================================
+// NESTED ACCORDION
+// ============================================
+
+.#{$so-prefix}accordion-nested {
+  .#{$so-prefix}accordion {
+    margin: spacing('3') 0;
+    margin-left: spacing('4');
+  }
+}
+
+// ============================================
+// DARK MODE SUPPORT
+// ============================================
+
+[data-theme='dark'] {
+  .#{$so-prefix}accordion {
+    --accordion-color: #{css-var('text-color')};
+    --accordion-bg: #{css-var('card-bg')};
+    --accordion-border-color: #{css-var('border-color')};
+  }
+
+  .#{$so-prefix}accordion-button {
+    &::after {
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23e1e1e1'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
+    }
+  }
+
+  .#{$so-prefix}accordion-plus-minus {
+    .#{$so-prefix}accordion-button {
+      &::after {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23e1e1e1'%3e%3cpath d='M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z'/%3e%3c/svg%3e");
+      }
+
+      &:not(.#{$so-prefix}collapsed)::after {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23e1e1e1'%3e%3cpath d='M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8z'/%3e%3c/svg%3e");
+      }
+    }
+  }
+
+  .#{$so-prefix}accordion-arrow {
+    .#{$so-prefix}accordion-button::after {
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23e1e1e1'%3e%3cpath fill-rule='evenodd' d='M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
+    }
+  }
+
+  .#{$so-prefix}accordion-icon-left {
+    .#{$so-prefix}accordion-button::before {
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23e1e1e1'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
+    }
+  }
+}

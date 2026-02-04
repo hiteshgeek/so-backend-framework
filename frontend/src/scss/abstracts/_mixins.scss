@@ -1,0 +1,496 @@
+// ============================================
+// SIXORBIT UI - MIXINS
+// Reusable style patterns
+// ============================================
+
+@use 'sass:map';
+@use 'config' as *;
+@use 'variables' as *;
+@use 'functions' as *;
+
+// ============================================
+// RESPONSIVE BREAKPOINT MIXINS
+// ============================================
+
+/// Media query for minimum width (mobile-first)
+/// @param {String} $breakpoint - Breakpoint key from $so-breakpoints
+@mixin media-up($breakpoint) {
+  $value: breakpoint($breakpoint);
+  @if $value == 0 {
+    @content;
+  } @else {
+    @media (min-width: $value) {
+      @content;
+    }
+  }
+}
+
+/// Media query for maximum width (desktop-first)
+/// @param {String} $breakpoint - Breakpoint key from $so-breakpoints
+@mixin media-down($breakpoint) {
+  $value: breakpoint($breakpoint);
+  @if $value > 0 {
+    @media (max-width: #{$value - 1px}) {
+      @content;
+    }
+  }
+}
+
+/// Media query between two breakpoints
+/// @param {String} $lower - Lower breakpoint key
+/// @param {String} $upper - Upper breakpoint key
+@mixin media-between($lower, $upper) {
+  $lower-value: breakpoint($lower);
+  $upper-value: breakpoint($upper);
+  @media (min-width: $lower-value) and (max-width: #{$upper-value - 1px}) {
+    @content;
+  }
+}
+
+/// Shorthand for mobile styles (< 768px)
+@mixin mobile {
+  @include media-down('md') {
+    @content;
+  }
+}
+
+/// Shorthand for tablet styles (768px - 1024px)
+@mixin tablet {
+  @include media-between('md', 'lg') {
+    @content;
+  }
+}
+
+/// Shorthand for desktop styles (>= 1024px)
+@mixin desktop {
+  @include media-up('lg') {
+    @content;
+  }
+}
+
+// ============================================
+// DARK MODE MIXINS
+// ============================================
+
+/// Apply styles for dark mode (must be used inside a selector)
+/// For top-level dark mode styles, use the selector directly
+@mixin dark-mode {
+  @at-root [data-theme='dark'] #{&} {
+    @content;
+  }
+}
+
+/// Apply styles when dark mode is NOT active (must be used inside a selector)
+@mixin light-mode {
+  @at-root :root:not([data-theme='dark']) #{&},
+  [data-theme='light'] #{&} {
+    @content;
+  }
+}
+
+/// Apply sidebar-dark theme styles (must be used inside a selector)
+@mixin sidebar-dark {
+  @at-root .#{$so-prefix}sidebar.sidebar-dark #{&} {
+    @content;
+  }
+}
+
+// ============================================
+// BUTTON MIXINS
+// ============================================
+
+/// Base button structure (no colors)
+@mixin button-base {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: spacing('2');
+  height: $so-form-height-md;
+  padding: 0 spacing('4');
+  font-size: font-size('base');
+  font-weight: font-weight('medium');
+  font-family: inherit;
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  border-radius: radius('base');
+  border: 1px solid transparent;
+  transition: all $so-transition-base;
+  position: relative;
+  overflow: hidden;
+  user-select: none;
+
+  &:focus {
+    outline: none;
+  }
+
+  &:disabled,
+  &.disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+    pointer-events: none;
+  }
+}
+
+/// Button color variant
+/// @param {Color} $bg - Background color
+/// @param {Color} $text - Text color
+/// @param {Color} $hover-bg - Hover background color
+/// @param {Color} $border - Border color (default: $bg)
+@mixin button-variant($bg, $text, $hover-bg, $border: $bg) {
+  background: $bg;
+  color: $text;
+  border-color: $border;
+
+  &:hover:not(:disabled) {
+    background: $hover-bg;
+    border-color: $hover-bg;
+  }
+
+  &:active:not(:disabled) {
+    background: darken-color($hover-bg, 5%);
+  }
+}
+
+/// Button size variant
+/// @param {Number} $height - Button height
+/// @param {Number} $padding - Horizontal padding
+/// @param {Number} $font-size - Font size
+@mixin button-size($height, $padding, $font-size) {
+  height: $height;
+  padding: 0 $padding;
+  font-size: $font-size;
+}
+
+/// Material design ripple effect
+/// @param {Color} $color - Ripple color
+@mixin ripple-effect($color: rgba(255, 255, 255, 0.3)) {
+  @if $so-enable-ripple-effect {
+    &::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: $color;
+      transform: translate(-50%, -50%);
+      transition: width 0.3s ease, height 0.3s ease, opacity 0.3s ease;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    &:active::after {
+      width: 200%;
+      height: 200%;
+      opacity: 1;
+      transition: width 0s, height 0s, opacity 0s;
+    }
+  }
+}
+
+// ============================================
+// INPUT MIXINS
+// ============================================
+
+/// Base input structure
+@mixin input-base {
+  display: block;
+  width: 100%;
+  height: $so-form-height-md;
+  padding: spacing('2') spacing('3'); // 8px 16px - consistent vertical padding
+  font-size: font-size('base');
+  font-family: inherit;
+  line-height: line-height('normal'); // 1.5 for vertical centering
+  color: css-var('form-text');
+  background: css-var('form-bg');
+  border: 1px solid css-var('form-border');
+  border-radius: radius('base');
+  outline: none;
+  transition: border-color $so-transition-base, box-shadow $so-transition-base;
+
+  &::placeholder {
+    color: css-var('form-placeholder');
+  }
+
+  &:hover:not(:disabled):not(:focus) {
+    border-color: css-var('form-border-hover');
+  }
+
+  &:focus {
+    border-color: css-var('form-border-focus');
+    box-shadow: 0 0 0 3px alpha($so-primary, 0.1);
+  }
+
+  &:disabled {
+    background: css-var('form-disabled-bg');
+    color: css-var('form-disabled-text');
+    cursor: not-allowed;
+  }
+}
+
+/// Input size variant
+/// @param {Number} $height - Input height
+/// @param {Number} $padding-x - Horizontal padding
+/// @param {Number} $font-size - Font size
+/// @param {Number} $padding-y [spacing('2')] - Vertical padding
+@mixin input-size($height, $padding-x, $font-size, $padding-y: spacing('2')) {
+  height: $height;
+  padding: $padding-y $padding-x;
+  font-size: $font-size;
+}
+
+// ============================================
+// DROPDOWN MIXINS
+// ============================================
+
+/// Dropdown menu container
+@mixin dropdown-menu {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  min-width: 200px;
+  max-height: 320px;
+  overflow-y: auto;
+  background: css-var('dropdown-bg');
+  border: 1px solid css-var('dropdown-border');
+  border-radius: radius('lg');
+  box-shadow: css-var('dropdown-shadow');
+  z-index: z-index('dropdown');
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-8px);
+  transition: all duration('normal') easing('material');
+}
+
+/// Dropdown open state
+@mixin dropdown-open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+/// Dropdown item
+@mixin dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: spacing('2');
+  padding: spacing('2') spacing('3');
+  font-size: font-size('base');
+  color: css-var('form-text');
+  text-decoration: none;
+  cursor: pointer;
+  transition: background $so-transition-base;
+
+  &:hover {
+    background: css-var('dropdown-item-hover');
+    text-decoration: none;
+  }
+
+  &.active,
+  &.selected {
+    background: css-var('dropdown-item-active');
+    color: css-var('dropdown-item-active-text');
+  }
+}
+
+// ============================================
+// LAYOUT MIXINS
+// ============================================
+
+/// Flexbox center
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/// Flexbox space between
+@mixin flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/// Flexbox start
+@mixin flex-start {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+/// Flexbox column
+@mixin flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+/// Card styling
+@mixin card {
+  display: flex;
+  flex-direction: column;
+  background: css-var('card-bg');
+  border-radius: radius('lg');
+  box-shadow: css-var('shadow');
+}
+
+/// Absolute center
+@mixin absolute-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/// Absolute fill
+@mixin absolute-fill {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+// ============================================
+// SCROLLBAR MIXINS
+// ============================================
+
+/// Hide scrollbar
+@mixin hide-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
+  }
+}
+
+/// Custom scrollbar
+/// @param {Number} $width - Scrollbar width
+/// @param {Color} $thumb-color - Thumb color
+/// @param {Color} $track-color - Track color
+@mixin custom-scrollbar($width: 6px, $thumb-color: $so-grey-400, $track-color: transparent) {
+  scrollbar-width: thin;
+  scrollbar-color: $thumb-color $track-color;
+
+  &::-webkit-scrollbar {
+    width: $width;
+    height: $width;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: $track-color;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: $thumb-color;
+    border-radius: $width * 0.5;
+
+    &:hover {
+      background: darken-color($thumb-color, 10%);
+    }
+  }
+}
+
+// ============================================
+// TEXT MIXINS
+// ============================================
+
+/// Text truncation (ellipsis)
+@mixin text-truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/// Multi-line text truncation
+/// @param {Number} $lines - Number of lines to show
+@mixin text-truncate-lines($lines: 2) {
+  display: -webkit-box;
+  -webkit-line-clamp: $lines;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/// Reset list styles
+@mixin list-reset {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+// ============================================
+// FOCUS MIXINS
+// ============================================
+
+/// Focus ring (keyboard focus)
+/// @param {Color} $color - Ring color
+/// @param {Number} $offset - Ring offset
+@mixin focus-ring($color: css-var('accent-primary'), $offset: 2px) {
+  &:focus-visible,
+  &.#{$so-prefix}focus-visible {
+    outline: 2px solid $color;
+    outline-offset: $offset;
+  }
+}
+
+/// Focus shadow (input focus)
+/// @param {Color} $color - Shadow color
+@mixin focus-shadow($color: $so-primary) {
+  &:focus {
+    box-shadow: 0 0 0 3px alpha($color, 0.1);
+  }
+}
+
+// ============================================
+// TRANSITION MIXINS
+// ============================================
+
+/// Standard transition
+/// @param {List} $properties - Properties to transition
+/// @param {Number} $duration - Duration
+/// @param {String} $easing - Easing function
+@mixin transition($properties: all, $duration: $so-transition-base, $easing: ease) {
+  transition-property: $properties;
+  transition-duration: $duration;
+  transition-timing-function: $easing;
+}
+
+/// Material design transition
+@mixin transition-material {
+  transition: all $so-transition-material;
+}
+
+// ============================================
+// CLEARFIX
+// ============================================
+
+/// Clearfix for floats
+@mixin clearfix {
+  &::after {
+    content: '';
+    display: table;
+    clear: both;
+  }
+}
+
+// ============================================
+// VISUALLY HIDDEN (Accessibility)
+// ============================================
+
+/// Visually hide element but keep accessible
+@mixin visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}

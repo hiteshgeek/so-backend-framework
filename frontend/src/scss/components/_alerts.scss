@@ -1,0 +1,569 @@
+// ============================================
+// SIXORBIT UI - ALERTS
+// Info boxes, warnings, and notifications
+// ============================================
+
+@use "sass:color";
+@use "../abstracts" as *;
+
+// Alert base styles
+.#{$so-prefix}alert {
+  display: flex;
+  align-items: flex-start;
+  gap: spacing("3");
+  padding: spacing("4");
+  border-radius: radius("lg");
+  border: 1px solid transparent;
+  font-size: font-size("sm");
+  line-height: 1.5;
+
+  // Icon styling
+  > .material-icons,
+  > .#{$so-prefix}alert-icon {
+    // flex-shrink: 0;
+    // width: 40px;
+    // height: 40px;
+    // display: flex;
+    // align-items: center;
+    // justify-content: center;
+    // border-radius: radius('md');
+    // font-size: 20px;
+
+    flex: 0 0 40px; /* shorthand: flex-grow flex-shrink flex-basis */
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    max-width: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: radius("md");
+    font-size: 20px;
+    box-sizing: border-box;
+    overflow: hidden;
+    padding: 0; /* Remove any padding */
+    margin: 0; /* Remove any margin */
+  }
+
+  // Content wrapper
+  > div,
+  > .#{$so-prefix}alert-content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  // Strong/bold text
+  strong {
+    font-weight: font-weight("semibold");
+    display: block;
+    margin-bottom: spacing("1");
+    font-size: font-size("base");
+  }
+
+  // Lists inside alerts
+  ul,
+  ol {
+    margin: 0;
+    padding-left: spacing("4");
+
+    li {
+      margin-bottom: spacing("1");
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  // Code inside alerts
+  code {
+    background: rgba(0, 0, 0, 0.08);
+    padding: 0.125rem 0.375rem;
+    border-radius: radius("sm");
+    font-size: 0.8125em;
+  }
+
+  // Heading within alert
+  .#{$so-prefix}alert-heading {
+    font-size: font-size("lg");
+    font-weight: font-weight("semibold");
+    margin-bottom: spacing("2");
+    color: inherit;
+  }
+
+  // Link styling within alert
+  .#{$so-prefix}alert-link {
+    font-weight: font-weight("semibold");
+    text-decoration: underline;
+    transition: color $so-transition-base;
+
+    &:hover {
+      text-decoration: none;
+    }
+  }
+
+  // Horizontal rule in alert
+  hr {
+    margin: spacing("3") 0;
+    border: 0;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
+  // Paragraph spacing
+  p {
+    margin-bottom: spacing("2");
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+// Alert variants
+.#{$so-prefix}alert-info {
+  background: rgba($so-info, 0.08);
+  border-color: rgba($so-info, 0.2);
+  color: css-var("text-primary");
+
+  > .material-icons,
+  > .#{$so-prefix}alert-icon {
+    background: rgba($so-info, 0.15);
+    color: css-var("accent-info");
+  }
+
+  code {
+    background: rgba($so-info, 0.12);
+    color: color.adjust($so-info, $lightness: -10%);
+  }
+
+  .#{$so-prefix}alert-link {
+    color: color.adjust($so-info, $lightness: -15%);
+  }
+}
+
+.#{$so-prefix}alert-success {
+  background: rgba($so-success, 0.08);
+  border-color: rgba($so-success, 0.2);
+  color: css-var("text-primary");
+
+  > .material-icons,
+  > .#{$so-prefix}alert-icon {
+    background: rgba($so-success, 0.15);
+    color: css-var("accent-success");
+  }
+
+  code {
+    background: rgba($so-success, 0.12);
+    color: color.adjust($so-success, $lightness: -10%);
+  }
+
+  .#{$so-prefix}alert-link {
+    color: color.adjust($so-success, $lightness: -15%);
+  }
+}
+
+.#{$so-prefix}alert-warning {
+  background: rgba($so-warning, 0.1);
+  border-color: rgba($so-warning, 0.25);
+  color: css-var("text-primary");
+
+  > .material-icons,
+  > .#{$so-prefix}alert-icon {
+    background: rgba($so-warning, 0.2);
+    color: color.adjust($so-warning, $lightness: -10%);
+  }
+
+  code {
+    background: rgba($so-warning, 0.15);
+    color: color.adjust($so-warning, $lightness: -15%);
+  }
+
+  .#{$so-prefix}alert-link {
+    color: color.adjust($so-warning, $lightness: -20%);
+  }
+}
+
+.#{$so-prefix}alert-danger,
+.#{$so-prefix}alert-error {
+  background: rgba($so-danger, 0.08);
+  border-color: rgba($so-danger, 0.2);
+  color: css-var("text-primary");
+
+  > .material-icons,
+  > .#{$so-prefix}alert-icon {
+    background: rgba($so-danger, 0.15);
+    color: css-var("accent-danger");
+  }
+
+  code {
+    background: rgba($so-danger, 0.12);
+    color: color.adjust($so-danger, $lightness: -5%);
+  }
+
+  .#{$so-prefix}alert-link {
+    color: color.adjust($so-danger, $lightness: -10%);
+  }
+}
+
+// Primary variant (for tips/highlights)
+.#{$so-prefix}alert-primary {
+  background: rgba($so-primary, 0.08);
+  border-color: rgba($so-primary, 0.2);
+  color: css-var("text-primary");
+
+  > .material-icons,
+  > .#{$so-prefix}alert-icon {
+    background: rgba($so-primary, 0.15);
+    color: css-var("accent-primary");
+  }
+
+  code {
+    background: rgba($so-primary, 0.12);
+    color: color.adjust($so-primary, $lightness: -5%);
+  }
+
+  .#{$so-prefix}alert-link {
+    color: color.adjust($so-primary, $lightness: -10%);
+  }
+}
+
+// Secondary variant (neutral gray)
+.#{$so-prefix}alert-secondary {
+  background: rgba($so-secondary, 0.08);
+  border-color: rgba($so-secondary, 0.2);
+  color: css-var("text-primary");
+
+  > .material-icons,
+  > .#{$so-prefix}alert-icon {
+    background: rgba($so-secondary, 0.15);
+    color: $so-secondary;
+  }
+
+  code {
+    background: rgba($so-secondary, 0.12);
+    color: color.adjust($so-secondary, $lightness: -10%);
+  }
+
+  .#{$so-prefix}alert-link {
+    color: color.adjust($so-secondary, $lightness: -15%);
+  }
+}
+
+// Light variant (very subtle)
+.#{$so-prefix}alert-light {
+  background: $so-grey-100;
+  border-color: $so-grey-300;
+  color: css-var("text-primary");
+
+  > .material-icons,
+  > .#{$so-prefix}alert-icon {
+    background: $so-grey-200;
+    color: $so-grey-700;
+  }
+
+  code {
+    background: rgba(0, 0, 0, 0.06);
+    color: $so-grey-800;
+  }
+
+  .#{$so-prefix}alert-link {
+    color: $so-grey-900;
+  }
+}
+
+// Dark variant (high contrast)
+.#{$so-prefix}alert-dark {
+  background: $so-grey-800;
+  border-color: $so-grey-700;
+  color: $so-white;
+
+  > .material-icons,
+  > .#{$so-prefix}alert-icon {
+    background: $so-grey-700;
+    color: $so-white;
+  }
+
+  code {
+    background: rgba(255, 255, 255, 0.15);
+    color: $so-grey-100;
+  }
+
+  .#{$so-prefix}alert-link {
+    color: $so-grey-200;
+  }
+}
+
+// Compact variant (smaller padding)
+.#{$so-prefix}alert-sm {
+  padding: spacing("3");
+  gap: spacing("2");
+  font-size: font-size("xs");
+
+  > .material-icons,
+  > .#{$so-prefix}alert-icon {
+    width: 32px;
+    height: 32px;
+    font-size: 18px;
+  }
+
+  strong {
+    font-size: font-size("sm");
+  }
+}
+
+// Outline variants (no background fill)
+.#{$so-prefix}alert-outline {
+  background: transparent;
+
+  &.#{$so-prefix}alert-info {
+    border-color: rgba($so-info, 0.4);
+  }
+
+  &.#{$so-prefix}alert-success {
+    border-color: rgba($so-success, 0.4);
+  }
+
+  &.#{$so-prefix}alert-warning {
+    border-color: rgba($so-warning, 0.4);
+  }
+
+  &.#{$so-prefix}alert-danger,
+  &.#{$so-prefix}alert-error {
+    border-color: rgba($so-danger, 0.4);
+  }
+
+  &.#{$so-prefix}alert-primary {
+    border-color: rgba($so-primary, 0.4);
+  }
+
+  &.#{$so-prefix}alert-secondary {
+    border-color: rgba($so-secondary, 0.4);
+  }
+
+  &.#{$so-prefix}alert-light {
+    border-color: $so-grey-400;
+    background: transparent;
+  }
+
+  &.#{$so-prefix}alert-dark {
+    border-color: $so-grey-600;
+    background: transparent;
+    color: css-var("text-primary");
+
+    > .material-icons,
+    > .#{$so-prefix}alert-icon {
+      background: rgba($so-grey-800, 0.15);
+      color: $so-grey-800;
+    }
+  }
+}
+
+// Dismissible alert
+.#{$so-prefix}alert-dismissible {
+  position: relative;
+  padding-right: spacing("10");
+
+  .#{$so-prefix}alert-close {
+    position: absolute;
+    top: spacing("3");
+    right: spacing("3");
+    padding: spacing("1");
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    opacity: 0.5;
+    transition: opacity 0.2s ease;
+    color: inherit;
+    border-radius: radius("sm");
+
+    &:hover {
+      opacity: 1;
+      background: rgba(0, 0, 0, 0.05);
+    }
+
+    .material-icons {
+      font-size: 18px;
+    }
+  }
+}
+
+// Dark mode adjustments
+[data-theme="dark"] {
+  .#{$so-prefix}alert {
+    code {
+      background: rgba(255, 255, 255, 0.1);
+    }
+  }
+
+  .#{$so-prefix}alert-info {
+    background: rgba($so-info, 0.12);
+    border-color: rgba($so-info, 0.25);
+
+    > .material-icons,
+    > .#{$so-prefix}alert-icon {
+      background: rgba($so-info, 0.2);
+    }
+
+    code {
+      background: rgba($so-info, 0.2);
+      color: color.adjust($so-info, $lightness: 15%);
+    }
+
+    .#{$so-prefix}alert-link {
+      color: color.adjust($so-info, $lightness: 15%);
+    }
+  }
+
+  .#{$so-prefix}alert-success {
+    background: rgba($so-success, 0.12);
+    border-color: rgba($so-success, 0.25);
+
+    > .material-icons,
+    > .#{$so-prefix}alert-icon {
+      background: rgba($so-success, 0.2);
+    }
+
+    code {
+      background: rgba($so-success, 0.2);
+      color: color.adjust($so-success, $lightness: 15%);
+    }
+
+    .#{$so-prefix}alert-link {
+      color: color.adjust($so-success, $lightness: 15%);
+    }
+  }
+
+  .#{$so-prefix}alert-warning {
+    background: rgba($so-warning, 0.15);
+    border-color: rgba($so-warning, 0.3);
+
+    > .material-icons,
+    > .#{$so-prefix}alert-icon {
+      background: rgba($so-warning, 0.25);
+      color: color.adjust($so-warning, $lightness: 10%);
+    }
+
+    code {
+      background: rgba($so-warning, 0.25);
+      color: color.adjust($so-warning, $lightness: 10%);
+    }
+
+    .#{$so-prefix}alert-link {
+      color: color.adjust($so-warning, $lightness: 10%);
+    }
+  }
+
+  .#{$so-prefix}alert-danger,
+  .#{$so-prefix}alert-error {
+    background: rgba($so-danger, 0.12);
+    border-color: rgba($so-danger, 0.25);
+
+    > .material-icons,
+    > .#{$so-prefix}alert-icon {
+      background: rgba($so-danger, 0.2);
+    }
+
+    code {
+      background: rgba($so-danger, 0.2);
+      color: color.adjust($so-danger, $lightness: 15%);
+    }
+
+    .#{$so-prefix}alert-link {
+      color: color.adjust($so-danger, $lightness: 15%);
+    }
+  }
+
+  .#{$so-prefix}alert-primary {
+    background: rgba($so-primary, 0.12);
+    border-color: rgba($so-primary, 0.25);
+
+    > .material-icons,
+    > .#{$so-prefix}alert-icon {
+      background: rgba($so-primary, 0.2);
+    }
+
+    code {
+      background: rgba($so-primary, 0.2);
+      color: color.adjust($so-primary, $lightness: 15%);
+    }
+  }
+
+  .#{$so-prefix}alert-primary {
+    background: rgba($so-primary, 0.12);
+    border-color: rgba($so-primary, 0.25);
+
+    > .material-icons,
+    > .#{$so-prefix}alert-icon {
+      background: rgba($so-primary, 0.2);
+    }
+
+    code {
+      background: rgba($so-primary, 0.2);
+      color: color.adjust($so-primary, $lightness: 15%);
+    }
+
+    .#{$so-prefix}alert-link {
+      color: color.adjust($so-primary, $lightness: 15%);
+    }
+  }
+
+  .#{$so-prefix}alert-secondary {
+    background: rgba($so-secondary, 0.15);
+    border-color: rgba($so-secondary, 0.25);
+
+    > .material-icons,
+    > .#{$so-prefix}alert-icon {
+      background: rgba($so-secondary, 0.2);
+      color: $so-grey-400;
+    }
+
+    code {
+      background: rgba($so-secondary, 0.2);
+      color: $so-grey-300;
+    }
+
+    .#{$so-prefix}alert-link {
+      color: $so-grey-300;
+    }
+  }
+
+  .#{$so-prefix}alert-light {
+    background: rgba($so-grey-100, 0.1);
+    border-color: rgba($so-grey-300, 0.3);
+
+    > .material-icons,
+    > .#{$so-prefix}alert-icon {
+      background: rgba($so-grey-100, 0.15);
+      color: $so-grey-300;
+    }
+
+    .#{$so-prefix}alert-link {
+      color: $so-grey-200;
+    }
+  }
+
+  .#{$so-prefix}alert-dark {
+    background: $so-grey-900;
+    border-color: $so-grey-700;
+
+    > .material-icons,
+    > .#{$so-prefix}alert-icon {
+      background: $so-grey-800;
+    }
+
+    .#{$so-prefix}alert-link {
+      color: $so-grey-300;
+    }
+  }
+
+  .#{$so-prefix}alert-dismissible {
+    .#{$so-prefix}alert-close:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+  }
+
+  // Dark mode hr
+  .#{$so-prefix}alert hr {
+    border-top-color: rgba(255, 255, 255, 0.1);
+  }
+}

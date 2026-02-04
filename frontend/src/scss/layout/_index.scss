@@ -1,0 +1,18 @@
+// ============================================
+// SIXORBIT UI - LAYOUT INDEX
+// Forward all layout modules
+// ============================================
+
+// Grid System Configuration (shared variables)
+@forward 'grid-config';
+
+// Grid System
+@forward 'containers';
+@forward 'grid';
+@forward 'css-grid';
+
+// Page Layout Components
+@forward 'sidebar';
+@forward 'sidebar-drawer';
+@forward 'navbar';
+@forward 'main-content';

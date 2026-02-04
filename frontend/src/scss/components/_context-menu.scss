@@ -1,0 +1,417 @@
+// ============================================
+// SIXORBIT UI - CONTEXT MENU
+// Right-click contextual menu component
+// ============================================
+
+@use '../abstracts' as *;
+
+// ============================================
+// BASE CONTEXT MENU
+// ============================================
+
+.#{$so-prefix}context-menu {
+  position: fixed;
+  z-index: z-index('popover');
+  min-width: 180px;
+  max-width: 280px;
+  padding: spacing('1') 0;
+  background: css-var('dropdown-bg');
+  border: 1px solid css-var('dropdown-border');
+  border-radius: radius('lg');
+  box-shadow: css-var('dropdown-shadow');
+  opacity: 0;
+  visibility: hidden;
+  transform: scale(0.95);
+  transform-origin: top left;
+  transition: opacity $so-transition-normal, transform $so-transition-normal, visibility $so-transition-normal;
+  user-select: none;
+
+  // Open state
+  &.#{$so-prefix}open {
+    opacity: 1;
+    visibility: visible;
+    transform: scale(1);
+  }
+
+  // Position variants for viewport edge handling
+  &.#{$so-prefix}flip-x {
+    transform-origin: top right;
+  }
+
+  &.#{$so-prefix}flip-y {
+    transform-origin: bottom left;
+  }
+
+  &.#{$so-prefix}flip-x.#{$so-prefix}flip-y {
+    transform-origin: bottom right;
+  }
+}
+
+// ============================================
+// MENU HEADER
+// ============================================
+
+.#{$so-prefix}context-menu-header {
+  padding: spacing('2') spacing('3');
+  font-size: font-size('xs');
+  font-weight: font-weight('semibold');
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: css-var('text-secondary');
+  cursor: default;
+
+  // First header doesn't need top padding
+  &:first-child {
+    padding-top: spacing('1');
+  }
+}
+
+// ============================================
+// MENU DIVIDER
+// ============================================
+
+.#{$so-prefix}context-menu-divider {
+  height: 1px;
+  margin: spacing('1') 0;
+  background: css-var('dropdown-border');
+}
+
+// ============================================
+// MENU ITEM
+// ============================================
+
+.#{$so-prefix}context-menu-item {
+  display: flex;
+  align-items: center;
+  gap: spacing('2');
+  padding: spacing('2') spacing('3');
+  font-size: font-size('sm');
+  color: css-var('dropdown-item-text');
+  cursor: pointer;
+  transition: background $so-transition-base;
+  position: relative;
+
+  &:hover:not(.#{$so-prefix}disabled) {
+    background: css-var('dropdown-item-hover');
+  }
+
+  // Focused state (keyboard navigation)
+  &.#{$so-prefix}focused:not(.#{$so-prefix}disabled) {
+    background: css-var('dropdown-item-hover');
+    outline: none;
+  }
+
+  // Disabled state
+  &.#{$so-prefix}disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  // Danger/destructive action
+  &.#{$so-prefix}danger {
+    color: css-var('accent-danger');
+
+    .#{$so-prefix}context-menu-item-icon {
+      color: css-var('accent-danger');
+    }
+
+    &:hover:not(.#{$so-prefix}disabled) {
+      background: alpha($so-danger, 0.1);
+    }
+  }
+
+  // Has submenu indicator
+  &.#{$so-prefix}has-submenu {
+    padding-right: spacing('2');
+  }
+}
+
+// Item icon
+.#{$so-prefix}context-menu-item-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  color: css-var('text-secondary');
+
+  .material-icons {
+    font-size: 18px;
+  }
+}
+
+// Item text/label
+.#{$so-prefix}context-menu-item-text {
+  flex: 1;
+  @include text-truncate;
+}
+
+// Keyboard shortcut hint
+.#{$so-prefix}context-menu-item-shortcut {
+  margin-left: auto;
+  padding-left: spacing('4');
+  font-size: font-size('xs');
+  color: css-var('text-muted');
+  font-family: inherit;
+  letter-spacing: 0.3px;
+}
+
+// Submenu arrow indicator
+.#{$so-prefix}context-menu-item-arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto;
+  color: css-var('text-secondary');
+
+  .material-icons {
+    font-size: 16px;
+  }
+}
+
+// ============================================
+// SUBMENU
+// ============================================
+
+.#{$so-prefix}context-menu-submenu {
+  position: absolute;
+  left: 100%;
+  top: 0;
+  margin-left: -4px;
+  min-width: 160px;
+  max-width: 260px;
+  padding: spacing('1') 0;
+  background: css-var('dropdown-bg');
+  border: 1px solid css-var('dropdown-border');
+  border-radius: radius('lg');
+  box-shadow: css-var('dropdown-shadow');
+  opacity: 0;
+  visibility: hidden;
+  transform: translateX(-8px);
+  transition: opacity $so-transition-normal, transform $so-transition-normal, visibility $so-transition-normal;
+  z-index: 1;
+
+  // Visible state
+  &.#{$so-prefix}open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(0);
+  }
+
+  // Flip to left when near right edge
+  &.#{$so-prefix}flip-x {
+    left: auto;
+    right: 100%;
+    margin-left: 0;
+    margin-right: -4px;
+    transform: translateX(8px);
+
+    &.#{$so-prefix}open {
+      transform: translateX(0);
+    }
+  }
+
+  // Nested submenu (2nd level)
+  .#{$so-prefix}context-menu-submenu {
+    // Same positioning rules apply
+  }
+}
+
+// Parent item with open submenu
+.#{$so-prefix}context-menu-item.submenu-open {
+  background: css-var('dropdown-item-hover');
+}
+
+// ============================================
+// MENU GROUP (for enable/disable)
+// ============================================
+
+.#{$so-prefix}context-menu-group {
+  // Group container - no visual styling, just for JS targeting
+
+  // Disabled group
+  &.#{$so-prefix}disabled {
+    .#{$so-prefix}context-menu-item {
+      opacity: 0.5;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+  }
+}
+
+// ============================================
+// CHECKBOX/RADIO ITEMS
+// ============================================
+
+.#{$so-prefix}context-menu-item-check {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  color: css-var('accent-primary');
+  opacity: 0;
+  transition: opacity $so-transition-base;
+
+  .material-icons {
+    font-size: 18px;
+  }
+}
+
+.#{$so-prefix}context-menu-item.#{$so-prefix}checked {
+  .#{$so-prefix}context-menu-item-check {
+    opacity: 1;
+  }
+}
+
+// ============================================
+// SIZE VARIANTS
+// ============================================
+
+// Compact/small variant
+.#{$so-prefix}context-menu-sm {
+  min-width: 140px;
+  max-width: 220px;
+  padding: spacing('1') - 2px 0;
+
+  .#{$so-prefix}context-menu-header {
+    padding: spacing('1') + 2px spacing('2') + 2px;
+    font-size: 10px;
+  }
+
+  .#{$so-prefix}context-menu-item {
+    padding: spacing('1') + 2px spacing('2') + 2px;
+    font-size: font-size('xs');
+    gap: spacing('1') + 2px;
+  }
+
+  .#{$so-prefix}context-menu-item-icon {
+    width: 16px;
+    height: 16px;
+
+    .material-icons {
+      font-size: 16px;
+    }
+  }
+
+  .#{$so-prefix}context-menu-divider {
+    margin: spacing('1') - 2px 0;
+  }
+}
+
+// Large variant
+.#{$so-prefix}context-menu-lg {
+  min-width: 220px;
+  max-width: 320px;
+  padding: spacing('2') 0;
+
+  .#{$so-prefix}context-menu-header {
+    padding: spacing('2') + 2px spacing('4');
+    font-size: font-size('xs');
+  }
+
+  .#{$so-prefix}context-menu-item {
+    padding: spacing('2') + 2px spacing('4');
+    font-size: font-size('base');
+    gap: spacing('3');
+  }
+
+  .#{$so-prefix}context-menu-item-icon {
+    width: 24px;
+    height: 24px;
+
+    .material-icons {
+      font-size: 20px;
+    }
+  }
+
+  .#{$so-prefix}context-menu-divider {
+    margin: spacing('2') 0;
+  }
+}
+
+// ============================================
+// ITEM WITH DESCRIPTION
+// ============================================
+
+.#{$so-prefix}context-menu-item-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.#{$so-prefix}context-menu-item-description {
+  font-size: font-size('xs');
+  color: css-var('text-muted');
+  margin-top: 2px;
+  @include text-truncate;
+}
+
+// ============================================
+// INLINE MENU (always visible, not positioned)
+// Used for displaying menus in documentation/demos
+// ============================================
+
+.#{$so-prefix}context-menu-inline {
+  position: relative;
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  display: inline-block;
+}
+
+// ============================================
+// TRIGGER AREA HIGHLIGHT
+// ============================================
+
+[data-so-context-menu] {
+  // Optional: Add subtle indicator that element has context menu
+  // cursor: context-menu; // Uncomment to show context menu cursor
+
+  &:focus-visible,
+  &.#{$so-prefix}focus-visible {
+    outline: 2px solid css-var('accent-primary');
+    outline-offset: 2px;
+  }
+}
+
+// ============================================
+// ANIMATION KEYFRAMES
+// ============================================
+
+@keyframes so-context-menu-fade-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes so-context-menu-fade-out {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+}
+
+// Animated variant (optional - use class .so-context-menu-animated)
+.#{$so-prefix}context-menu-animated {
+  &.#{$so-prefix}open {
+    animation: so-context-menu-fade-in 150ms ease-out forwards;
+  }
+
+  &.#{$so-prefix}closing {
+    animation: so-context-menu-fade-out 150ms ease-in forwards;
+  }
+}

@@ -1,0 +1,279 @@
+{
+    "items": [
+        {
+            "id": "prod-1",
+            "sku": "PHONE-IP14-128",
+            "name": "iPhone 14 Pro Max 128GB Space Black",
+            "stock": 25,
+            "price": 134900,
+            "cost": 120000,
+            "vendorStock": 150,
+            "status": "active",
+            "category": "items"
+        },
+        {
+            "id": "prod-2",
+            "sku": "PHONE-IP14-256",
+            "name": "iPhone 14 Pro Max 256GB Deep Purple",
+            "stock": 8,
+            "price": 144900,
+            "cost": 128000,
+            "vendorStock": 80,
+            "status": "active",
+            "category": "items"
+        },
+        {
+            "id": "prod-3",
+            "sku": "PHONE-S23-256",
+            "name": "Samsung Galaxy S23 Ultra 256GB Phantom Black",
+            "stock": 0,
+            "price": 124999,
+            "cost": 105000,
+            "vendorStock": 0,
+            "status": "liquidation",
+            "category": "items"
+        },
+        {
+            "id": "prod-4",
+            "sku": "PHONE-S23-512",
+            "name": "Samsung Galaxy S23 Ultra 512GB Cream",
+            "stock": 15,
+            "price": 144999,
+            "cost": 125000,
+            "vendorStock": 45,
+            "status": "active",
+            "category": "items"
+        },
+        {
+            "id": "prod-5",
+            "sku": "PHONE-PX7-128",
+            "name": "Google Pixel 7 Pro 128GB Obsidian",
+            "stock": 3,
+            "price": 84999,
+            "cost": 72000,
+            "vendorStock": 25,
+            "status": "active",
+            "category": "items"
+        },
+        {
+            "id": "prod-6",
+            "sku": "PHONE-OP11-256",
+            "name": "OnePlus 11 5G 256GB Eternal Green",
+            "stock": 0,
+            "price": 61999,
+            "cost": 52000,
+            "vendorStock": 100,
+            "status": "active",
+            "category": "items"
+        },
+        {
+            "id": "prod-7",
+            "sku": "LAPTOP-MB-M2",
+            "name": "MacBook Air M2 256GB Midnight",
+            "stock": 12,
+            "price": 114900,
+            "cost": 98000,
+            "vendorStock": 35,
+            "status": "active",
+            "category": "items"
+        },
+        {
+            "id": "prod-8",
+            "sku": "LAPTOP-MB-M2P",
+            "name": "MacBook Pro 14\" M2 Pro 512GB Space Gray",
+            "stock": 5,
+            "price": 199900,
+            "cost": 175000,
+            "vendorStock": 20,
+            "status": "active",
+            "category": "items"
+        },
+        {
+            "id": "prod-9",
+            "sku": "TABLET-IPAD-64",
+            "name": "iPad 10th Gen 64GB Silver WiFi",
+            "stock": 30,
+            "price": 44900,
+            "cost": 38000,
+            "vendorStock": 200,
+            "status": "active",
+            "category": "items"
+        },
+        {
+            "id": "prod-10",
+            "sku": "TABLET-IPAD-256",
+            "name": "iPad Pro 12.9\" M2 256GB Space Gray",
+            "stock": 2,
+            "price": 112900,
+            "cost": 95000,
+            "vendorStock": 15,
+            "status": "liquidation",
+            "category": "items"
+        },
+        {
+            "id": "prod-11",
+            "sku": "WATCH-AW8-45",
+            "name": "Apple Watch Series 8 45mm GPS Midnight",
+            "stock": 18,
+            "price": 45900,
+            "cost": 39000,
+            "vendorStock": 80,
+            "status": "active",
+            "category": "items"
+        },
+        {
+            "id": "prod-12",
+            "sku": "WATCH-AWU-49",
+            "name": "Apple Watch Ultra 49mm Titanium Orange",
+            "stock": 0,
+            "price": 89900,
+            "cost": 78000,
+            "vendorStock": 10,
+            "status": "active",
+            "category": "items"
+        },
+        {
+            "id": "prod-13",
+            "sku": "AUDIO-APP-2",
+            "name": "AirPods Pro 2nd Gen with MagSafe Case",
+            "stock": 45,
+            "price": 26900,
+            "cost": 22000,
+            "vendorStock": 300,
+            "status": "active",
+            "category": "items"
+        },
+        {
+            "id": "prod-14",
+            "sku": "AUDIO-APM-SG",
+            "name": "AirPods Max Space Gray",
+            "stock": 7,
+            "price": 59900,
+            "cost": 52000,
+            "vendorStock": 25,
+            "status": "liquidation",
+            "category": "items"
+        },
+        {
+            "id": "prod-15",
+            "sku": "ACC-MAGSAFE",
+            "name": "MagSafe Charger for iPhone",
+            "stock": 120,
+            "price": 4500,
+            "cost": 3200,
+            "vendorStock": 500,
+            "status": "active",
+            "category": "items"
+        },
+        {
+            "id": "prod-16",
+            "sku": "PHONE-IP15-128",
+            "name": "iPhone 15 Pro 128GB Natural Titanium",
+            "stock": 35,
+            "price": 134900,
+            "cost": 118000,
+            "vendorStock": 200,
+            "status": "active",
+            "category": "items"
+        },
+        {
+            "id": "prod-17",
+            "sku": "PHONE-IP15-256",
+            "name": "iPhone 15 Pro Max 256GB Blue Titanium",
+            "stock": 20,
+            "price": 159900,
+            "cost": 140000,
+            "vendorStock": 120,
+            "status": "active",
+            "category": "items"
+        },
+        {
+            "id": "prod-18",
+            "sku": "LAPTOP-MB-M3",
+            "name": "MacBook Air M3 256GB Starlight",
+            "stock": 10,
+            "price": 124900,
+            "cost": 108000,
+            "vendorStock": 50,
+            "status": "active",
+            "category": "items"
+        },
+        {
+            "id": "prod-19",
+            "sku": "WATCH-AW9-45",
+            "name": "Apple Watch Series 9 45mm GPS Starlight",
+            "stock": 22,
+            "price": 45900,
+            "cost": 38500,
+            "vendorStock": 100,
+            "status": "active",
+            "category": "items"
+        },
+        {
+            "id": "prod-20",
+            "sku": "ACC-CABLE-UC",
+            "name": "USB-C to Lightning Cable 1m",
+            "stock": 200,
+            "price": 1900,
+            "cost": 1200,
+            "vendorStock": 1000,
+            "status": "active",
+            "category": "items"
+        },
+        {
+            "id": "prod-21",
+            "sku": "PHONE-S24-256",
+            "name": "Samsung Galaxy S24 Ultra 256GB Titanium Gray",
+            "stock": 18,
+            "price": 134999,
+            "cost": 115000,
+            "vendorStock": 80,
+            "status": "active",
+            "category": "items"
+        },
+        {
+            "id": "prod-22",
+            "sku": "TABLET-TAB-S9",
+            "name": "Samsung Galaxy Tab S9+ 256GB Graphite",
+            "stock": 6,
+            "price": 94999,
+            "cost": 82000,
+            "vendorStock": 30,
+            "status": "active",
+            "category": "items"
+        },
+        {
+            "id": "prod-23",
+            "sku": "AUDIO-BUDS-2",
+            "name": "Samsung Galaxy Buds2 Pro Graphite",
+            "stock": 0,
+            "price": 17999,
+            "cost": 14500,
+            "vendorStock": 0,
+            "status": "liquidation",
+            "category": "items"
+        },
+        {
+            "id": "prod-24",
+            "sku": "PHONE-PX8-128",
+            "name": "Google Pixel 8 Pro 128GB Bay",
+            "stock": 9,
+            "price": 106999,
+            "cost": 92000,
+            "vendorStock": 45,
+            "status": "active",
+            "category": "items"
+        },
+        {
+            "id": "prod-25",
+            "sku": "ACC-CASE-IP15",
+            "name": "Silicone Case for iPhone 15 Pro",
+            "stock": 85,
+            "price": 4900,
+            "cost": 3500,
+            "vendorStock": 400,
+            "status": "active",
+            "category": "items"
+        }
+    ]
+}

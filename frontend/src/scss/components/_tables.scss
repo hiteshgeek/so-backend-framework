@@ -1,0 +1,731 @@
+// ============================================
+// SIXORBIT UI - TABLES
+// Data tables with Bootstrap & Material Design features
+// ============================================
+
+@use "sass:color";
+@use "../abstracts" as *;
+
+// ============================================
+// VARIABLES
+// ============================================
+
+$table-cell-padding-y: spacing("3");
+$table-cell-padding-x: spacing("4");
+$table-cell-padding-y-sm: spacing("2");
+$table-cell-padding-x-sm: spacing("3");
+$table-cell-padding-y-lg: spacing("4");
+$table-cell-padding-x-lg: spacing("5");
+
+$table-border-color: css-var("border-color");
+$table-striped-bg: rgba(0, 0, 0, 0.02);
+$table-hover-bg: rgba(0, 0, 0, 0.04);
+$table-active-bg: alpha($so-primary, 0.08);
+
+$table-row-height-dense: 32px;
+$table-row-height-default: 48px;
+$table-row-height-comfortable: 56px;
+
+// Breakpoints
+$breakpoints: (
+  sm: 576px,
+  md: 768px,
+  lg: 1024px,
+  xl: 1200px,
+  xxl: 1400px,
+);
+
+// ============================================
+// BASE TABLE
+// ============================================
+
+.#{$so-prefix}table {
+  width: 100%;
+  margin-bottom: spacing("4");
+  color: css-var("text-primary");
+  vertical-align: middle;
+  border-color: $table-border-color;
+
+  // Reset browser defaults
+  border-collapse: collapse;
+  border-spacing: 0;
+
+  // Header cells
+  > thead {
+    vertical-align: bottom;
+
+    > tr > th {
+      padding: $table-cell-padding-y $table-cell-padding-x;
+      font-weight: font-weight("semibold");
+      text-align: left;
+      color: css-var("text-primary");
+      background: css-var("card-bg");
+      border-bottom: 2px solid $table-border-color;
+    }
+  }
+
+  // Body cells
+  > tbody > tr > td {
+    padding: $table-cell-padding-y $table-cell-padding-x;
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    border-bottom-color: $table-border-color;
+  }
+
+  // Footer
+  > tfoot {
+    > tr > td,
+    > tr > th {
+      padding: $table-cell-padding-y $table-cell-padding-x;
+      font-weight: font-weight("semibold");
+      border-top: 2px solid $table-border-color;
+    }
+  }
+
+  // Caption
+  > caption {
+    padding: $table-cell-padding-y $table-cell-padding-x;
+    color: css-var("text-secondary");
+    text-align: left;
+    caption-side: bottom;
+  }
+
+  // Caption at top
+  &.#{$so-prefix}table-caption-top > caption {
+    caption-side: top;
+  }
+}
+
+// ============================================
+// STRIPED ROWS
+// ============================================
+
+.#{$so-prefix}table-striped {
+  > tbody > tr:nth-of-type(odd) > * {
+    background-color: $table-striped-bg;
+  }
+
+  @include dark-mode {
+    > tbody > tr:nth-of-type(odd) > * {
+      background-color: rgba(255, 255, 255, 0.02);
+    }
+  }
+}
+
+// Striped columns variant
+.#{$so-prefix}table-striped-columns {
+  > tbody > tr > :nth-child(odd),
+  > thead > tr > :nth-child(odd) {
+    background-color: $table-striped-bg;
+  }
+
+  @include dark-mode {
+    > tbody > tr > :nth-child(odd),
+    > thead > tr > :nth-child(odd) {
+      background-color: rgba(255, 255, 255, 0.02);
+    }
+  }
+}
+
+// ============================================
+// HOVER EFFECT
+// ============================================
+
+.#{$so-prefix}table-hover {
+  > tbody > tr {
+    transition: background-color $so-transition-fast;
+
+    &:hover > * {
+      background-color: $table-hover-bg;
+    }
+  }
+
+  @include dark-mode {
+    > tbody > tr:hover > * {
+      background-color: rgba(255, 255, 255, 0.04);
+    }
+  }
+}
+
+// ============================================
+// ACTIVE/SELECTED ROW
+// ============================================
+
+.#{$so-prefix}table-active,
+.#{$so-prefix}table > tbody > tr.#{$so-prefix}table-active {
+  > * {
+    background-color: $table-active-bg;
+  }
+}
+
+// ============================================
+// BORDERED & BORDERLESS
+// ============================================
+
+.#{$so-prefix}table-bordered {
+  border: 1px solid $table-border-color;
+
+  > :not(caption) > * > * {
+    border: 1px solid $table-border-color;
+    border-width: 1px;
+  }
+}
+
+.#{$so-prefix}table-borderless {
+  > :not(caption) > * > * {
+    border-bottom-width: 0;
+  }
+
+  > :not(:first-child) {
+    border-top-width: 0;
+  }
+}
+
+// ============================================
+// SIZE VARIANTS
+// ============================================
+
+.#{$so-prefix}table-sm {
+  > :not(caption) > * > * {
+    padding: $table-cell-padding-y-sm $table-cell-padding-x-sm;
+  }
+}
+
+.#{$so-prefix}table-lg {
+  > :not(caption) > * > * {
+    padding: $table-cell-padding-y-lg $table-cell-padding-x-lg;
+  }
+}
+
+// ============================================
+// DENSITY (Material Design)
+// ============================================
+
+.#{$so-prefix}table-dense {
+  > tbody > tr {
+    height: $table-row-height-dense;
+
+    > td {
+      padding-top: spacing("1");
+      padding-bottom: spacing("1");
+    }
+  }
+}
+
+.#{$so-prefix}table-comfortable {
+  > tbody > tr {
+    height: $table-row-height-comfortable;
+
+    > td {
+      padding-top: spacing("4");
+      padding-bottom: spacing("4");
+    }
+  }
+}
+
+// ============================================
+// HEADER VARIANTS
+// ============================================
+
+.#{$so-prefix}thead-light {
+  > tr > th {
+    background-color: css-var("bg-secondary");
+    color: css-var("text-primary");
+  }
+}
+
+.#{$so-prefix}thead-dark {
+  > tr > th {
+    background-color: $so-grey-800;
+    color: $so-white;
+    border-bottom-color: $so-grey-700;
+  }
+}
+
+// ============================================
+// CONTEXTUAL COLORS
+// ============================================
+
+$table-colors: (
+  "primary": $so-primary,
+  "secondary": $so-secondary,
+  "success": $so-success,
+  "danger": $so-danger,
+  "warning": $so-warning,
+  "info": $so-info,
+  "light": $so-grey-100,
+  "dark": $so-grey-800,
+);
+
+@each $name, $color in $table-colors {
+  // Row or cell contextual coloring
+  .#{$so-prefix}table-#{$name} {
+    $bg-color: alpha($color, 0.1);
+    $text-color: $color;
+    @if $name == "light" {
+      $text-color: $so-grey-800;
+    } @else if $name == "dark" {
+      $text-color: $so-white;
+    } @else {
+      $text-color: darken-color($color, 10%);
+    }
+    $border-color: alpha($color, 0.2);
+
+    --so-table-color: #{$text-color};
+    --so-table-bg: #{$bg-color};
+    --so-table-border-color: #{$border-color};
+
+    color: var(--so-table-color);
+    background-color: var(--so-table-bg);
+    border-color: var(--so-table-border-color);
+  }
+}
+
+// ============================================
+// RESPONSIVE TABLES
+// ============================================
+
+.#{$so-prefix}table-responsive {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+
+  // Prevent double border
+  > .#{$so-prefix}table-bordered {
+    border: 0;
+  }
+}
+
+// Breakpoint-specific responsive
+@each $breakpoint, $min-width in $breakpoints {
+  .#{$so-prefix}table-responsive-#{$breakpoint} {
+    @media (max-width: ($min-width - 1px)) {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+  }
+}
+
+// ============================================
+// STICKY HEADER
+// ============================================
+
+.#{$so-prefix}table-sticky-header {
+  > thead {
+    position: sticky;
+    top: 0;
+    z-index: z-index("sticky");
+
+    > tr > th {
+      background: css-var("card-bg");
+      box-shadow: 0 1px 0 $table-border-color;
+    }
+  }
+}
+
+// Inside responsive container
+.#{$so-prefix}table-responsive .#{$so-prefix}table-sticky-header {
+  > thead {
+    position: sticky;
+    top: 0;
+  }
+}
+
+// ============================================
+// SORTABLE COLUMNS
+// ============================================
+
+.#{$so-prefix}table-sortable {
+  > thead > tr > th[data-sort] {
+    cursor: pointer;
+    user-select: none;
+    position: relative;
+    transition: background-color $so-transition-fast;
+
+    &:hover {
+      background: css-var("bg-secondary");
+    }
+  }
+
+  // Sort indicator wrapper
+  .#{$so-prefix}table-sort {
+    display: inline-flex;
+    align-items: center;
+    gap: spacing("1");
+  }
+
+  .#{$so-prefix}table-sort-icon {
+    opacity: 0.3;
+    transition:
+      opacity $so-transition-fast,
+      transform $so-transition-fast;
+
+    .material-icons {
+      font-size: 18px;
+      vertical-align: middle;
+    }
+  }
+
+  > thead > tr > th[data-sort]:hover .#{$so-prefix}table-sort-icon {
+    opacity: 0.6;
+  }
+
+  // Active sort states
+  > thead > tr > th[aria-sort="ascending"],
+  > thead > tr > th[aria-sort="descending"] {
+    .#{$so-prefix}table-sort-icon {
+      opacity: 1;
+      color: css-var("accent-primary");
+    }
+  }
+
+  > thead > tr > th[aria-sort="descending"] .#{$so-prefix}table-sort-icon {
+    transform: rotate(180deg);
+  }
+}
+
+// ============================================
+// SELECTABLE ROWS
+// ============================================
+
+.#{$so-prefix}table-selectable {
+  > tbody > tr {
+    cursor: pointer;
+    transition: background-color $so-transition-fast;
+
+    &:hover > * {
+      background-color: $table-hover-bg;
+    }
+
+    &.#{$so-prefix}selected > * {
+      background-color: $table-active-bg;
+    }
+  }
+
+  // Checkbox cell styling
+  .#{$so-prefix}table-check {
+    width: 48px;
+    padding: spacing("2");
+    text-align: center;
+    vertical-align: middle;
+
+    .#{$so-prefix}checkbox {
+      margin: 0;
+    }
+  }
+
+  @include dark-mode {
+    > tbody > tr:hover > * {
+      background-color: rgba(255, 255, 255, 0.04);
+    }
+
+    > tbody > tr.#{$so-prefix}selected > * {
+      background-color: alpha($so-primary, 0.15);
+    }
+  }
+}
+
+// ============================================
+// EXPANDABLE ROWS
+// ============================================
+
+.#{$so-prefix}table-expandable {
+  .#{$so-prefix}table-expand-cell {
+    width: 48px;
+    padding: spacing("2");
+    text-align: center;
+    vertical-align: middle;
+  }
+
+  .#{$so-prefix}table-expand-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    background: transparent;
+    border: none;
+    border-radius: radius("full");
+    cursor: pointer;
+    color: css-var("text-secondary");
+    transition:
+      background-color $so-transition-fast,
+      color $so-transition-fast;
+
+    &:hover {
+      background: css-var("bg-secondary");
+      color: css-var("text-primary");
+    }
+
+    .material-icons {
+      font-size: 20px;
+      transition: transform $so-transition-base;
+    }
+
+    &.#{$so-prefix}expanded {
+      color: css-var("accent-primary");
+
+      .material-icons {
+        transform: rotate(180deg);
+      }
+    }
+  }
+
+  // Expand row (hidden by default)
+  .#{$so-prefix}table-expand-row {
+    > td {
+      padding: 0;
+      border-bottom: 1px solid $table-border-color;
+    }
+
+    &[hidden] {
+      display: none;
+    }
+  }
+
+  .#{$so-prefix}table-expand-content {
+    padding: spacing("4");
+    background: css-var("bg-secondary");
+  }
+}
+
+// ============================================
+// LOADING STATE
+// ============================================
+
+.#{$so-prefix}table-loading {
+  position: relative;
+  pointer-events: none;
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.7);
+    z-index: 1;
+  }
+
+  @include dark-mode {
+    &::after {
+      background: rgba(0, 0, 0, 0.5);
+    }
+  }
+}
+
+// Wrapper for loading (when table is inside responsive)
+.#{$so-prefix}table-wrapper {
+  position: relative;
+
+  &.#{$so-prefix}loading {
+    pointer-events: none;
+
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(255, 255, 255, 0.7);
+      z-index: 1;
+    }
+
+    @include dark-mode {
+      &::after {
+        background: rgba(0, 0, 0, 0.5);
+      }
+    }
+  }
+}
+
+// ============================================
+// EMPTY STATE
+// ============================================
+
+.#{$so-prefix}table-empty {
+  text-align: center;
+  padding: spacing("8") spacing("4");
+  color: css-var("text-secondary");
+
+  .material-icons {
+    font-size: 48px;
+    margin-bottom: spacing("3");
+    opacity: 0.5;
+  }
+
+  p {
+    margin: 0;
+    font-size: font-size("base");
+  }
+}
+
+// ============================================
+// TABLE TOOLBAR
+// ============================================
+
+.#{$so-prefix}table-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: spacing("3");
+  padding: spacing("3") spacing("4");
+  background: css-var("card-bg");
+  border: 1px solid $table-border-color;
+  border-bottom: none;
+  border-radius: radius("lg") radius("lg") 0 0;
+
+  .#{$so-prefix}table-title {
+    font-size: font-size("lg");
+    font-weight: font-weight("semibold");
+    color: css-var("text-primary");
+    margin: 0;
+  }
+
+  .#{$so-prefix}table-actions {
+    display: flex;
+    align-items: center;
+    gap: spacing("2");
+  }
+
+  // Selection info
+  .#{$so-prefix}table-selection-info {
+    font-size: font-size("sm");
+    color: css-var("text-secondary");
+
+    strong {
+      color: css-var("accent-primary");
+      font-weight: font-weight("semibold");
+    }
+  }
+}
+
+// Table with toolbar - add border and remove radius
+.#{$so-prefix}table-toolbar + .#{$so-prefix}table-responsive,
+.#{$so-prefix}table-toolbar + .#{$so-prefix}table {
+  border: 1px solid $table-border-color;
+  // border-top: none;
+  border-radius: 0;
+}
+
+// When followed by footer, remove bottom border from table container
+.#{$so-prefix}table-toolbar
+  + .#{$so-prefix}table-responsive:has(+ .#{$so-prefix}table-footer),
+.#{$so-prefix}table-toolbar
+  + .#{$so-prefix}table:has(+ .#{$so-prefix}table-footer) {
+  border-bottom: none;
+}
+
+// ============================================
+// TABLE FOOTER
+// ============================================
+
+.#{$so-prefix}table-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: spacing("3");
+  padding: spacing("3") spacing("4");
+  background: css-var("card-bg");
+  border: 1px solid $table-border-color;
+  border-top: none;
+  border-radius: 0 0 radius("lg") radius("lg");
+}
+
+// ============================================
+// NESTED TABLES
+// ============================================
+
+.#{$so-prefix}table .#{$so-prefix}table {
+  margin-bottom: 0;
+  background-color: transparent;
+}
+
+// ============================================
+// VERTICAL ALIGNMENT
+// ============================================
+
+.#{$so-prefix}table-align-top {
+  > :not(caption) > * > * {
+    vertical-align: top;
+  }
+}
+
+.#{$so-prefix}table-align-middle {
+  > :not(caption) > * > * {
+    vertical-align: middle;
+  }
+}
+
+.#{$so-prefix}table-align-bottom {
+  > :not(caption) > * > * {
+    vertical-align: bottom;
+  }
+}
+
+// ============================================
+// NOWRAP CELLS
+// ============================================
+
+.#{$so-prefix}table-nowrap {
+  > :not(caption) > * > * {
+    white-space: nowrap;
+  }
+}
+
+// ============================================
+// FIXED LAYOUT
+// ============================================
+
+.#{$so-prefix}table-fixed {
+  table-layout: fixed;
+}
+
+// ============================================
+// CARD TABLE (table inside card without margins)
+// ============================================
+
+.#{$so-prefix}card > .#{$so-prefix}table,
+.#{$so-prefix}card > .#{$so-prefix}table-responsive > .#{$so-prefix}table {
+  margin-bottom: 0;
+
+  > :not(caption) > *:last-child > * {
+    border-bottom: 0;
+  }
+}
+
+// ============================================
+// DARK MODE
+// ============================================
+
+@include dark-mode {
+  .#{$so-prefix}table {
+    color: css-var("text-primary");
+
+    > thead > tr > th {
+      background: css-var("card-bg");
+      border-bottom-color: css-var("border-color");
+    }
+
+    > tbody > tr > td {
+      border-bottom-color: css-var("border-color");
+    }
+  }
+
+  .#{$so-prefix}thead-light {
+    > tr > th {
+      background-color: css-var("bg-secondary");
+      color: css-var("text-primary");
+    }
+  }
+
+  .#{$so-prefix}table-bordered {
+    border-color: css-var("border-color");
+
+    > :not(caption) > * > * {
+      border-color: css-var("border-color");
+    }
+  }
+
+  .#{$so-prefix}table-toolbar,
+  .#{$so-prefix}table-footer {
+    background: css-var("card-bg");
+    border-color: css-var("border-color");
+  }
+}

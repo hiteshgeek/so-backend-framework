@@ -1,0 +1,500 @@
+// ============================================
+// SIXORBIT UI - SLIDERS
+// Range slider components with Material Design style
+// ============================================
+
+@use '../abstracts' as *;
+
+// ============================================
+// SLIDER VARIABLES
+// ============================================
+$slider-track-height: 8px !default;
+$slider-track-height-xs: 4px !default;
+$slider-track-height-sm: 6px !default;
+$slider-track-height-lg: 10px !default;
+
+$slider-thumb-size: 18px !default;
+$slider-thumb-size-xs: 12px !default;
+$slider-thumb-size-sm: 14px !default;
+$slider-thumb-size-lg: 22px !default;
+
+// ============================================
+// BASE SLIDER
+// ============================================
+
+.#{$so-prefix}slider {
+  --slider-track-height: #{$slider-track-height};
+  --slider-thumb-size: #{$slider-thumb-size};
+  --slider-fill-bg: #{$so-primary};
+  --slider-thumb-bg: #{$so-primary};
+
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: var(--slider-thumb-size);
+  padding: spacing('2') 0;
+}
+
+// Hidden native input (accessible but styled via custom elements)
+.#{$so-prefix}slider-input {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+  z-index: 2;
+
+  &:disabled {
+    cursor: not-allowed;
+  }
+
+  &:focus + .#{$so-prefix}slider-track .#{$so-prefix}slider-thumb {
+    box-shadow: 0 0 0 4px alpha($so-primary, 0.2);
+  }
+}
+
+// Track (background)
+.#{$so-prefix}slider-track {
+  position: relative;
+  width: 100%;
+  height: var(--slider-track-height);
+  background: css-var('form-disabled-bg', $so-grey-300);
+  border-radius: radius('full');
+  overflow: visible;
+}
+
+// Fill (progress portion)
+.#{$so-prefix}slider-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: var(--slider-fill-bg);
+  border-radius: radius('full');
+  pointer-events: none;
+  // No transition - must sync exactly with thumb position
+}
+
+// Thumb (handle)
+.#{$so-prefix}slider-thumb {
+  position: absolute;
+  top: 50%;
+  width: var(--slider-thumb-size);
+  height: var(--slider-thumb-size);
+  background: var(--slider-thumb-bg);
+  border: 2px solid $so-white;
+  border-radius: radius('full');
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transform: translate(-50%, -50%);
+  transition: box-shadow $so-transition-base, transform $so-transition-base;
+  pointer-events: none;
+}
+
+.#{$so-prefix}slider-input:hover + .#{$so-prefix}slider-track .#{$so-prefix}slider-thumb {
+  transform: translate(-50%, -50%) scale(1.1);
+}
+
+.#{$so-prefix}slider-input:active + .#{$so-prefix}slider-track .#{$so-prefix}slider-thumb {
+  transform: translate(-50%, -50%) scale(1.15);
+}
+
+// ============================================
+// SIZE VARIANTS
+// ============================================
+
+.#{$so-prefix}slider-xs {
+  --slider-track-height: #{$slider-track-height-xs};
+  --slider-thumb-size: #{$slider-thumb-size-xs};
+}
+
+.#{$so-prefix}slider-sm {
+  --slider-track-height: #{$slider-track-height-sm};
+  --slider-thumb-size: #{$slider-thumb-size-sm};
+}
+
+.#{$so-prefix}slider-lg {
+  --slider-track-height: #{$slider-track-height-lg};
+  --slider-thumb-size: #{$slider-thumb-size-lg};
+}
+
+// ============================================
+// COLOR VARIANTS
+// ============================================
+
+.#{$so-prefix}slider-primary {
+  --slider-fill-bg: #{$so-primary};
+  --slider-thumb-bg: #{$so-primary};
+
+  .#{$so-prefix}slider-input:focus + .#{$so-prefix}slider-track .#{$so-prefix}slider-thumb {
+    box-shadow: 0 0 0 4px alpha($so-primary, 0.2);
+  }
+}
+
+.#{$so-prefix}slider-secondary {
+  --slider-fill-bg: #{$so-secondary};
+  --slider-thumb-bg: #{$so-secondary};
+
+  .#{$so-prefix}slider-input:focus + .#{$so-prefix}slider-track .#{$so-prefix}slider-thumb {
+    box-shadow: 0 0 0 4px alpha($so-secondary, 0.2);
+  }
+}
+
+.#{$so-prefix}slider-success {
+  --slider-fill-bg: #{$so-success};
+  --slider-thumb-bg: #{$so-success};
+
+  .#{$so-prefix}slider-input:focus + .#{$so-prefix}slider-track .#{$so-prefix}slider-thumb {
+    box-shadow: 0 0 0 4px alpha($so-success, 0.2);
+  }
+}
+
+.#{$so-prefix}slider-danger {
+  --slider-fill-bg: #{$so-danger};
+  --slider-thumb-bg: #{$so-danger};
+
+  .#{$so-prefix}slider-input:focus + .#{$so-prefix}slider-track .#{$so-prefix}slider-thumb {
+    box-shadow: 0 0 0 4px alpha($so-danger, 0.2);
+  }
+}
+
+.#{$so-prefix}slider-warning {
+  --slider-fill-bg: #{$so-warning};
+  --slider-thumb-bg: #{$so-warning};
+
+  .#{$so-prefix}slider-input:focus + .#{$so-prefix}slider-track .#{$so-prefix}slider-thumb {
+    box-shadow: 0 0 0 4px alpha($so-warning, 0.2);
+  }
+}
+
+.#{$so-prefix}slider-info {
+  --slider-fill-bg: #{$so-info};
+  --slider-thumb-bg: #{$so-info};
+
+  .#{$so-prefix}slider-input:focus + .#{$so-prefix}slider-track .#{$so-prefix}slider-thumb {
+    box-shadow: 0 0 0 4px alpha($so-info, 0.2);
+  }
+}
+
+.#{$so-prefix}slider-light {
+  --slider-fill-bg: #{$so-grey-400};
+  --slider-thumb-bg: #{$so-grey-400};
+
+  .#{$so-prefix}slider-input:focus + .#{$so-prefix}slider-track .#{$so-prefix}slider-thumb {
+    box-shadow: 0 0 0 4px alpha($so-grey-400, 0.3);
+  }
+}
+
+.#{$so-prefix}slider-dark {
+  --slider-fill-bg: #{$so-grey-800};
+  --slider-thumb-bg: #{$so-grey-800};
+
+  .#{$so-prefix}slider-input:focus + .#{$so-prefix}slider-track .#{$so-prefix}slider-thumb {
+    box-shadow: 0 0 0 4px alpha($so-grey-800, 0.2);
+  }
+}
+
+// ============================================
+// DISCRETE SLIDER (WITH TICKS)
+// ============================================
+
+.#{$so-prefix}slider-discrete {
+  .#{$so-prefix}slider-ticks {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    transform: translateY(-50%);
+    display: flex;
+    justify-content: space-between;
+    padding: 0 calc(var(--slider-thumb-size) / 2 - 1px);
+    pointer-events: none;
+  }
+
+  .#{$so-prefix}slider-tick {
+    width: 2px;
+    height: calc(var(--slider-track-height) + 4px);
+    background: css-var('border-color', $so-grey-400);
+    border-radius: 1px;
+  }
+
+  .#{$so-prefix}slider-tick.active {
+    background: var(--slider-fill-bg);
+  }
+}
+
+// ============================================
+// SLIDER WITH TOOLTIP
+// ============================================
+
+.#{$so-prefix}slider-labeled {
+  .#{$so-prefix}slider-tooltip {
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    padding: spacing('1') spacing('2');
+    background: $so-grey-800;
+    color: $so-white;
+    font-size: font-size('xs');
+    font-weight: font-weight('medium');
+    border-radius: radius('base');
+    white-space: nowrap;
+    opacity: 0;
+    transform: translateX(-50%) translateY(4px);
+    transition: opacity $so-transition-base, transform $so-transition-base;
+    pointer-events: none;
+    z-index: 10;
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 5px solid transparent;
+      border-top-color: $so-grey-800;
+    }
+  }
+
+  .#{$so-prefix}slider-input:hover + .#{$so-prefix}slider-track .#{$so-prefix}slider-tooltip,
+  .#{$so-prefix}slider-input:focus + .#{$so-prefix}slider-track .#{$so-prefix}slider-tooltip,
+  .#{$so-prefix}slider-input:active + .#{$so-prefix}slider-track .#{$so-prefix}slider-tooltip {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+// ============================================
+// VERTICAL SLIDER
+// ============================================
+
+.#{$so-prefix}slider-vertical {
+  width: var(--slider-thumb-size);
+  height: 200px;
+  flex-direction: column;
+  padding: 0 spacing('2');
+
+  .#{$so-prefix}slider-input {
+    writing-mode: vertical-lr;
+    direction: rtl;
+    width: 100%;
+    height: 100%;
+  }
+
+  .#{$so-prefix}slider-track {
+    width: var(--slider-track-height);
+    height: 100%;
+  }
+
+  .#{$so-prefix}slider-fill {
+    width: 100%;
+    height: auto;
+    top: auto;
+    bottom: 0;
+  }
+
+  .#{$so-prefix}slider-thumb {
+    top: auto;
+    left: 50%;
+    transform: translate(-50%, 50%);
+  }
+
+  .#{$so-prefix}slider-input:hover + .#{$so-prefix}slider-track .#{$so-prefix}slider-thumb {
+    transform: translate(-50%, 50%) scale(1.1);
+  }
+
+  .#{$so-prefix}slider-input:active + .#{$so-prefix}slider-track .#{$so-prefix}slider-thumb {
+    transform: translate(-50%, 50%) scale(1.15);
+  }
+
+  // Tooltip for vertical
+  &.#{$so-prefix}slider-labeled {
+    .#{$so-prefix}slider-tooltip {
+      bottom: auto;
+      left: calc(100% + 8px);
+      top: 50%;
+      transform: translateY(-50%) translateX(-4px);
+
+      &::after {
+        top: 50%;
+        left: auto;
+        right: 100%;
+        transform: translateY(-50%);
+        border: 5px solid transparent;
+        border-right-color: $so-grey-800;
+        border-top-color: transparent;
+      }
+    }
+
+    .#{$so-prefix}slider-input:hover + .#{$so-prefix}slider-track .#{$so-prefix}slider-tooltip,
+    .#{$so-prefix}slider-input:focus + .#{$so-prefix}slider-track .#{$so-prefix}slider-tooltip,
+    .#{$so-prefix}slider-input:active + .#{$so-prefix}slider-track .#{$so-prefix}slider-tooltip {
+      transform: translateY(-50%) translateX(0);
+    }
+  }
+}
+
+// ============================================
+// RANGE SLIDER (DUAL THUMB)
+// ============================================
+
+.#{$so-prefix}slider-range {
+  // Both inputs overlay each other
+  .#{$so-prefix}slider-input {
+    pointer-events: none;
+
+    // Make the track area clickable
+    &::-webkit-slider-thumb {
+      pointer-events: all;
+      cursor: pointer;
+    }
+
+    &::-moz-range-thumb {
+      pointer-events: all;
+      cursor: pointer;
+    }
+  }
+
+  // Position inputs properly for dual thumb interaction
+  .#{$so-prefix}slider-input-min {
+    z-index: 3;
+  }
+
+  .#{$so-prefix}slider-input-max {
+    z-index: 4;
+  }
+
+  // When min value is higher, swap z-index
+  &.min-above .#{$so-prefix}slider-input-min {
+    z-index: 5;
+  }
+
+  .#{$so-prefix}slider-fill {
+    // Position will be set via JS
+  }
+
+  .#{$so-prefix}slider-thumb-min,
+  .#{$so-prefix}slider-thumb-max {
+    position: absolute;
+    top: 50%;
+    width: var(--slider-thumb-size);
+    height: var(--slider-thumb-size);
+    background: var(--slider-thumb-bg);
+    border: 2px solid $so-white;
+    border-radius: radius('full');
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transform: translate(-50%, -50%);
+    transition: box-shadow $so-transition-base, transform $so-transition-base;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .#{$so-prefix}slider-thumb-min:hover,
+  .#{$so-prefix}slider-thumb-max:hover {
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+
+  // Focus states
+  .#{$so-prefix}slider-input-min:focus ~ .#{$so-prefix}slider-track .#{$so-prefix}slider-thumb-min {
+    box-shadow: 0 0 0 4px alpha($so-primary, 0.2);
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+
+  .#{$so-prefix}slider-input-max:focus ~ .#{$so-prefix}slider-track .#{$so-prefix}slider-thumb-max {
+    box-shadow: 0 0 0 4px alpha($so-primary, 0.2);
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+}
+
+// ============================================
+// DISABLED STATE
+// ============================================
+
+.#{$so-prefix}slider.disabled,
+.#{$so-prefix}slider:has(.#{$so-prefix}slider-input:disabled) {
+  opacity: 0.5;
+  pointer-events: none;
+
+  .#{$so-prefix}slider-thumb {
+    box-shadow: none;
+  }
+}
+
+// ============================================
+// VALUE DISPLAY
+// ============================================
+
+.#{$so-prefix}slider-value {
+  min-width: 40px;
+  margin-left: spacing('3');
+  font-size: font-size('sm');
+  font-weight: font-weight('medium');
+  color: css-var('text-primary');
+  text-align: center;
+}
+
+// ============================================
+// WRAPPER WITH LABELS
+// ============================================
+
+.#{$so-prefix}slider-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: spacing('2');
+}
+
+.#{$so-prefix}slider-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: font-size('xs');
+  color: css-var('text-muted');
+}
+
+.#{$so-prefix}slider-label {
+  font-size: font-size('sm');
+  font-weight: font-weight('medium');
+  color: css-var('text-primary');
+  margin-bottom: spacing('2');
+}
+
+// ============================================
+// WITH INLINE VALUE
+// ============================================
+
+.#{$so-prefix}slider-inline {
+  display: flex;
+  align-items: center;
+  gap: spacing('3');
+
+  .#{$so-prefix}slider {
+    flex: 1;
+  }
+}
+
+// ============================================
+// DARK MODE
+// ============================================
+
+[data-theme='dark'] {
+  .#{$so-prefix}slider-track {
+    background: $so-grey-700;
+  }
+
+  .#{$so-prefix}slider-discrete .#{$so-prefix}slider-tick {
+    background: $so-grey-600;
+  }
+
+  .#{$so-prefix}slider-labeled .#{$so-prefix}slider-tooltip {
+    background: $so-grey-600;
+
+    &::after {
+      border-top-color: $so-grey-600;
+    }
+  }
+
+  .#{$so-prefix}slider-vertical.#{$so-prefix}slider-labeled .#{$so-prefix}slider-tooltip::after {
+    border-right-color: $so-grey-600;
+    border-top-color: transparent;
+  }
+}

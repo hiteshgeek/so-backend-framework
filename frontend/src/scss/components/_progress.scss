@@ -1,0 +1,645 @@
+// ============================================
+// SIXORBIT UI - PROGRESS BARS
+// Linear and circular progress indicators
+// ============================================
+
+@use 'sass:color';
+@use '../abstracts' as *;
+
+// ============================================
+// PROGRESS VARIABLES
+// ============================================
+$progress-height: 12px !default;
+$progress-height-xs: 4px !default;
+$progress-height-sm: 8px !default;
+$progress-height-lg: 16px !default;
+$progress-height-xl: 20px !default;
+
+$progress-circular-size: 48px !default;
+$progress-circular-size-xs: 32px !default;
+$progress-circular-size-sm: 40px !default;
+$progress-circular-size-lg: 64px !default;
+$progress-circular-size-xl: 80px !default;
+
+$progress-stroke-width: 4px !default;
+
+// ============================================
+// LINEAR PROGRESS - BASE
+// ============================================
+
+.#{$so-prefix}progress {
+  --progress-height: #{$progress-height};
+  --progress-bg: #{$so-grey-200};
+  --progress-bar-bg: #{$so-primary};
+  --progress-border-radius: #{radius('full')};
+
+  display: flex;
+  height: var(--progress-height);
+  overflow: hidden;
+  background-color: var(--progress-bg);
+  border-radius: var(--progress-border-radius);
+  position: relative;
+}
+
+// Progress bar (filled portion)
+.#{$so-prefix}progress-bar {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+  color: $so-white;
+  text-align: center;
+  white-space: nowrap;
+  background-color: var(--progress-bar-bg);
+  transition: width $so-transition-base ease;
+  border-radius: var(--progress-border-radius);
+}
+
+// Label inside progress bar
+.#{$so-prefix}progress-label {
+  padding: 0 spacing('2');
+  font-size: font-size('xs');
+  font-weight: font-weight('medium');
+  line-height: var(--progress-height);
+}
+
+// ============================================
+// LINEAR PROGRESS - SIZE VARIANTS
+// ============================================
+
+.#{$so-prefix}progress-xs {
+  --progress-height: #{$progress-height-xs};
+
+  .#{$so-prefix}progress-label {
+    font-size: 0;
+    padding: 0;
+  }
+}
+
+.#{$so-prefix}progress-sm {
+  --progress-height: #{$progress-height-sm};
+
+  .#{$so-prefix}progress-label {
+    font-size: font-size('2xs');
+    line-height: #{$progress-height-sm};
+  }
+}
+
+.#{$so-prefix}progress-lg {
+  --progress-height: #{$progress-height-lg};
+
+  .#{$so-prefix}progress-label {
+    font-size: font-size('sm');
+    line-height: #{$progress-height-lg};
+  }
+}
+
+.#{$so-prefix}progress-xl {
+  --progress-height: #{$progress-height-xl};
+
+  .#{$so-prefix}progress-label {
+    font-size: font-size('base');
+    line-height: #{$progress-height-xl};
+  }
+}
+
+// ============================================
+// LINEAR PROGRESS - COLOR VARIANTS
+// ============================================
+
+.#{$so-prefix}progress-primary {
+  --progress-bar-bg: #{$so-primary};
+}
+
+.#{$so-prefix}progress-secondary {
+  --progress-bar-bg: #{$so-secondary};
+}
+
+.#{$so-prefix}progress-success {
+  --progress-bar-bg: #{$so-success};
+}
+
+.#{$so-prefix}progress-danger {
+  --progress-bar-bg: #{$so-danger};
+}
+
+.#{$so-prefix}progress-warning {
+  --progress-bar-bg: #{$so-warning};
+
+  .#{$so-prefix}progress-label {
+    color: $so-grey-900;
+  }
+}
+
+.#{$so-prefix}progress-info {
+  --progress-bar-bg: #{$so-info};
+}
+
+.#{$so-prefix}progress-light {
+  --progress-bar-bg: #{$so-grey-300};
+
+  .#{$so-prefix}progress-label {
+    color: $so-grey-800;
+  }
+}
+
+.#{$so-prefix}progress-dark {
+  --progress-bar-bg: #{$so-grey-800};
+}
+
+// ============================================
+// LINEAR PROGRESS - STRIPED
+// ============================================
+
+.#{$so-prefix}progress-striped .#{$so-prefix}progress-bar {
+  background-image: linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.15) 25%,
+    transparent 25%,
+    transparent 50%,
+    rgba(255, 255, 255, 0.15) 50%,
+    rgba(255, 255, 255, 0.15) 75%,
+    transparent 75%,
+    transparent
+  );
+  background-size: 1rem 1rem;
+}
+
+// ============================================
+// LINEAR PROGRESS - ANIMATED
+// ============================================
+
+@keyframes so-progress-bar-stripes {
+  0% {
+    background-position-x: 1rem;
+  }
+}
+
+.#{$so-prefix}progress-animated .#{$so-prefix}progress-bar {
+  animation: so-progress-bar-stripes 1s linear infinite;
+}
+
+// ============================================
+// LINEAR PROGRESS - INDETERMINATE
+// ============================================
+
+@keyframes so-progress-indeterminate {
+  0% {
+    left: -35%;
+    right: 100%;
+  }
+  60% {
+    left: 100%;
+    right: -90%;
+  }
+  100% {
+    left: 100%;
+    right: -90%;
+  }
+}
+
+@keyframes so-progress-indeterminate-short {
+  0% {
+    left: -200%;
+    right: 100%;
+  }
+  60% {
+    left: 107%;
+    right: -8%;
+  }
+  100% {
+    left: 107%;
+    right: -8%;
+  }
+}
+
+.#{$so-prefix}progress-indeterminate {
+  overflow: hidden;
+
+  .#{$so-prefix}progress-bar {
+    width: auto !important;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    animation: so-progress-indeterminate 2.1s cubic-bezier(0.65, 0.815, 0.735, 0.395) infinite;
+  }
+
+  .#{$so-prefix}progress-bar-secondary {
+    animation: so-progress-indeterminate-short 2.1s cubic-bezier(0.165, 0.84, 0.44, 1) infinite;
+    animation-delay: 1.15s;
+  }
+}
+
+// ============================================
+// LINEAR PROGRESS - BUFFER
+// ============================================
+
+.#{$so-prefix}progress-buffer {
+  position: relative;
+  overflow: hidden;
+
+  .#{$so-prefix}progress-bar {
+    position: relative;
+    z-index: 2;
+  }
+
+  .#{$so-prefix}progress-buffer-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background-color: alpha($so-primary, 0.3);
+    border-radius: var(--progress-border-radius);
+    z-index: 1;
+    transition: width $so-transition-base ease;
+  }
+
+  &.#{$so-prefix}progress-primary .#{$so-prefix}progress-buffer-bar {
+    background-color: alpha($so-primary, 0.3);
+  }
+
+  &.#{$so-prefix}progress-secondary .#{$so-prefix}progress-buffer-bar {
+    background-color: alpha($so-secondary, 0.3);
+  }
+
+  &.#{$so-prefix}progress-success .#{$so-prefix}progress-buffer-bar {
+    background-color: alpha($so-success, 0.3);
+  }
+
+  &.#{$so-prefix}progress-danger .#{$so-prefix}progress-buffer-bar {
+    background-color: alpha($so-danger, 0.3);
+  }
+
+  &.#{$so-prefix}progress-warning .#{$so-prefix}progress-buffer-bar {
+    background-color: alpha($so-warning, 0.3);
+  }
+
+  &.#{$so-prefix}progress-info .#{$so-prefix}progress-buffer-bar {
+    background-color: alpha($so-info, 0.3);
+  }
+}
+
+// Buffer dots animation
+@keyframes so-buffer-dots {
+  0% {
+    opacity: 1;
+    background-position: 0 -23px;
+  }
+  50% {
+    opacity: 0;
+    background-position: 0 -23px;
+  }
+  100% {
+    opacity: 1;
+    background-position: -200px -23px;
+  }
+}
+
+.#{$so-prefix}progress-buffer-dots {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: radial-gradient(
+    circle at 2px 2px,
+    currentColor 1px,
+    transparent 1px
+  );
+  background-size: 10px 10px;
+  opacity: 0.3;
+  animation: so-buffer-dots 3s infinite linear;
+  z-index: 0;
+}
+
+// ============================================
+// LINEAR PROGRESS - STACKED (Multiple Bars)
+// ============================================
+
+.#{$so-prefix}progress-stacked {
+  display: flex;
+  overflow: hidden;
+
+  .#{$so-prefix}progress {
+    overflow: visible;
+    flex: none;
+    height: 100%;
+    background: transparent;
+    border-radius: 0;
+
+    &:first-child {
+      border-radius: var(--progress-border-radius) 0 0 var(--progress-border-radius);
+
+      .#{$so-prefix}progress-bar {
+        border-radius: var(--progress-border-radius) 0 0 var(--progress-border-radius);
+      }
+    }
+
+    &:last-child {
+      border-radius: 0 var(--progress-border-radius) var(--progress-border-radius) 0;
+
+      .#{$so-prefix}progress-bar {
+        border-radius: 0 var(--progress-border-radius) var(--progress-border-radius) 0;
+      }
+    }
+
+    .#{$so-prefix}progress-bar {
+      width: 100%;
+      border-radius: 0;
+    }
+  }
+}
+
+// ============================================
+// CIRCULAR PROGRESS - BASE
+// ============================================
+
+.#{$so-prefix}progress-circular {
+  --progress-circular-size: #{$progress-circular-size};
+  --progress-stroke-width: #{$progress-stroke-width};
+  --progress-circular-color: #{$so-primary};
+
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--progress-circular-size);
+  height: var(--progress-circular-size);
+}
+
+.#{$so-prefix}progress-ring {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.#{$so-prefix}progress-ring-bg {
+  fill: none;
+  stroke: $so-grey-200;
+  stroke-width: var(--progress-stroke-width);
+}
+
+.#{$so-prefix}progress-ring-fill {
+  fill: none;
+  stroke: var(--progress-circular-color);
+  stroke-width: var(--progress-stroke-width);
+  stroke-linecap: round;
+  transition: stroke-dashoffset $so-transition-base ease;
+}
+
+.#{$so-prefix}progress-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: font-size('sm');
+  font-weight: font-weight('semibold');
+  color: css-var('text-primary');
+}
+
+// ============================================
+// CIRCULAR PROGRESS - SIZE VARIANTS
+// ============================================
+
+.#{$so-prefix}progress-circular-xs {
+  --progress-circular-size: #{$progress-circular-size-xs};
+  --progress-stroke-width: 3px;
+
+  .#{$so-prefix}progress-text {
+    font-size: font-size('2xs');
+  }
+}
+
+.#{$so-prefix}progress-circular-sm {
+  --progress-circular-size: #{$progress-circular-size-sm};
+  --progress-stroke-width: 3px;
+
+  .#{$so-prefix}progress-text {
+    font-size: font-size('xs');
+  }
+}
+
+.#{$so-prefix}progress-circular-lg {
+  --progress-circular-size: #{$progress-circular-size-lg};
+  --progress-stroke-width: 5px;
+
+  .#{$so-prefix}progress-text {
+    font-size: font-size('base');
+  }
+}
+
+.#{$so-prefix}progress-circular-xl {
+  --progress-circular-size: #{$progress-circular-size-xl};
+  --progress-stroke-width: 6px;
+
+  .#{$so-prefix}progress-text {
+    font-size: font-size('lg');
+  }
+}
+
+// ============================================
+// CIRCULAR PROGRESS - COLOR VARIANTS
+// ============================================
+
+.#{$so-prefix}progress-circular-primary {
+  --progress-circular-color: #{$so-primary};
+}
+
+.#{$so-prefix}progress-circular-secondary {
+  --progress-circular-color: #{$so-secondary};
+}
+
+.#{$so-prefix}progress-circular-success {
+  --progress-circular-color: #{$so-success};
+}
+
+.#{$so-prefix}progress-circular-danger {
+  --progress-circular-color: #{$so-danger};
+}
+
+.#{$so-prefix}progress-circular-warning {
+  --progress-circular-color: #{$so-warning};
+}
+
+.#{$so-prefix}progress-circular-info {
+  --progress-circular-color: #{$so-info};
+}
+
+.#{$so-prefix}progress-circular-light {
+  --progress-circular-color: #{$so-grey-400};
+}
+
+.#{$so-prefix}progress-circular-dark {
+  --progress-circular-color: #{$so-grey-800};
+}
+
+// ============================================
+// CIRCULAR PROGRESS - INDETERMINATE
+// ============================================
+
+@keyframes so-progress-circular-rotate {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes so-progress-circular-dash {
+  0% {
+    stroke-dasharray: 1, 150;
+    stroke-dashoffset: 0;
+  }
+  50% {
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: -35;
+  }
+  100% {
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: -124;
+  }
+}
+
+.#{$so-prefix}progress-circular-indeterminate {
+  .#{$so-prefix}progress-ring {
+    animation: so-progress-circular-rotate 2s linear infinite;
+    transform: rotate(0deg);
+  }
+
+  .#{$so-prefix}progress-ring-fill {
+    stroke-dasharray: 1, 150;
+    stroke-dashoffset: 0;
+    animation: so-progress-circular-dash 1.5s ease-in-out infinite;
+  }
+
+  .#{$so-prefix}progress-ring-bg {
+    display: none;
+  }
+}
+
+// ============================================
+// PROGRESS WITH EXTERNAL LABEL
+// ============================================
+
+.#{$so-prefix}progress-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: spacing('2');
+}
+
+.#{$so-prefix}progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.#{$so-prefix}progress-title {
+  font-size: font-size('sm');
+  font-weight: font-weight('medium');
+  color: css-var('text-primary');
+}
+
+.#{$so-prefix}progress-value {
+  font-size: font-size('sm');
+  font-weight: font-weight('medium');
+  color: css-var('text-muted');
+}
+
+// ============================================
+// PROGRESS - GRADIENT VARIANT
+// ============================================
+
+.#{$so-prefix}progress-gradient {
+  .#{$so-prefix}progress-bar {
+    background: linear-gradient(90deg, $so-primary, $so-secondary);
+  }
+}
+
+.#{$so-prefix}progress-gradient-success {
+  .#{$so-prefix}progress-bar {
+    background: linear-gradient(90deg, $so-success, color.adjust($so-success, $lightness: 15%));
+  }
+}
+
+.#{$so-prefix}progress-gradient-danger {
+  .#{$so-prefix}progress-bar {
+    background: linear-gradient(90deg, $so-danger, color.adjust($so-danger, $lightness: 15%));
+  }
+}
+
+.#{$so-prefix}progress-gradient-rainbow {
+  .#{$so-prefix}progress-bar {
+    background: linear-gradient(90deg,
+      $so-danger,
+      $so-warning,
+      $so-success,
+      $so-info,
+      $so-primary
+    );
+  }
+}
+
+// ============================================
+// PROGRESS - STEPPED/SEGMENTED
+// ============================================
+
+.#{$so-prefix}progress-stepped {
+  display: flex;
+  gap: 2px;
+  background: transparent;
+  overflow: visible;
+
+  .#{$so-prefix}progress-step {
+    flex: 1;
+    height: var(--progress-height);
+    background: var(--progress-bg);
+    border-radius: var(--progress-border-radius);
+    position: relative;
+    overflow: hidden;
+
+    &.#{$so-prefix}active {
+      .#{$so-prefix}progress-step-fill {
+        width: 100%;
+      }
+    }
+
+    &.#{$so-prefix}partial {
+      .#{$so-prefix}progress-step-fill {
+        width: var(--step-progress, 50%);
+      }
+    }
+  }
+
+  .#{$so-prefix}progress-step-fill {
+    height: 100%;
+    width: 0;
+    background: var(--progress-bar-bg);
+    border-radius: var(--progress-border-radius);
+    transition: width $so-transition-base ease;
+  }
+}
+
+// ============================================
+// DARK MODE
+// ============================================
+
+[data-theme='dark'] {
+  .#{$so-prefix}progress {
+    --progress-bg: #{$so-grey-700};
+  }
+
+  .#{$so-prefix}progress-ring-bg {
+    stroke: $so-grey-700;
+  }
+
+  .#{$so-prefix}progress-light {
+    --progress-bar-bg: #{$so-grey-500};
+  }
+
+  .#{$so-prefix}progress-circular-light {
+    --progress-circular-color: #{$so-grey-500};
+  }
+
+  .#{$so-prefix}progress-stepped .#{$so-prefix}progress-step {
+    background: $so-grey-700;
+  }
+}

@@ -1,0 +1,486 @@
+// ============================================
+// SIXORBIT UI - LIST GROUP
+// Flexible component for displaying lists
+// ============================================
+
+@use 'sass:color';
+@use '../abstracts' as *;
+
+// ============================================
+// BASE LIST GROUP
+// ============================================
+
+.#{$so-prefix}list-group {
+  display: flex;
+  flex-direction: column;
+  padding-left: 0;
+  margin-bottom: 0;
+  border-radius: radius('lg');
+}
+
+.#{$so-prefix}list-group-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: spacing('3') spacing('4');
+  color: css-var('text-color');
+  text-decoration: none;
+  background-color: css-var('card-bg');
+  border: 1px solid css-var('border-color');
+  margin-top: -1px;
+  margin-bottom: 0;
+
+  &:first-child {
+    margin-top: 0;
+    border-top-left-radius: radius('lg');
+    border-top-right-radius: radius('lg');
+  }
+
+  &:last-child {
+    border-bottom-left-radius: radius('lg');
+    border-bottom-right-radius: radius('lg');
+  }
+
+  // Disabled state
+  &.#{$so-prefix}disabled,
+  &:disabled {
+    color: css-var('text-muted');
+    pointer-events: none;
+    background-color: css-var('card-bg');
+    opacity: 0.65;
+  }
+
+  // Active state
+  &.#{$so-prefix}active {
+    z-index: 2;
+    color: #fff;
+    background-color: $so-primary;
+    border-color: $so-primary;
+  }
+}
+
+// ============================================
+// ACTIONABLE LIST ITEMS
+// ============================================
+
+.#{$so-prefix}list-group-item-action {
+  width: 100%;
+  text-align: inherit;
+  cursor: pointer;
+  transition: color $so-transition-fast,
+              background-color $so-transition-fast,
+              border-color $so-transition-fast;
+
+  &:hover,
+  &:focus {
+    z-index: 1;
+    color: css-var('text-color');
+    text-decoration: none;
+    background-color: css-var('hover-bg');
+  }
+
+  &:active {
+    color: css-var('text-color');
+    background-color: css-var('active-bg');
+  }
+}
+
+// ============================================
+// FLUSH VARIANT (No borders/rounded corners)
+// ============================================
+
+.#{$so-prefix}list-group-flush {
+  border-radius: 0;
+
+  > .#{$so-prefix}list-group-item {
+    border-width: 0 0 1px;
+    border-radius: 0;
+
+    &:last-child {
+      border-bottom-width: 0;
+    }
+  }
+}
+
+// ============================================
+// NUMBERED LIST GROUP
+// ============================================
+
+.#{$so-prefix}list-group-numbered {
+  list-style-type: none;
+  counter-reset: list-group-counter;
+
+  > .#{$so-prefix}list-group-item {
+    counter-increment: list-group-counter;
+
+    &::before {
+      content: counter(list-group-counter) ".";
+      margin-right: spacing('3');
+      font-weight: font-weight('semibold');
+      color: css-var('text-muted');
+      min-width: 1.5rem;
+    }
+  }
+}
+
+// ============================================
+// HORIZONTAL LIST GROUP
+// ============================================
+
+.#{$so-prefix}list-group-horizontal {
+  flex-direction: row;
+
+  > .#{$so-prefix}list-group-item {
+    margin-top: 0;
+    margin-left: -1px;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+
+    &:first-child {
+      margin-left: 0;
+      border-top-left-radius: radius('lg');
+      border-bottom-left-radius: radius('lg');
+      border-top-right-radius: 0;
+    }
+
+    &:last-child {
+      border-top-right-radius: radius('lg');
+      border-bottom-right-radius: radius('lg');
+      border-bottom-left-radius: 0;
+    }
+  }
+}
+
+// Responsive horizontal variants
+@each $breakpoint in (sm, md, lg, xl) {
+  @include media-up($breakpoint) {
+    .#{$so-prefix}list-group-horizontal-#{$breakpoint} {
+      flex-direction: row;
+
+      > .#{$so-prefix}list-group-item {
+        margin-top: 0;
+        margin-left: -1px;
+        border-top-width: 1px;
+        border-bottom-width: 1px;
+
+        &:first-child {
+          margin-left: 0;
+          border-top-left-radius: radius('lg');
+          border-bottom-left-radius: radius('lg');
+          border-top-right-radius: 0;
+        }
+
+        &:last-child {
+          border-top-right-radius: radius('lg');
+          border-bottom-right-radius: radius('lg');
+          border-bottom-left-radius: 0;
+        }
+      }
+    }
+  }
+}
+
+// ============================================
+// COLOR VARIANTS
+// ============================================
+
+@each $color-name, $color-value in $so-colors {
+  .#{$so-prefix}list-group-item-#{$color-name} {
+    color: color.adjust($color-value, $lightness: -20%);
+    background-color: rgba($color-value, 0.1);
+    border-color: rgba($color-value, 0.2);
+
+    &.#{$so-prefix}list-group-item-action {
+      &:hover,
+      &:focus {
+        color: color.adjust($color-value, $lightness: -25%);
+        background-color: rgba($color-value, 0.2);
+      }
+
+      &.#{$so-prefix}active {
+        color: #fff;
+        background-color: $color-value;
+        border-color: $color-value;
+      }
+    }
+  }
+}
+
+// ============================================
+// LIST GROUP WITH BADGES
+// ============================================
+
+.#{$so-prefix}list-group-item {
+  .#{$so-prefix}badge {
+    margin-left: auto;
+  }
+}
+
+// ============================================
+// LIST GROUP WITH ICONS
+// ============================================
+
+.#{$so-prefix}list-group-item {
+  > .material-icons,
+  > .#{$so-prefix}list-group-icon {
+    margin-right: spacing('3');
+    font-size: 1.25rem;
+    color: css-var('text-muted');
+  }
+
+  &.#{$so-prefix}active {
+    > .material-icons,
+    > .#{$so-prefix}list-group-icon {
+      color: inherit;
+    }
+  }
+}
+
+// ============================================
+// LIST GROUP WITH AVATAR
+// ============================================
+
+.#{$so-prefix}list-group-item {
+  > .#{$so-prefix}avatar {
+    margin-right: spacing('3');
+    flex-shrink: 0;
+  }
+}
+
+// ============================================
+// CUSTOM CONTENT LIST GROUP
+// ============================================
+
+.#{$so-prefix}list-group-item-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.#{$so-prefix}list-group-item-heading {
+  margin-bottom: spacing('1');
+  font-weight: font-weight('medium');
+  color: css-var('text-color');
+
+  // Active state - direct child or nested in content
+  .active > &,
+  .active > .#{$so-prefix}list-group-item-content > & {
+    color: inherit;
+  }
+
+  // Better styling for contextual items
+  @each $color-name, $color-value in $so-colors {
+    .#{$so-prefix}list-group-item-#{$color-name} > &,
+    .#{$so-prefix}list-group-item-#{$color-name} > .#{$so-prefix}list-group-item-content > & {
+      color: color.adjust($color-value, $lightness: -25%);
+      font-weight: font-weight('semibold');
+    }
+  }
+}
+
+.#{$so-prefix}list-group-item-text {
+  margin-bottom: 0;
+  font-size: font-size('sm');
+  color: css-var('text-muted');
+  line-height: 1.4;
+
+  // Active state - direct child or nested in content
+  .active > &,
+  .active > .#{$so-prefix}list-group-item-content > & {
+    color: rgba(255, 255, 255, 0.8);
+  }
+
+  // Better styling for contextual items - direct child or nested in content
+  @each $color-name, $color-value in $so-colors {
+    .#{$so-prefix}list-group-item-#{$color-name} > &,
+    .#{$so-prefix}list-group-item-#{$color-name} > .#{$so-prefix}list-group-item-content > & {
+      color: color.adjust($color-value, $lightness: -10%);
+      opacity: 0.85;
+    }
+  }
+}
+
+// ============================================
+// CHECKABLE LIST GROUP
+// ============================================
+
+.#{$so-prefix}list-group-checkable {
+  .#{$so-prefix}list-group-item {
+    cursor: pointer;
+
+    input[type="checkbox"],
+    input[type="radio"] {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+
+      &:checked + .#{$so-prefix}list-group-item-label {
+        color: $so-primary;
+
+        &::before {
+          background-color: $so-primary;
+          border-color: $so-primary;
+        }
+
+        &::after {
+          opacity: 1;
+        }
+      }
+
+      &:focus + .#{$so-prefix}list-group-item-label {
+        box-shadow: 0 0 0 3px rgba($so-primary, 0.25);
+      }
+
+      &:disabled + .#{$so-prefix}list-group-item-label {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+    }
+  }
+
+  .#{$so-prefix}list-group-item-label {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: spacing('3') spacing('4');
+    cursor: pointer;
+    transition: all $so-transition-fast;
+
+    &::before {
+      content: '';
+      display: inline-block;
+      width: 18px;
+      height: 18px;
+      margin-right: spacing('3');
+      border: 2px solid css-var('border-color');
+      border-radius: 3px;
+      background-color: css-var('card-bg');
+      transition: all $so-transition-fast;
+      flex-shrink: 0;
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      left: calc(#{spacing('4')} + 4px);
+      width: 10px;
+      height: 5px;
+      border-left: 2px solid #fff;
+      border-bottom: 2px solid #fff;
+      transform: rotate(-45deg);
+      opacity: 0;
+      transition: opacity $so-transition-fast;
+    }
+  }
+
+  // Radio style (circular)
+  &.#{$so-prefix}list-group-radio {
+    .#{$so-prefix}list-group-item-label {
+      &::before {
+        border-radius: 50%;
+      }
+
+      &::after {
+        left: calc(#{spacing('4')} + 5px);
+        width: 8px;
+        height: 8px;
+        border: none;
+        border-radius: 50%;
+        background-color: #fff;
+        transform: none;
+      }
+    }
+  }
+}
+
+// ============================================
+// SORTABLE LIST GROUP (visual only)
+// ============================================
+
+.#{$so-prefix}list-group-sortable {
+  .#{$so-prefix}list-group-item {
+    cursor: grab;
+
+    &::before {
+      content: '⋮⋮';
+      margin-right: spacing('3');
+      color: css-var('text-muted');
+      font-size: 1rem;
+      letter-spacing: -2px;
+    }
+
+    &:active {
+      cursor: grabbing;
+    }
+
+    &.dragging {
+      opacity: 0.5;
+      background-color: css-var('hover-bg');
+    }
+  }
+}
+
+// ============================================
+// SIZE VARIANTS
+// ============================================
+
+.#{$so-prefix}list-group-sm {
+  .#{$so-prefix}list-group-item {
+    padding: spacing('2') spacing('3');
+    font-size: font-size('sm');
+  }
+}
+
+.#{$so-prefix}list-group-lg {
+  .#{$so-prefix}list-group-item {
+    padding: spacing('4') spacing('5');
+    font-size: font-size('lg');
+  }
+}
+
+// ============================================
+// BORDERED VARIANT
+// ============================================
+
+.#{$so-prefix}list-group-bordered {
+  .#{$so-prefix}list-group-item {
+    border-left-width: 3px;
+
+    @each $color-name, $color-value in $so-colors {
+      &.#{$so-prefix}list-group-item-#{$color-name} {
+        border-left-color: $color-value;
+      }
+    }
+  }
+}
+
+// ============================================
+// DARK MODE SUPPORT
+// ============================================
+
+[data-theme='dark'] {
+  .#{$so-prefix}list-group-item {
+    background-color: css-var('card-bg');
+    border-color: css-var('border-color');
+    color: css-var('text-color');
+
+    &.#{$so-prefix}active {
+      background-color: $so-primary;
+      border-color: $so-primary;
+    }
+  }
+
+  .#{$so-prefix}list-group-item-action {
+    &:hover,
+    &:focus {
+      background-color: css-var('hover-bg');
+    }
+  }
+
+  @each $color-name, $color-value in $so-colors {
+    .#{$so-prefix}list-group-item-#{$color-name} {
+      color: color.adjust($color-value, $lightness: 20%);
+      background-color: rgba($color-value, 0.15);
+      border-color: rgba($color-value, 0.3);
+    }
+  }
+}

@@ -1,0 +1,1501 @@
+// ============================================
+// SIXORBIT UI - SIDEBAR
+// Full-height sidebar with hover-expand functionality
+// ============================================
+
+@use "../abstracts" as *;
+
+// ============================================
+// SIDEBAR BASE STYLES
+// ============================================
+
+.#{$so-prefix}sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: css-var("sidebar-width");
+  background: css-var("sidebar-bg");
+  border-right: 1px solid css-var("sidebar-border");
+  overflow: hidden;
+  z-index: z-index("sidebar");
+  display: flex;
+  flex-direction: column;
+  transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  font-family: $so-font-family;
+  -webkit-font-smoothing: antialiased;
+
+  // Disable transitions on initial page load
+  &.no-transition,
+  &.no-transition *,
+  &.no-transition .#{$so-prefix}sidebar-submenu {
+    transition: none !important;
+  }
+}
+
+// ============================================
+// INITIAL STATE - Prevent flash on page load
+// ============================================
+
+// Hide sidebar until state is determined
+html:not(.sidebar-ready) .#{$so-prefix}sidebar,
+html:not(.sidebar-ready) .#{$so-prefix}navbar,
+html:not(.sidebar-ready) .#{$so-prefix}main-content {
+  visibility: hidden;
+}
+
+// Initial collapsed state
+html.sidebar-collapsed .#{$so-prefix}sidebar {
+  width: css-var("sidebar-collapsed-width");
+}
+
+html.sidebar-collapsed .#{$so-prefix}navbar {
+  left: css-var("sidebar-collapsed-width");
+}
+
+html.sidebar-collapsed .#{$so-prefix}main-content {
+  margin-left: css-var("sidebar-collapsed-width");
+}
+
+// Initial collapsed - hide text elements
+html.sidebar-collapsed .#{$so-prefix}sidebar .#{$so-prefix}sidebar-brand-info,
+html.sidebar-collapsed .#{$so-prefix}sidebar .#{$so-prefix}sidebar-text,
+html.sidebar-collapsed .#{$so-prefix}sidebar .#{$so-prefix}sidebar-arrow,
+html.sidebar-collapsed .#{$so-prefix}sidebar .#{$so-prefix}sidebar-section span,
+html.sidebar-collapsed
+  .#{$so-prefix}sidebar
+  .#{$so-prefix}sidebar-footer-item
+  span:not(.material-icons) {
+  opacity: 0;
+  visibility: hidden;
+}
+
+// Initial pinned state
+html.sidebar-pinned .#{$so-prefix}sidebar {
+  width: css-var("sidebar-width");
+}
+
+html.sidebar-pinned .#{$so-prefix}navbar {
+  left: css-var("sidebar-width");
+}
+
+html.sidebar-pinned .#{$so-prefix}main-content {
+  margin-left: css-var("sidebar-width");
+}
+
+// ============================================
+// SIDEBAR HEADER
+// ============================================
+
+.#{$so-prefix}sidebar-header {
+  padding: 0 spacing("4") 0 spacing("1") + 2px;
+  display: flex;
+  align-items: center;
+  gap: spacing("3");
+  flex-shrink: 0;
+  height: css-var("navbar-height");
+  border-bottom: 1px solid css-var("sidebar-border");
+  transition: none;
+}
+
+.#{$so-prefix}sidebar-logo {
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  border-radius: radius("lg") + 2px;
+  background: $so-primary;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $so-white;
+  font-size: font-size("md");
+  font-weight: font-weight("semibold");
+  flex-shrink: 0;
+}
+
+.#{$so-prefix}sidebar-brand-info {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.#{$so-prefix}sidebar-brand-name {
+  font-size: font-size("md");
+  font-weight: font-weight("medium");
+  color: css-var("text-heading");
+  white-space: nowrap;
+  @include text-truncate;
+}
+
+.#{$so-prefix}sidebar-brand-subtitle {
+  font-size: font-size("xs");
+  color: css-var("text-secondary");
+  white-space: nowrap;
+}
+
+// Toggle button - Circular checkbox style
+.#{$so-prefix}sidebar-toggle {
+  width: 20px;
+  height: 20px;
+  min-width: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: radius("full");
+  cursor: pointer;
+  background: transparent;
+  border: 2px solid $so-grey-400;
+  transition: all $so-transition-base;
+  flex-shrink: 0;
+  padding: 0;
+
+  &:hover {
+    border-color: $so-primary;
+  }
+
+  .toggle-circle {
+    width: 10px;
+    height: 10px;
+    border-radius: radius("full");
+    background: transparent;
+    transition: all $so-transition-base;
+  }
+}
+
+// Checked state - when sidebar is pinned
+.#{$so-prefix}sidebar.pinned .#{$so-prefix}sidebar-toggle {
+  border-color: $so-primary;
+
+  .toggle-circle {
+    background: $so-primary;
+  }
+}
+
+// Scrollable content area
+.#{$so-prefix}sidebar-scroll {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: spacing("2") 0;
+  @include hide-scrollbar;
+}
+
+// ============================================
+// NAVIGATION LIST
+// ============================================
+
+.#{$so-prefix}sidebar-nav {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+// ============================================
+// SECTION HEADING
+// ============================================
+
+.#{$so-prefix}sidebar-section {
+  padding: spacing("2") + 2px spacing("3") spacing("1") spacing("3");
+  font-size: font-size("xs");
+  font-weight: font-weight("semibold");
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: css-var("text-muted");
+  white-space: nowrap;
+  overflow: hidden;
+  min-height: 28px;
+  display: flex;
+  align-items: center;
+}
+
+// ============================================
+// MENU ITEM
+// ============================================
+
+.#{$so-prefix}sidebar-item {
+  margin: 1px spacing("1");
+}
+
+.#{$so-prefix}sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: spacing("2") + 2px;
+  padding: spacing("2") spacing("2") spacing("2") spacing("3");
+  text-decoration: none;
+  color: css-var("sidebar-item-color");
+  border-radius: radius("md");
+  cursor: pointer;
+  transition:
+    background $so-transition-base,
+    color $so-transition-base,
+    box-shadow $so-transition-base;
+  position: relative;
+  min-height: 36px;
+
+  &:hover {
+    background: css-var("sidebar-item-hover-bg");
+    text-decoration: none;
+    color: css-var("sidebar-item-color");
+  }
+}
+
+// Active/Current State
+.#{$so-prefix}sidebar-item.active > .#{$so-prefix}sidebar-link,
+.#{$so-prefix}sidebar-item.current > .#{$so-prefix}sidebar-link {
+  background: css-var("sidebar-item-active-bg");
+  color: css-var("sidebar-item-active-color");
+  box-shadow: 0 2px 8px alpha($so-primary, 0.3);
+}
+
+.#{$so-prefix}sidebar-item.active
+  > .#{$so-prefix}sidebar-link
+  .#{$so-prefix}sidebar-icon,
+.#{$so-prefix}sidebar-item.current
+  > .#{$so-prefix}sidebar-link
+  .#{$so-prefix}sidebar-icon {
+  color: css-var("sidebar-item-active-color");
+}
+
+.#{$so-prefix}sidebar-item.active
+  > .#{$so-prefix}sidebar-link
+  .#{$so-prefix}sidebar-arrow,
+.#{$so-prefix}sidebar-item.current
+  > .#{$so-prefix}sidebar-link
+  .#{$so-prefix}sidebar-arrow {
+  color: css-var("sidebar-item-active-color");
+}
+
+// Icon
+.#{$so-prefix}sidebar-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  min-width: 24px;
+  flex-shrink: 0;
+  color: css-var("sidebar-item-icon-color");
+  font-size: 20px;
+  transition: color $so-transition-base;
+
+  .material-icons,
+  .material-symbols-rounded,
+  .fa {
+    font-size: 20px;
+  }
+}
+
+// Text
+.#{$so-prefix}sidebar-text {
+  flex: 1;
+  font-size: font-size("base");
+  font-weight: font-weight("regular");
+  white-space: nowrap;
+  @include text-truncate;
+  line-height: line-height("snug");
+}
+
+// Arrow for expandable items
+.#{$so-prefix}sidebar-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  min-width: 20px;
+  color: css-var("sidebar-item-icon-color");
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  flex-shrink: 0;
+
+  .material-icons {
+    font-size: 18px;
+  }
+}
+
+.#{$so-prefix}sidebar-item.#{$so-prefix}open
+  > .#{$so-prefix}sidebar-link
+  .#{$so-prefix}sidebar-arrow {
+  transform: rotate(90deg);
+}
+
+// ============================================
+// SUBMENU
+// ============================================
+
+.#{$so-prefix}sidebar-submenu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  position: relative;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+}
+
+// Open menu items - subtle highlight
+.#{$so-prefix}sidebar-item.#{$so-prefix}open > .#{$so-prefix}sidebar-link {
+  color: css-var("accent-primary");
+}
+
+.#{$so-prefix}sidebar-item.#{$so-prefix}open
+  > .#{$so-prefix}sidebar-link
+  .#{$so-prefix}sidebar-icon {
+  color: css-var("accent-primary");
+}
+
+.#{$so-prefix}sidebar-item.#{$so-prefix}open > .#{$so-prefix}sidebar-submenu {
+  max-height: 2000px;
+  transition: max-height 0.3s ease-in;
+}
+
+.#{$so-prefix}sidebar-submenu .#{$so-prefix}sidebar-item {
+  margin: 0;
+  position: relative;
+}
+
+// Level 1 submenu items
+.#{$so-prefix}sidebar-submenu .#{$so-prefix}sidebar-link {
+  display: flex;
+  align-items: center;
+  padding: spacing("1") + 2px spacing("8") spacing("1") + 2px spacing("5");
+  font-size: font-size("sm");
+  margin: 0;
+  border-radius: 0;
+  min-height: 32px;
+  color: css-var("sidebar-item-color");
+  position: relative;
+  gap: spacing("2") + 2px;
+}
+
+// Level 1 icons - smaller size
+.#{$so-prefix}sidebar-submenu
+  .#{$so-prefix}sidebar-link
+  .#{$so-prefix}sidebar-icon {
+  width: 20px;
+  height: 20px;
+  min-width: 20px;
+  margin-top: 0;
+
+  .material-icons {
+    font-size: 18px;
+  }
+}
+
+.#{$so-prefix}sidebar-submenu
+  .#{$so-prefix}sidebar-link
+  .#{$so-prefix}sidebar-text {
+  white-space: nowrap;
+  @include text-truncate;
+  line-height: line-height("snug");
+}
+
+.#{$so-prefix}sidebar-submenu .#{$so-prefix}sidebar-link:hover {
+  color: css-var("text-heading");
+}
+
+// Active/Current submenu item
+.#{$so-prefix}sidebar-submenu
+  .#{$so-prefix}sidebar-item.active
+  > .#{$so-prefix}sidebar-link,
+.#{$so-prefix}sidebar-submenu
+  .#{$so-prefix}sidebar-item.current
+  > .#{$so-prefix}sidebar-link {
+  background: alpha($so-primary, 0.12);
+  color: css-var("accent-primary");
+  box-shadow: none;
+  margin-left: -100px;
+  margin-right: -4px;
+  padding-left: calc(100px + 4px + 16px);
+  padding-right: 36px;
+  border-radius: 0;
+}
+
+.#{$so-prefix}sidebar-submenu
+  .#{$so-prefix}sidebar-item.active
+  > .#{$so-prefix}sidebar-link
+  .#{$so-prefix}sidebar-icon,
+.#{$so-prefix}sidebar-submenu
+  .#{$so-prefix}sidebar-item.current
+  > .#{$so-prefix}sidebar-link
+  .#{$so-prefix}sidebar-icon {
+  color: css-var("accent-primary");
+}
+
+// ============================================
+// NESTED SUBMENUS - Level 2 and deeper
+// ============================================
+
+// Level 2 links
+.#{$so-prefix}sidebar-submenu
+  .#{$so-prefix}sidebar-submenu
+  .#{$so-prefix}sidebar-link {
+  padding-left: 32px;
+}
+
+// Level 2 icons - even smaller
+.#{$so-prefix}sidebar-submenu
+  .#{$so-prefix}sidebar-submenu
+  .#{$so-prefix}sidebar-link
+  .#{$so-prefix}sidebar-icon {
+  width: 18px;
+  height: 18px;
+  min-width: 18px;
+
+  .material-icons {
+    font-size: 16px;
+  }
+}
+
+// Level 2 current items
+.#{$so-prefix}sidebar-submenu
+  .#{$so-prefix}sidebar-submenu
+  .#{$so-prefix}sidebar-item.active
+  > .#{$so-prefix}sidebar-link,
+.#{$so-prefix}sidebar-submenu
+  .#{$so-prefix}sidebar-submenu
+  .#{$so-prefix}sidebar-item.current
+  > .#{$so-prefix}sidebar-link {
+  padding-left: calc(100px + 4px + 32px);
+}
+
+// Level 3 icons
+.#{$so-prefix}sidebar-submenu
+  .#{$so-prefix}sidebar-submenu
+  .#{$so-prefix}sidebar-submenu
+  .#{$so-prefix}sidebar-link
+  .#{$so-prefix}sidebar-icon {
+  width: 16px;
+  height: 16px;
+  min-width: 16px;
+
+  .material-icons {
+    font-size: 14px;
+  }
+}
+
+// Level 3 links
+.#{$so-prefix}sidebar-submenu
+  .#{$so-prefix}sidebar-submenu
+  .#{$so-prefix}sidebar-submenu
+  .#{$so-prefix}sidebar-link {
+  padding-left: 48px;
+}
+
+// Level 3 current items
+.#{$so-prefix}sidebar-submenu
+  .#{$so-prefix}sidebar-submenu
+  .#{$so-prefix}sidebar-submenu
+  .#{$so-prefix}sidebar-item.active
+  > .#{$so-prefix}sidebar-link,
+.#{$so-prefix}sidebar-submenu
+  .#{$so-prefix}sidebar-submenu
+  .#{$so-prefix}sidebar-submenu
+  .#{$so-prefix}sidebar-item.current
+  > .#{$so-prefix}sidebar-link {
+  padding-left: calc(100px + 48px);
+}
+
+// Level 4 icons
+.#{$so-prefix}sidebar-submenu
+  .#{$so-prefix}sidebar-submenu
+  .#{$so-prefix}sidebar-submenu
+  .#{$so-prefix}sidebar-submenu
+  .#{$so-prefix}sidebar-link
+  .#{$so-prefix}sidebar-icon {
+  width: 14px;
+  height: 14px;
+  min-width: 14px;
+
+  .material-icons {
+    font-size: 12px;
+  }
+}
+
+// Level 4 links
+.#{$so-prefix}sidebar-submenu
+  .#{$so-prefix}sidebar-submenu
+  .#{$so-prefix}sidebar-submenu
+  .#{$so-prefix}sidebar-submenu
+  .#{$so-prefix}sidebar-link {
+  padding-left: 64px;
+}
+
+// Level 4 current items
+.#{$so-prefix}sidebar-submenu
+  .#{$so-prefix}sidebar-submenu
+  .#{$so-prefix}sidebar-submenu
+  .#{$so-prefix}sidebar-submenu
+  .#{$so-prefix}sidebar-item.active
+  > .#{$so-prefix}sidebar-link,
+.#{$so-prefix}sidebar-submenu
+  .#{$so-prefix}sidebar-submenu
+  .#{$so-prefix}sidebar-submenu
+  .#{$so-prefix}sidebar-submenu
+  .#{$so-prefix}sidebar-item.current
+  > .#{$so-prefix}sidebar-link {
+  padding-left: calc(100px + 4px + 64px);
+}
+
+// Submenu items with children - Arrow indicator
+.#{$so-prefix}sidebar-submenu
+  .#{$so-prefix}sidebar-item.has-children
+  > .#{$so-prefix}sidebar-link
+  .#{$so-prefix}sidebar-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 18px;
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.#{$so-prefix}sidebar-submenu
+  .#{$so-prefix}sidebar-item.has-children.#{$so-prefix}open
+  > .#{$so-prefix}sidebar-link
+  .#{$so-prefix}sidebar-arrow {
+  transform: translateY(-50%) rotate(90deg);
+}
+
+// ============================================
+// SECTION DIVIDER
+// ============================================
+
+.#{$so-prefix}sidebar-divider {
+  height: 1px;
+  background: css-var("sidebar-border");
+  margin: spacing("3") spacing("4");
+}
+
+// ============================================
+// BADGE ON MENU ITEM
+// ============================================
+
+.#{$so-prefix}sidebar-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 spacing("1") + 2px;
+  font-size: font-size("xs");
+  font-weight: font-weight("medium");
+  color: $so-white;
+  background: $so-danger;
+  border-radius: radius("lg");
+  margin-left: auto;
+  flex-shrink: 0;
+
+  &.primary {
+    background: $so-primary;
+  }
+
+  &.success {
+    background: $so-success;
+  }
+}
+
+// ============================================
+// SIDEBAR FOOTER
+// ============================================
+
+.#{$so-prefix}sidebar-footer {
+  padding: spacing("1") + 2px spacing("2");
+  border-top: 1px solid css-var("sidebar-border");
+  background: css-var("sidebar-bg");
+  position: relative;
+}
+
+.#{$so-prefix}sidebar-footer-buttons {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  gap: 2px;
+}
+
+.#{$so-prefix}sidebar-footer-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  height: 32px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: radius("md");
+  color: css-var("text-secondary");
+  cursor: pointer;
+  transition:
+    background $so-transition-base,
+    color $so-transition-base;
+
+  &:hover {
+    background: css-var("sidebar-item-hover-bg");
+    color: css-var("text-heading");
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+
+  .material-icons {
+    font-size: 20px;
+  }
+}
+
+// Info Popup
+.#{$so-prefix}sidebar-info-popup {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: spacing("2");
+  right: spacing("2");
+  background: css-var("card-bg");
+  border: 1px solid css-var("sidebar-border");
+  border-radius: radius("xl");
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(8px);
+  transition: all $so-transition-normal;
+  z-index: z-index("dropdown") + 10;
+
+  &.#{$so-prefix}active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+}
+
+.#{$so-prefix}sidebar-info-popup-header {
+  display: flex;
+  align-items: center;
+  gap: spacing("2");
+  padding: spacing("3") spacing("4");
+  border-bottom: 1px solid css-var("sidebar-border");
+  font-size: font-size("sm");
+  font-weight: font-weight("semibold");
+  color: css-var("text-heading");
+
+  .material-icons {
+    font-size: 18px;
+    color: css-var("accent-primary");
+  }
+}
+
+.#{$so-prefix}sidebar-info-popup-content {
+  padding: spacing("3") spacing("4");
+}
+
+.#{$so-prefix}sidebar-info-popup-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: spacing("2") 0;
+  border-bottom: 1px solid css-var("card-hover-bg");
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.#{$so-prefix}sidebar-info-popup-label {
+  font-size: font-size("xs");
+  color: css-var("text-secondary");
+}
+
+.#{$so-prefix}sidebar-info-popup-value {
+  font-size: font-size("xs");
+  font-weight: font-weight("medium");
+  color: css-var("text-heading");
+  font-family: $so-font-family-mono;
+}
+
+// Legacy footer item
+.#{$so-prefix}sidebar-footer-item {
+  display: flex;
+  align-items: center;
+  gap: spacing("3");
+  padding: spacing("2") + 2px spacing("3");
+  color: css-var("text-secondary");
+  font-size: font-size("sm");
+  border-radius: radius("lg");
+  cursor: pointer;
+  transition: all $so-transition-base;
+
+  &:hover {
+    background: css-var("sidebar-item-hover-bg");
+    color: css-var("text-heading");
+  }
+
+  .material-icons {
+    font-size: 20px;
+  }
+}
+
+// ============================================
+// COLLAPSED / MINI SIDEBAR
+// ============================================
+
+.#{$so-prefix}sidebar.#{$so-prefix}collapsed {
+  width: css-var("sidebar-collapsed-width");
+}
+
+// On hover, expand the mini sidebar
+.#{$so-prefix}sidebar.#{$so-prefix}collapsed:hover {
+  width: css-var("sidebar-width");
+  box-shadow: 4px 0 16px rgba(0, 0, 0, 0.08);
+}
+
+// Header in collapsed state
+.#{$so-prefix}sidebar.#{$so-prefix}collapsed .#{$so-prefix}sidebar-header {
+  padding: 0 spacing("4") 0 spacing("1") + 2px;
+  justify-content: flex-start;
+  gap: spacing("3");
+  transition: none;
+}
+
+.#{$so-prefix}sidebar.#{$so-prefix}collapsed .#{$so-prefix}sidebar-logo {
+  margin: 0;
+}
+
+.#{$so-prefix}sidebar.#{$so-prefix}collapsed .#{$so-prefix}sidebar-brand-info,
+.#{$so-prefix}sidebar.#{$so-prefix}collapsed .#{$so-prefix}sidebar-toggle {
+  opacity: 0;
+  visibility: hidden;
+  width: 0;
+  min-width: 0;
+  flex: 0 0 0;
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+  // Delay hiding until sidebar width transition completes
+  transition:
+    opacity 0.1s ease 0.15s,
+    visibility 0.1s ease 0.15s,
+    width 0s ease 0.25s,
+    flex 0s ease 0.25s;
+}
+
+.#{$so-prefix}sidebar.#{$so-prefix}collapsed:hover
+  .#{$so-prefix}sidebar-header {
+  padding: spacing("3") spacing("4") spacing("3") spacing("1") + 2px;
+  justify-content: flex-start;
+  gap: spacing("3");
+  transition: none;
+}
+
+.#{$so-prefix}sidebar.#{$so-prefix}collapsed:hover
+  .#{$so-prefix}sidebar-brand-info {
+  opacity: 1;
+  visibility: visible;
+  width: auto;
+  flex: 1;
+  overflow: visible;
+  // Show immediately on hover
+  transition:
+    opacity 0.15s ease,
+    visibility 0.15s ease,
+    width 0s ease,
+    flex 0s ease;
+}
+
+.#{$so-prefix}sidebar.#{$so-prefix}collapsed:hover
+  .#{$so-prefix}sidebar-toggle {
+  opacity: 1;
+  visibility: visible;
+  width: 20px;
+  min-width: 20px;
+  height: 20px;
+  flex: 0 0 20px;
+  overflow: visible;
+  // Show immediately on hover
+  transition:
+    opacity 0.15s ease,
+    visibility 0.15s ease,
+    width 0s ease,
+    flex 0s ease;
+}
+
+// Menu items in collapsed state
+.#{$so-prefix}sidebar.#{$so-prefix}collapsed .#{$so-prefix}sidebar-item {
+  margin: 1px spacing("1");
+}
+
+.#{$so-prefix}sidebar.#{$so-prefix}collapsed .#{$so-prefix}sidebar-link {
+  padding: spacing("2") spacing("2") spacing("2") spacing("3");
+  justify-content: flex-start;
+  align-items: center;
+  gap: spacing("2") + 2px;
+  min-height: 40px;
+  transition: none;
+}
+
+.#{$so-prefix}sidebar.#{$so-prefix}collapsed .#{$so-prefix}sidebar-icon {
+  margin: 0;
+  position: relative;
+  left: 0;
+  transform: none;
+}
+
+.#{$so-prefix}sidebar.#{$so-prefix}collapsed .#{$so-prefix}sidebar-text,
+.#{$so-prefix}sidebar.#{$so-prefix}collapsed .#{$so-prefix}sidebar-arrow,
+.#{$so-prefix}sidebar.#{$so-prefix}collapsed .#{$so-prefix}sidebar-badge {
+  opacity: 0;
+  visibility: hidden;
+  width: 0;
+  min-width: 0;
+  flex: 0 0 0;
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+  // Delay hiding until sidebar width transition completes
+  transition:
+    opacity 0.1s ease 0.15s,
+    visibility 0.1s ease 0.15s,
+    width 0s ease 0.25s,
+    flex 0s ease 0.25s;
+}
+
+// Section becomes a separator line in collapsed view
+.#{$so-prefix}sidebar.#{$so-prefix}collapsed .#{$so-prefix}sidebar-section {
+  padding: 0;
+  margin: 0 spacing("1");
+  min-height: 28px;
+  height: 28px;
+  background: transparent;
+  font-size: 0;
+  color: transparent;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+
+  &::before {
+    content: "";
+    display: block;
+    width: 100%;
+    height: 1px;
+    background: css-var("border-color");
+  }
+}
+
+.#{$so-prefix}sidebar.#{$so-prefix}collapsed .#{$so-prefix}sidebar-submenu {
+  max-height: 0 !important;
+  overflow: hidden !important;
+  opacity: 0;
+  visibility: hidden;
+  transition: none !important;
+}
+
+// On hover expand - show all elements
+.#{$so-prefix}sidebar.#{$so-prefix}collapsed:hover
+  > .#{$so-prefix}sidebar-scroll
+  > .#{$so-prefix}sidebar-nav
+  > .#{$so-prefix}sidebar-item {
+  margin: 1px spacing("1");
+}
+
+.#{$so-prefix}sidebar.#{$so-prefix}collapsed:hover
+  .#{$so-prefix}sidebar-submenu
+  .#{$so-prefix}sidebar-item {
+  margin: 0;
+}
+
+.#{$so-prefix}sidebar.#{$so-prefix}collapsed:hover .#{$so-prefix}sidebar-link {
+  transition:
+    background $so-transition-base,
+    color $so-transition-base,
+    box-shadow $so-transition-base;
+}
+
+.#{$so-prefix}sidebar.#{$so-prefix}collapsed:hover .#{$so-prefix}sidebar-text,
+.#{$so-prefix}sidebar.#{$so-prefix}collapsed:hover .#{$so-prefix}sidebar-arrow,
+.#{$so-prefix}sidebar.#{$so-prefix}collapsed:hover .#{$so-prefix}sidebar-badge {
+  opacity: 1;
+  visibility: visible;
+  width: auto;
+  overflow: visible;
+  // Show immediately on hover
+  transition:
+    opacity 0.15s ease,
+    visibility 0.15s ease,
+    width 0s ease,
+    flex 0s ease;
+}
+
+.#{$so-prefix}sidebar.#{$so-prefix}collapsed:hover .#{$so-prefix}sidebar-text {
+  flex: 1;
+}
+
+.#{$so-prefix}sidebar.#{$so-prefix}collapsed:hover .#{$so-prefix}sidebar-arrow,
+.#{$so-prefix}sidebar.#{$so-prefix}collapsed:hover .#{$so-prefix}sidebar-badge {
+  flex: 0 0 auto;
+}
+
+// Restore section text on hover
+.#{$so-prefix}sidebar.#{$so-prefix}collapsed:hover
+  .#{$so-prefix}sidebar-section {
+  display: flex;
+  padding: spacing("2") + 2px spacing("3") spacing("1") spacing("3");
+  margin: 0;
+  min-height: 28px;
+  height: auto;
+  background: transparent;
+  font-size: font-size("xs");
+  color: css-var("text-muted");
+
+  &::before {
+    display: none;
+  }
+}
+
+// Only show submenu if parent item is open (user clicked)
+.#{$so-prefix}sidebar.#{$so-prefix}collapsed:hover
+  .#{$so-prefix}sidebar-item.#{$so-prefix}open
+  > .#{$so-prefix}sidebar-submenu {
+  max-height: 2000px !important;
+  opacity: 1;
+  visibility: visible;
+  transition:
+    max-height 0.3s ease-in,
+    opacity 0.2s ease;
+}
+
+// ============================================
+// COLLAPSED HOVER - Submenu indentation
+// ============================================
+
+.#{$so-prefix}sidebar.#{$so-prefix}collapsed:hover
+  .#{$so-prefix}sidebar-submenu
+  .#{$so-prefix}sidebar-link {
+  padding: spacing("1") + 2px spacing("8") spacing("1") + 2px spacing("5");
+  margin: 0 spacing("1");
+  gap: spacing("2") + 2px;
+  min-height: 32px;
+}
+
+.#{$so-prefix}sidebar.#{$so-prefix}collapsed:hover
+  .#{$so-prefix}sidebar-submenu
+  .#{$so-prefix}sidebar-submenu
+  .#{$so-prefix}sidebar-link {
+  padding-left: 32px;
+}
+
+.#{$so-prefix}sidebar.#{$so-prefix}collapsed:hover
+  .#{$so-prefix}sidebar-submenu
+  .#{$so-prefix}sidebar-submenu
+  .#{$so-prefix}sidebar-submenu
+  .#{$so-prefix}sidebar-link {
+  padding-left: 48px;
+}
+
+.#{$so-prefix}sidebar.#{$so-prefix}collapsed:hover
+  .#{$so-prefix}sidebar-submenu
+  .#{$so-prefix}sidebar-submenu
+  .#{$so-prefix}sidebar-submenu
+  .#{$so-prefix}sidebar-submenu
+  .#{$so-prefix}sidebar-link {
+  padding-left: 64px;
+}
+
+// Current items in collapsed:hover state
+.#{$so-prefix}sidebar.#{$so-prefix}collapsed:hover
+  .#{$so-prefix}sidebar-submenu
+  .#{$so-prefix}sidebar-item.current
+  > .#{$so-prefix}sidebar-link,
+.#{$so-prefix}sidebar.#{$so-prefix}collapsed:hover
+  .#{$so-prefix}sidebar-submenu
+  .#{$so-prefix}sidebar-item.active
+  > .#{$so-prefix}sidebar-link {
+  margin-left: -100px;
+  margin-right: -4px;
+  padding-left: calc(100px + 4px + 16px);
+  padding-right: 36px;
+}
+
+.#{$so-prefix}sidebar.#{$so-prefix}collapsed:hover
+  .#{$so-prefix}sidebar-submenu
+  .#{$so-prefix}sidebar-submenu
+  .#{$so-prefix}sidebar-item.current
+  > .#{$so-prefix}sidebar-link,
+.#{$so-prefix}sidebar.#{$so-prefix}collapsed:hover
+  .#{$so-prefix}sidebar-submenu
+  .#{$so-prefix}sidebar-submenu
+  .#{$so-prefix}sidebar-item.active
+  > .#{$so-prefix}sidebar-link {
+  padding-left: calc(100px + 4px + 32px);
+}
+
+.#{$so-prefix}sidebar.#{$so-prefix}collapsed:hover
+  .#{$so-prefix}sidebar-submenu
+  .#{$so-prefix}sidebar-submenu
+  .#{$so-prefix}sidebar-submenu
+  .#{$so-prefix}sidebar-item.current
+  > .#{$so-prefix}sidebar-link,
+.#{$so-prefix}sidebar.#{$so-prefix}collapsed:hover
+  .#{$so-prefix}sidebar-submenu
+  .#{$so-prefix}sidebar-submenu
+  .#{$so-prefix}sidebar-submenu
+  .#{$so-prefix}sidebar-item.active
+  > .#{$so-prefix}sidebar-link {
+  padding-left: calc(100px + 4px + 48px);
+}
+
+.#{$so-prefix}sidebar.#{$so-prefix}collapsed:hover
+  .#{$so-prefix}sidebar-submenu
+  .#{$so-prefix}sidebar-submenu
+  .#{$so-prefix}sidebar-submenu
+  .#{$so-prefix}sidebar-submenu
+  .#{$so-prefix}sidebar-item.current
+  > .#{$so-prefix}sidebar-link,
+.#{$so-prefix}sidebar.#{$so-prefix}collapsed:hover
+  .#{$so-prefix}sidebar-submenu
+  .#{$so-prefix}sidebar-submenu
+  .#{$so-prefix}sidebar-submenu
+  .#{$so-prefix}sidebar-submenu
+  .#{$so-prefix}sidebar-item.active
+  > .#{$so-prefix}sidebar-link {
+  padding-left: calc(100px + 4px + 64px);
+}
+
+// Footer in collapsed state
+.#{$so-prefix}sidebar.#{$so-prefix}collapsed .#{$so-prefix}sidebar-footer-item {
+  justify-content: center;
+  padding: spacing("3");
+}
+
+.#{$so-prefix}sidebar.#{$so-prefix}collapsed
+  .#{$so-prefix}sidebar-footer-item
+  span:not(.material-icons) {
+  display: none;
+}
+
+.#{$so-prefix}sidebar.#{$so-prefix}collapsed:hover
+  .#{$so-prefix}sidebar-footer-item {
+  justify-content: flex-start;
+  padding: spacing("2") + 2px spacing("3");
+}
+
+.#{$so-prefix}sidebar.#{$so-prefix}collapsed:hover
+  .#{$so-prefix}sidebar-footer-item
+  span:not(.material-icons) {
+  display: inline;
+}
+
+// Footer Buttons - Collapsed state
+.#{$so-prefix}sidebar.#{$so-prefix}collapsed .#{$so-prefix}sidebar-footer {
+  padding: spacing("1") + 2px spacing("2");
+}
+
+.#{$so-prefix}sidebar.#{$so-prefix}collapsed
+  .#{$so-prefix}sidebar-footer-buttons {
+  justify-content: center;
+}
+
+.#{$so-prefix}sidebar.#{$so-prefix}collapsed .#{$so-prefix}sidebar-footer-btn {
+  display: none;
+}
+
+.#{$so-prefix}sidebar.#{$so-prefix}collapsed
+  .#{$so-prefix}sidebar-footer-btn#sidebarInfoBtn {
+  display: flex;
+  flex: 0 0 auto;
+  width: 32px;
+  height: 32px;
+}
+
+.#{$so-prefix}sidebar.#{$so-prefix}collapsed .#{$so-prefix}sidebar-info-popup {
+  left: calc(100% + 8px);
+  right: auto;
+  bottom: 0;
+  width: 220px;
+}
+
+// Footer Buttons - Collapsed hover state
+.#{$so-prefix}sidebar.#{$so-prefix}collapsed:hover
+  .#{$so-prefix}sidebar-footer {
+  padding: spacing("1") + 2px spacing("2");
+}
+
+.#{$so-prefix}sidebar.#{$so-prefix}collapsed:hover
+  .#{$so-prefix}sidebar-footer-buttons {
+  justify-content: space-around;
+}
+
+.#{$so-prefix}sidebar.#{$so-prefix}collapsed:hover
+  .#{$so-prefix}sidebar-footer-btn {
+  display: flex;
+  flex: 1;
+}
+
+.#{$so-prefix}sidebar.#{$so-prefix}collapsed:hover
+  .#{$so-prefix}sidebar-footer-btn#sidebarInfoBtn {
+  flex: 1;
+  width: auto;
+}
+
+.#{$so-prefix}sidebar.#{$so-prefix}collapsed:hover
+  .#{$so-prefix}sidebar-info-popup {
+  left: spacing("2");
+  right: spacing("2");
+  bottom: calc(100% + 8px);
+  width: auto;
+}
+
+// Tooltip on collapsed sidebar
+.#{$so-prefix}sidebar.#{$so-prefix}collapsed
+  .#{$so-prefix}sidebar-link[data-title]::after {
+  content: attr(data-title);
+  position: absolute;
+  left: calc(100% + 16px);
+  top: 50%;
+  transform: translateY(-50%);
+  padding: spacing("2") spacing("3");
+  background: $so-grey-900;
+  color: $so-white;
+  font-size: font-size("sm");
+  font-weight: font-weight("regular");
+  white-space: nowrap;
+  border-radius: radius("base");
+  z-index: z-index("tooltip");
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition:
+    opacity $so-transition-base,
+    visibility $so-transition-base;
+}
+
+.#{$so-prefix}sidebar.#{$so-prefix}collapsed
+  .#{$so-prefix}sidebar-link:hover::after {
+  opacity: 1;
+  visibility: visible;
+}
+
+// Hide tooltip when sidebar is expanded on hover
+.#{$so-prefix}sidebar.#{$so-prefix}collapsed:hover
+  .#{$so-prefix}sidebar-link::after {
+  display: none;
+}
+
+// ============================================
+// NAVBAR & MAIN CONTENT OFFSET
+// ============================================
+
+.#{$so-prefix}main-content {
+  margin-left: css-var("sidebar-width");
+  padding-top: css-var("navbar-height");
+  min-height: 100vh;
+  transition: margin-left 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+// When sidebar is collapsed
+body.sidebar-collapsed .#{$so-prefix}navbar {
+  left: css-var("sidebar-collapsed-width");
+}
+
+body.sidebar-collapsed .#{$so-prefix}main-content {
+  margin-left: css-var("sidebar-collapsed-width");
+}
+
+// ============================================
+// MOBILE / RESPONSIVE STYLES
+// ============================================
+
+@include media-down("lg") {
+  :root {
+    --#{$so-css-var-prefix}-sidebar-width: 240px;
+  }
+}
+
+@include mobile {
+  .#{$so-prefix}sidebar {
+    transform: translateX(-100%);
+    width: 280px;
+    box-shadow: 4px 0 16px rgba(0, 0, 0, 0.1);
+
+    &.#{$so-prefix}open {
+      transform: translateX(0);
+    }
+
+    // On mobile, ignore collapsed state
+    &.#{$so-prefix}collapsed {
+      width: 280px;
+    }
+
+    &.#{$so-prefix}collapsed.#{$so-prefix}open {
+      width: 280px;
+    }
+
+    // Hide the pin toggle button on mobile
+    .#{$so-prefix}sidebar-toggle {
+      display: none !important;
+    }
+
+    // Show all elements in mobile regardless of collapsed state
+    &.#{$so-prefix}collapsed .#{$so-prefix}sidebar-text,
+    &.#{$so-prefix}collapsed .#{$so-prefix}sidebar-arrow,
+    &.#{$so-prefix}collapsed .#{$so-prefix}sidebar-badge,
+    &.#{$so-prefix}collapsed .#{$so-prefix}sidebar-brand-info {
+      display: block !important;
+      opacity: 1 !important;
+      width: auto !important;
+    }
+
+    &.#{$so-prefix}collapsed .#{$so-prefix}sidebar-section {
+      padding: spacing("2") + 2px spacing("3") spacing("1") spacing("3") !important;
+      margin: 0 !important;
+      height: auto !important;
+      font-size: font-size("xs") !important;
+      color: css-var("text-muted") !important;
+
+      &::before {
+        display: none !important;
+      }
+    }
+
+    &.#{$so-prefix}collapsed .#{$so-prefix}sidebar-link {
+      padding: spacing("1") + 2px spacing("2") !important;
+      justify-content: flex-start !important;
+      gap: spacing("2") + 2px !important;
+    }
+
+    &.#{$so-prefix}collapsed .#{$so-prefix}sidebar-icon {
+      margin: 0 !important;
+    }
+
+    &.#{$so-prefix}collapsed .#{$so-prefix}sidebar-header {
+      padding: spacing("3") spacing("4") !important;
+      justify-content: flex-start !important;
+      gap: spacing("3") !important;
+    }
+
+    &.#{$so-prefix}collapsed .#{$so-prefix}sidebar-logo {
+      margin: 0 !important;
+    }
+
+    &.#{$so-prefix}collapsed .#{$so-prefix}sidebar-submenu {
+      display: block !important;
+    }
+
+    // Mobile submenu - allow full expansion for large menus
+    .#{$so-prefix}sidebar-item.#{$so-prefix}open
+      > .#{$so-prefix}sidebar-submenu {
+      max-height: 3000px !important;
+    }
+
+    &.#{$so-prefix}collapsed
+      .#{$so-prefix}sidebar-item.#{$so-prefix}open
+      > .#{$so-prefix}sidebar-submenu {
+      max-height: 3000px !important;
+      overflow: visible !important;
+    }
+
+    &.#{$so-prefix}collapsed .#{$so-prefix}sidebar-footer-item {
+      justify-content: flex-start !important;
+      padding: spacing("2") + 2px spacing("3") !important;
+    }
+
+    &.#{$so-prefix}collapsed
+      .#{$so-prefix}sidebar-footer-item
+      span:not(.material-icons) {
+      display: inline !important;
+    }
+
+    // Hide tooltips on mobile
+    &.#{$so-prefix}collapsed .#{$so-prefix}sidebar-link::after {
+      display: none !important;
+    }
+  }
+
+  .#{$so-prefix}main-content {
+    margin-left: 0 !important;
+  }
+
+  // Mobile overlay
+  .#{$so-prefix}sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: z-index("modal-backdrop");
+    display: none;
+
+    &.#{$so-prefix}active {
+      display: block;
+    }
+  }
+}
+
+// ============================================
+// PINNED STATE
+// ============================================
+
+.#{$so-prefix}sidebar.pinned {
+  width: css-var("sidebar-width");
+}
+
+.#{$so-prefix}sidebar.pinned
+  .#{$so-prefix}sidebar-toggle
+  .material-icons::before {
+  content: "push_pin";
+}
+
+// ============================================
+// SIDEBAR DARK MODE (Independent of global theme)
+// ============================================
+
+.#{$so-prefix}sidebar.sidebar-dark {
+  @include sidebar-dark-vars;
+}
+
+.#{$so-prefix}sidebar.sidebar-dark .#{$so-prefix}sidebar-footer {
+  border-top-color: #3b4056;
+  background: #25293c;
+}
+
+.#{$so-prefix}sidebar.sidebar-dark .#{$so-prefix}sidebar-footer-btn {
+  color: #a3a8b8;
+
+  &:hover {
+    background: #3b4056;
+    color: #e7e9f0;
+  }
+}
+
+.#{$so-prefix}sidebar.sidebar-dark .#{$so-prefix}sidebar-header {
+  border-bottom-color: #3b4056;
+}
+
+.#{$so-prefix}sidebar.sidebar-dark .#{$so-prefix}sidebar-logo {
+  background: $so-primary;
+}
+
+.#{$so-prefix}sidebar.sidebar-dark .#{$so-prefix}sidebar-brand-name {
+  color: #e7e9f0;
+}
+
+.#{$so-prefix}sidebar.sidebar-dark .#{$so-prefix}sidebar-brand-tagline,
+.#{$so-prefix}sidebar.sidebar-dark .#{$so-prefix}sidebar-brand-subtitle {
+  color: #a3a8b8;
+}
+
+.#{$so-prefix}sidebar.sidebar-dark .#{$so-prefix}sidebar-section,
+.#{$so-prefix}sidebar.sidebar-dark .#{$so-prefix}sidebar-section-title {
+  color: #6c7293;
+}
+
+// Submenu styles for sidebar-dark
+.#{$so-prefix}sidebar.sidebar-dark
+  .#{$so-prefix}sidebar-submenu
+  .#{$so-prefix}sidebar-link {
+  color: #a3a8b8;
+
+  &:hover {
+    color: #e7e9f0;
+  }
+}
+
+// Toggle button styles
+.#{$so-prefix}sidebar.sidebar-dark .#{$so-prefix}sidebar-toggle {
+  border-color: #474d64;
+
+  &:hover {
+    border-color: #8ab4f8;
+  }
+}
+
+.#{$so-prefix}sidebar.sidebar-dark.pinned .#{$so-prefix}sidebar-toggle {
+  border-color: #8ab4f8;
+
+  .toggle-circle {
+    background: #8ab4f8;
+  }
+}
+
+// Dark sidebar open menu highlight
+.#{$so-prefix}sidebar.sidebar-dark
+  .#{$so-prefix}sidebar-item.#{$so-prefix}open
+  > .#{$so-prefix}sidebar-link {
+  color: #8ab4f8;
+}
+
+.#{$so-prefix}sidebar.sidebar-dark
+  .#{$so-prefix}sidebar-item.#{$so-prefix}open
+  > .#{$so-prefix}sidebar-link
+  .#{$so-prefix}sidebar-icon {
+  color: #8ab4f8;
+}
+
+// Dark sidebar active/current item in submenu
+.#{$so-prefix}sidebar.sidebar-dark
+  .#{$so-prefix}sidebar-submenu
+  .#{$so-prefix}sidebar-item.active
+  > .#{$so-prefix}sidebar-link,
+.#{$so-prefix}sidebar.sidebar-dark
+  .#{$so-prefix}sidebar-submenu
+  .#{$so-prefix}sidebar-item.current
+  > .#{$so-prefix}sidebar-link {
+  background: rgba(138, 180, 248, 0.15);
+  color: #8ab4f8;
+}
+
+.#{$so-prefix}sidebar.sidebar-dark
+  .#{$so-prefix}sidebar-submenu
+  .#{$so-prefix}sidebar-item.active
+  > .#{$so-prefix}sidebar-link
+  .#{$so-prefix}sidebar-icon,
+.#{$so-prefix}sidebar.sidebar-dark
+  .#{$so-prefix}sidebar-submenu
+  .#{$so-prefix}sidebar-item.current
+  > .#{$so-prefix}sidebar-link
+  .#{$so-prefix}sidebar-icon {
+  color: #8ab4f8;
+}
+
+// Collapsed state - section separator line
+.#{$so-prefix}sidebar.sidebar-dark.#{$so-prefix}collapsed
+  .#{$so-prefix}sidebar-section::before {
+  background: #3b4056;
+}
+
+// Info popup dark styles
+.#{$so-prefix}sidebar.sidebar-dark .#{$so-prefix}sidebar-info-popup {
+  background: #2f3349;
+  border-color: #3b4056;
+}
+
+.#{$so-prefix}sidebar.sidebar-dark .#{$so-prefix}sidebar-info-popup-header {
+  border-bottom-color: #3b4056;
+  color: #e7e9f0;
+
+  .material-icons {
+    color: #7367f0;
+  }
+}
+
+.#{$so-prefix}sidebar.sidebar-dark .#{$so-prefix}sidebar-info-popup-row {
+  border-bottom-color: #3b4056;
+}
+
+.#{$so-prefix}sidebar.sidebar-dark .#{$so-prefix}sidebar-info-popup-label {
+  color: #a3a8b8;
+}
+
+.#{$so-prefix}sidebar.sidebar-dark .#{$so-prefix}sidebar-info-popup-value {
+  color: #e7e9f0;
+}
+
+.#{$so-prefix}sidebar.sidebar-dark .#{$so-prefix}sidebar-footer-item {
+  color: #a3a8b8;
+
+  &:hover {
+    background: #3b4056;
+    color: #e7e9f0;
+  }
+}

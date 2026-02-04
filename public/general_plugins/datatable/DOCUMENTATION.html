@@ -1,0 +1,2310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DataTable - Developer Documentation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="../../common/sixorbit-common.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <style>
+        * { box-sizing: border-box; }
+        body { margin: 0; padding: 0; background: #f8f9fa; font-family: 'Roboto', sans-serif; }
+
+        /* Layout with sidebar */
+        .doc-layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Floating Sidebar Navigation */
+        .doc-sidebar {
+            width: 280px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            background: #fff;
+            border-right: 1px solid #e8eaed;
+            overflow-y: auto;
+            z-index: 100;
+            padding: 20px 0;
+            box-shadow: 2px 0 8px rgba(0,0,0,0.05);
+        }
+
+        .sidebar-header {
+            padding: 0 20px 20px 20px;
+            border-bottom: 1px solid #e8eaed;
+            margin-bottom: 16px;
+        }
+
+        .sidebar-logo {
+            font-size: 20px;
+            font-weight: 500;
+            color: #1a73e8;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .sidebar-logo .material-icons {
+            font-size: 28px;
+        }
+
+        .sidebar-version {
+            font-size: 12px;
+            color: #5f6368;
+            margin-top: 4px;
+        }
+
+        .nav-section {
+            padding: 0 12px;
+            margin-bottom: 8px;
+        }
+
+        .nav-section-title {
+            font-size: 11px;
+            font-weight: 600;
+            color: #5f6368;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 12px 12px 8px 12px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            color: #3c4043;
+            text-decoration: none;
+            font-size: 13px;
+            border-radius: 8px;
+            transition: all 0.2s;
+            margin-bottom: 2px;
+        }
+
+        .nav-link:hover {
+            background: #f1f3f4;
+            color: #1a73e8;
+        }
+
+        .nav-link.active {
+            background: #e8f0fe;
+            color: #1a73e8;
+            font-weight: 500;
+        }
+
+        .nav-link .material-icons {
+            font-size: 18px;
+            opacity: 0.7;
+        }
+
+        .nav-link:hover .material-icons,
+        .nav-link.active .material-icons {
+            opacity: 1;
+        }
+
+        /* Main Content */
+        .doc-main {
+            flex: 1;
+            margin-left: 280px;
+            padding: 32px 48px;
+            max-width: 1000px;
+        }
+
+        .doc-header {
+            background: linear-gradient(135deg, #1a73e8 0%, #1557b0 100%);
+            color: white;
+            padding: 48px 40px;
+            border-radius: 16px;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 20px rgba(26, 115, 232, 0.3);
+        }
+
+        .doc-header h1 {
+            margin: 0 0 8px 0;
+            font-size: 36px;
+            font-weight: 500;
+        }
+
+        .doc-header p {
+            margin: 0;
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .back-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .doc-section {
+            background: white;
+            padding: 32px 40px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        }
+
+        .doc-section h2 {
+            font-size: 24px;
+            font-weight: 500;
+            color: #202124;
+            margin: 0 0 16px 0;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #e8eaed;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .doc-section h2 .material-icons {
+            font-size: 28px;
+            color: #1a73e8;
+        }
+
+        .doc-section h3 {
+            font-size: 18px;
+            font-weight: 500;
+            color: #3c4043;
+            margin: 28px 0 12px 0;
+        }
+
+        .doc-section h4 {
+            font-size: 15px;
+            font-weight: 500;
+            color: #5f6368;
+            margin: 20px 0 10px 0;
+        }
+
+        .doc-section p {
+            font-size: 14px;
+            line-height: 1.7;
+            color: #5f6368;
+            margin-bottom: 16px;
+        }
+
+        .doc-section ul, .doc-section ol {
+            font-size: 14px;
+            line-height: 1.8;
+            color: #5f6368;
+            margin-bottom: 16px;
+            padding-left: 24px;
+        }
+
+        .doc-section li {
+            margin-bottom: 6px;
+        }
+
+        /* Code Blocks */
+        .code-block {
+            position: relative;
+            margin: 16px 0;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .code-header {
+            background: #2d3748;
+            color: white;
+            padding: 10px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .code-language {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .copy-btn {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 11px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.2s;
+        }
+
+        .copy-btn:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .copy-btn.copied {
+            background: #34a853;
+            border-color: #34a853;
+        }
+
+        .copy-btn .material-icons {
+            font-size: 14px;
+        }
+
+        pre {
+            margin: 0;
+            padding: 20px;
+            background: #1e293b !important;
+            overflow-x: auto;
+        }
+
+        code {
+            font-family: 'Roboto Mono', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .inline-code {
+            background: #f1f3f4;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 12px;
+            color: #d93025;
+        }
+
+        /* Tables */
+        .param-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+            font-size: 13px;
+        }
+
+        .param-table th {
+            background: #f8f9fa;
+            padding: 12px 16px;
+            text-align: left;
+            font-weight: 500;
+            border-bottom: 2px solid #e8eaed;
+            color: #3c4043;
+        }
+
+        .param-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid #f1f3f4;
+            vertical-align: top;
+        }
+
+        .param-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .param-table tr:hover td {
+            background: #f8f9fa;
+        }
+
+        /* Info Boxes */
+        .info-box {
+            background: #e8f0fe;
+            border-left: 4px solid #1a73e8;
+            padding: 16px 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 16px 0;
+        }
+
+        .info-box.warning {
+            background: #fef7e0;
+            border-left-color: #f9ab00;
+        }
+
+        .info-box.success {
+            background: #e6f4ea;
+            border-left-color: #34a853;
+        }
+
+        .info-box p {
+            margin: 0;
+            color: #3c4043;
+        }
+
+        .info-box strong {
+            color: #202124;
+        }
+
+        /* Color Swatches */
+        .color-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 12px;
+            margin: 16px 0;
+        }
+
+        .color-swatch {
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .color-swatch.blue { background: #e3f2fd; color: #1565c0; }
+        .color-swatch.green { background: #e8f5e9; color: #2e7d32; }
+        .color-swatch.red { background: #ffebee; color: #c62828; }
+        .color-swatch.orange { background: #fff3e0; color: #e65100; }
+        .color-swatch.purple { background: #f3e5f5; color: #6a1b9a; }
+        .color-swatch.teal { background: #e0f2f1; color: #00695c; }
+        .color-swatch.pink { background: #fce4ec; color: #ad1457; }
+        .color-swatch.indigo { background: #e8eaf6; color: #283593; }
+        .color-swatch.cyan { background: #e0f7fa; color: #00838f; }
+        .color-swatch.amber { background: #fff8e1; color: #ff6f00; }
+        .color-swatch.lime { background: #f0f4c3; color: #827717; }
+        .color-swatch.brown { background: #efebe9; color: #4e342e; }
+        .color-swatch.gray { background: #f5f5f5; color: #424242; }
+
+        /* Feature Cards */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+            margin: 16px 0;
+        }
+
+        .feature-card {
+            background: #f8f9fa;
+            padding: 16px;
+            border-radius: 8px;
+            border: 1px solid #e8eaed;
+        }
+
+        .feature-card h4 {
+            margin: 0 0 8px 0;
+            font-size: 14px;
+            color: #202124;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .feature-card h4 .material-icons {
+            font-size: 18px;
+            color: #1a73e8;
+        }
+
+        .feature-card p {
+            margin: 0;
+            font-size: 12px;
+            color: #5f6368;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .doc-sidebar {
+                width: 240px;
+            }
+            .doc-main {
+                margin-left: 240px;
+                padding: 24px 32px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .doc-sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s;
+            }
+            .doc-sidebar.open {
+                transform: translateX(0);
+            }
+            .doc-main {
+                margin-left: 0;
+                padding: 16px;
+            }
+            .mobile-menu-btn {
+                display: flex;
+            }
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 56px;
+            height: 56px;
+            background: #1a73e8;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            box-shadow: 0 4px 12px rgba(26, 115, 232, 0.4);
+            cursor: pointer;
+            z-index: 101;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .mobile-menu-btn .material-icons {
+            font-size: 24px;
+        }
+
+        /* Scroll to top */
+        .scroll-top-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 48px;
+            height: 48px;
+            background: #1a73e8;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+            z-index: 99;
+        }
+
+        .scroll-top-btn.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .scroll-top-btn:hover {
+            background: #1557b0;
+        }
+    </style>
+</head>
+<body>
+    <div class="doc-layout">
+        <!-- Floating Sidebar Navigation -->
+        <nav class="doc-sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <a href="index.html" class="sidebar-logo">
+                    <span class="material-icons">table_chart</span>
+                    DataTable
+                </a>
+                <div class="sidebar-version">Version 1.0.0</div>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Getting Started</div>
+                <a href="#overview" class="nav-link"><span class="material-icons">info</span>Overview</a>
+                <a href="#installation" class="nav-link"><span class="material-icons">download</span>Installation</a>
+                <a href="#basic-usage" class="nav-link"><span class="material-icons">code</span>Basic Usage</a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Core Features</div>
+                <a href="#row-expand" class="nav-link"><span class="material-icons">add_circle</span>Row Expand (Plus Icon)</a>
+                <a href="#row-selection" class="nav-link"><span class="material-icons">check_box</span>Checkbox & Row Selection</a>
+                <a href="#action-buttons" class="nav-link"><span class="material-icons">more_vert</span>Action Buttons</a>
+                <a href="#column-options" class="nav-link"><span class="material-icons">view_column</span>Column Options</a>
+                <a href="#column-types" class="nav-link"><span class="material-icons">text_fields</span>Column Types</a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Data & API</div>
+                <a href="#api-data" class="nav-link"><span class="material-icons">cloud_download</span>Loading API Data</a>
+                <a href="#api-reload" class="nav-link"><span class="material-icons">refresh</span>Reload Data on Filter</a>
+                <a href="#api-search" class="nav-link"><span class="material-icons">search</span>Search with API</a>
+                <a href="#infinite-scroll" class="nav-link"><span class="material-icons">all_inclusive</span>Infinite Scroll</a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Footer & Totals</div>
+                <a href="#footer-totals" class="nav-link"><span class="material-icons">functions</span>Footer Totals</a>
+                <a href="#dynamic-footer" class="nav-link"><span class="material-icons">sync</span>Dynamic Footer (API)</a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Export</div>
+                <a href="#export-options" class="nav-link"><span class="material-icons">settings</span>Custom Export Options</a>
+                <a href="#api-export" class="nav-link"><span class="material-icons">cloud_upload</span>API-Based Export</a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Configuration</div>
+                <a href="#config-options" class="nav-link"><span class="material-icons">tune</span>All Config Options</a>
+                <a href="#get-config" class="nav-link"><span class="material-icons">save</span>Get Current Config</a>
+                <a href="#events" class="nav-link"><span class="material-icons">bolt</span>Events & Callbacks</a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Reference</div>
+                <a href="#api-methods" class="nav-link"><span class="material-icons">integration_instructions</span>API Methods</a>
+                <a href="#column-colors" class="nav-link"><span class="material-icons">palette</span>Column Colors</a>
+                <a href="#examples" class="nav-link"><span class="material-icons">description</span>Examples</a>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="doc-main">
+            <div class="doc-header">
+                <a href="../../index.html" class="back-btn">
+                    <span class="material-icons">arrow_back</span>
+                    Back to Main Menu
+                </a>
+                <h1>DataTable Plugin</h1>
+                <p>Complete Developer Documentation - A powerful, feature-rich data table component</p>
+            </div>
+
+            <!-- Overview -->
+            <section class="doc-section" id="overview">
+                <h2><span class="material-icons">info</span>Overview</h2>
+                <p>The DataTable plugin provides a powerful, feature-rich table component built on Tabulator with Material UI styling. It includes advanced features like row expansion, cell selection, column pinning, grouping, export functionality, and seamless API integration.</p>
+
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h4><span class="material-icons">add_circle</span>Row Expand</h4>
+                        <p>Expand rows to show detailed content loaded dynamically</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4><span class="material-icons">check_box</span>Row Selection</h4>
+                        <p>Multi-row selection with checkboxes and callbacks</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4><span class="material-icons">push_pin</span>Column Pinning</h4>
+                        <p>Pin columns to left or right for easy reference</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4><span class="material-icons">group_work</span>Multi-Level Grouping</h4>
+                        <p>Group data by multiple columns with drag reorder</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4><span class="material-icons">download</span>Export</h4>
+                        <p>Export to Excel/CSV with custom options</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4><span class="material-icons">palette</span>Column Colors</h4>
+                        <p>Apply aesthetic colors to highlight columns</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Installation -->
+            <section class="doc-section" id="installation">
+                <h2><span class="material-icons">download</span>Installation</h2>
+                <p>Include the required CSS and JavaScript files in your HTML. You can use local files or CDN links.</p>
+
+                <h3>Using Local Files (Recommended)</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-language"><span class="material-icons">code</span>HTML</span>
+                        <button class="copy-btn" onclick="copyCode(this)"><span class="material-icons">content_copy</span>Copy</button>
+                    </div>
+                    <pre><code class="language-html">&lt;!-- Google Fonts & Icons --&gt;
+&lt;link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@300;400;500;700&display=swap" rel="stylesheet"&gt;
+&lt;link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"&gt;
+
+&lt;!-- Tabulator CSS (Local) --&gt;
+&lt;link href="libs/tabulator.min.css" rel="stylesheet"&gt;
+
+&lt;!-- Common & Plugin Styles --&gt;
+&lt;link rel="stylesheet" href="../../common/sixorbit-common.css"&gt;
+&lt;link rel="stylesheet" href="datatable.css"&gt;
+
+&lt;!-- Tabulator JS (Local) --&gt;
+&lt;script src="libs/tabulator.min.js"&gt;&lt;/script&gt;
+
+&lt;!-- SheetJS for Excel Export (Local) --&gt;
+&lt;script src="libs/xlsx.full.min.js"&gt;&lt;/script&gt;
+
+&lt;!-- Plugin JavaScript --&gt;
+&lt;script src="datatable.js"&gt;&lt;/script&gt;</code></pre>
+                </div>
+
+                <h3>Using CDN</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-language"><span class="material-icons">code</span>HTML</span>
+                        <button class="copy-btn" onclick="copyCode(this)"><span class="material-icons">content_copy</span>Copy</button>
+                    </div>
+                    <pre><code class="language-html">&lt;!-- Tabulator CSS --&gt;
+&lt;link href="https://unpkg.com/tabulator-tables@5.5.2/dist/css/tabulator.min.css" rel="stylesheet"&gt;
+
+&lt;!-- Tabulator JS --&gt;
+&lt;script src="https://unpkg.com/tabulator-tables@5.5.2/dist/js/tabulator.min.js"&gt;&lt;/script&gt;
+
+&lt;!-- SheetJS for Excel Export --&gt;
+&lt;script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"&gt;&lt;/script&gt;</code></pre>
+                </div>
+            </section>
+
+            <!-- Basic Usage -->
+            <section class="doc-section" id="basic-usage">
+                <h2><span class="material-icons">code</span>Basic Usage</h2>
+                <p>Create a container element and initialize the DataTable with columns and data.</p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-language"><span class="material-icons">code</span>HTML</span>
+                        <button class="copy-btn" onclick="copyCode(this)"><span class="material-icons">content_copy</span>Copy</button>
+                    </div>
+                    <pre><code class="language-html">&lt;div id="datatable-container" style="height: 500px;"&gt;&lt;/div&gt;</code></pre>
+                </div>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-language"><span class="material-icons">code</span>JavaScript</span>
+                        <button class="copy-btn" onclick="copyCode(this)"><span class="material-icons">content_copy</span>Copy</button>
+                    </div>
+                    <pre><code class="language-javascript">const dataTable = new DataTable('datatable-container', {
+    columns: [
+        { title: "ID", field: "id", width: 70 },
+        { title: "Name", field: "name", width: 180 },
+        { title: "Email", field: "email", width: 200 },
+        { title: "Department", field: "department", width: 140 }
+    ],
+    data: [
+        { id: 1, name: "John Doe", email: "john@example.com", department: "Sales" },
+        { id: 2, name: "Jane Smith", email: "jane@example.com", department: "Marketing" }
+    ],
+    pagination: true,
+    paginationSize: 25,
+    enableSearch: true,
+    enableColumnSelection: true,
+    enableGrouping: true
+});</code></pre>
+                </div>
+            </section>
+
+            <!-- Row Expand (Plus Icon) -->
+            <section class="doc-section" id="row-expand">
+                <h2><span class="material-icons">add_circle</span>Row Expand (Plus Icon)</h2>
+                <p>Enable expandable rows to show additional details. When enabled, a plus (+) icon appears as the first column. Clicking it expands the row to display custom HTML content.</p>
+
+                <h3>Configuration</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-language"><span class="material-icons">code</span>JavaScript</span>
+                        <button class="copy-btn" onclick="copyCode(this)"><span class="material-icons">content_copy</span>Copy</button>
+                    </div>
+                    <pre><code class="language-javascript">const dataTable = new DataTable('container', {
+    columns: sampleColumns,
+    data: sampleData,
+    enableRowExpand: true,  // Enable the plus icon column
+
+    // Callback when row is expanded
+    onRowExpand: function(rowData, callback) {
+        // rowData: The data object for the expanded row
+        // callback: Function to call with HTML content to display
+
+        // Option 1: Simple synchronous content
+        const html = `
+            &lt;div class="dt-expand-content"&gt;
+                &lt;h3&gt;Details for ${rowData.name}&lt;/h3&gt;
+                &lt;p&gt;Email: ${rowData.email}&lt;/p&gt;
+                &lt;p&gt;Department: ${rowData.department}&lt;/p&gt;
+            &lt;/div&gt;
+        `;
+        callback(html);
+    }
+});</code></pre>
+                </div>
+
+                <h3>Loading Dynamic Content via AJAX</h3>
+                <p>You can fetch additional data from an API before displaying the expanded content:</p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-language"><span class="material-icons">code</span>JavaScript</span>
+                        <button class="copy-btn" onclick="copyCode(this)"><span class="material-icons">content_copy</span>Copy</button>
+                    </div>
+                    <pre><code class="language-javascript">onRowExpand: function(rowData, callback) {
+    // Show loading state
+    callback('&lt;div class="dt-expand-loading"&gt;Loading...&lt;/div&gt;');
+
+    // Fetch additional data from API
+    fetch(`/api/employees/${rowData.id}/details`)
+        .then(response => response.json())
+        .then(details => {
+            const html = `
+                &lt;div class="dt-expand-content"&gt;
+                    &lt;h3&gt;Employee Details&lt;/h3&gt;
+                    &lt;div class="dt-detail-grid"&gt;
+                        &lt;div class="dt-detail-item"&gt;
+                            &lt;span class="dt-detail-label"&gt;Full Name&lt;/span&gt;
+                            &lt;span class="dt-detail-value"&gt;${details.fullName}&lt;/span&gt;
+                        &lt;/div&gt;
+                        &lt;div class="dt-detail-item"&gt;
+                            &lt;span class="dt-detail-label"&gt;Phone&lt;/span&gt;
+                            &lt;span class="dt-detail-value"&gt;${details.phone}&lt;/span&gt;
+                        &lt;/div&gt;
+                        &lt;div class="dt-detail-item"&gt;
+                            &lt;span class="dt-detail-label"&gt;Address&lt;/span&gt;
+                            &lt;span class="dt-detail-value"&gt;${details.address}&lt;/span&gt;
+                        &lt;/div&gt;
+                        &lt;div class="dt-detail-item"&gt;
+                            &lt;span class="dt-detail-label"&gt;Manager&lt;/span&gt;
+                            &lt;span class="dt-detail-value"&gt;${details.manager}&lt;/span&gt;
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+            `;
+            callback(html);
+        })
+        .catch(error => {
+            callback('&lt;div class="dt-expand-error"&gt;Failed to load details&lt;/div&gt;');
+        });
+}</code></pre>
+                </div>
+
+                <div class="info-box">
+                    <p><strong>Tip:</strong> The expand icon column is automatically frozen to the left side of the table for easy access when scrolling horizontally.</p>
+                </div>
+            </section>
+
+            <!-- Checkbox & Row Selection -->
+            <section class="doc-section" id="row-selection">
+                <h2><span class="material-icons">check_box</span>Checkbox & Row Selection</h2>
+                <p>Enable row selection with checkboxes. Users can select individual rows or use the header checkbox to select all rows on the current page.</p>
+
+                <h3>Configuration</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-language"><span class="material-icons">code</span>JavaScript</span>
+                        <button class="copy-btn" onclick="copyCode(this)"><span class="material-icons">content_copy</span>Copy</button>
+                    </div>
+                    <pre><code class="language-javascript">const dataTable = new DataTable('container', {
+    columns: sampleColumns,
+    data: sampleData,
+    enableRowSelection: true,  // Enable checkbox column
+
+    // Callback when selection changes
+    onRowSelectionChange: function(selectedData, selectedRows) {
+        // selectedData: Array of data objects for selected rows
+        // selectedRows: Array of Tabulator row components
+
+        console.log('Selected count:', selectedData.length);
+        console.log('Selected IDs:', selectedData.map(row => row.id));
+
+        // Example: Enable/disable bulk action buttons
+        document.getElementById('deleteBtn').disabled = selectedData.length === 0;
+        document.getElementById('exportBtn').disabled = selectedData.length === 0;
+    }
+});</code></pre>
+                </div>
+
+                <h3>Programmatic Selection</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-language"><span class="material-icons">code</span>JavaScript</span>
+                        <button class="copy-btn" onclick="copyCode(this)"><span class="material-icons">content_copy</span>Copy</button>
+                    </div>
+                    <pre><code class="language-javascript">// Get currently selected rows
+const selected = dataTable.getSelectedRows();
+
+// Select all rows
+dataTable.selectAllRows();
+
+// Deselect all rows
+dataTable.deselectAllRows();
+
+// Get selected data
+const selectedData = dataTable.getSelectedData();</code></pre>
+                </div>
+
+                <h3>Checkbox States</h3>
+                <p>The header checkbox supports three states:</p>
+                <ul>
+                    <li><strong>Unchecked:</strong> No rows selected</li>
+                    <li><strong>Checked:</strong> All visible rows selected</li>
+                    <li><strong>Indeterminate:</strong> Some rows selected (partial selection)</li>
+                </ul>
+            </section>
+
+            <!-- Action Buttons -->
+            <section class="doc-section" id="action-buttons">
+                <h2><span class="material-icons">more_vert</span>Action Buttons</h2>
+                <p>Add action buttons to each row for operations like View, Edit, Delete. Actions appear in a dropdown menu triggered by a three-dot icon.</p>
+
+                <h3>Defining Actions</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-language"><span class="material-icons">code</span>JavaScript</span>
+                        <button class="copy-btn" onclick="copyCode(this)"><span class="material-icons">content_copy</span>Copy</button>
+                    </div>
+                    <pre><code class="language-javascript">const dataTable = new DataTable('container', {
+    columns: sampleColumns,
+    data: sampleData,
+
+    // Define action buttons
+    actions: [
+        {
+            id: 'view',
+            label: 'View',
+            icon: 'visibility',  // Material icon name
+            onClick: function(rowData) {
+                console.log('View clicked for:', rowData);
+                window.location.href = `/employees/${rowData.id}`;
+            }
+        },
+        {
+            id: 'edit',
+            label: 'Edit',
+            icon: 'edit',
+            onClick: function(rowData) {
+                console.log('Edit clicked for:', rowData);
+                openEditModal(rowData);
+            }
+        },
+        {
+            id: 'delete',
+            label: 'Delete',
+            icon: 'delete',
+            onClick: function(rowData) {
+                if (confirm(`Delete ${rowData.name}?`)) {
+                    deleteEmployee(rowData.id);
+                }
+            }
+        }
+    ],
+
+    // Optional: Global action callback
+    onActionClick: function(action, rowData) {
+        console.log('Action clicked:', action.label, 'for row:', rowData);
+        // Use for logging, analytics, etc.
+    }
+});</code></pre>
+                </div>
+
+                <h3>Action Object Properties</h3>
+                <table class="param-table">
+                    <thead>
+                        <tr><th>Property</th><th>Type</th><th>Description</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><code class="inline-code">id</code></td><td>String</td><td>Unique identifier for the action</td></tr>
+                        <tr><td><code class="inline-code">label</code></td><td>String</td><td>Display text for the action</td></tr>
+                        <tr><td><code class="inline-code">icon</code></td><td>String</td><td>Material icon name (e.g., 'edit', 'delete', 'visibility')</td></tr>
+                        <tr><td><code class="inline-code">onClick</code></td><td>Function</td><td>Callback function receiving rowData as parameter</td></tr>
+                    </tbody>
+                </table>
+
+                <div class="info-box">
+                    <p><strong>Note:</strong> The action column is automatically frozen to the right side of the table for easy access when scrolling.</p>
+                </div>
+            </section>
+
+            <!-- Column Options -->
+            <section class="doc-section" id="column-options">
+                <h2><span class="material-icons">view_column</span>Column Options</h2>
+                <p>Configure columns with various options like pinning, coloring, text wrapping, and custom formatting.</p>
+
+                <h3>Column Pinning</h3>
+                <p>Pin columns to left or right to keep them visible while scrolling:</p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-language"><span class="material-icons">code</span>JavaScript</span>
+                        <button class="copy-btn" onclick="copyCode(this)"><span class="material-icons">content_copy</span>Copy</button>
+                    </div>
+                    <pre><code class="language-javascript">columns: [
+    { title: "ID", field: "id", frozen: true },           // Frozen left (default)
+    { title: "Name", field: "name", frozen: "left" },     // Explicitly frozen left
+    { title: "Email", field: "email" },                   // Normal column
+    { title: "Actions", field: "actions", frozen: "right" } // Frozen right
+]</code></pre>
+                </div>
+
+                <p>Users can also pin/unpin columns via right-click context menu on the column header.</p>
+
+                <h3>Column Coloring</h3>
+                <p>Apply background colors to highlight important columns:</p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-language"><span class="material-icons">code</span>JavaScript</span>
+                        <button class="copy-btn" onclick="copyCode(this)"><span class="material-icons">content_copy</span>Copy</button>
+                    </div>
+                    <pre><code class="language-javascript">columns: [
+    { title: "Name", field: "name", color: "blue" },           // Light blue background
+    { title: "Department", field: "department", color: "purple" },
+    { title: "Salary", field: "salary", color: "green" },      // Good for financial data
+    { title: "Status", field: "status", color: "amber" },
+    { title: "Warning", field: "alerts", color: "red" }        // Highlights warnings
+]</code></pre>
+                </div>
+
+                <h3>Text Wrapping</h3>
+                <p>Enable text wrapping for columns with long content:</p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-language"><span class="material-icons">code</span>JavaScript</span>
+                        <button class="copy-btn" onclick="copyCode(this)"><span class="material-icons">content_copy</span>Copy</button>
+                    </div>
+                    <pre><code class="language-javascript">columns: [
+    { title: "Email", field: "email", wrap: true },       // Enable text wrapping
+    { title: "Description", field: "description", wrap: true },
+    { title: "ID", field: "id" }                          // Default: clip (no wrap)
+]</code></pre>
+                </div>
+
+                <p>Users can toggle wrapping via right-click context menu on the column header.</p>
+
+                <h3>Column Width</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-language"><span class="material-icons">code</span>JavaScript</span>
+                        <button class="copy-btn" onclick="copyCode(this)"><span class="material-icons">content_copy</span>Copy</button>
+                    </div>
+                    <pre><code class="language-javascript">columns: [
+    { title: "ID", field: "id", width: 70 },              // Fixed width in pixels
+    { title: "Name", field: "name", width: 180 },
+    { title: "Email", field: "email", minWidth: 150, maxWidth: 300 }  // Min/max bounds
+]</code></pre>
+                </div>
+
+                <h3>Complete Column Definition</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-language"><span class="material-icons">code</span>JavaScript</span>
+                        <button class="copy-btn" onclick="copyCode(this)"><span class="material-icons">content_copy</span>Copy</button>
+                    </div>
+                    <pre><code class="language-javascript">{
+    title: "Salary",                    // Column header text
+    field: "salary",                    // Data field name
+    width: 120,                         // Column width
+    frozen: "left",                     // Pin position: true, "left", "right", false
+    color: "green",                     // Background color
+    wrap: false,                        // Text wrapping
+    formatter: "money",                 // Built-in formatter
+    formatterParams: {
+        symbol: "$",
+        precision: 0
+    },
+    bottomCalc: "sum",                  // Footer calculation: "sum", "avg", "count", etc.
+    visible: true,                      // Show/hide column
+    headerSort: true                    // Enable sorting
+}</code></pre>
+                </div>
+            </section>
+
+            <!-- Column Types -->
+            <section class="doc-section" id="column-types">
+                <h2><span class="material-icons">text_fields</span>Column Types</h2>
+                <p>Define column types using the <code class="inline-code">formatter</code> property to properly display text, numbers, and currency values.</p>
+
+                <h3>Text Columns</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-language"><span class="material-icons">code</span>JavaScript</span>
+                        <button class="copy-btn" onclick="copyCode(this)"><span class="material-icons">content_copy</span>Copy</button>
+                    </div>
+                    <pre><code class="language-javascript">// Default text column (no formatter needed)
+{ title: "Name", field: "name" }
+
+// With text formatting options
+{ title: "Name", field: "name", formatter: "plaintext" }
+
+// HTML content (use with caution)
+{ title: "Rich Text", field: "content", formatter: "html" }</code></pre>
+                </div>
+
+                <h3>Number Columns</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-language"><span class="material-icons">code</span>JavaScript</span>
+                        <button class="copy-btn" onclick="copyCode(this)"><span class="material-icons">content_copy</span>Copy</button>
+                    </div>
+                    <pre><code class="language-javascript">// Basic number
+{ title: "Age", field: "age" }
+
+// Number with thousand separators
+{
+    title: "Quantity",
+    field: "quantity",
+    formatter: function(cell) {
+        return cell.getValue().toLocaleString();
+    }
+}
+
+// Decimal precision
+{
+    title: "Rating",
+    field: "rating",
+    formatter: function(cell) {
+        return cell.getValue().toFixed(2);
+    }
+}</code></pre>
+                </div>
+
+                <h3>Currency Columns</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-language"><span class="material-icons">code</span>JavaScript</span>
+                        <button class="copy-btn" onclick="copyCode(this)"><span class="material-icons">content_copy</span>Copy</button>
+                    </div>
+                    <pre><code class="language-javascript">// Using built-in money formatter
+{
+    title: "Salary",
+    field: "salary",
+    formatter: "money",
+    formatterParams: {
+        symbol: "$",           // Currency symbol
+        precision: 0,          // Decimal places (0 = no decimals)
+        thousand: ",",         // Thousands separator
+        decimal: "."           // Decimal separator
+    }
+}
+
+// Different currencies
+{
+    title: "Price (EUR)",
+    field: "priceEur",
+    formatter: "money",
+    formatterParams: {
+        symbol: "€",
+        precision: 2,
+        symbolAfter: true      // Symbol after number (e.g., "100.00€")
+    }
+}
+
+// Indian Rupee format
+{
+    title: "Amount",
+    field: "amount",
+    formatter: "money",
+    formatterParams: {
+        symbol: "₹",
+        precision: 2
+    }
+}</code></pre>
+                </div>
+
+                <h3>Date Columns</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-language"><span class="material-icons">code</span>JavaScript</span>
+                        <button class="copy-btn" onclick="copyCode(this)"><span class="material-icons">content_copy</span>Copy</button>
+                    </div>
+                    <pre><code class="language-javascript">// Basic date (displays as-is)
+{ title: "Join Date", field: "joinDate" }
+
+// Custom date formatting
+{
+    title: "Created At",
+    field: "createdAt",
+    formatter: function(cell) {
+        const date = new Date(cell.getValue());
+        return date.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+        });
+    }
+}</code></pre>
+                </div>
+
+                <h3>Footer Calculations by Type</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-language"><span class="material-icons">code</span>JavaScript</span>
+                        <button class="copy-btn" onclick="copyCode(this)"><span class="material-icons">content_copy</span>Copy</button>
+                    </div>
+                    <pre><code class="language-javascript">// Sum for currency/numbers
+{ title: "Salary", field: "salary", formatter: "money", bottomCalc: "sum" }
+
+// Average for ratings
+{ title: "Rating", field: "rating", bottomCalc: "avg" }
+
+// Count for any column
+{ title: "Status", field: "status", bottomCalc: "count" }
+
+// Min/Max
+{ title: "Age", field: "age", bottomCalc: "min" }
+{ title: "Salary", field: "salary", bottomCalc: "max" }
+
+// Disable footer calc for a column
+{ title: "ID", field: "id", bottomCalc: null }</code></pre>
+                </div>
+            </section>
+
+            <!-- Loading API Data -->
+            <section class="doc-section" id="api-data">
+                <h2><span class="material-icons">cloud_download</span>Loading Data from API</h2>
+                <p>Load data from an API endpoint instead of providing static data. The plugin will fetch and display the data automatically.</p>
+
+                <h3>Basic API Loading</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-language"><span class="material-icons">code</span>JavaScript</span>
+                        <button class="copy-btn" onclick="copyCode(this)"><span class="material-icons">content_copy</span>Copy</button>
+                    </div>
+                    <pre><code class="language-javascript">const dataTable = new DataTable('container', {
+    columns: sampleColumns,
+    dataUrl: 'https://api.example.com/employees',  // API endpoint
+    filters: {
+        department: 'Sales',
+        status: 'Active',
+        minSalary: 50000
+    }
+});</code></pre>
+                </div>
+
+                <h3>Expected API Response Format</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-language"><span class="material-icons">code</span>JSON</span>
+                        <button class="copy-btn" onclick="copyCode(this)"><span class="material-icons">content_copy</span>Copy</button>
+                    </div>
+                    <pre><code class="language-json">{
+    "data": [
+        { "id": 1, "name": "John Doe", "salary": 75000 },
+        { "id": 2, "name": "Jane Smith", "salary": 82000 }
+    ],
+    "totals": {
+        "salary": 157000,
+        "bonus": 25000
+    },
+    "meta": {
+        "total": 100,
+        "page": 1,
+        "perPage": 25
+    }
+}</code></pre>
+                </div>
+
+                <div class="info-box">
+                    <p><strong>Note:</strong> The API should return data in the expected format. If your API returns a different structure, you may need to transform the response.</p>
+                </div>
+            </section>
+
+            <!-- Reload Data on Filter Change -->
+            <section class="doc-section" id="api-reload">
+                <h2><span class="material-icons">refresh</span>Reload Data on Filter Change</h2>
+                <p>When using API-based data, you can reload the table with new filters when the user changes filter options.</p>
+
+                <h3>Using setFilters Method</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-language"><span class="material-icons">code</span>JavaScript</span>
+                        <button class="copy-btn" onclick="copyCode(this)"><span class="material-icons">content_copy</span>Copy</button>
+                    </div>
+                    <pre><code class="language-javascript">// Initialize table with API
+const dataTable = new DataTable('container', {
+    columns: sampleColumns,
+    dataUrl: '/api/employees',
+    filters: { department: 'All' }
+});
+
+// When user changes department filter
+document.getElementById('departmentFilter').addEventListener('change', function(e) {
+    dataTable.setFilters({
+        department: e.target.value,
+        status: document.getElementById('statusFilter').value
+    });
+    // Table automatically reloads with new filters
+});</code></pre>
+                </div>
+
+                <h3>Manual Reload</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-language"><span class="material-icons">code</span>JavaScript</span>
+                        <button class="copy-btn" onclick="copyCode(this)"><span class="material-icons">content_copy</span>Copy</button>
+                    </div>
+                    <pre><code class="language-javascript">// Reload with current filters
+dataTable.refresh();
+
+// Or set new data directly (for local data)
+dataTable.setData(newDataArray);</code></pre>
+                </div>
+
+                <h3>Complete Filter Example</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-language"><span class="material-icons">code</span>JavaScript</span>
+                        <button class="copy-btn" onclick="copyCode(this)"><span class="material-icons">content_copy</span>Copy</button>
+                    </div>
+                    <pre><code class="language-javascript">// HTML: Filter controls
+// &lt;select id="dept-filter"&gt;...&lt;/select&gt;
+// &lt;select id="status-filter"&gt;...&lt;/select&gt;
+// &lt;button id="apply-filters"&gt;Apply&lt;/button&gt;
+
+document.getElementById('apply-filters').addEventListener('click', function() {
+    const filters = {
+        department: document.getElementById('dept-filter').value,
+        status: document.getElementById('status-filter').value,
+        dateFrom: document.getElementById('date-from').value,
+        dateTo: document.getElementById('date-to').value
+    };
+
+    // Remove empty filters
+    Object.keys(filters).forEach(key => {
+        if (!filters[key] || filters[key] === 'all') {
+            delete filters[key];
+        }
+    });
+
+    // Reload table with new filters
+    dataTable.setFilters(filters);
+});</code></pre>
+                </div>
+            </section>
+
+            <!-- Search with API -->
+            <section class="doc-section" id="api-search">
+                <h2><span class="material-icons">search</span>Search with API Data</h2>
+                <p>The built-in search works client-side by default. For API-based data, you can integrate server-side search.</p>
+
+                <h3>Client-Side Search (Default)</h3>
+                <p>When <code class="inline-code">enableSearch: true</code>, the search box filters data already loaded in the table. This works well for smaller datasets.</p>
+
+                <h3>Server-Side Search</h3>
+                <p>For large datasets, implement server-side search by listening to search input and reloading data:</p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-language"><span class="material-icons">code</span>JavaScript</span>
+                        <button class="copy-btn" onclick="copyCode(this)"><span class="material-icons">content_copy</span>Copy</button>
+                    </div>
+                    <pre><code class="language-javascript">const dataTable = new DataTable('container', {
+    columns: sampleColumns,
+    dataUrl: '/api/employees',
+    enableSearch: true,
+
+    // Custom search handler for API
+    onSearch: function(query) {
+        // Debounce to avoid too many API calls
+        clearTimeout(this.searchTimeout);
+        this.searchTimeout = setTimeout(() => {
+            // Add search query to filters and reload
+            this.setFilters({
+                ...this.options.filters,
+                search: query
+            });
+        }, 300);
+    }
+});
+
+// Alternative: Manual search implementation
+const searchInput = document.querySelector('[data-search]');
+let searchTimeout;
+
+searchInput.addEventListener('input', function(e) {
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(() => {
+        const query = e.target.value;
+
+        if (query.length >= 2 || query.length === 0) {
+            dataTable.setFilters({
+                ...dataTable.options.filters,
+                search: query
+            });
+        }
+    }, 300);
+});</code></pre>
+                </div>
+
+                <div class="info-box">
+                    <p><strong>Tip:</strong> Always debounce search input to avoid excessive API calls while the user is typing.</p>
+                </div>
+            </section>
+
+            <!-- Infinite Scroll -->
+            <section class="doc-section" id="infinite-scroll">
+                <h2><span class="material-icons">all_inclusive</span>Infinite Scroll</h2>
+                <p>Disable pagination to enable infinite scroll mode. All data loads at once and users can scroll through the entire dataset.</p>
+
+                <h3>Enable Infinite Scroll</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-language"><span class="material-icons">code</span>JavaScript</span>
+                        <button class="copy-btn" onclick="copyCode(this)"><span class="material-icons">content_copy</span>Copy</button>
+                    </div>
+                    <pre><code class="language-javascript">const dataTable = new DataTable('container', {
+    columns: sampleColumns,
+    data: sampleData,        // Full dataset
+    pagination: false,       // Disable pagination = infinite scroll
+
+    // Other options work normally
+    enableSearch: true,
+    enableColumnSelection: true,
+    showFooter: true
+});</code></pre>
+                </div>
+
+                <h3>Infinite Scroll with API</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-language"><span class="material-icons">code</span>JavaScript</span>
+                        <button class="copy-btn" onclick="copyCode(this)"><span class="material-icons">content_copy</span>Copy</button>
+                    </div>
+                    <pre><code class="language-javascript">const dataTable = new DataTable('container', {
+    columns: sampleColumns,
+    dataUrl: '/api/employees?limit=1000',  // Load all data
+    pagination: false
+});</code></pre>
+                </div>
+
+                <div class="info-box warning">
+                    <p><strong>Performance Note:</strong> Infinite scroll works best with datasets under 10,000 rows. For larger datasets, consider using pagination or virtual scrolling.</p>
+                </div>
+            </section>
+
+            <!-- Footer Totals -->
+            <section class="doc-section" id="footer-totals">
+                <h2><span class="material-icons">functions</span>Footer Totals</h2>
+                <p>Display calculated totals in the table footer. Supports client-side calculations or server-provided totals.</p>
+
+                <h3>Client-Side Calculation (Auto)</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-language"><span class="material-icons">code</span>JavaScript</span>
+                        <button class="copy-btn" onclick="copyCode(this)"><span class="material-icons">content_copy</span>Copy</button>
+                    </div>
+                    <pre><code class="language-javascript">const dataTable = new DataTable('container', {
+    columns: [
+        { title: "Name", field: "name" },
+        { title: "Salary", field: "salary", bottomCalc: "sum" },
+        { title: "Bonus", field: "bonus", bottomCalc: "sum" },
+        { title: "Rating", field: "rating", bottomCalc: "avg" }
+    ],
+    data: sampleData,
+    showFooter: true,        // Show footer row
+    calcFooterTotals: true   // Auto-calculate from data (default)
+});</code></pre>
+                </div>
+
+                <h3>Server-Side Totals</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-language"><span class="material-icons">code</span>JavaScript</span>
+                        <button class="copy-btn" onclick="copyCode(this)"><span class="material-icons">content_copy</span>Copy</button>
+                    </div>
+                    <pre><code class="language-javascript">const dataTable = new DataTable('container', {
+    columns: sampleColumns,
+    data: sampleData,
+    showFooter: true,
+    calcFooterTotals: false,  // Don't auto-calculate
+    footerTotals: {           // Use provided totals
+        salary: 7500000,
+        bonus: 1250000,
+        experience: 625
+    }
+});</code></pre>
+                </div>
+
+                <h3>Available Calculations</h3>
+                <table class="param-table">
+                    <thead>
+                        <tr><th>Value</th><th>Description</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><code class="inline-code">"sum"</code></td><td>Sum of all values in the column</td></tr>
+                        <tr><td><code class="inline-code">"avg"</code></td><td>Average of all values</td></tr>
+                        <tr><td><code class="inline-code">"count"</code></td><td>Count of rows</td></tr>
+                        <tr><td><code class="inline-code">"min"</code></td><td>Minimum value</td></tr>
+                        <tr><td><code class="inline-code">"max"</code></td><td>Maximum value</td></tr>
+                        <tr><td><code class="inline-code">null</code></td><td>No calculation (empty cell)</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Dynamic Footer (API) -->
+            <section class="doc-section" id="dynamic-footer">
+                <h2><span class="material-icons">sync</span>Dynamic Footer Totals (API)</h2>
+                <p>Update footer totals dynamically when data changes or filters are applied.</p>
+
+                <h3>Update Totals from API Response</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-language"><span class="material-icons">code</span>JavaScript</span>
+                        <button class="copy-btn" onclick="copyCode(this)"><span class="material-icons">content_copy</span>Copy</button>
+                    </div>
+                    <pre><code class="language-javascript">// Initialize with server totals
+const dataTable = new DataTable('container', {
+    columns: sampleColumns,
+    dataUrl: '/api/employees',
+    showFooter: true,
+    calcFooterTotals: false,  // We'll provide totals from API
+    footerTotals: {}
+});
+
+// When filters change, fetch new data with totals
+async function applyFilters(filters) {
+    const response = await fetch('/api/employees?' + new URLSearchParams(filters));
+    const result = await response.json();
+
+    // Update table data
+    dataTable.setData(result.data);
+
+    // Update footer totals
+    dataTable.updateFooterTotals(result.totals);
+}</code></pre>
+                </div>
+
+                <h3>updateFooterTotals Method</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-language"><span class="material-icons">code</span>JavaScript</span>
+                        <button class="copy-btn" onclick="copyCode(this)"><span class="material-icons">content_copy</span>Copy</button>
+                    </div>
+                    <pre><code class="language-javascript">// Update footer with new totals
+dataTable.updateFooterTotals({
+    salary: 5200000,
+    bonus: 890000,
+    experience: 420
+});
+
+// API response format
+{
+    "data": [...],
+    "totals": {
+        "salary": 5200000,
+        "bonus": 890000
+    }
+}</code></pre>
+                </div>
+
+                <h3>Complete Dynamic Footer Example</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-language"><span class="material-icons">code</span>JavaScript</span>
+                        <button class="copy-btn" onclick="copyCode(this)"><span class="material-icons">content_copy</span>Copy</button>
+                    </div>
+                    <pre><code class="language-javascript">// Initialize table
+const dataTable = new DataTable('container', {
+    columns: [
+        { title: "Name", field: "name" },
+        { title: "Salary", field: "salary", formatter: "money", bottomCalc: "sum" },
+        { title: "Bonus", field: "bonus", formatter: "money", bottomCalc: "sum" }
+    ],
+    dataUrl: '/api/employees',
+    showFooter: true,
+    calcFooterTotals: false
+});
+
+// Filter change handler
+document.getElementById('dept-filter').addEventListener('change', async function(e) {
+    const dept = e.target.value;
+
+    // Fetch filtered data with totals
+    const response = await fetch(`/api/employees?department=${dept}`);
+    const result = await response.json();
+
+    // Update table
+    dataTable.setData(result.data);
+
+    // Update footer with filtered totals
+    dataTable.updateFooterTotals(result.totals);
+});</code></pre>
+                </div>
+            </section>
+
+            <!-- Custom Export Options -->
+            <section class="doc-section" id="export-options">
+                <h2><span class="material-icons">settings</span>Custom Export Options</h2>
+                <p>Add custom options to the export popup that users can configure before exporting data.</p>
+
+                <h3>Defining Export Options</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-language"><span class="material-icons">code</span>JavaScript</span>
+                        <button class="copy-btn" onclick="copyCode(this)"><span class="material-icons">content_copy</span>Copy</button>
+                    </div>
+                    <pre><code class="language-javascript">const dataTable = new DataTable('container', {
+    columns: sampleColumns,
+    data: sampleData,
+    exportFilename: 'employees_report',  // Base filename for exports
+
+    exportOptions: [
+        // Checkbox options
+        {
+            key: 'includeHeader',
+            label: 'Include header row',
+            type: 'checkbox',
+            default: true,
+            group: 'General',
+            excelOnly: false           // Available for both Excel and CSV
+        },
+        {
+            key: 'alternateRowColors',
+            label: 'Alternate row colors',
+            type: 'checkbox',
+            default: true,
+            group: 'Formatting',
+            excelOnly: true            // Only for Excel export
+        },
+        {
+            key: 'highlightNegative',
+            label: 'Highlight negative values',
+            type: 'checkbox',
+            default: false,
+            group: 'Formatting',
+            excelOnly: true
+        },
+        {
+            key: 'autoFitColumns',
+            label: 'Auto-fit column widths',
+            type: 'checkbox',
+            default: false,
+            group: 'Formatting',
+            excelOnly: true
+        },
+
+        // Text input options
+        {
+            key: 'sheetName',
+            label: 'Sheet name',
+            type: 'text',
+            default: 'Data',
+            group: 'Excel',
+            excelOnly: true
+        },
+        {
+            key: 'dateFormat',
+            label: 'Date format',
+            type: 'text',
+            default: 'YYYY-MM-DD',
+            group: 'Formatting',
+            excelOnly: false
+        },
+
+        // Number input options
+        {
+            key: 'maxRows',
+            label: 'Max rows to export',
+            type: 'number',
+            default: 0,               // 0 = no limit
+            group: 'Limits',
+            excelOnly: false,
+            min: 0,
+            max: 10000
+        },
+
+        // More checkbox options
+        {
+            key: 'includeSummary',
+            label: 'Include summary sheet',
+            type: 'checkbox',
+            default: false,
+            group: 'Excel',
+            excelOnly: true
+        }
+    ]
+});</code></pre>
+                </div>
+
+                <h3>Export Option Properties</h3>
+                <table class="param-table">
+                    <thead>
+                        <tr><th>Property</th><th>Type</th><th>Description</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><code class="inline-code">key</code></td><td>String</td><td>Unique identifier for the option</td></tr>
+                        <tr><td><code class="inline-code">label</code></td><td>String</td><td>Display label shown to user</td></tr>
+                        <tr><td><code class="inline-code">type</code></td><td>String</td><td>Input type: 'checkbox', 'text', 'number'</td></tr>
+                        <tr><td><code class="inline-code">default</code></td><td>Any</td><td>Default value for the option</td></tr>
+                        <tr><td><code class="inline-code">group</code></td><td>String</td><td>Group name for organizing options</td></tr>
+                        <tr><td><code class="inline-code">excelOnly</code></td><td>Boolean</td><td>If true, only shown for Excel export</td></tr>
+                        <tr><td><code class="inline-code">min</code></td><td>Number</td><td>Minimum value (for number type)</td></tr>
+                        <tr><td><code class="inline-code">max</code></td><td>Number</td><td>Maximum value (for number type)</td></tr>
+                    </tbody>
+                </table>
+
+                <h3>Option Groups</h3>
+                <p>Options are automatically grouped in the UI by their <code class="inline-code">group</code> property. Common groups include:</p>
+                <ul>
+                    <li><strong>General:</strong> Basic export settings</li>
+                    <li><strong>Formatting:</strong> Visual formatting options</li>
+                    <li><strong>Excel:</strong> Excel-specific settings</li>
+                    <li><strong>Limits:</strong> Data limiting options</li>
+                </ul>
+            </section>
+
+            <!-- API-Based Export -->
+            <section class="doc-section" id="api-export">
+                <h2><span class="material-icons">cloud_upload</span>API-Based Export</h2>
+                <p>For server-side export, post export configuration to an API endpoint and receive the generated file.</p>
+
+                <h3>Custom Export URL</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-language"><span class="material-icons">code</span>JavaScript</span>
+                        <button class="copy-btn" onclick="copyCode(this)"><span class="material-icons">content_copy</span>Copy</button>
+                    </div>
+                    <pre><code class="language-javascript">const dataTable = new DataTable('container', {
+    columns: sampleColumns,
+    dataUrl: '/api/employees',
+
+    // Custom export endpoint
+    exportUrl: '/api/employees/export',
+
+    exportOptions: [
+        { key: 'includeHeader', label: 'Include headers', type: 'checkbox', default: true },
+        { key: 'format', label: 'File format', type: 'text', default: 'xlsx' }
+    ],
+
+    // Callback to customize export request
+    onExport: function(format, options, columns) {
+        // format: 'excel' or 'csv'
+        // options: User-selected export options
+        // columns: Array of selected column definitions
+
+        const exportData = {
+            format: format,
+            options: options,
+            columns: columns.map(col => col.field),
+            filters: this.options.filters,  // Current filters
+            sort: this.getCurrentSort()     // Current sort
+        };
+
+        // Post to export API
+        fetch('/api/employees/export', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(exportData)
+        })
+        .then(response => response.blob())
+        .then(blob => {
+            // Download the file
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `export_${Date.now()}.${format === 'excel' ? 'xlsx' : 'csv'}`;
+            a.click();
+            window.URL.revokeObjectURL(url);
+        });
+
+        return false;  // Prevent default client-side export
+    }
+});</code></pre>
+                </div>
+
+                <h3>Export Request Format</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-language"><span class="material-icons">code</span>JSON</span>
+                        <button class="copy-btn" onclick="copyCode(this)"><span class="material-icons">content_copy</span>Copy</button>
+                    </div>
+                    <pre><code class="language-json">{
+    "format": "excel",
+    "options": {
+        "includeHeader": true,
+        "alternateRowColors": true,
+        "sheetName": "Employees"
+    },
+    "columns": ["id", "name", "email", "department", "salary"],
+    "filters": {
+        "department": "Sales",
+        "status": "Active"
+    },
+    "sort": {
+        "field": "name",
+        "direction": "asc"
+    }
+}</code></pre>
+                </div>
+
+                <h3>Server Response</h3>
+                <p>The server should return the file as a binary blob with appropriate headers:</p>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-language"><span class="material-icons">code</span>HTTP Response Headers</span>
+                        <button class="copy-btn" onclick="copyCode(this)"><span class="material-icons">content_copy</span>Copy</button>
+                    </div>
+                    <pre><code>Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+Content-Disposition: attachment; filename="export_2024-01-15.xlsx"</code></pre>
+                </div>
+            </section>
+
+            <!-- All Configuration Options -->
+            <section class="doc-section" id="config-options">
+                <h2><span class="material-icons">tune</span>All Configuration Options</h2>
+                <p>Complete list of all available configuration options for the DataTable plugin.</p>
+
+                <table class="param-table">
+                    <thead>
+                        <tr><th>Option</th><th>Type</th><th>Default</th><th>Description</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td colspan="4" style="background:#f0f4f9;font-weight:500;">Data</td></tr>
+                        <tr><td><code class="inline-code">columns</code></td><td>Array</td><td><code class="inline-code">[]</code></td><td>Column definitions array</td></tr>
+                        <tr><td><code class="inline-code">data</code></td><td>Array</td><td><code class="inline-code">null</code></td><td>Data array for static data</td></tr>
+                        <tr><td><code class="inline-code">dataUrl</code></td><td>String</td><td><code class="inline-code">null</code></td><td>API endpoint URL for remote data</td></tr>
+                        <tr><td><code class="inline-code">filters</code></td><td>Object</td><td><code class="inline-code">{}</code></td><td>Filter parameters for API requests</td></tr>
+
+                        <tr><td colspan="4" style="background:#f0f4f9;font-weight:500;">Layout & Display</td></tr>
+                        <tr><td><code class="inline-code">height</code></td><td>String</td><td><code class="inline-code">null</code></td><td>Table height (null = auto-expand)</td></tr>
+                        <tr><td><code class="inline-code">layout</code></td><td>String</td><td><code class="inline-code">'fitData'</code></td><td>Layout mode: 'fitData' or 'fitColumns'</td></tr>
+                        <tr><td><code class="inline-code">cellSpacing</code></td><td>String</td><td><code class="inline-code">'normal'</code></td><td>Cell padding: 'compact', 'normal', 'comfortable'</td></tr>
+                        <tr><td><code class="inline-code">cellVerticalAlign</code></td><td>String</td><td><code class="inline-code">'top'</code></td><td>Vertical alignment: 'top', 'middle', 'bottom'</td></tr>
+
+                        <tr><td colspan="4" style="background:#f0f4f9;font-weight:500;">Pagination</td></tr>
+                        <tr><td><code class="inline-code">pagination</code></td><td>Boolean</td><td><code class="inline-code">true</code></td><td>Enable pagination (false = infinite scroll)</td></tr>
+                        <tr><td><code class="inline-code">paginationSize</code></td><td>Number</td><td><code class="inline-code">50</code></td><td>Rows per page</td></tr>
+                        <tr><td><code class="inline-code">paginationSizeSelector</code></td><td>Array</td><td><code class="inline-code">[10,25,50,100,200]</code></td><td>Page size options</td></tr>
+
+                        <tr><td colspan="4" style="background:#f0f4f9;font-weight:500;">Features</td></tr>
+                        <tr><td><code class="inline-code">enableSearch</code></td><td>Boolean</td><td><code class="inline-code">true</code></td><td>Show search box</td></tr>
+                        <tr><td><code class="inline-code">enableColumnSelection</code></td><td>Boolean</td><td><code class="inline-code">true</code></td><td>Show column visibility control</td></tr>
+                        <tr><td><code class="inline-code">enableGrouping</code></td><td>Boolean</td><td><code class="inline-code">true</code></td><td>Enable grouping dropdown</td></tr>
+                        <tr><td><code class="inline-code">groupBy</code></td><td>String</td><td><code class="inline-code">null</code></td><td>Initial column to group by</td></tr>
+                        <tr><td><code class="inline-code">groupTotalsInline</code></td><td>Boolean</td><td><code class="inline-code">true</code></td><td>Show group totals inline with header</td></tr>
+
+                        <tr><td colspan="4" style="background:#f0f4f9;font-weight:500;">Selection</td></tr>
+                        <tr><td><code class="inline-code">enableRowSelection</code></td><td>Boolean</td><td><code class="inline-code">true</code></td><td>Show checkbox column</td></tr>
+                        <tr><td><code class="inline-code">enableCellSelection</code></td><td>Boolean</td><td><code class="inline-code">true</code></td><td>Enable cell range selection</td></tr>
+
+                        <tr><td colspan="4" style="background:#f0f4f9;font-weight:500;">Row Features</td></tr>
+                        <tr><td><code class="inline-code">showSerialNumber</code></td><td>Boolean</td><td><code class="inline-code">false</code></td><td>Show S.N. (serial number) column</td></tr>
+                        <tr><td><code class="inline-code">enableRowExpand</code></td><td>Boolean</td><td><code class="inline-code">false</code></td><td>Show expand (+) icon column</td></tr>
+                        <tr><td><code class="inline-code">actions</code></td><td>Array</td><td><code class="inline-code">[]</code></td><td>Action button definitions</td></tr>
+
+                        <tr><td colspan="4" style="background:#f0f4f9;font-weight:500;">Footer</td></tr>
+                        <tr><td><code class="inline-code">showFooter</code></td><td>Boolean</td><td><code class="inline-code">false</code></td><td>Show footer with totals</td></tr>
+                        <tr><td><code class="inline-code">calcFooterTotals</code></td><td>Boolean</td><td><code class="inline-code">true</code></td><td>Auto-calculate totals from data</td></tr>
+                        <tr><td><code class="inline-code">footerTotals</code></td><td>Object</td><td><code class="inline-code">null</code></td><td>Server-provided totals object</td></tr>
+
+                        <tr><td colspan="4" style="background:#f0f4f9;font-weight:500;">Export</td></tr>
+                        <tr><td><code class="inline-code">exportFilename</code></td><td>String</td><td><code class="inline-code">'export'</code></td><td>Base filename for exports</td></tr>
+                        <tr><td><code class="inline-code">exportOptions</code></td><td>Array</td><td><code class="inline-code">[]</code></td><td>Custom export option definitions</td></tr>
+                        <tr><td><code class="inline-code">exportUrl</code></td><td>String</td><td><code class="inline-code">null</code></td><td>API endpoint for server-side export</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Get Current Config -->
+            <section class="doc-section" id="get-config">
+                <h2><span class="material-icons">save</span>Get Current Configuration</h2>
+                <p>Retrieve the current table configuration including column order, visibility, pinning, and other settings that the user has modified.</p>
+
+                <h3>Get Configuration</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-language"><span class="material-icons">code</span>JavaScript</span>
+                        <button class="copy-btn" onclick="copyCode(this)"><span class="material-icons">content_copy</span>Copy</button>
+                    </div>
+                    <pre><code class="language-javascript">// Get current table configuration
+const config = dataTable.getConfig();
+
+console.log(config);
+// {
+//     columns: [...],           // Current column definitions with order
+//     pinnedColumns: {...},     // { fieldName: 'left'|'right' }
+//     columnVisibility: {...},  // { fieldName: true|false }
+//     columnOrder: [...],       // Array of field names in current order
+//     columnWidths: {...},      // { fieldName: width }
+//     wrapSettings: {...},      // { fieldName: 'wrap'|'clip' }
+//     groupBy: [...],           // Current grouping columns
+//     cellSpacing: 'normal',    // Current spacing setting
+//     verticalAlign: 'top'      // Current vertical alignment
+// }</code></pre>
+                </div>
+
+                <h3>Save and Restore Configuration</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-language"><span class="material-icons">code</span>JavaScript</span>
+                        <button class="copy-btn" onclick="copyCode(this)"><span class="material-icons">content_copy</span>Copy</button>
+                    </div>
+                    <pre><code class="language-javascript">// Save configuration to localStorage
+function saveTableConfig() {
+    const config = dataTable.getConfig();
+    localStorage.setItem('myTableConfig', JSON.stringify(config));
+}
+
+// Save button handler
+document.getElementById('saveConfigBtn').addEventListener('click', saveTableConfig);
+
+// Restore configuration on page load
+function loadTableConfig() {
+    const savedConfig = localStorage.getItem('myTableConfig');
+    if (savedConfig) {
+        const config = JSON.parse(savedConfig);
+
+        // Apply saved configuration when initializing
+        const dataTable = new DataTable('container', {
+            columns: config.columns,
+            data: sampleData,
+            groupBy: config.groupBy[0] || null,
+            cellSpacing: config.cellSpacing,
+            cellVerticalAlign: config.verticalAlign
+            // ... other options
+        });
+
+        // Apply column settings after initialization
+        dataTable.applyConfig(config);
+    }
+}</code></pre>
+                </div>
+
+                <h3>Send Configuration to Server</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-language"><span class="material-icons">code</span>JavaScript</span>
+                        <button class="copy-btn" onclick="copyCode(this)"><span class="material-icons">content_copy</span>Copy</button>
+                    </div>
+                    <pre><code class="language-javascript">// Save configuration to server
+async function saveConfigToServer() {
+    const config = dataTable.getConfig();
+
+    await fetch('/api/user/table-config', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            tableId: 'employees-table',
+            config: config
+        })
+    });
+}
+
+// Listen for config changes
+dataTable.onConfigChange = function() {
+    // Auto-save when user makes changes
+    saveConfigToServer();
+};</code></pre>
+                </div>
+            </section>
+
+            <!-- Events & Callbacks -->
+            <section class="doc-section" id="events">
+                <h2><span class="material-icons">bolt</span>Events & Callbacks</h2>
+                <p>Handle various table events with callback functions.</p>
+
+                <table class="param-table">
+                    <thead>
+                        <tr><th>Callback</th><th>Parameters</th><th>Description</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code class="inline-code">onRowClick</code></td>
+                            <td><code class="inline-code">rowData</code></td>
+                            <td>Called when a row is clicked</td>
+                        </tr>
+                        <tr>
+                            <td><code class="inline-code">onRowSelectionChange</code></td>
+                            <td><code class="inline-code">selectedData, selectedRows</code></td>
+                            <td>Called when row selection changes</td>
+                        </tr>
+                        <tr>
+                            <td><code class="inline-code">onRowExpand</code></td>
+                            <td><code class="inline-code">rowData, callback</code></td>
+                            <td>Called when expand icon is clicked</td>
+                        </tr>
+                        <tr>
+                            <td><code class="inline-code">onActionClick</code></td>
+                            <td><code class="inline-code">action, rowData</code></td>
+                            <td>Called when any action button is clicked</td>
+                        </tr>
+                        <tr>
+                            <td><code class="inline-code">onExport</code></td>
+                            <td><code class="inline-code">format, options, columns</code></td>
+                            <td>Called before export (return false to prevent)</td>
+                        </tr>
+                        <tr>
+                            <td><code class="inline-code">onSearch</code></td>
+                            <td><code class="inline-code">query</code></td>
+                            <td>Called when search input changes</td>
+                        </tr>
+                        <tr>
+                            <td><code class="inline-code">onConfigChange</code></td>
+                            <td>none</td>
+                            <td>Called when table configuration changes</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>Example</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-language"><span class="material-icons">code</span>JavaScript</span>
+                        <button class="copy-btn" onclick="copyCode(this)"><span class="material-icons">content_copy</span>Copy</button>
+                    </div>
+                    <pre><code class="language-javascript">const dataTable = new DataTable('container', {
+    columns: sampleColumns,
+    data: sampleData,
+
+    onRowClick: function(rowData) {
+        console.log('Row clicked:', rowData.id);
+    },
+
+    onRowSelectionChange: function(selectedData, selectedRows) {
+        document.getElementById('selected-count').textContent = selectedData.length;
+    },
+
+    onRowExpand: function(rowData, callback) {
+        fetch(`/api/details/${rowData.id}`)
+            .then(r => r.json())
+            .then(data => callback(renderDetails(data)));
+    },
+
+    onActionClick: function(action, rowData) {
+        console.log(`${action.label} clicked for ${rowData.name}`);
+    }
+});</code></pre>
+                </div>
+            </section>
+
+            <!-- API Methods -->
+            <section class="doc-section" id="api-methods">
+                <h2><span class="material-icons">integration_instructions</span>API Methods</h2>
+                <p>Methods available on the DataTable instance for programmatic control.</p>
+
+                <h3>Data Methods</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-language"><span class="material-icons">code</span>JavaScript</span>
+                        <button class="copy-btn" onclick="copyCode(this)"><span class="material-icons">content_copy</span>Copy</button>
+                    </div>
+                    <pre><code class="language-javascript">// Set new data
+dataTable.setData(newDataArray);
+
+// Get all data
+const allData = dataTable.getData();
+
+// Set filters and reload from API
+dataTable.setFilters({ department: 'Sales' });
+
+// Refresh data from API
+dataTable.refresh();</code></pre>
+                </div>
+
+                <h3>Selection Methods</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-language"><span class="material-icons">code</span>JavaScript</span>
+                        <button class="copy-btn" onclick="copyCode(this)"><span class="material-icons">content_copy</span>Copy</button>
+                    </div>
+                    <pre><code class="language-javascript">// Get selected rows
+const selected = dataTable.getSelectedRows();
+
+// Get selected row data
+const selectedData = dataTable.getSelectedData();
+
+// Select all visible rows
+dataTable.selectAllRows();
+
+// Deselect all rows
+dataTable.deselectAllRows();</code></pre>
+                </div>
+
+                <h3>Footer Methods</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-language"><span class="material-icons">code</span>JavaScript</span>
+                        <button class="copy-btn" onclick="copyCode(this)"><span class="material-icons">content_copy</span>Copy</button>
+                    </div>
+                    <pre><code class="language-javascript">// Update footer totals
+dataTable.updateFooterTotals({
+    salary: 5000000,
+    bonus: 800000
+});</code></pre>
+                </div>
+
+                <h3>Configuration Methods</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-language"><span class="material-icons">code</span>JavaScript</span>
+                        <button class="copy-btn" onclick="copyCode(this)"><span class="material-icons">content_copy</span>Copy</button>
+                    </div>
+                    <pre><code class="language-javascript">// Get current configuration
+const config = dataTable.getConfig();
+
+// Apply saved configuration
+dataTable.applyConfig(savedConfig);
+
+// Get current sort
+const sort = dataTable.getCurrentSort();</code></pre>
+                </div>
+
+                <h3>Tabulator Access</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-language"><span class="material-icons">code</span>JavaScript</span>
+                        <button class="copy-btn" onclick="copyCode(this)"><span class="material-icons">content_copy</span>Copy</button>
+                    </div>
+                    <pre><code class="language-javascript">// Access underlying Tabulator instance for advanced operations
+const tabulator = dataTable.getTable();
+
+// Use Tabulator methods directly
+tabulator.setSort("name", "asc");
+tabulator.scrollToRow(15);</code></pre>
+                </div>
+            </section>
+
+            <!-- Column Colors Reference -->
+            <section class="doc-section" id="column-colors">
+                <h2><span class="material-icons">palette</span>Column Colors</h2>
+                <p>Available color options for column highlighting. Add the <code class="inline-code">color</code> property to any column definition.</p>
+
+                <div class="color-grid">
+                    <div class="color-swatch blue">blue</div>
+                    <div class="color-swatch green">green</div>
+                    <div class="color-swatch red">red</div>
+                    <div class="color-swatch orange">orange</div>
+                    <div class="color-swatch purple">purple</div>
+                    <div class="color-swatch teal">teal</div>
+                    <div class="color-swatch pink">pink</div>
+                    <div class="color-swatch indigo">indigo</div>
+                    <div class="color-swatch cyan">cyan</div>
+                    <div class="color-swatch amber">amber</div>
+                    <div class="color-swatch lime">lime</div>
+                    <div class="color-swatch brown">brown</div>
+                    <div class="color-swatch gray">gray</div>
+                </div>
+
+                <h3>Recommended Usage</h3>
+                <ul>
+                    <li><strong>blue:</strong> Primary/identity columns (Name, ID)</li>
+                    <li><strong>green:</strong> Financial/positive data (Salary, Revenue, Profit)</li>
+                    <li><strong>red:</strong> Alerts, warnings, negative values</li>
+                    <li><strong>orange:</strong> Highlighting important data</li>
+                    <li><strong>purple:</strong> Categories, departments</li>
+                    <li><strong>teal:</strong> Technical/system data</li>
+                    <li><strong>amber:</strong> Ratings, scores, KPIs</li>
+                    <li><strong>gray:</strong> Secondary/less important columns</li>
+                </ul>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-language"><span class="material-icons">code</span>JavaScript</span>
+                        <button class="copy-btn" onclick="copyCode(this)"><span class="material-icons">content_copy</span>Copy</button>
+                    </div>
+                    <pre><code class="language-javascript">columns: [
+    { title: "Name", field: "name", color: "blue" },
+    { title: "Department", field: "department", color: "purple" },
+    { title: "Salary", field: "salary", color: "green", formatter: "money" },
+    { title: "Rating", field: "rating", color: "amber" },
+    { title: "Alerts", field: "alerts", color: "red" }
+]</code></pre>
+                </div>
+            </section>
+
+            <!-- Examples -->
+            <section class="doc-section" id="examples">
+                <h2><span class="material-icons">description</span>Examples</h2>
+
+                <h3>Full-Featured Table</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-language"><span class="material-icons">code</span>JavaScript</span>
+                        <button class="copy-btn" onclick="copyCode(this)"><span class="material-icons">content_copy</span>Copy</button>
+                    </div>
+                    <pre><code class="language-javascript">const dataTable = new DataTable('datatable-container', {
+    // Columns
+    columns: [
+        { title: "ID", field: "id", width: 70 },
+        { title: "Name", field: "name", width: 180, color: "blue" },
+        { title: "Email", field: "email", width: 200, wrap: true },
+        { title: "Department", field: "department", width: 140, color: "purple" },
+        { title: "Salary", field: "salary", formatter: "money",
+          formatterParams: { symbol: "$", precision: 0 },
+          width: 120, color: "green", bottomCalc: "sum" },
+        { title: "Status", field: "status", width: 100 }
+    ],
+
+    // Data
+    data: employeeData,
+
+    // Features
+    pagination: true,
+    paginationSize: 25,
+    enableSearch: true,
+    enableColumnSelection: true,
+    enableGrouping: true,
+    enableRowSelection: true,
+    enableRowExpand: true,
+    showSerialNumber: true,
+    showFooter: true,
+    calcFooterTotals: true,
+    cellSpacing: 'normal',
+
+    // Actions
+    actions: [
+        { id: 'view', label: 'View', icon: 'visibility', onClick: viewEmployee },
+        { id: 'edit', label: 'Edit', icon: 'edit', onClick: editEmployee },
+        { id: 'delete', label: 'Delete', icon: 'delete', onClick: deleteEmployee }
+    ],
+
+    // Export
+    exportFilename: 'employees_report',
+    exportOptions: [
+        { key: 'includeHeader', label: 'Include headers', type: 'checkbox',
+          default: true, group: 'General' }
+    ],
+
+    // Callbacks
+    onRowClick: function(rowData) {
+        console.log('Clicked:', rowData);
+    },
+    onRowSelectionChange: function(selected) {
+        console.log('Selected:', selected.length);
+    },
+    onRowExpand: function(rowData, callback) {
+        callback(`&lt;div&gt;Details for ${rowData.name}&lt;/div&gt;`);
+    }
+});</code></pre>
+                </div>
+
+                <h3>Minimal Table</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-language"><span class="material-icons">code</span>JavaScript</span>
+                        <button class="copy-btn" onclick="copyCode(this)"><span class="material-icons">content_copy</span>Copy</button>
+                    </div>
+                    <pre><code class="language-javascript">const dataTable = new DataTable('simple-table', {
+    columns: [
+        { title: "Name", field: "name" },
+        { title: "Email", field: "email" },
+        { title: "Role", field: "role" }
+    ],
+    data: userData,
+    pagination: true,
+    enableSearch: true,
+    enableColumnSelection: false,
+    enableGrouping: false,
+    enableRowSelection: false
+});</code></pre>
+                </div>
+
+                <h3>API-Driven Table</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-language"><span class="material-icons">code</span>JavaScript</span>
+                        <button class="copy-btn" onclick="copyCode(this)"><span class="material-icons">content_copy</span>Copy</button>
+                    </div>
+                    <pre><code class="language-javascript">const dataTable = new DataTable('api-table', {
+    columns: sampleColumns,
+    dataUrl: '/api/employees',
+    filters: { status: 'Active' },
+    pagination: true,
+    showFooter: true,
+    calcFooterTotals: false,  // Server provides totals
+
+    onRowClick: function(rowData) {
+        window.location.href = `/employees/${rowData.id}`;
+    }
+});
+
+// Update filters
+document.getElementById('filterBtn').addEventListener('click', () => {
+    dataTable.setFilters({
+        department: document.getElementById('dept').value,
+        status: document.getElementById('status').value
+    });
+});</code></pre>
+                </div>
+
+                <div class="info-box success">
+                    <p><strong>Live Demo:</strong> See <a href="index.html"><code class="inline-code">index.html</code></a> for a complete working example with sample data and all features enabled.</p>
+                </div>
+            </section>
+
+            <!-- Browser Support -->
+            <section class="doc-section" id="browser-support">
+                <h2><span class="material-icons">devices</span>Browser Support</h2>
+                <ul>
+                    <li>Chrome (latest)</li>
+                    <li>Firefox (latest)</li>
+                    <li>Safari (latest)</li>
+                    <li>Edge (latest)</li>
+                    <li>Mobile browsers (iOS Safari, Chrome for Android)</li>
+                </ul>
+            </section>
+        </main>
+    </div>
+
+    <!-- Scroll to top button -->
+    <button class="scroll-top-btn" id="scrollTopBtn" onclick="scrollToTop()">
+        <span class="material-icons">keyboard_arrow_up</span>
+    </button>
+
+    <!-- Mobile menu button -->
+    <button class="mobile-menu-btn" id="mobileMenuBtn" onclick="toggleSidebar()">
+        <span class="material-icons">menu</span>
+    </button>
+
+    <script>
+        hljs.highlightAll();
+
+        // Copy code functionality
+        function copyCode(button) {
+            const code = button.closest('.code-block').querySelector('code').textContent;
+            navigator.clipboard.writeText(code).then(function() {
+                button.classList.add('copied');
+                button.innerHTML = '<span class="material-icons">check</span>Copied!';
+                setTimeout(function() {
+                    button.classList.remove('copied');
+                    button.innerHTML = '<span class="material-icons">content_copy</span>Copy';
+                }, 2000);
+            });
+        }
+
+        // Scroll to top
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Toggle mobile sidebar
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        // Show/hide scroll to top button
+        window.addEventListener('scroll', function() {
+            const btn = document.getElementById('scrollTopBtn');
+            if (window.scrollY > 300) {
+                btn.classList.add('visible');
+            } else {
+                btn.classList.remove('visible');
+            }
+        });
+
+        // Highlight active nav link on scroll
+        const sections = document.querySelectorAll('.doc-section[id]');
+        const navLinks = document.querySelectorAll('.nav-link');
+
+        window.addEventListener('scroll', function() {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 100;
+                if (window.scrollY >= sectionTop) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            });
+        });
+
+        // Smooth scroll for nav links
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href').substring(1);
+                const target = document.getElementById(targetId);
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    // Close mobile sidebar
+                    document.getElementById('sidebar').classList.remove('open');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

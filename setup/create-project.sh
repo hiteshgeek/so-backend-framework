@@ -39,16 +39,12 @@ fi
 
 # Parse arguments
 KEEP_DOCS=false
-FORCE=false
 DEST_DIR=""
 
 for arg in "$@"; do
     case $arg in
         --keep-docs)
             KEEP_DOCS=true
-            ;;
-        --force)
-            FORCE=true
             ;;
         *)
             if [ -z "$DEST_DIR" ]; then
@@ -68,27 +64,16 @@ if [ -z "$DEST_DIR" ]; then
     echo "Examples:"
     echo "  ./setup/create-project.sh /var/www/html/my-app"
     echo "  ./setup/create-project.sh ../my-new-project --keep-docs"
-    echo "  ./setup/create-project.sh /var/www/html/my-app --force"
-    echo "  ./setup/create-project.sh ../my-app --keep-docs --force"
     echo ""
     echo "Options:"
     echo "  --keep-docs    Keep documentation files (docs/)"
-    echo "  --force        Overwrite destination directory if it exists"
     exit 1
 fi
 
 # Check if destination exists
 if [ -d "$DEST_DIR" ]; then
-    if [ "$FORCE" = false ]; then
-        echo -e "${RED}Error: Destination directory already exists: $DEST_DIR${NC}"
-        echo -e "${YELLOW}Use --force to overwrite${NC}"
-        exit 1
-    else
-        echo -e "${YELLOW}Warning: Destination directory exists and will be overwritten${NC}"
-        echo -e "${YELLOW}Removing existing directory: $DEST_DIR${NC}"
-        rm -rf "$DEST_DIR"
-        echo -e "${GREEN}✓${NC} Existing directory removed"
-    fi
+    echo -e "${RED}Error: Destination directory already exists: $DEST_DIR${NC}"
+    exit 1
 fi
 
 echo -e "${BLUE}╔════════════════════════════════════════════════════════════╗${NC}"
@@ -98,7 +83,6 @@ echo ""
 echo -e "${YELLOW}Source:${NC}      $SOURCE_DIR"
 echo -e "${YELLOW}Destination:${NC} $DEST_DIR"
 echo -e "${YELLOW}Keep docs:${NC}   $KEEP_DOCS"
-echo -e "${YELLOW}Force:${NC}       $FORCE"
 echo ""
 
 # Check PHP version and required extensions
@@ -196,6 +180,12 @@ RSYNC_EXCLUDES=(
     'storage/sessions/*'
     'storage/cache/*'
     'storage/logs/*'
+
+    # Frontend framework files
+    'frontend'
+    'public/frontend'
+    'package.json'
+    'routes/web/frontend.php'
 
     # Demo documentation system
     'docs'

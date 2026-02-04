@@ -1,0 +1,1012 @@
+{
+  "menu": [
+    {
+      "id": "dashboard",
+      "title": "Dashboard",
+      "icon": "dashboard",
+      "url": "index.php"
+    },
+    {
+      "id": "ui-demo",
+      "title": "UI Demo Site",
+      "icon": "web",
+      "url": "../ui-demo/index.php",
+      "badge": "New"
+    },
+    {
+      "id": "sixorbit-element",
+      "title": "SixOrbit Element",
+      "icon": "widgets",
+      "children": [
+        {
+          "id": "grid-system",
+          "title": "Grid System",
+          "icon": "grid_view",
+          "children": [
+            {
+              "id": "breakpoints",
+              "title": "Breakpoints",
+              "icon": "devices",
+              "url": "grid/breakpoints.php"
+            },
+            {
+              "id": "columns",
+              "title": "Columns",
+              "icon": "view_column",
+              "url": "grid/columns.php"
+            },
+            {
+              "id": "containers",
+              "title": "Containers",
+              "icon": "crop_free",
+              "url": "grid/containers.php"
+            },
+            {
+              "id": "css-grid",
+              "title": "CSS Grid",
+              "icon": "apps",
+              "url": "grid/css-grid.php"
+            },
+            {
+              "id": "grid",
+              "title": "Grid",
+              "icon": "grid_on",
+              "url": "grid/grid.php"
+            },
+            {
+              "id": "gutters",
+              "title": "Gutters",
+              "icon": "space_bar",
+              "url": "grid/gutters.php"
+            },
+            {
+              "id": "layouts",
+              "title": "Layouts",
+              "icon": "dashboard_customize",
+              "url": "grid/layouts.php"
+            },
+            {
+              "id": "grid-utilities",
+              "title": "Utilities",
+              "icon": "build",
+              "url": "grid/utilities.php"
+            },
+            {
+              "id": "z-index",
+              "title": "Z-Index",
+              "icon": "layers",
+              "url": "grid/z-index.php"
+            }
+          ]
+        },
+        {
+          "id": "form-elements",
+          "title": "Components",
+          "icon": "input",
+          "children": [
+            {
+              "id": "accordion",
+              "title": "1. Accordion",
+              "icon": "expand_more",
+              "url": "elements/accordion.php"
+            },
+            {
+              "id": "alerts-toasts",
+              "title": "2. Alerts & Toasts",
+              "icon": "notifications",
+              "url": "elements/alerts-toasts.php"
+            },
+            {
+              "id": "animations",
+              "title": "3. Animations",
+              "icon": "animation",
+              "url": "elements/animations.php",
+              "badge": "New"
+            },
+            {
+              "id": "autocomplete",
+              "title": "4. Autocomplete",
+              "icon": "search",
+              "url": "elements/autocomplete.php",
+              "badge": "New"
+            },
+            {
+              "id": "badges",
+              "title": "5. Badges",
+              "icon": "new_releases",
+              "url": "elements/badges.php"
+            },
+            {
+              "id": "breadcrumb",
+              "title": "6. Breadcrumb",
+              "icon": "navigation",
+              "url": "elements/breadcrumb.php"
+            },
+            {
+              "id": "button-groups",
+              "title": "7. Button Groups",
+              "icon": "view_week",
+              "url": "elements/button-groups.php"
+            },
+            {
+              "id": "buttons",
+              "title": "8. Buttons",
+              "icon": "smart_button",
+              "url": "elements/buttons.php"
+            },
+            {
+              "id": "cards",
+              "title": "9. Cards",
+              "icon": "credit_card",
+              "url": "elements/cards.php"
+            },
+            {
+              "id": "carousel",
+              "title": "10. Carousel",
+              "icon": "view_carousel",
+              "url": "elements/carousel.php"
+            },
+            {
+              "id": "checkboxes",
+              "title": "11. Checkboxes & Radios",
+              "icon": "check_box",
+              "url": "elements/checkboxes.php"
+            },
+            {
+              "id": "code-block",
+              "title": "12. Code Block",
+              "icon": "code",
+              "url": "elements/code-block.php",
+              "badge": "New"
+            },
+            {
+              "id": "collapse",
+              "title": "13. Collapse",
+              "icon": "unfold_less",
+              "url": "elements/collapse.php"
+            },
+            {
+              "id": "colors",
+              "title": "14. Colors",
+              "icon": "palette",
+              "url": "elements/colors.php"
+            },
+            {
+              "id": "context-menu",
+              "title": "15. Context Menu",
+              "icon": "more_vert",
+              "url": "elements/context-menu.php"
+            },
+            {
+              "id": "copy",
+              "title": "16. Copy Button",
+              "icon": "content_copy",
+              "url": "elements/copy.php",
+              "badge": "New"
+            },
+            {
+              "id": "dropdowns",
+              "title": "17. Dropdowns",
+              "icon": "arrow_drop_down_circle",
+              "url": "elements/dropdowns.php"
+            },
+            {
+              "id": "empty-states",
+              "title": "18. Empty States",
+              "icon": "inbox",
+              "url": "elements/empty-states.php",
+              "badge": "New"
+            },
+            {
+              "id": "forms",
+              "title": "19. Forms",
+              "icon": "edit_note",
+              "children": [
+                {
+                  "id": "basic-inputs",
+                  "title": "1. Basic Inputs",
+                  "icon": "text_fields",
+                  "url": "elements/basic-inputs.php"
+                },
+                {
+                  "id": "complete-forms",
+                  "title": "2. Complete Forms",
+                  "icon": "assignment",
+                  "url": "elements/complete-forms.php"
+                },
+                {
+                  "id": "file-color",
+                  "title": "3. File & Color",
+                  "icon": "attach_file",
+                  "url": "elements/file-color.php"
+                },
+                {
+                  "id": "floating-labels",
+                  "title": "4. Floating Labels",
+                  "icon": "label",
+                  "url": "elements/floating-labels.php"
+                },
+                {
+                  "id": "form-layouts",
+                  "title": "5. Form Layouts",
+                  "icon": "view_quilt",
+                  "url": "elements/form-layouts.php"
+                },
+                {
+                  "id": "validation",
+                  "title": "6. Validation",
+                  "icon": "verified",
+                  "url": "elements/validation.php"
+                },
+                {
+                  "id": "form-enhancements",
+                  "title": "7. Form Enhancements",
+                  "icon": "auto_fix_high",
+                  "url": "elements/form-enhancements.php",
+                  "badge": "New"
+                }
+              ]
+            },
+            {
+              "id": "input-groups",
+              "title": "20. Input Groups",
+              "icon": "group_work",
+              "url": "elements/input-groups.php"
+            },
+            {
+              "id": "inputs",
+              "title": "21. Inputs",
+              "icon": "text_fields",
+              "url": "elements/inputs.php"
+            },
+            {
+              "id": "list-group",
+              "title": "22. List Group",
+              "icon": "list",
+              "url": "elements/list-group.php"
+            },
+            {
+              "id": "media-object",
+              "title": "23. Media Object",
+              "icon": "perm_media",
+              "url": "elements/media-object.php",
+              "badge": "New"
+            },
+            {
+              "id": "modals",
+              "title": "24. Modals",
+              "icon": "open_in_new",
+              "url": "elements/modals.php"
+            },
+            {
+              "id": "navbar",
+              "title": "25. Navbar",
+              "icon": "web",
+              "url": "elements/navbar.php"
+            },
+            {
+              "id": "offcanvas",
+              "title": "26. Offcanvas",
+              "icon": "menu_open",
+              "url": "elements/offcanvas.php"
+            },
+            {
+              "id": "otp-input",
+              "title": "27. OTP Input",
+              "icon": "pin",
+              "url": "elements/otp-input.php"
+            },
+            {
+              "id": "pagination",
+              "title": "28. Pagination",
+              "icon": "last_page",
+              "url": "elements/pagination.php"
+            },
+            {
+              "id": "popover",
+              "title": "29. Popover",
+              "icon": "chat_bubble",
+              "url": "elements/popover.php",
+              "badge": "New"
+            },
+            {
+              "id": "print",
+              "title": "30. Print Styles",
+              "icon": "print",
+              "url": "elements/print.php",
+              "badge": "New"
+            },
+            {
+              "id": "progress",
+              "title": "31. Progress",
+              "icon": "donut_large",
+              "url": "elements/progress.php"
+            },
+            {
+              "id": "rating",
+              "title": "32. Rating",
+              "icon": "star",
+              "url": "elements/rating.php",
+              "badge": "New"
+            },
+            {
+              "id": "rtl",
+              "title": "33. RTL Support",
+              "icon": "format_textdirection_r_to_l",
+              "url": "elements/rtl.php",
+              "badge": "New"
+            },
+            {
+              "id": "scrollspy",
+              "title": "34. Scrollspy",
+              "icon": "visibility",
+              "url": "elements/scrollspy.php"
+            },
+            {
+              "id": "scroll-navigation",
+              "title": "35. Scroll Navigation",
+              "icon": "swap_vert",
+              "url": "elements/go-to-top.php",
+              "badge": "New"
+            },
+            {
+              "id": "skeleton",
+              "title": "36. Skeleton",
+              "icon": "hourglass_empty",
+              "url": "elements/skeleton.php",
+              "badge": "New"
+            },
+            {
+              "id": "sliders",
+              "title": "37. Sliders",
+              "icon": "tune",
+              "url": "elements/sliders.php"
+            },
+            {
+              "id": "spinners",
+              "title": "38. Spinners",
+              "icon": "refresh",
+              "url": "elements/spinners.php",
+              "badge": "New"
+            },
+            {
+              "id": "stepper",
+              "title": "39. Stepper",
+              "icon": "format_list_numbered",
+              "url": "elements/stepper.php",
+              "badge": "New"
+            },
+            {
+              "id": "tables",
+              "title": "40. Tables",
+              "icon": "table_chart",
+              "url": "elements/tables.php"
+            },
+            {
+              "id": "tabs",
+              "title": "41. Tabs",
+              "icon": "tab",
+              "url": "elements/tabs.php"
+            },
+            {
+              "id": "tags-avatars",
+              "title": "42. Tags & Avatars",
+              "icon": "local_offer",
+              "url": "elements/tags-avatars.php"
+            },
+            {
+              "id": "timeline",
+              "title": "43. Timeline",
+              "icon": "timeline",
+              "url": "elements/timeline.php",
+              "badge": "New"
+            },
+            {
+              "id": "tooltips",
+              "title": "44. Tooltips",
+              "icon": "chat_bubble_outline",
+              "url": "elements/tooltips.php"
+            },
+            {
+              "id": "utilities",
+              "title": "45. Utilities",
+              "icon": "handyman",
+              "url": "elements/utilities.php"
+            }
+          ]
+        },
+        {
+          "id": "ui-engine",
+          "title": "UI Engine",
+          "icon": "auto_awesome",
+          "badge": "New",
+          "children": [
+            {
+              "id": "uie-form",
+              "title": "Form Elements",
+              "icon": "input",
+              "children": [
+                {"id": "uie-autocomplete", "title": "1. Autocomplete", "icon": "search", "url": "ui-engine/form/autocomplete.php"},
+                {"id": "uie-button", "title": "2. Button", "icon": "smart_button", "url": "ui-engine/form/button.php"},
+                {"id": "uie-checkbox", "title": "3. Checkbox", "icon": "check_box", "url": "ui-engine/form/checkbox.php"},
+                {"id": "uie-color-input", "title": "4. Color Input", "icon": "palette", "url": "ui-engine/form/color-input.php"},
+                {"id": "uie-date-picker", "title": "5. Date Picker", "icon": "calendar_today", "url": "ui-engine/form/date-picker.php"},
+                {"id": "uie-dropzone", "title": "6. Dropzone", "icon": "cloud_upload", "url": "ui-engine/form/dropzone.php"},
+                {"id": "uie-file-input", "title": "7. File Input", "icon": "attach_file", "url": "ui-engine/form/file-input.php"},
+                {"id": "uie-form", "title": "8. Form", "icon": "description", "url": "ui-engine/form/form.php"},
+                {"id": "uie-hidden", "title": "9. Hidden", "icon": "visibility_off", "url": "ui-engine/form/hidden.php"},
+                {"id": "uie-input", "title": "10. Input", "icon": "text_fields", "url": "ui-engine/form/input.php"},
+                {"id": "uie-otp-input", "title": "11. OTP Input", "icon": "pin", "url": "ui-engine/form/otp-input.php"},
+                {"id": "uie-radio", "title": "12. Radio", "icon": "radio_button_checked", "url": "ui-engine/form/radio.php"},
+                {"id": "uie-select", "title": "13. Select", "icon": "arrow_drop_down", "url": "ui-engine/form/select.php"},
+                {"id": "uie-slider", "title": "14. Slider", "icon": "tune", "url": "ui-engine/form/slider.php"},
+                {"id": "uie-switch", "title": "15. Switch", "icon": "toggle_on", "url": "ui-engine/form/switch.php"},
+                {"id": "uie-textarea", "title": "16. Textarea", "icon": "notes", "url": "ui-engine/form/textarea.php"},
+                {"id": "uie-time-picker", "title": "17. Time Picker", "icon": "schedule", "url": "ui-engine/form/time-picker.php"}
+              ]
+            },
+            {
+              "id": "uie-display",
+              "title": "Display Elements",
+              "icon": "widgets",
+              "children": [
+                {"id": "uie-accordion", "title": "1. Accordion", "icon": "expand_more", "url": "ui-engine/display/accordion.php"},
+                {"id": "uie-alert", "title": "2. Alert", "icon": "warning", "url": "ui-engine/display/alert.php"},
+                {"id": "uie-badge", "title": "3. Badge", "icon": "new_releases", "url": "ui-engine/display/badge.php"},
+                {"id": "uie-breadcrumb", "title": "4. Breadcrumb", "icon": "navigation", "url": "ui-engine/display/breadcrumb.php"},
+                {"id": "uie-card", "title": "5. Card", "icon": "credit_card", "url": "ui-engine/display/card.php"},
+                {"id": "uie-carousel", "title": "6. Carousel", "icon": "view_carousel", "url": "ui-engine/display/carousel.php"},
+                {"id": "uie-code-block", "title": "7. Code Block", "icon": "code", "url": "ui-engine/display/code-block.php"},
+                {"id": "uie-empty-state", "title": "8. Empty State", "icon": "inbox", "url": "ui-engine/display/empty-state.php"},
+                {"id": "uie-list-group", "title": "9. List Group", "icon": "list", "url": "ui-engine/display/list-group.php"},
+                {"id": "uie-media-object", "title": "10. Media Object", "icon": "perm_media", "url": "ui-engine/display/media-object.php"},
+                {"id": "uie-modal", "title": "11. Modal", "icon": "open_in_new", "url": "ui-engine/display/modal.php"},
+                {"id": "uie-pagination", "title": "12. Pagination", "icon": "last_page", "url": "ui-engine/display/pagination.php"},
+                {"id": "uie-progress", "title": "13. Progress", "icon": "donut_large", "url": "ui-engine/display/progress.php"},
+                {"id": "uie-rating", "title": "14. Rating", "icon": "star", "url": "ui-engine/display/rating.php"},
+                {"id": "uie-skeleton", "title": "15. Skeleton", "icon": "hourglass_empty", "url": "ui-engine/display/skeleton.php"},
+                {"id": "uie-spinner", "title": "16. Spinner", "icon": "refresh", "url": "ui-engine/display/spinner.php"},
+                {"id": "uie-stepper", "title": "17. Stepper", "icon": "format_list_numbered", "url": "ui-engine/display/stepper.php"},
+                {"id": "uie-table", "title": "18. Table", "icon": "table_chart", "url": "ui-engine/display/table.php"},
+                {"id": "uie-tabs", "title": "19. Tabs", "icon": "tab", "url": "ui-engine/display/tabs.php"},
+                {"id": "uie-timeline", "title": "20. Timeline", "icon": "timeline", "url": "ui-engine/display/timeline.php"},
+                {"id": "uie-toast", "title": "21. Toast", "icon": "notifications", "url": "ui-engine/display/toast.php"},
+                {"id": "uie-tooltip", "title": "22. Tooltip", "icon": "chat_bubble_outline", "url": "ui-engine/display/tooltip.php"}
+              ]
+            },
+            {
+              "id": "uie-navigation",
+              "title": "Navigation Elements",
+              "icon": "menu",
+              "children": [
+                {"id": "uie-collapse", "title": "1. Collapse", "icon": "unfold_less", "url": "ui-engine/navigation/collapse.php"},
+                {"id": "uie-context-menu", "title": "2. Context Menu", "icon": "more_vert", "url": "ui-engine/navigation/context-menu.php"},
+                {"id": "uie-dropdown", "title": "3. Dropdown", "icon": "arrow_drop_down_circle", "url": "ui-engine/navigation/dropdown.php"},
+                {"id": "uie-navbar", "title": "4. Navbar", "icon": "web", "url": "ui-engine/navigation/navbar.php"}
+              ]
+            },
+            {
+              "id": "uie-layout",
+              "title": "Layout Elements",
+              "icon": "dashboard",
+              "children": [
+                {"id": "uie-column", "title": "1. Column", "icon": "view_column", "url": "ui-engine/layout/column.php"},
+                {"id": "uie-container", "title": "2. Container", "icon": "crop_free", "url": "ui-engine/layout/container.php"},
+                {"id": "uie-divider", "title": "3. Divider", "icon": "horizontal_rule", "url": "ui-engine/layout/divider.php"},
+                {"id": "uie-flex", "title": "4. Flex", "icon": "view_agenda", "url": "ui-engine/layout/flex.php"},
+                {"id": "uie-grid", "title": "5. Grid", "icon": "grid_on", "url": "ui-engine/layout/grid.php"},
+                {"id": "uie-row", "title": "6. Row", "icon": "table_rows", "url": "ui-engine/layout/row.php"}
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "office",
+      "title": "Office",
+      "icon": "business",
+      "children": [
+        {
+          "id": "purchase-indent",
+          "title": "Purchase Indent",
+          "icon": "assignment",
+          "children": [
+            {
+              "id": "create-pi",
+              "title": "Create Purchase Indent",
+              "icon": "add_circle",
+              "url": "#create-pi"
+            },
+            {
+              "id": "pi-list",
+              "title": "Purchase Indent List",
+              "icon": "list_alt",
+              "url": "#pi-list"
+            }
+          ]
+        },
+        {
+          "id": "purchase-order",
+          "title": "Purchase Order",
+          "icon": "shopping_cart",
+          "children": [
+            {
+              "id": "create-po",
+              "title": "Create Purchase Order",
+              "icon": "add_shopping_cart",
+              "url": "#create-po"
+            },
+            {
+              "id": "po-list",
+              "title": "Purchase Order List",
+              "icon": "list_alt",
+              "url": "#po-list"
+            }
+          ]
+        },
+        {
+          "id": "vendor",
+          "title": "Vendor",
+          "icon": "storefront",
+          "children": [
+            {
+              "id": "create-vendor",
+              "title": "Create Vendor",
+              "icon": "person_add",
+              "url": "#create-vendor"
+            },
+            {
+              "id": "vendor-list",
+              "title": "Vendor List",
+              "icon": "list_alt",
+              "url": "#vendor-list"
+            }
+          ]
+        },
+        {
+          "id": "stock-requests",
+          "title": "Stock Requests",
+          "icon": "inventory_2",
+          "children": [
+            {
+              "id": "create-sr",
+              "title": "Create Stock Request",
+              "icon": "add_box",
+              "url": "#create-sr"
+            },
+            {
+              "id": "sr-list",
+              "title": "Stock Request List",
+              "icon": "list_alt",
+              "url": "#sr-list"
+            }
+          ]
+        },
+        {
+          "id": "stock-transfer",
+          "title": "Stock Transfer",
+          "icon": "swap_horiz",
+          "children": [
+            {
+              "id": "create-st",
+              "title": "Create Stock Transfer",
+              "icon": "move_to_inbox",
+              "url": "#create-st"
+            },
+            {
+              "id": "st-list",
+              "title": "Stock Transfer List",
+              "icon": "list_alt",
+              "url": "#st-list"
+            }
+          ]
+        },
+        {
+          "id": "office-reports",
+          "title": "Reports",
+          "icon": "analytics",
+          "children": [
+            {
+              "id": "pi-report",
+              "title": "Purchase Indent Report",
+              "icon": "summarize",
+              "url": "#pi-report"
+            },
+            {
+              "id": "po-report",
+              "title": "Purchase Order Report",
+              "icon": "summarize",
+              "url": "#po-report"
+            },
+            {
+              "id": "stock-reports",
+              "title": "Stock Reports",
+              "icon": "inventory",
+              "children": [
+                {
+                  "id": "current-stock",
+                  "title": "Current Stock",
+                  "icon": "inventory",
+                  "url": "#current-stock"
+                },
+                {
+                  "id": "stock-movement",
+                  "title": "Stock Movement",
+                  "icon": "trending_flat",
+                  "url": "#stock-movement"
+                },
+                {
+                  "id": "stock-analysis",
+                  "title": "Stock Analysis",
+                  "icon": "insights",
+                  "children": [
+                    {
+                      "id": "daily-analysis",
+                      "title": "Daily Analysis",
+                      "icon": "today",
+                      "url": "#daily-analysis"
+                    },
+                    {
+                      "id": "weekly-trend",
+                      "title": "Weekly Trend",
+                      "icon": "date_range",
+                      "url": "#weekly-trend"
+                    },
+                    {
+                      "id": "monthly-trend",
+                      "title": "Monthly Trend",
+                      "icon": "calendar_month",
+                      "url": "#monthly-trend"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "finance",
+      "title": "Finance",
+      "icon": "account_balance",
+      "children": [
+        {
+          "id": "account",
+          "title": "Account",
+          "icon": "account_tree",
+          "children": [
+            {
+              "id": "groups",
+              "title": "Groups",
+              "icon": "folder",
+              "url": "#groups"
+            },
+            {
+              "id": "ledgers",
+              "title": "Ledgers",
+              "icon": "menu_book",
+              "url": "#ledgers"
+            },
+            {
+              "id": "vouchers",
+              "title": "Vouchers",
+              "icon": "receipt",
+              "url": "#vouchers"
+            }
+          ]
+        },
+        {
+          "id": "sales-invoice",
+          "title": "Sales Invoice",
+          "icon": "receipt_long",
+          "children": [
+            {
+              "id": "create-si",
+              "title": "Create Sales Invoice",
+              "icon": "add_circle",
+              "url": "#create-si"
+            },
+            {
+              "id": "si-list",
+              "title": "Sales Invoice List",
+              "icon": "list_alt",
+              "url": "#si-list"
+            }
+          ]
+        },
+        {
+          "id": "purchase-invoice",
+          "title": "Purchase Invoice",
+          "icon": "request_quote",
+          "children": [
+            {
+              "id": "create-pinv",
+              "title": "Create Purchase Invoice",
+              "icon": "add_circle",
+              "url": "#create-pinv"
+            },
+            {
+              "id": "pinv-list",
+              "title": "Purchase Invoice List",
+              "icon": "list_alt",
+              "url": "#pinv-list"
+            }
+          ]
+        },
+        {
+          "id": "receipt",
+          "title": "Receipt",
+          "icon": "call_received",
+          "children": [
+            {
+              "id": "create-receipt",
+              "title": "Create Receipt",
+              "icon": "add_circle",
+              "url": "#create-receipt"
+            },
+            {
+              "id": "receipt-list",
+              "title": "Receipt List",
+              "icon": "list_alt",
+              "url": "#receipt-list"
+            }
+          ]
+        },
+        {
+          "id": "payment",
+          "title": "Payment",
+          "icon": "payments",
+          "children": [
+            {
+              "id": "create-payment",
+              "title": "Create Payment",
+              "icon": "add_circle",
+              "url": "#create-payment"
+            },
+            {
+              "id": "payment-list",
+              "title": "Payment List",
+              "icon": "list_alt",
+              "url": "#payment-list"
+            }
+          ]
+        },
+        {
+          "id": "credit-note",
+          "title": "Credit Note",
+          "icon": "note_add",
+          "children": [
+            {
+              "id": "create-cn",
+              "title": "Create Credit Note",
+              "icon": "add_circle",
+              "url": "#create-cn"
+            },
+            {
+              "id": "cn-list",
+              "title": "Credit Note List",
+              "icon": "list_alt",
+              "url": "#cn-list"
+            }
+          ]
+        },
+        {
+          "id": "debit-note",
+          "title": "Debit Note",
+          "icon": "sticky_note_2",
+          "children": [
+            {
+              "id": "create-dn",
+              "title": "Create Debit Note",
+              "icon": "add_circle",
+              "url": "#create-dn"
+            },
+            {
+              "id": "dn-list",
+              "title": "Debit Note List",
+              "icon": "list_alt",
+              "url": "#dn-list"
+            }
+          ]
+        },
+        {
+          "id": "statutory",
+          "title": "Statutory Info",
+          "icon": "gavel",
+          "children": [
+            {
+              "id": "gst-settings",
+              "title": "GST Settings",
+              "icon": "percent",
+              "url": "#gst-settings"
+            },
+            {
+              "id": "tds-settings",
+              "title": "TDS Settings",
+              "icon": "calculate",
+              "url": "#tds-settings"
+            }
+          ]
+        },
+        {
+          "id": "asset",
+          "title": "Asset",
+          "icon": "apartment",
+          "children": [
+            {
+              "id": "create-asset",
+              "title": "Create Asset",
+              "icon": "add_home",
+              "url": "#create-asset"
+            },
+            {
+              "id": "asset-list",
+              "title": "Asset List",
+              "icon": "list_alt",
+              "url": "#asset-list"
+            }
+          ]
+        },
+        {
+          "id": "finance-reports",
+          "title": "Reports",
+          "icon": "assessment",
+          "children": [
+            {
+              "id": "cash-flow-summary",
+              "title": "Cash Flow Summary",
+              "icon": "account_balance_wallet",
+              "url": "cash-flow-summary.php"
+            },
+            {
+              "id": "trial-balance",
+              "title": "Trial Balance",
+              "icon": "balance",
+              "url": "trial-balance.php"
+            },
+            {
+              "id": "profit-loss",
+              "title": "Profit & Loss",
+              "icon": "trending_up",
+              "url": "profit-loss.php"
+            },
+            {
+              "id": "monthwise-profit-loss",
+              "title": "Monthwise P&L",
+              "icon": "calendar_month",
+              "url": "monthwise-profit-loss.php"
+            },
+            {
+              "id": "balance-sheet",
+              "title": "Balance Sheet",
+              "icon": "account_balance",
+              "url": "balance-sheet.php"
+            },
+            {
+              "id": "group-summary",
+              "title": "Group Summary",
+              "icon": "summarize",
+              "url": "group-summary.php"
+            },
+            {
+              "id": "other-reports",
+              "title": "Other Reports",
+              "icon": "more_horiz",
+              "url": "other-reports.php"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sales",
+      "title": "Sales",
+      "icon": "point_of_sale",
+      "children": [
+        {
+          "id": "leads",
+          "title": "Leads",
+          "icon": "leaderboard",
+          "children": [
+            {
+              "id": "create-lead",
+              "title": "Create Lead",
+              "icon": "person_add",
+              "url": "#create-lead"
+            },
+            {
+              "id": "lead-list",
+              "title": "Lead List",
+              "icon": "list_alt",
+              "url": "#lead-list"
+            }
+          ]
+        },
+        {
+          "id": "quotation",
+          "title": "Quotation",
+          "icon": "description",
+          "children": [
+            {
+              "id": "create-quote",
+              "title": "Create Quotation",
+              "icon": "post_add",
+              "url": "#create-quote"
+            },
+            {
+              "id": "quote-list",
+              "title": "Quotation List",
+              "icon": "list_alt",
+              "url": "#quote-list"
+            }
+          ]
+        },
+        {
+          "id": "sales-order",
+          "title": "Sales Order",
+          "icon": "shopping_bag",
+          "children": [
+            {
+              "id": "create-so",
+              "title": "Create Sales Order",
+              "icon": "add_shopping_cart",
+              "url": "#create-so"
+            },
+            {
+              "id": "so-list",
+              "title": "Sales Order List",
+              "icon": "list_alt",
+              "url": "#so-list"
+            }
+          ]
+        },
+        {
+          "id": "customer",
+          "title": "Customer",
+          "icon": "people",
+          "children": [
+            {
+              "id": "create-customer",
+              "title": "Create Customer",
+              "icon": "person_add",
+              "url": "#create-customer"
+            },
+            {
+              "id": "customer-list",
+              "title": "Customer List",
+              "icon": "list_alt",
+              "url": "#customer-list"
+            },
+            {
+              "id": "wallet",
+              "title": "Customer Wallet",
+              "icon": "account_balance_wallet",
+              "url": "wallet.php"
+            }
+          ]
+        },
+        {
+          "id": "sales-reports",
+          "title": "Reports",
+          "icon": "bar_chart",
+          "children": [
+            {
+              "id": "sales-report",
+              "title": "Sales Report",
+              "icon": "trending_up",
+              "url": "#sales-report"
+            },
+            {
+              "id": "lead-report",
+              "title": "Lead Report",
+              "icon": "leaderboard",
+              "url": "#lead-report"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,1251 @@
+// ============================================
+// SIXORBIT UI - TABS COMPONENT
+// Navigation tabs and tab content
+// ============================================
+
+@use "../abstracts" as *;
+
+// ============================================
+// BASE TABS CONTAINER
+// ============================================
+
+.#{$so-prefix}tabs {
+  display: flex;
+  align-items: center;
+  gap: spacing("1");
+  flex-wrap: wrap;
+  border-bottom: 1px solid css-var("border-color");
+  padding-bottom: 0;
+
+  // Remove border for variants that don't need it
+  &.#{$so-prefix}tabs-pills,
+  &.#{$so-prefix}tabs-boxed,
+  &.#{$so-prefix}tabs-ghost {
+    border-bottom: none;
+  }
+}
+
+// ============================================
+// TAB LABEL (e.g., "Jump to:")
+// ============================================
+
+.#{$so-prefix}tabs-label {
+  font-size: font-size("sm");
+  font-weight: font-weight("semibold");
+  color: css-var("text-secondary");
+  padding: spacing("2") 0;
+  white-space: nowrap;
+}
+
+// ============================================
+// BASE TAB ITEM
+// ============================================
+
+.#{$so-prefix}tab {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: spacing("2");
+  min-height: 36px;
+  padding: spacing("2") spacing("4");
+  font-size: font-size("sm");
+  font-weight: font-weight("medium");
+  color: css-var("text-secondary");
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: all $so-transition-base;
+  position: relative;
+  margin-bottom: -1px;
+  overflow: visible; // Ensure content doesn't clip
+
+  // Underline indicator (default variant)
+  &::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: transparent;
+    transition: background $so-transition-base;
+  }
+
+  // Hover state
+  &:hover {
+    color: css-var("text-primary");
+    background: css-var("card-hover-bg");
+  }
+
+  // Focus state
+  &:focus {
+    outline: none;
+  }
+
+  &:focus-visible,
+  &.#{$so-prefix}focus-visible {
+    outline: 2px solid css-var("accent-primary");
+    outline-offset: -2px;
+  }
+
+  // Active state
+  &.#{$so-prefix}active,
+  &[aria-selected="true"] {
+    color: css-var("accent-primary");
+
+    &::after {
+      background: css-var("accent-primary");
+    }
+  }
+
+  // Disabled state
+  &.#{$so-prefix}disabled,
+  &:disabled,
+  &[aria-disabled="true"] {
+    color: css-var("text-disabled");
+    pointer-events: none;
+    cursor: not-allowed;
+  }
+
+  // Icon inside tab
+  .material-icons {
+    font-size: 21px;
+    line-height: 1;
+    width: 21px;
+    height: 21px;
+    flex-shrink: 0;
+  }
+}
+
+// ============================================
+// PILLS VARIANT
+// ============================================
+
+.#{$so-prefix}tabs-pills {
+  gap: spacing("2");
+
+  .#{$so-prefix}tab {
+    border-radius: radius("md");
+    margin-bottom: 0;
+
+    &::after {
+      display: none;
+    }
+
+    &:hover {
+      background: css-var("card-hover-bg");
+    }
+
+    &.#{$so-prefix}active,
+    &[aria-selected="true"] {
+      color: $so-white;
+      background: css-var("accent-primary");
+
+      &:hover {
+        background: $so-primary-hover;
+      }
+    }
+  }
+}
+
+// ============================================
+// BOXED/SEGMENTED VARIANT
+// ============================================
+
+.#{$so-prefix}tabs-boxed {
+  display: inline-flex;
+  gap: 0;
+  padding: spacing("1");
+  background: css-var("card-hover-bg");
+  border-radius: radius("lg");
+
+  .#{$so-prefix}tab {
+    border-radius: radius("md");
+    margin-bottom: 0;
+
+    &::after {
+      display: none;
+    }
+
+    &:hover {
+      background: rgba(0, 0, 0, 0.05);
+    }
+
+    &.#{$so-prefix}active,
+    &[aria-selected="true"] {
+      color: css-var("text-primary");
+      background: css-var("card-bg");
+      box-shadow: shadow("sm");
+
+      &:hover {
+        background: css-var("card-bg");
+      }
+    }
+  }
+}
+
+// ============================================
+// GHOST VARIANT
+// ============================================
+
+.#{$so-prefix}tabs-ghost {
+  gap: spacing("1");
+
+  .#{$so-prefix}tab {
+    border-radius: radius("md");
+    margin-bottom: 0;
+
+    &::after {
+      display: none;
+    }
+
+    &:hover {
+      background: css-var("card-hover-bg");
+    }
+
+    &.#{$so-prefix}active,
+    &[aria-selected="true"] {
+      color: css-var("accent-primary");
+      background: alpha($so-primary, 0.1);
+
+      &:hover {
+        background: alpha($so-primary, 0.15);
+      }
+    }
+  }
+}
+
+// ============================================
+// BORDERED VARIANT
+// ============================================
+
+.#{$so-prefix}tabs-bordered {
+  gap: spacing("2");
+  border-bottom: none;
+
+  .#{$so-prefix}tab {
+    border: 1px solid css-var("border-color");
+    border-radius: radius("md");
+    margin-bottom: 0;
+
+    &::after {
+      display: none;
+    }
+
+    &:hover {
+      border-color: css-var("border-dark");
+      background: css-var("card-hover-bg");
+    }
+
+    &.#{$so-prefix}active,
+    &[aria-selected="true"] {
+      color: css-var("accent-primary");
+      border-color: css-var("accent-primary");
+      background: alpha($so-primary, 0.05);
+
+      &:hover {
+        background: alpha($so-primary, 0.1);
+      }
+    }
+  }
+}
+
+// ============================================
+// SIZE VARIANTS
+// ============================================
+
+// Small tabs
+.#{$so-prefix}tabs-sm {
+  .#{$so-prefix}tab {
+    min-height: 28px;
+    padding: spacing("1") + 2px spacing("3");
+    font-size: 12px;
+
+    .material-icons {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+    }
+  }
+
+  .#{$so-prefix}tabs-label {
+    font-size: 12px;
+  }
+
+  // Adjust boxed padding
+  &.#{$so-prefix}tabs-boxed {
+    padding: 3px;
+  }
+}
+
+// Large tabs
+.#{$so-prefix}tabs-lg {
+  .#{$so-prefix}tab {
+    min-height: 44px;
+    padding: spacing("3") spacing("5");
+    font-size: font-size("base");
+
+    .material-icons {
+      font-size: 22px;
+      width: 22px;
+      height: 22px;
+    }
+  }
+
+  .#{$so-prefix}tabs-label {
+    font-size: font-size("base");
+  }
+
+  // Adjust boxed padding
+  &.#{$so-prefix}tabs-boxed {
+    padding: spacing("1") + 2px;
+  }
+}
+
+// ============================================
+// CONTEXTUAL COLOR VARIANTS
+// ============================================
+
+// Primary (default - no extra class needed)
+.#{$so-prefix}tabs-primary {
+  .#{$so-prefix}tab.active,
+  .#{$so-prefix}tab[aria-selected="true"] {
+    color: css-var("accent-primary");
+
+    &::after {
+      background: css-var("accent-primary");
+    }
+  }
+
+  &.#{$so-prefix}tabs-pills .#{$so-prefix}tab.active,
+  &.#{$so-prefix}tabs-pills .#{$so-prefix}tab[aria-selected="true"] {
+    background: css-var("accent-primary");
+    color: $so-white;
+  }
+}
+
+// Success
+.#{$so-prefix}tabs-success {
+  .#{$so-prefix}tab.active,
+  .#{$so-prefix}tab[aria-selected="true"] {
+    color: css-var("accent-success");
+
+    &::after {
+      background: css-var("accent-success");
+    }
+  }
+
+  &.#{$so-prefix}tabs-pills .#{$so-prefix}tab.active,
+  &.#{$so-prefix}tabs-pills .#{$so-prefix}tab[aria-selected="true"] {
+    background: css-var("accent-success");
+    color: $so-white;
+  }
+
+  &.#{$so-prefix}tabs-ghost .#{$so-prefix}tab.active,
+  &.#{$so-prefix}tabs-ghost .#{$so-prefix}tab[aria-selected="true"] {
+    background: alpha($so-success, 0.1);
+    color: css-var("accent-success");
+  }
+
+  &.#{$so-prefix}tabs-bordered .#{$so-prefix}tab.active,
+  &.#{$so-prefix}tabs-bordered .#{$so-prefix}tab[aria-selected="true"] {
+    border-color: css-var("accent-success");
+    background: alpha($so-success, 0.05);
+    color: css-var("accent-success");
+  }
+}
+
+// Danger
+.#{$so-prefix}tabs-danger {
+  .#{$so-prefix}tab.active,
+  .#{$so-prefix}tab[aria-selected="true"] {
+    color: css-var("accent-danger");
+
+    &::after {
+      background: css-var("accent-danger");
+    }
+  }
+
+  &.#{$so-prefix}tabs-pills .#{$so-prefix}tab.active,
+  &.#{$so-prefix}tabs-pills .#{$so-prefix}tab[aria-selected="true"] {
+    background: css-var("accent-danger");
+    color: $so-white;
+  }
+
+  &.#{$so-prefix}tabs-ghost .#{$so-prefix}tab.active,
+  &.#{$so-prefix}tabs-ghost .#{$so-prefix}tab[aria-selected="true"] {
+    background: alpha($so-danger, 0.1);
+    color: css-var("accent-danger");
+  }
+
+  &.#{$so-prefix}tabs-bordered .#{$so-prefix}tab.active,
+  &.#{$so-prefix}tabs-bordered .#{$so-prefix}tab[aria-selected="true"] {
+    border-color: css-var("accent-danger");
+    background: alpha($so-danger, 0.05);
+    color: css-var("accent-danger");
+  }
+}
+
+// Warning
+.#{$so-prefix}tabs-warning {
+  .#{$so-prefix}tab.active,
+  .#{$so-prefix}tab[aria-selected="true"] {
+    color: css-var("accent-warning");
+
+    &::after {
+      background: css-var("accent-warning");
+    }
+  }
+
+  &.#{$so-prefix}tabs-pills .#{$so-prefix}tab.active,
+  &.#{$so-prefix}tabs-pills .#{$so-prefix}tab[aria-selected="true"] {
+    background: css-var("accent-warning");
+    color: $so-grey-900;
+  }
+
+  &.#{$so-prefix}tabs-ghost .#{$so-prefix}tab.active,
+  &.#{$so-prefix}tabs-ghost .#{$so-prefix}tab[aria-selected="true"] {
+    background: alpha($so-warning, 0.15);
+    color: css-var("accent-warning");
+  }
+
+  &.#{$so-prefix}tabs-bordered .#{$so-prefix}tab.active,
+  &.#{$so-prefix}tabs-bordered .#{$so-prefix}tab[aria-selected="true"] {
+    border-color: css-var("accent-warning");
+    background: alpha($so-warning, 0.05);
+    color: css-var("accent-warning");
+  }
+}
+
+// Info
+.#{$so-prefix}tabs-info {
+  .#{$so-prefix}tab.active,
+  .#{$so-prefix}tab[aria-selected="true"] {
+    color: css-var("accent-info");
+
+    &::after {
+      background: css-var("accent-info");
+    }
+  }
+
+  &.#{$so-prefix}tabs-pills .#{$so-prefix}tab.active,
+  &.#{$so-prefix}tabs-pills .#{$so-prefix}tab[aria-selected="true"] {
+    background: css-var("accent-info");
+    color: $so-white;
+  }
+
+  &.#{$so-prefix}tabs-ghost .#{$so-prefix}tab.active,
+  &.#{$so-prefix}tabs-ghost .#{$so-prefix}tab[aria-selected="true"] {
+    background: alpha($so-info, 0.1);
+    color: css-var("accent-info");
+  }
+
+  &.#{$so-prefix}tabs-bordered .#{$so-prefix}tab.active,
+  &.#{$so-prefix}tabs-bordered .#{$so-prefix}tab[aria-selected="true"] {
+    border-color: css-var("accent-info");
+    background: alpha($so-info, 0.05);
+    color: css-var("accent-info");
+  }
+}
+
+// Secondary
+.#{$so-prefix}tabs-secondary {
+  .#{$so-prefix}tab.active,
+  .#{$so-prefix}tab[aria-selected="true"] {
+    color: css-var("text-primary");
+
+    &::after {
+      background: css-var("text-secondary");
+    }
+  }
+
+  &.#{$so-prefix}tabs-pills .#{$so-prefix}tab.active,
+  &.#{$so-prefix}tabs-pills .#{$so-prefix}tab[aria-selected="true"] {
+    background: $so-secondary;
+    color: $so-white;
+  }
+
+  &.#{$so-prefix}tabs-ghost .#{$so-prefix}tab.active,
+  &.#{$so-prefix}tabs-ghost .#{$so-prefix}tab[aria-selected="true"] {
+    background: css-var("card-hover-bg");
+    color: css-var("text-primary");
+  }
+
+  &.#{$so-prefix}tabs-bordered .#{$so-prefix}tab.active,
+  &.#{$so-prefix}tabs-bordered .#{$so-prefix}tab[aria-selected="true"] {
+    border-color: css-var("text-secondary");
+    background: css-var("card-hover-bg");
+    color: css-var("text-primary");
+  }
+}
+
+// Light
+.#{$so-prefix}tabs-light {
+  .#{$so-prefix}tab.active,
+  .#{$so-prefix}tab[aria-selected="true"] {
+    color: $so-grey-600;
+
+    &::after {
+      background: $so-grey-400;
+    }
+  }
+
+  &.#{$so-prefix}tabs-pills .#{$so-prefix}tab.active,
+  &.#{$so-prefix}tabs-pills .#{$so-prefix}tab[aria-selected="true"] {
+    background: $so-grey-200;
+    color: $so-grey-800;
+  }
+
+  &.#{$so-prefix}tabs-ghost .#{$so-prefix}tab.active,
+  &.#{$so-prefix}tabs-ghost .#{$so-prefix}tab[aria-selected="true"] {
+    background: $so-grey-100;
+    color: $so-grey-700;
+  }
+
+  &.#{$so-prefix}tabs-bordered .#{$so-prefix}tab.active,
+  &.#{$so-prefix}tabs-bordered .#{$so-prefix}tab[aria-selected="true"] {
+    border-color: $so-grey-300;
+    background: $so-grey-50;
+    color: $so-grey-700;
+  }
+}
+
+// Dark
+.#{$so-prefix}tabs-dark {
+  .#{$so-prefix}tab.active,
+  .#{$so-prefix}tab[aria-selected="true"] {
+    color: $so-grey-900;
+
+    &::after {
+      background: $so-grey-900;
+    }
+  }
+
+  &.#{$so-prefix}tabs-pills .#{$so-prefix}tab.active,
+  &.#{$so-prefix}tabs-pills .#{$so-prefix}tab[aria-selected="true"] {
+    background: $so-grey-900;
+    color: $so-white;
+  }
+
+  &.#{$so-prefix}tabs-ghost .#{$so-prefix}tab.active,
+  &.#{$so-prefix}tabs-ghost .#{$so-prefix}tab[aria-selected="true"] {
+    background: alpha($so-grey-900, 0.1);
+    color: $so-grey-900;
+  }
+
+  &.#{$so-prefix}tabs-bordered .#{$so-prefix}tab.active,
+  &.#{$so-prefix}tabs-bordered .#{$so-prefix}tab[aria-selected="true"] {
+    border-color: $so-grey-900;
+    background: alpha($so-grey-900, 0.05);
+    color: $so-grey-900;
+  }
+}
+
+// ============================================
+// ALIGNMENT VARIANTS
+// ============================================
+
+// Center aligned
+.#{$so-prefix}tabs-center {
+  justify-content: center;
+}
+
+// Right aligned
+.#{$so-prefix}tabs-end {
+  justify-content: flex-end;
+}
+
+// Justified (equal width)
+.#{$so-prefix}tabs-justified {
+  .#{$so-prefix}tab {
+    flex: 1;
+    text-align: center;
+  }
+}
+
+// Fill (proportional width)
+.#{$so-prefix}tabs-fill {
+  .#{$so-prefix}tab {
+    flex: 1 1 auto;
+    text-align: center;
+  }
+}
+
+// ============================================
+// VERTICAL TABS
+// ============================================
+
+.#{$so-prefix}tabs-vertical {
+  flex-direction: column;
+  align-items: stretch;
+  flex-wrap: nowrap;
+  border-bottom: none;
+  border-right: 1px solid css-var("border-color");
+  padding-right: 0;
+  padding-bottom: spacing("2");
+
+  .#{$so-prefix}tab {
+    justify-content: flex-start;
+    margin-bottom: 0;
+    margin-right: -1px;
+
+    &::after {
+      top: 0;
+      bottom: 0;
+      left: auto;
+      right: 0;
+      width: 2px;
+      height: auto;
+    }
+  }
+
+  .#{$so-prefix}tabs-label {
+    padding: spacing("2") spacing("4");
+  }
+
+  // Pills variant
+  &.#{$so-prefix}tabs-pills {
+    border-right: none;
+    padding-right: spacing("2");
+
+    .#{$so-prefix}tab {
+      margin-right: 0;
+    }
+  }
+
+  // Boxed variant
+  &.#{$so-prefix}tabs-boxed {
+    border-right: none;
+    padding: spacing("1");
+  }
+
+  // Ghost variant
+  &.#{$so-prefix}tabs-ghost {
+    border-right: none;
+    padding-right: spacing("1");
+
+    .#{$so-prefix}tab {
+      margin-right: 0;
+    }
+  }
+
+  // Bordered variant
+  &.#{$so-prefix}tabs-bordered {
+    border-right: none;
+
+    .#{$so-prefix}tab {
+      margin-right: 0;
+    }
+  }
+}
+
+// ============================================
+// SCROLLABLE TABS
+// ============================================
+
+.#{$so-prefix}tabs-scrollable {
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none; // Firefox
+
+  &::-webkit-scrollbar {
+    display: none; // Chrome, Safari
+  }
+
+  .#{$so-prefix}tab {
+    flex-shrink: 0;
+  }
+}
+
+// ============================================
+// TAB CONTENT CONTAINER
+// ============================================
+
+.#{$so-prefix}tab-content {
+  width: 100%;
+  // padding-top: spacing("4");
+}
+
+// ============================================
+// TAB PANE
+// ============================================
+
+.#{$so-prefix}tab-pane {
+  display: none;
+  padding: spacing("2") 0;
+
+  &.#{$so-prefix}active,
+  &.#{$so-prefix}show {
+    display: block;
+  }
+
+  // Fade animation
+  &.#{$so-prefix}fade {
+    opacity: 0;
+    transition: opacity $so-transition-normal;
+
+    &.#{$so-prefix}show {
+      opacity: 1;
+    }
+  }
+}
+
+// ============================================
+// TABS WITH VERTICAL CONTENT LAYOUT
+// ============================================
+
+.#{$so-prefix}tabs-container {
+  display: flex;
+  gap: spacing("6");
+
+  &.#{$so-prefix}tabs-container-vertical {
+    .#{$so-prefix}tabs-vertical {
+      flex-shrink: 0;
+      min-width: 180px;
+      align-self: flex-start;
+      max-height: calc(100vh - 100px);
+      // overflow-y: auto;
+      flex-wrap: nowrap;
+      scrollbar-width: thin;
+
+      &::-webkit-scrollbar {
+        width: 4px;
+      }
+
+      &::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background: css-var("border-color");
+        border-radius: radius("full");
+      }
+    }
+
+    .#{$so-prefix}tab-content {
+      flex: 1;
+      min-width: 0;
+      padding-top: 0; // No top padding for vertical layout
+    }
+  }
+}
+
+// ============================================
+// STICKY TABS
+// ============================================
+
+.#{$so-prefix}tabs-sticky {
+  position: sticky;
+  top: spacing("4");
+}
+
+// ============================================
+// CLOSABLE TABS
+// ============================================
+
+.#{$so-prefix}tab-closable {
+  padding-right: spacing("2");
+
+  .#{$so-prefix}tab-close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    margin-left: spacing("2");
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: transparent;
+    color: css-var("text-muted");
+    cursor: pointer;
+    transition: all $so-transition-base;
+    flex-shrink: 0;
+
+    .material-icons {
+      font-size: 14px;
+      width: 14px;
+      height: 14px;
+    }
+
+    &:hover {
+      background: css-var("card-hover-bg");
+      color: css-var("text-primary");
+    }
+
+    &:active {
+      background: css-var("border-color");
+    }
+  }
+
+  // Active tab close button
+  &.#{$so-prefix}active .#{$so-prefix}tab-close,
+  &[aria-selected="true"] .#{$so-prefix}tab-close {
+    color: css-var("accent-primary");
+
+    &:hover {
+      background: alpha($so-primary, 0.15);
+      color: css-var("accent-danger");
+    }
+  }
+}
+
+// Pills variant closable
+.#{$so-prefix}tabs-pills .#{$so-prefix}tab-closable {
+  &.#{$so-prefix}active .#{$so-prefix}tab-close,
+  &[aria-selected="true"] .#{$so-prefix}tab-close {
+    color: rgba(255, 255, 255, 0.8);
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.2);
+      color: $so-white;
+    }
+  }
+}
+
+// ============================================
+// TAB BADGES/INDICATORS
+// ============================================
+
+.#{$so-prefix}tab {
+  // Badge inside tab
+  .#{$so-prefix}badge {
+    margin-left: spacing("2");
+    font-size: 10px;
+    min-width: 18px;
+    height: 18px;
+    line-height: 18px;
+    padding: 0 6px;
+  }
+
+  // Dot indicator (notification dot)
+  .#{$so-prefix}tab-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: css-var("accent-danger");
+    margin-left: spacing("2");
+    flex-shrink: 0;
+
+    &.#{$so-prefix}tab-dot-success {
+      background: css-var("accent-success");
+    }
+
+    &.#{$so-prefix}tab-dot-warning {
+      background: css-var("accent-warning");
+    }
+
+    &.#{$so-prefix}tab-dot-info {
+      background: css-var("accent-info");
+    }
+
+    &.#{$so-prefix}tab-dot-primary {
+      background: css-var("accent-primary");
+    }
+
+    // Pulse animation
+    &.#{$so-prefix}tab-dot-pulse {
+      animation: so-tab-dot-pulse 1.5s ease-in-out infinite;
+    }
+  }
+
+  // Counter badge
+  .#{$so-prefix}tab-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 6px;
+    margin-left: spacing("2");
+    font-size: 11px;
+    font-weight: font-weight("semibold");
+    background: css-var("card-hover-bg");
+    color: css-var("text-secondary");
+    border-radius: radius("full");
+    flex-shrink: 0;
+  }
+
+  &.#{$so-prefix}active .#{$so-prefix}tab-count,
+  &[aria-selected="true"] .#{$so-prefix}tab-count {
+    background: alpha($so-primary, 0.15);
+    color: css-var("accent-primary");
+  }
+}
+
+@keyframes so-tab-dot-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(0.9);
+  }
+}
+
+// Pills variant badges
+.#{$so-prefix}tabs-pills .#{$so-prefix}tab {
+  &.#{$so-prefix}active .#{$so-prefix}tab-count,
+  &[aria-selected="true"] .#{$so-prefix}tab-count {
+    background: rgba(255, 255, 255, 0.25);
+    color: $so-white;
+  }
+}
+
+// ============================================
+// OVERFLOW HANDLING (Scroll Arrows)
+// ============================================
+
+.#{$so-prefix}tabs-overflow {
+  position: relative;
+  flex-wrap: nowrap;
+  overflow: hidden;
+}
+
+.#{$so-prefix}tabs-overflow-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.#{$so-prefix}tabs-scroll-wrapper {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+
+.#{$so-prefix}tabs-scroll-inner {
+  display: flex;
+  align-items: center;
+  gap: spacing("1");
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  .#{$so-prefix}tab {
+    flex-shrink: 0;
+  }
+}
+
+// Scroll arrows - hidden by default, shown only when overflow exists
+.#{$so-prefix}tabs-scroll-btn {
+  display: none; // Hidden by default
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: none;
+  background: css-var("card-bg");
+  color: css-var("text-secondary");
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all $so-transition-base;
+  border-radius: radius("md");
+  z-index: 2;
+
+  .material-icons {
+    font-size: 20px;
+  }
+
+  &:hover:not(:disabled) {
+    background: css-var("card-hover-bg");
+    color: css-var("text-primary");
+  }
+
+  &:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+
+  &.#{$so-prefix}tabs-scroll-prev {
+    margin-right: spacing("1");
+  }
+
+  &.#{$so-prefix}tabs-scroll-next {
+    margin-left: spacing("1");
+  }
+}
+
+// Only show scroll buttons when there's actual overflow
+.#{$so-prefix}tabs-overflow-container.#{$so-prefix}has-overflow {
+  .#{$so-prefix}tabs-scroll-btn {
+    display: flex;
+  }
+}
+
+// Shadow indicators for scroll
+.#{$so-prefix}tabs-scroll-wrapper::before,
+.#{$so-prefix}tabs-scroll-wrapper::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 24px;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity $so-transition-base;
+}
+
+.#{$so-prefix}tabs-scroll-wrapper::before {
+  left: 0;
+  background: linear-gradient(to right, css-var("card-bg"), transparent);
+}
+
+.#{$so-prefix}tabs-scroll-wrapper::after {
+  right: 0;
+  background: linear-gradient(to left, css-var("card-bg"), transparent);
+}
+
+.#{$so-prefix}tabs-overflow-container.#{$so-prefix}can-scroll-left
+  .#{$so-prefix}tabs-scroll-wrapper::before {
+  opacity: 1;
+}
+
+.#{$so-prefix}tabs-overflow-container.#{$so-prefix}can-scroll-right
+  .#{$so-prefix}tabs-scroll-wrapper::after {
+  opacity: 1;
+}
+
+// Dropdown overflow menu
+.#{$so-prefix}tabs-overflow-menu {
+  position: relative;
+  margin-left: spacing("2");
+}
+
+.#{$so-prefix}tabs-overflow-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: spacing("1");
+  min-height: 36px;
+  padding: spacing("2") spacing("3");
+  font-size: font-size("sm");
+  font-weight: font-weight("medium");
+  color: css-var("text-secondary");
+  background: transparent;
+  border: 1px solid css-var("border-color");
+  border-radius: radius("md");
+  cursor: pointer;
+  transition: all $so-transition-base;
+
+  .material-icons {
+    font-size: 18px;
+  }
+
+  &:hover {
+    background: css-var("card-hover-bg");
+    border-color: css-var("border-dark");
+  }
+
+  .#{$so-prefix}tabs-overflow-count {
+    font-size: 11px;
+    padding: 2px 6px;
+    background: css-var("card-hover-bg");
+    border-radius: radius("full");
+  }
+}
+
+.#{$so-prefix}tabs-overflow-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  min-width: 180px;
+  max-height: 300px;
+  margin-top: spacing("1");
+  padding: spacing("1");
+  background: css-var("card-bg");
+  border: 1px solid css-var("border-color");
+  border-radius: radius("lg");
+  box-shadow: shadow("lg");
+  overflow-y: auto;
+  z-index: z-index("dropdown");
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-8px);
+  transition: all $so-transition-base;
+
+  &.#{$so-prefix}show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  .#{$so-prefix}tab {
+    display: flex;
+    width: 100%;
+    justify-content: flex-start;
+    border-radius: radius("md");
+    margin-bottom: 0;
+
+    &::after {
+      display: none;
+    }
+
+    &.#{$so-prefix}active,
+    &[aria-selected="true"] {
+      background: alpha($so-primary, 0.1);
+    }
+  }
+}
+
+// ============================================
+// DRAGGABLE TABS
+// ============================================
+
+.#{$so-prefix}tabs-draggable {
+  .#{$so-prefix}tab {
+    cursor: grab;
+    user-select: none;
+
+    &:active {
+      cursor: grabbing;
+    }
+  }
+
+  .#{$so-prefix}tab.#{$so-prefix}dragging {
+    opacity: 0.5;
+    cursor: grabbing;
+  }
+
+  .#{$so-prefix}tab.#{$so-prefix}drag-over {
+    border-left: 2px solid css-var("accent-primary");
+  }
+
+  // Drag ghost element
+  .#{$so-prefix}tab-drag-ghost {
+    position: fixed;
+    pointer-events: none;
+    z-index: z-index("modal");
+    opacity: 0.9;
+    transform: rotate(2deg);
+    box-shadow: shadow("lg");
+  }
+}
+
+// ============================================
+// VERTICAL TABS ENHANCEMENTS
+// ============================================
+
+.#{$so-prefix}tabs-vertical {
+  // Closable in vertical
+  .#{$so-prefix}tab-closable {
+    padding-right: spacing("3");
+
+    .#{$so-prefix}tab-close {
+      margin-left: auto;
+    }
+  }
+
+  // Badges in vertical
+  .#{$so-prefix}tab .#{$so-prefix}badge,
+  .#{$so-prefix}tab .#{$so-prefix}tab-count,
+  .#{$so-prefix}tab .#{$so-prefix}tab-dot {
+    margin-left: auto;
+  }
+
+  // Overflow in vertical - use max-height
+  &.#{$so-prefix}tabs-overflow {
+    max-height: 400px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+
+    &::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: css-var("border-color");
+      border-radius: radius("full");
+    }
+  }
+
+  // Draggable in vertical
+  &.#{$so-prefix}tabs-draggable {
+    .#{$so-prefix}tab.#{$so-prefix}drag-over {
+      border-left: none;
+      border-top: 2px solid css-var("accent-primary");
+    }
+  }
+}
+
+// ============================================
+// TAB ADD BUTTON
+// ============================================
+
+.#{$so-prefix}tab-add {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px dashed css-var("border-color");
+  border-radius: radius("md");
+  background: transparent;
+  color: css-var("text-muted");
+  cursor: pointer;
+  transition: all $so-transition-base;
+  margin-left: spacing("2");
+  flex-shrink: 0;
+
+  .material-icons {
+    font-size: 18px;
+  }
+
+  &:hover {
+    border-color: css-var("accent-primary");
+    color: css-var("accent-primary");
+    background: alpha($so-primary, 0.05);
+  }
+}
+
+// ============================================
+// RESPONSIVE
+// ============================================
+
+@media (max-width: 576px) {
+  .#{$so-prefix}tabs:not(.#{$so-prefix}tabs-vertical) {
+    // Auto-scroll on mobile
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    .#{$so-prefix}tab {
+      flex-shrink: 0;
+    }
+  }
+
+  .#{$so-prefix}tabs-scroll-btn {
+    width: 28px;
+    height: 28px;
+
+    .material-icons {
+      font-size: 18px;
+    }
+  }
+}

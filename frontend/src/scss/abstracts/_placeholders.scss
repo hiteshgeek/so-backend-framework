@@ -1,0 +1,114 @@
+// ============================================
+// SIXORBIT UI - PLACEHOLDER SELECTORS
+// Extendable patterns using @extend
+// ============================================
+
+@use 'config' as *;
+@use 'variables' as *;
+@use 'mixins' as *;
+
+// ============================================
+// LAYOUT PLACEHOLDERS
+// ============================================
+
+/// Flex center pattern
+%flex-center {
+  @include flex-center;
+}
+
+/// Flex between pattern
+%flex-between {
+  @include flex-between;
+}
+
+/// Flex start pattern
+%flex-start {
+  @include flex-start;
+}
+
+/// Flex column pattern
+%flex-column {
+  @include flex-column;
+}
+
+// ============================================
+// TEXT PLACEHOLDERS
+// ============================================
+
+/// Text truncation pattern
+%text-truncate {
+  @include text-truncate;
+}
+
+/// Reset list pattern
+%list-reset {
+  @include list-reset;
+}
+
+// ============================================
+// BUTTON PLACEHOLDERS
+// ============================================
+
+/// Base button pattern
+%button-base {
+  @include button-base;
+}
+
+// ============================================
+// INPUT PLACEHOLDERS
+// ============================================
+
+/// Base input pattern
+%input-base {
+  @include input-base;
+}
+
+// ============================================
+// CARD PLACEHOLDERS
+// ============================================
+
+/// Card pattern
+%card {
+  @include card;
+}
+
+// ============================================
+// SCROLLBAR PLACEHOLDERS
+// ============================================
+
+/// Hidden scrollbar pattern
+%hide-scrollbar {
+  @include hide-scrollbar;
+}
+
+/// Custom scrollbar pattern
+%custom-scrollbar {
+  @include custom-scrollbar;
+}
+
+// ============================================
+// ACCESSIBILITY PLACEHOLDERS
+// ============================================
+
+/// Visually hidden pattern
+%visually-hidden {
+  @include visually-hidden;
+}
+
+// ============================================
+// TRANSITION PLACEHOLDERS
+// ============================================
+
+/// Material transition pattern
+%transition-material {
+  @include transition-material;
+}
+
+// ============================================
+// CLEARFIX PLACEHOLDER
+// ============================================
+
+/// Clearfix pattern
+%clearfix {
+  @include clearfix;
+}

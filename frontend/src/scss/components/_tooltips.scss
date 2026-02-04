@@ -1,0 +1,1419 @@
+// ============================================
+// SIXORBIT UI - TOOLTIPS
+// Tooltip and popover components
+// ============================================
+
+@use '../abstracts' as *;
+
+// ============================================
+// BASE TOOLTIP
+// ============================================
+
+.#{$so-prefix}tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.#{$so-prefix}tooltip-content {
+  position: absolute;
+  z-index: z-index('tooltip');
+  padding: spacing('2') spacing('2') + 2px;
+  font-size: font-size('xs');
+  font-weight: font-weight('medium');
+  line-height: line-height('snug');
+  white-space: nowrap;
+  color: $so-white;
+  background: $so-grey-800;
+  border-radius: radius('base');
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  opacity: 0;
+  visibility: hidden;
+  transform: scale(0.95);
+  transition: all $so-transition-fast;
+  pointer-events: none;
+
+  // Arrow
+  &::after {
+    content: '';
+    position: absolute;
+    border: 5px solid transparent;
+  }
+}
+
+// Show state
+.#{$so-prefix}tooltip:hover .#{$so-prefix}tooltip-content,
+.#{$so-prefix}tooltip.show .#{$so-prefix}tooltip-content {
+  opacity: 1;
+  visibility: visible;
+  transform: scale(1);
+}
+
+// ============================================
+// TOOLTIP POSITIONS
+// ============================================
+
+// Top (default)
+.#{$so-prefix}tooltip-top .#{$so-prefix}tooltip-content,
+.#{$so-prefix}tooltip-content {
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%) scale(0.95);
+
+  &::after {
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-top-color: $so-grey-800;
+  }
+}
+
+.#{$so-prefix}tooltip-top:hover .#{$so-prefix}tooltip-content,
+.#{$so-prefix}tooltip:hover .#{$so-prefix}tooltip-content {
+  transform: translateX(-50%) scale(1);
+}
+
+// Bottom
+.#{$so-prefix}tooltip-bottom .#{$so-prefix}tooltip-content {
+  top: calc(100% + 8px);
+  bottom: auto;
+  left: 50%;
+  transform: translateX(-50%) scale(0.95);
+
+  &::after {
+    top: auto;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-top-color: transparent;
+    border-bottom-color: $so-grey-800;
+  }
+}
+
+.#{$so-prefix}tooltip-bottom:hover .#{$so-prefix}tooltip-content {
+  transform: translateX(-50%) scale(1);
+}
+
+// Left
+.#{$so-prefix}tooltip-left .#{$so-prefix}tooltip-content {
+  top: 50%;
+  right: calc(100% + 8px);
+  bottom: auto;
+  left: auto;
+  transform: translateY(-50%) scale(0.95);
+
+  &::after {
+    top: 50%;
+    right: auto;
+    bottom: auto;
+    left: 100%;
+    transform: translateY(-50%);
+    border-top-color: transparent;
+    border-left-color: $so-grey-800;
+  }
+}
+
+.#{$so-prefix}tooltip-left:hover .#{$so-prefix}tooltip-content {
+  transform: translateY(-50%) scale(1);
+}
+
+// Right
+.#{$so-prefix}tooltip-right .#{$so-prefix}tooltip-content {
+  top: 50%;
+  left: calc(100% + 8px);
+  bottom: auto;
+  right: auto;
+  transform: translateY(-50%) scale(0.95);
+
+  &::after {
+    top: 50%;
+    right: 100%;
+    bottom: auto;
+    left: auto;
+    transform: translateY(-50%);
+    border-top-color: transparent;
+    border-right-color: $so-grey-800;
+  }
+}
+
+.#{$so-prefix}tooltip-right:hover .#{$so-prefix}tooltip-content {
+  transform: translateY(-50%) scale(1);
+}
+
+// ============================================
+// TOOLTIP COLORS
+// ============================================
+
+.#{$so-prefix}tooltip-primary .#{$so-prefix}tooltip-content {
+  background: $so-primary;
+
+  &::after {
+    border-top-color: $so-primary;
+  }
+}
+
+.#{$so-prefix}tooltip-primary.#{$so-prefix}tooltip-bottom .#{$so-prefix}tooltip-content::after {
+  border-top-color: transparent;
+  border-bottom-color: $so-primary;
+}
+
+.#{$so-prefix}tooltip-success .#{$so-prefix}tooltip-content {
+  background: $so-success;
+
+  &::after {
+    border-top-color: $so-success;
+  }
+}
+
+.#{$so-prefix}tooltip-danger .#{$so-prefix}tooltip-content {
+  background: $so-danger;
+
+  &::after {
+    border-top-color: $so-danger;
+  }
+}
+
+.#{$so-prefix}tooltip-warning .#{$so-prefix}tooltip-content {
+  background: $so-warning;
+  color: $so-grey-900;
+
+  &::after {
+    border-top-color: $so-warning;
+  }
+}
+
+// ============================================
+// LIGHT TOOLTIP
+// ============================================
+
+.#{$so-prefix}tooltip-light .#{$so-prefix}tooltip-content {
+  color: css-var('text-primary');
+  background: css-var('card-bg');
+  border: 1px solid css-var('border-color');
+  box-shadow: css-var('shadow');
+
+  &::after {
+    border-top-color: css-var('card-bg');
+  }
+}
+
+// ============================================
+// MULTILINE TOOLTIP
+// ============================================
+
+.#{$so-prefix}tooltip-multiline .#{$so-prefix}tooltip-content {
+  white-space: normal;
+  max-width: 240px;
+  text-align: center;
+}
+
+// ============================================
+// POPOVER
+// ============================================
+
+.#{$so-prefix}popover {
+  position: relative;
+  display: inline-block;
+}
+
+.#{$so-prefix}popover-content {
+  position: absolute;
+  z-index: z-index('tooltip');
+  min-width: 200px;
+  max-width: 320px;
+  background: css-var('card-bg');
+  border: 1px solid css-var('border-color');
+  border-radius: radius('lg');
+  box-shadow: css-var('shadow-lg');
+  opacity: 0;
+  visibility: hidden;
+  transform: scale(0.95);
+  transition: all $so-transition-normal;
+
+  // Arrow
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    border: 8px solid transparent;
+  }
+
+  &::before {
+    border-width: 9px;
+  }
+}
+
+// Show state
+.#{$so-prefix}popover.show .#{$so-prefix}popover-content {
+  opacity: 1;
+  visibility: visible;
+  transform: scale(1);
+}
+
+// Popover positions
+.#{$so-prefix}popover-top .#{$so-prefix}popover-content,
+.#{$so-prefix}popover-content {
+  bottom: calc(100% + 12px);
+  left: 50%;
+  transform: translateX(-50%) scale(0.95);
+
+  &::after,
+  &::before {
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  &::after {
+    border-top-color: css-var('card-bg');
+  }
+
+  &::before {
+    border-top-color: css-var('border-color');
+    margin-top: 1px;
+  }
+}
+
+.#{$so-prefix}popover-top.show .#{$so-prefix}popover-content,
+.#{$so-prefix}popover.show .#{$so-prefix}popover-content {
+  transform: translateX(-50%) scale(1);
+}
+
+// Bottom popover
+.#{$so-prefix}popover-bottom .#{$so-prefix}popover-content {
+  top: calc(100% + 12px);
+  bottom: auto;
+  left: 50%;
+  transform: translateX(-50%) scale(0.95);
+
+  &::after,
+  &::before {
+    top: auto;
+    bottom: 100%;
+    left: 50%;
+  }
+
+  &::after {
+    border-top-color: transparent;
+    border-bottom-color: css-var('card-bg');
+  }
+
+  &::before {
+    border-top-color: transparent;
+    border-bottom-color: css-var('border-color');
+    margin-bottom: 1px;
+  }
+}
+
+.#{$so-prefix}popover-bottom.show .#{$so-prefix}popover-content {
+  transform: translateX(-50%) scale(1);
+}
+
+// Popover sections
+.#{$so-prefix}popover-header {
+  padding: spacing('3') spacing('4');
+  border-bottom: 1px solid css-var('border-color');
+}
+
+.#{$so-prefix}popover-title {
+  font-size: font-size('base');
+  font-weight: font-weight('semibold');
+  color: css-var('text-heading');
+  margin: 0;
+}
+
+.#{$so-prefix}popover-body {
+  padding: spacing('3') spacing('4');
+  font-size: font-size('sm');
+  color: css-var('text-secondary');
+}
+
+.#{$so-prefix}popover-footer {
+  padding: spacing('2') spacing('4') spacing('3');
+  display: flex;
+  justify-content: flex-end;
+  gap: spacing('2');
+}
+
+// ============================================
+// TITLE ATTRIBUTE TOOLTIPS (Pure CSS)
+// ============================================
+
+[data-tooltip] {
+  position: relative;
+  cursor: help;
+
+  &::before {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%) scale(0.95);
+    padding: spacing('2') spacing('2') + 2px;
+    font-size: font-size('xs');
+    font-weight: font-weight('medium');
+    line-height: line-height('snug');
+    white-space: nowrap;
+    color: $so-white;
+    background: $so-grey-800;
+    border-radius: radius('base');
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    opacity: 0;
+    visibility: hidden;
+    transition: all $so-transition-fast;
+    pointer-events: none;
+    z-index: z-index('tooltip');
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: calc(100% + 3px);
+    left: 50%;
+    transform: translateX(-50%);
+    border: 5px solid transparent;
+    border-top-color: $so-grey-800;
+    opacity: 0;
+    visibility: hidden;
+    transition: all $so-transition-fast;
+    pointer-events: none;
+    z-index: z-index('tooltip');
+  }
+
+  &:hover::before,
+  &:hover::after {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  &:hover::before {
+    transform: translateX(-50%) scale(1);
+  }
+}
+
+// Data tooltip positions
+[data-tooltip-position="bottom"] {
+  &::before {
+    top: calc(100% + 8px);
+    bottom: auto;
+    transform: translateX(-50%) scale(0.95);
+  }
+
+  &::after {
+    top: calc(100% + 3px);
+    bottom: auto;
+    border-top-color: transparent;
+    border-bottom-color: $so-grey-800;
+  }
+
+  &:hover::before {
+    transform: translateX(-50%) scale(1);
+  }
+}
+
+[data-tooltip-position="left"] {
+  &::before {
+    top: 50%;
+    bottom: auto;
+    left: auto;
+    right: calc(100% + 8px);
+    transform: translateY(-50%) scale(0.95);
+  }
+
+  &::after {
+    top: 50%;
+    bottom: auto;
+    left: auto;
+    right: calc(100% + 3px);
+    transform: translateY(-50%);
+    border-top-color: transparent;
+    border-left-color: $so-grey-800;
+  }
+
+  &:hover::before {
+    transform: translateY(-50%) scale(1);
+  }
+}
+
+[data-tooltip-position="right"] {
+  &::before {
+    top: 50%;
+    bottom: auto;
+    left: calc(100% + 8px);
+    right: auto;
+    transform: translateY(-50%) scale(0.95);
+  }
+
+  &::after {
+    top: 50%;
+    bottom: auto;
+    left: calc(100% + 3px);
+    right: auto;
+    transform: translateY(-50%);
+    border-top-color: transparent;
+    border-right-color: $so-grey-800;
+  }
+
+  &:hover::before {
+    transform: translateY(-50%) scale(1);
+  }
+}
+
+// ============================================
+// TOOLTIP POPUP (JavaScript-controlled)
+// ============================================
+
+.#{$so-prefix}tooltip-popup {
+  position: absolute;
+  z-index: z-index('tooltip');
+  max-width: 320px;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+
+  &.#{$so-prefix}show {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+.#{$so-prefix}tooltip-inner {
+  display: inline-flex;
+  align-items: center;
+  gap: spacing('2');
+  padding: spacing('2') spacing('2') + 2px;
+  font-size: font-size('xs');
+  font-weight: font-weight('medium');
+  line-height: line-height('snug');
+  white-space: nowrap;
+  color: $so-white;
+  background: $so-grey-800;
+  border-radius: radius('base');
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+// Text content
+.#{$so-prefix}tooltip-text {
+  display: inline;
+}
+
+// Divider between text and shortcut
+.#{$so-prefix}tooltip-divider {
+  width: 1px;
+  height: 14px;
+  background: rgba(255, 255, 255, 0.3);
+  flex-shrink: 0;
+}
+
+// Keyboard shortcut styling
+.#{$so-prefix}tooltip-shortcut {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.#{$so-prefix}tooltip-inner kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 4px;
+  font-family: $so-font-family;
+  font-size: 10px;
+  font-weight: font-weight('semibold');
+  color: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: radius('sm');
+}
+
+// ============================================
+// POPUP ARROW
+// ============================================
+
+.#{$so-prefix}tooltip-popup.#{$so-prefix}tooltip-arrow {
+  .#{$so-prefix}tooltip-inner::after {
+    content: '';
+    position: absolute;
+    border: 5px solid transparent;
+  }
+}
+
+// Arrow positions
+.#{$so-prefix}tooltip-popup.#{$so-prefix}tooltip-arrow.#{$so-prefix}tooltip-top {
+  .#{$so-prefix}tooltip-inner {
+    position: relative;
+
+    &::after {
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border-top-color: $so-grey-800;
+    }
+  }
+}
+
+.#{$so-prefix}tooltip-popup.#{$so-prefix}tooltip-arrow.#{$so-prefix}tooltip-bottom {
+  .#{$so-prefix}tooltip-inner {
+    position: relative;
+
+    &::after {
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border-bottom-color: $so-grey-800;
+    }
+  }
+}
+
+.#{$so-prefix}tooltip-popup.#{$so-prefix}tooltip-arrow.#{$so-prefix}tooltip-left {
+  .#{$so-prefix}tooltip-inner {
+    position: relative;
+
+    &::after {
+      top: 50%;
+      left: 100%;
+      transform: translateY(-50%);
+      border-left-color: $so-grey-800;
+    }
+  }
+}
+
+.#{$so-prefix}tooltip-popup.#{$so-prefix}tooltip-arrow.#{$so-prefix}tooltip-right {
+  .#{$so-prefix}tooltip-inner {
+    position: relative;
+
+    &::after {
+      top: 50%;
+      right: 100%;
+      transform: translateY(-50%);
+      border-right-color: $so-grey-800;
+    }
+  }
+}
+
+// ============================================
+// POPUP SIZE VARIANTS
+// ============================================
+
+// Small size
+.#{$so-prefix}tooltip-popup.#{$so-prefix}tooltip-sm {
+  .#{$so-prefix}tooltip-inner {
+    padding: spacing('1') spacing('2');
+    font-size: 11px;
+    gap: spacing('1') + 2px;
+  }
+
+  .#{$so-prefix}tooltip-divider {
+    height: 12px;
+  }
+
+  .#{$so-prefix}tooltip-inner kbd {
+    min-width: 16px;
+    height: 16px;
+    padding: 0 3px;
+    font-size: 9px;
+  }
+}
+
+// Large size
+.#{$so-prefix}tooltip-popup.#{$so-prefix}tooltip-lg {
+  .#{$so-prefix}tooltip-inner {
+    padding: spacing('2') + 2px spacing('3');
+    font-size: font-size('sm');
+    gap: spacing('3');
+  }
+
+  .#{$so-prefix}tooltip-divider {
+    height: 16px;
+  }
+
+  .#{$so-prefix}tooltip-inner kbd {
+    min-width: 22px;
+    height: 22px;
+    padding: 0 5px;
+    font-size: 11px;
+  }
+}
+
+// ============================================
+// POPUP COLOR VARIANTS
+// ============================================
+
+// Primary
+.#{$so-prefix}tooltip-popup.#{$so-prefix}tooltip-primary {
+  .#{$so-prefix}tooltip-inner {
+    background: $so-primary;
+  }
+
+  &.#{$so-prefix}tooltip-arrow.#{$so-prefix}tooltip-top .#{$so-prefix}tooltip-inner::after {
+    border-top-color: $so-primary;
+  }
+
+  &.#{$so-prefix}tooltip-arrow.#{$so-prefix}tooltip-bottom .#{$so-prefix}tooltip-inner::after {
+    border-bottom-color: $so-primary;
+  }
+
+  &.#{$so-prefix}tooltip-arrow.#{$so-prefix}tooltip-left .#{$so-prefix}tooltip-inner::after {
+    border-left-color: $so-primary;
+  }
+
+  &.#{$so-prefix}tooltip-arrow.#{$so-prefix}tooltip-right .#{$so-prefix}tooltip-inner::after {
+    border-right-color: $so-primary;
+  }
+}
+
+// Success
+.#{$so-prefix}tooltip-popup.#{$so-prefix}tooltip-success {
+  .#{$so-prefix}tooltip-inner {
+    background: $so-success;
+  }
+
+  &.#{$so-prefix}tooltip-arrow.#{$so-prefix}tooltip-top .#{$so-prefix}tooltip-inner::after {
+    border-top-color: $so-success;
+  }
+
+  &.#{$so-prefix}tooltip-arrow.#{$so-prefix}tooltip-bottom .#{$so-prefix}tooltip-inner::after {
+    border-bottom-color: $so-success;
+  }
+
+  &.#{$so-prefix}tooltip-arrow.#{$so-prefix}tooltip-left .#{$so-prefix}tooltip-inner::after {
+    border-left-color: $so-success;
+  }
+
+  &.#{$so-prefix}tooltip-arrow.#{$so-prefix}tooltip-right .#{$so-prefix}tooltip-inner::after {
+    border-right-color: $so-success;
+  }
+}
+
+// Danger
+.#{$so-prefix}tooltip-popup.#{$so-prefix}tooltip-danger {
+  .#{$so-prefix}tooltip-inner {
+    background: $so-danger;
+  }
+
+  &.#{$so-prefix}tooltip-arrow.#{$so-prefix}tooltip-top .#{$so-prefix}tooltip-inner::after {
+    border-top-color: $so-danger;
+  }
+
+  &.#{$so-prefix}tooltip-arrow.#{$so-prefix}tooltip-bottom .#{$so-prefix}tooltip-inner::after {
+    border-bottom-color: $so-danger;
+  }
+
+  &.#{$so-prefix}tooltip-arrow.#{$so-prefix}tooltip-left .#{$so-prefix}tooltip-inner::after {
+    border-left-color: $so-danger;
+  }
+
+  &.#{$so-prefix}tooltip-arrow.#{$so-prefix}tooltip-right .#{$so-prefix}tooltip-inner::after {
+    border-right-color: $so-danger;
+  }
+}
+
+// Warning
+.#{$so-prefix}tooltip-popup.#{$so-prefix}tooltip-warning {
+  .#{$so-prefix}tooltip-inner {
+    background: $so-warning;
+    color: $so-grey-900;
+
+    kbd {
+      color: rgba(0, 0, 0, 0.8);
+      background: rgba(0, 0, 0, 0.1);
+      border-color: rgba(0, 0, 0, 0.15);
+    }
+  }
+
+  .#{$so-prefix}tooltip-divider {
+    background: rgba(0, 0, 0, 0.2);
+  }
+
+  &.#{$so-prefix}tooltip-arrow.#{$so-prefix}tooltip-top .#{$so-prefix}tooltip-inner::after {
+    border-top-color: $so-warning;
+  }
+
+  &.#{$so-prefix}tooltip-arrow.#{$so-prefix}tooltip-bottom .#{$so-prefix}tooltip-inner::after {
+    border-bottom-color: $so-warning;
+  }
+
+  &.#{$so-prefix}tooltip-arrow.#{$so-prefix}tooltip-left .#{$so-prefix}tooltip-inner::after {
+    border-left-color: $so-warning;
+  }
+
+  &.#{$so-prefix}tooltip-arrow.#{$so-prefix}tooltip-right .#{$so-prefix}tooltip-inner::after {
+    border-right-color: $so-warning;
+  }
+}
+
+// Info
+.#{$so-prefix}tooltip-popup.#{$so-prefix}tooltip-info {
+  .#{$so-prefix}tooltip-inner {
+    background: $so-info;
+  }
+
+  &.#{$so-prefix}tooltip-arrow.#{$so-prefix}tooltip-top .#{$so-prefix}tooltip-inner::after {
+    border-top-color: $so-info;
+  }
+
+  &.#{$so-prefix}tooltip-arrow.#{$so-prefix}tooltip-bottom .#{$so-prefix}tooltip-inner::after {
+    border-bottom-color: $so-info;
+  }
+
+  &.#{$so-prefix}tooltip-arrow.#{$so-prefix}tooltip-left .#{$so-prefix}tooltip-inner::after {
+    border-left-color: $so-info;
+  }
+
+  &.#{$so-prefix}tooltip-arrow.#{$so-prefix}tooltip-right .#{$so-prefix}tooltip-inner::after {
+    border-right-color: $so-info;
+  }
+}
+
+// Secondary
+.#{$so-prefix}tooltip-popup.#{$so-prefix}tooltip-secondary {
+  .#{$so-prefix}tooltip-inner {
+    background: $so-secondary;
+  }
+
+  &.#{$so-prefix}tooltip-arrow.#{$so-prefix}tooltip-top .#{$so-prefix}tooltip-inner::after {
+    border-top-color: $so-secondary;
+  }
+
+  &.#{$so-prefix}tooltip-arrow.#{$so-prefix}tooltip-bottom .#{$so-prefix}tooltip-inner::after {
+    border-bottom-color: $so-secondary;
+  }
+
+  &.#{$so-prefix}tooltip-arrow.#{$so-prefix}tooltip-left .#{$so-prefix}tooltip-inner::after {
+    border-left-color: $so-secondary;
+  }
+
+  &.#{$so-prefix}tooltip-arrow.#{$so-prefix}tooltip-right .#{$so-prefix}tooltip-inner::after {
+    border-right-color: $so-secondary;
+  }
+}
+
+// Dark
+.#{$so-prefix}tooltip-popup.#{$so-prefix}tooltip-dark {
+  .#{$so-prefix}tooltip-inner {
+    background: $so-grey-900;
+  }
+
+  &.#{$so-prefix}tooltip-arrow.#{$so-prefix}tooltip-top .#{$so-prefix}tooltip-inner::after {
+    border-top-color: $so-grey-900;
+  }
+
+  &.#{$so-prefix}tooltip-arrow.#{$so-prefix}tooltip-bottom .#{$so-prefix}tooltip-inner::after {
+    border-bottom-color: $so-grey-900;
+  }
+
+  &.#{$so-prefix}tooltip-arrow.#{$so-prefix}tooltip-left .#{$so-prefix}tooltip-inner::after {
+    border-left-color: $so-grey-900;
+  }
+
+  &.#{$so-prefix}tooltip-arrow.#{$so-prefix}tooltip-right .#{$so-prefix}tooltip-inner::after {
+    border-right-color: $so-grey-900;
+  }
+}
+
+// ============================================
+// POPUP OUTLINE COLOR VARIANTS
+// ============================================
+
+// Outline mixin - creates bordered arrow with two triangles
+@mixin tooltip-outline-arrows($border-color, $fill-color: css-var('card-bg')) {
+  .#{$so-prefix}tooltip-inner {
+    // Add ::before for border triangle
+    &::before {
+      content: '';
+      position: absolute;
+      border: 6px solid transparent;
+    }
+    // ::after is already the fill triangle (5px)
+    &::after {
+      border-width: 5px;
+    }
+  }
+
+  // Top position
+  &.#{$so-prefix}tooltip-arrow.#{$so-prefix}tooltip-top .#{$so-prefix}tooltip-inner {
+    &::before {
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border-top-color: $border-color;
+    }
+    &::after {
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border-top-color: $fill-color;
+      margin-top: -1px;
+    }
+  }
+
+  // Bottom position
+  &.#{$so-prefix}tooltip-arrow.#{$so-prefix}tooltip-bottom .#{$so-prefix}tooltip-inner {
+    &::before {
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border-bottom-color: $border-color;
+    }
+    &::after {
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border-bottom-color: $fill-color;
+      margin-bottom: -1px;
+    }
+  }
+
+  // Left position
+  &.#{$so-prefix}tooltip-arrow.#{$so-prefix}tooltip-left .#{$so-prefix}tooltip-inner {
+    &::before {
+      top: 50%;
+      left: 100%;
+      transform: translateY(-50%);
+      border-left-color: $border-color;
+    }
+    &::after {
+      top: 50%;
+      left: 100%;
+      transform: translateY(-50%);
+      border-left-color: $fill-color;
+      margin-left: -1px;
+    }
+  }
+
+  // Right position
+  &.#{$so-prefix}tooltip-arrow.#{$so-prefix}tooltip-right .#{$so-prefix}tooltip-inner {
+    &::before {
+      top: 50%;
+      right: 100%;
+      transform: translateY(-50%);
+      border-right-color: $border-color;
+    }
+    &::after {
+      top: 50%;
+      right: 100%;
+      transform: translateY(-50%);
+      border-right-color: $fill-color;
+      margin-right: -1px;
+    }
+  }
+}
+
+// Primary Outline
+.#{$so-prefix}tooltip-popup.#{$so-prefix}tooltip-outline-primary {
+  .#{$so-prefix}tooltip-inner {
+    background: css-var('card-bg');
+    color: $so-primary;
+    border: 1px solid $so-primary;
+
+    kbd {
+      color: $so-primary;
+      background: rgba($so-primary, 0.1);
+      border-color: rgba($so-primary, 0.3);
+    }
+  }
+
+  .#{$so-prefix}tooltip-divider {
+    background: rgba($so-primary, 0.3);
+  }
+
+  @include tooltip-outline-arrows($so-primary);
+}
+
+// Success Outline
+.#{$so-prefix}tooltip-popup.#{$so-prefix}tooltip-outline-success {
+  .#{$so-prefix}tooltip-inner {
+    background: css-var('card-bg');
+    color: $so-success;
+    border: 1px solid $so-success;
+
+    kbd {
+      color: $so-success;
+      background: rgba($so-success, 0.1);
+      border-color: rgba($so-success, 0.3);
+    }
+  }
+
+  .#{$so-prefix}tooltip-divider {
+    background: rgba($so-success, 0.3);
+  }
+
+  @include tooltip-outline-arrows($so-success);
+}
+
+// Danger Outline
+.#{$so-prefix}tooltip-popup.#{$so-prefix}tooltip-outline-danger {
+  .#{$so-prefix}tooltip-inner {
+    background: css-var('card-bg');
+    color: $so-danger;
+    border: 1px solid $so-danger;
+
+    kbd {
+      color: $so-danger;
+      background: rgba($so-danger, 0.1);
+      border-color: rgba($so-danger, 0.3);
+    }
+  }
+
+  .#{$so-prefix}tooltip-divider {
+    background: rgba($so-danger, 0.3);
+  }
+
+  @include tooltip-outline-arrows($so-danger);
+}
+
+// Warning Outline
+.#{$so-prefix}tooltip-popup.#{$so-prefix}tooltip-outline-warning {
+  .#{$so-prefix}tooltip-inner {
+    background: css-var('card-bg');
+    color: $so-warning-dark;
+    border: 1px solid $so-warning;
+
+    kbd {
+      color: $so-warning-dark;
+      background: rgba($so-warning, 0.15);
+      border-color: rgba($so-warning, 0.4);
+    }
+  }
+
+  .#{$so-prefix}tooltip-divider {
+    background: rgba($so-warning, 0.4);
+  }
+
+  @include tooltip-outline-arrows($so-warning);
+}
+
+// Info Outline
+.#{$so-prefix}tooltip-popup.#{$so-prefix}tooltip-outline-info {
+  .#{$so-prefix}tooltip-inner {
+    background: css-var('card-bg');
+    color: $so-info;
+    border: 1px solid $so-info;
+
+    kbd {
+      color: $so-info;
+      background: rgba($so-info, 0.1);
+      border-color: rgba($so-info, 0.3);
+    }
+  }
+
+  .#{$so-prefix}tooltip-divider {
+    background: rgba($so-info, 0.3);
+  }
+
+  @include tooltip-outline-arrows($so-info);
+}
+
+// Secondary Outline
+.#{$so-prefix}tooltip-popup.#{$so-prefix}tooltip-outline-secondary {
+  .#{$so-prefix}tooltip-inner {
+    background: css-var('card-bg');
+    color: $so-secondary;
+    border: 1px solid $so-secondary;
+
+    kbd {
+      color: $so-secondary;
+      background: rgba($so-secondary, 0.1);
+      border-color: rgba($so-secondary, 0.3);
+    }
+  }
+
+  .#{$so-prefix}tooltip-divider {
+    background: rgba($so-secondary, 0.3);
+  }
+
+  @include tooltip-outline-arrows($so-secondary);
+}
+
+// ============================================
+// POPUP SOFT/LIGHT COLOR VARIANTS
+// Uses solid light colors instead of rgba for better appearance
+// ============================================
+
+// Soft mixin - creates bordered arrow with two triangles
+@mixin tooltip-soft-arrows($border-color, $fill-color) {
+  .#{$so-prefix}tooltip-inner {
+    // Add ::before for border triangle
+    &::before {
+      content: '';
+      position: absolute;
+      border: 6px solid transparent;
+    }
+    // ::after is the fill triangle (5px)
+    &::after {
+      border-width: 5px;
+    }
+  }
+
+  // Top position
+  &.#{$so-prefix}tooltip-arrow.#{$so-prefix}tooltip-top .#{$so-prefix}tooltip-inner {
+    &::before {
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border-top-color: $border-color;
+    }
+    &::after {
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border-top-color: $fill-color;
+      margin-top: -1px;
+    }
+  }
+
+  // Bottom position
+  &.#{$so-prefix}tooltip-arrow.#{$so-prefix}tooltip-bottom .#{$so-prefix}tooltip-inner {
+    &::before {
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border-bottom-color: $border-color;
+    }
+    &::after {
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border-bottom-color: $fill-color;
+      margin-bottom: -1px;
+    }
+  }
+
+  // Left position
+  &.#{$so-prefix}tooltip-arrow.#{$so-prefix}tooltip-left .#{$so-prefix}tooltip-inner {
+    &::before {
+      top: 50%;
+      left: 100%;
+      transform: translateY(-50%);
+      border-left-color: $border-color;
+    }
+    &::after {
+      top: 50%;
+      left: 100%;
+      transform: translateY(-50%);
+      border-left-color: $fill-color;
+      margin-left: -1px;
+    }
+  }
+
+  // Right position
+  &.#{$so-prefix}tooltip-arrow.#{$so-prefix}tooltip-right .#{$so-prefix}tooltip-inner {
+    &::before {
+      top: 50%;
+      right: 100%;
+      transform: translateY(-50%);
+      border-right-color: $border-color;
+    }
+    &::after {
+      top: 50%;
+      right: 100%;
+      transform: translateY(-50%);
+      border-right-color: $fill-color;
+      margin-right: -1px;
+    }
+  }
+}
+
+// Primary Soft
+.#{$so-prefix}tooltip-popup.#{$so-prefix}tooltip-soft-primary {
+  .#{$so-prefix}tooltip-inner {
+    background: $so-primary-light;
+    color: $so-primary;
+    border: 1px solid lighten-color($so-primary, 60%);
+
+    kbd {
+      color: $so-primary;
+      background: lighten-color($so-primary, 70%);
+      border-color: lighten-color($so-primary, 50%);
+    }
+  }
+
+  .#{$so-prefix}tooltip-divider {
+    background: lighten-color($so-primary, 50%);
+  }
+
+  @include tooltip-soft-arrows(lighten-color($so-primary, 60%), $so-primary-light);
+}
+
+// Success Soft
+.#{$so-prefix}tooltip-popup.#{$so-prefix}tooltip-soft-success {
+  .#{$so-prefix}tooltip-inner {
+    background: $so-success-light;
+    color: darken-color($so-success, 15%);
+    border: 1px solid lighten-color($so-success, 60%);
+
+    kbd {
+      color: darken-color($so-success, 15%);
+      background: lighten-color($so-success, 70%);
+      border-color: lighten-color($so-success, 50%);
+    }
+  }
+
+  .#{$so-prefix}tooltip-divider {
+    background: lighten-color($so-success, 50%);
+  }
+
+  @include tooltip-soft-arrows(lighten-color($so-success, 60%), $so-success-light);
+}
+
+// Danger Soft
+.#{$so-prefix}tooltip-popup.#{$so-prefix}tooltip-soft-danger {
+  .#{$so-prefix}tooltip-inner {
+    background: $so-danger-light;
+    color: darken-color($so-danger, 15%);
+    border: 1px solid lighten-color($so-danger, 60%);
+
+    kbd {
+      color: darken-color($so-danger, 15%);
+      background: lighten-color($so-danger, 70%);
+      border-color: lighten-color($so-danger, 50%);
+    }
+  }
+
+  .#{$so-prefix}tooltip-divider {
+    background: lighten-color($so-danger, 50%);
+  }
+
+  @include tooltip-soft-arrows(lighten-color($so-danger, 60%), $so-danger-light);
+}
+
+// Warning Soft
+.#{$so-prefix}tooltip-popup.#{$so-prefix}tooltip-soft-warning {
+  .#{$so-prefix}tooltip-inner {
+    background: $so-warning-light;
+    color: $so-warning-dark;
+    border: 1px solid lighten-color($so-warning, 40%);
+
+    kbd {
+      color: $so-warning-dark;
+      background: lighten-color($so-warning, 50%);
+      border-color: lighten-color($so-warning, 30%);
+    }
+  }
+
+  .#{$so-prefix}tooltip-divider {
+    background: lighten-color($so-warning, 30%);
+  }
+
+  @include tooltip-soft-arrows(lighten-color($so-warning, 40%), $so-warning-light);
+}
+
+// Info Soft
+.#{$so-prefix}tooltip-popup.#{$so-prefix}tooltip-soft-info {
+  .#{$so-prefix}tooltip-inner {
+    background: $so-info-light;
+    color: darken-color($so-info, 15%);
+    border: 1px solid lighten-color($so-info, 60%);
+
+    kbd {
+      color: darken-color($so-info, 15%);
+      background: lighten-color($so-info, 70%);
+      border-color: lighten-color($so-info, 50%);
+    }
+  }
+
+  .#{$so-prefix}tooltip-divider {
+    background: lighten-color($so-info, 50%);
+  }
+
+  @include tooltip-soft-arrows(lighten-color($so-info, 60%), $so-info-light);
+}
+
+// Secondary Soft
+.#{$so-prefix}tooltip-popup.#{$so-prefix}tooltip-soft-secondary {
+  .#{$so-prefix}tooltip-inner {
+    background: $so-secondary-light;
+    color: $so-secondary;
+    border: 1px solid lighten-color($so-secondary, 60%);
+
+    kbd {
+      color: $so-secondary;
+      background: lighten-color($so-secondary, 70%);
+      border-color: lighten-color($so-secondary, 50%);
+    }
+  }
+
+  .#{$so-prefix}tooltip-divider {
+    background: lighten-color($so-secondary, 50%);
+  }
+
+  @include tooltip-soft-arrows(lighten-color($so-secondary, 60%), $so-secondary-light);
+}
+
+// ============================================
+// POPUP LIGHT THEME
+// Always shows light colors regardless of theme
+// ============================================
+
+// Light tooltip colors (fixed, not theme-dependent)
+$tooltip-light-bg: $so-white;
+$tooltip-light-text: $so-grey-800;
+$tooltip-light-border: $so-grey-200;
+$tooltip-light-kbd-bg: $so-grey-100;
+
+.#{$so-prefix}tooltip-popup.#{$so-prefix}tooltip-light {
+  // Use drop-shadow filter on popup for arrow shadow
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.15));
+
+  .#{$so-prefix}tooltip-inner {
+    color: $tooltip-light-text;
+    background: $tooltip-light-bg;
+    border: 1px solid $tooltip-light-border;
+    box-shadow: none;
+
+    kbd {
+      color: $tooltip-light-text;
+      background: $tooltip-light-kbd-bg;
+      border-color: $tooltip-light-border;
+    }
+
+    // Arrow needs both ::before (border) and ::after (fill)
+    &::before {
+      content: '';
+      position: absolute;
+      border: 6px solid transparent;
+    }
+
+    &::after {
+      border-width: 5px;
+    }
+  }
+
+  .#{$so-prefix}tooltip-divider {
+    background: $tooltip-light-border;
+  }
+
+  // Top position arrows
+  &.#{$so-prefix}tooltip-arrow.#{$so-prefix}tooltip-top .#{$so-prefix}tooltip-inner {
+    &::before {
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border-top-color: $tooltip-light-border;
+    }
+
+    &::after {
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border-top-color: $tooltip-light-bg;
+      margin-top: -1px;
+    }
+  }
+
+  // Bottom position arrows
+  &.#{$so-prefix}tooltip-arrow.#{$so-prefix}tooltip-bottom .#{$so-prefix}tooltip-inner {
+    &::before {
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border-bottom-color: $tooltip-light-border;
+    }
+
+    &::after {
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border-bottom-color: $tooltip-light-bg;
+      margin-bottom: -1px;
+    }
+  }
+
+  // Left position arrows
+  &.#{$so-prefix}tooltip-arrow.#{$so-prefix}tooltip-left .#{$so-prefix}tooltip-inner {
+    &::before {
+      top: 50%;
+      left: 100%;
+      transform: translateY(-50%);
+      border-left-color: $tooltip-light-border;
+    }
+
+    &::after {
+      top: 50%;
+      left: 100%;
+      transform: translateY(-50%);
+      border-left-color: $tooltip-light-bg;
+      margin-left: -1px;
+    }
+  }
+
+  // Right position arrows
+  &.#{$so-prefix}tooltip-arrow.#{$so-prefix}tooltip-right .#{$so-prefix}tooltip-inner {
+    &::before {
+      top: 50%;
+      right: 100%;
+      transform: translateY(-50%);
+      border-right-color: $tooltip-light-border;
+    }
+
+    &::after {
+      top: 50%;
+      right: 100%;
+      transform: translateY(-50%);
+      border-right-color: $tooltip-light-bg;
+      margin-right: -1px;
+    }
+  }
+
+  // Dark mode - stronger shadow for visibility against dark backgrounds
+  [data-so-theme="dark"] & {
+    filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.5));
+  }
+}
+
+// ============================================
+// POPUP ANIMATION VARIANTS
+// ============================================
+
+// Fade animation
+.#{$so-prefix}tooltip-popup.#{$so-prefix}tooltip-animate-fade {
+  transition: opacity $so-transition-fast, visibility $so-transition-fast;
+}
+
+// Scale animation (default)
+.#{$so-prefix}tooltip-popup.#{$so-prefix}tooltip-animate-scale {
+  transform: scale(0.95);
+  transition: all $so-transition-fast;
+
+  &.#{$so-prefix}show {
+    transform: scale(1);
+  }
+}
+
+// Slide animation
+.#{$so-prefix}tooltip-popup.#{$so-prefix}tooltip-animate-slide {
+  transition: all $so-transition-fast;
+
+  &.#{$so-prefix}tooltip-top {
+    transform: translateY(8px);
+  }
+
+  &.#{$so-prefix}tooltip-bottom {
+    transform: translateY(-8px);
+  }
+
+  &.#{$so-prefix}tooltip-left {
+    transform: translateX(8px);
+  }
+
+  &.#{$so-prefix}tooltip-right {
+    transform: translateX(-8px);
+  }
+
+  &.#{$so-prefix}show {
+    transform: translate(0);
+  }
+}
+
+// ============================================
+// MULTILINE POPUP
+// ============================================
+
+.#{$so-prefix}tooltip-popup.#{$so-prefix}tooltip-multiline {
+  .#{$so-prefix}tooltip-inner {
+    white-space: normal;
+    max-width: 240px;
+    text-align: center;
+  }
+}

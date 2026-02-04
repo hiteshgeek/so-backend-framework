@@ -1,0 +1,89 @@
+// ============================================
+// SIXORBIT UI - CONTAINER SYSTEM
+// Responsive fixed-width containers
+// ============================================
+
+@use 'sass:map';
+@use '../abstracts' as *;
+@use 'grid-config' as config;
+
+// ============================================
+// CSS CUSTOM PROPERTIES FOR GRID
+// ============================================
+
+:root {
+  --#{$so-css-var-prefix}-gutter-x: 1.5rem;
+  --#{$so-css-var-prefix}-gutter-y: 0;
+}
+
+// ============================================
+// BASE CONTAINER
+// ============================================
+
+// Shared container styles
+%container-base {
+  width: 100%;
+  padding-right: var(--#{$so-css-var-prefix}-gutter-x, #{config.$container-padding-x});
+  padding-left: var(--#{$so-css-var-prefix}-gutter-x, #{config.$container-padding-x});
+  margin-right: auto;
+  margin-left: auto;
+}
+
+// ============================================
+// FLUID CONTAINER
+// ============================================
+
+.#{$so-prefix}container-fluid {
+  @extend %container-base;
+}
+
+// ============================================
+// RESPONSIVE CONTAINERS
+// ============================================
+
+// Default container - responsive at all breakpoints
+.#{$so-prefix}container {
+  @extend %container-base;
+
+  @each $breakpoint, $max-width in config.$container-max-widths {
+    $min-width: map.get(config.$grid-breakpoints, $breakpoint);
+
+    @media (min-width: $min-width) {
+      max-width: $max-width;
+    }
+  }
+}
+
+// Breakpoint-specific containers
+// .so-container-sm, .so-container-md, etc.
+// These containers are 100% wide until the specified breakpoint
+@each $breakpoint, $min-width in config.$grid-breakpoints {
+  @if $breakpoint != 'xs' {
+    .#{$so-prefix}container-#{$breakpoint} {
+      @extend %container-base;
+    }
+  }
+}
+
+// Apply max-widths to breakpoint-specific containers
+@each $breakpoint, $min-width in config.$grid-breakpoints {
+  @if $breakpoint != 'xs' {
+    @media (min-width: $min-width) {
+      $max-width: map.get(config.$container-max-widths, $breakpoint);
+
+      .#{$so-prefix}container-#{$breakpoint} {
+        max-width: $max-width;
+      }
+
+      // Also apply to smaller breakpoint containers
+      @each $bp, $mw in config.$container-max-widths {
+        $bp-min: map.get(config.$grid-breakpoints, $bp);
+        @if $bp-min < $min-width {
+          .#{$so-prefix}container-#{$bp} {
+            max-width: $max-width;
+          }
+        }
+      }
+    }
+  }
+}

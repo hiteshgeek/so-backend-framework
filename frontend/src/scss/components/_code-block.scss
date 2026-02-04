@@ -1,0 +1,438 @@
+// ============================================
+// SIXORBIT UI - CODE BLOCK
+// Styled code display with syntax highlighting
+// ============================================
+
+@use "../abstracts" as *;
+
+// ============================================
+// INLINE CODE
+// ============================================
+
+.#{$so-prefix}code {
+  display: inline;
+  padding: 2px 6px;
+  font-family: $so-font-family-mono;
+  font-size: 0.875em;
+  color: css-var("accent-danger");
+  background: css-var("card-hover-bg");
+  border-radius: radius("sm");
+}
+
+// Light variant for dark backgrounds
+.#{$so-prefix}code-light {
+  color: $so-white;
+  background: rgba($so-white, 0.15);
+}
+
+// ============================================
+// CODE BLOCK CONTAINER
+// ============================================
+
+.#{$so-prefix}code-block {
+  position: relative;
+  background: #1e1e1e;
+  border-radius: radius("lg");
+  overflow: hidden;
+  margin: spacing("2") 0;
+
+  // Dark theme code block - slightly darker
+  [data-so-theme="dark"] & {
+    background: #0d1117;
+  }
+}
+
+// ============================================
+// CODE BLOCK HEADER
+// ============================================
+
+.#{$so-prefix}code-block-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: spacing("2") spacing("4");
+  background: rgba($so-white, 0.05);
+  border-bottom: 1px solid rgba($so-white, 0.1);
+}
+
+.#{$so-prefix}code-block-language {
+  font-size: font-size("xs");
+  font-weight: font-weight("medium");
+  color: rgba($so-white, 0.6);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.#{$so-prefix}code-block-filename {
+  display: flex;
+  align-items: center;
+  gap: spacing("2");
+  font-size: font-size("sm");
+  color: rgba($so-white, 0.8);
+
+  .material-icons {
+    font-size: 16px;
+    color: rgba($so-white, 0.5);
+  }
+}
+
+// ============================================
+// CODE BLOCK BODY
+// ============================================
+
+.#{$so-prefix}code-block-body {
+  position: relative;
+  overflow: auto;
+  max-height: 500px;
+}
+
+.#{$so-prefix}code-block-content {
+  display: block;
+  padding: spacing("4");
+  margin: 0;
+  font-family: $so-font-family-mono;
+  font-size: font-size("sm");
+  line-height: line-height("relaxed");
+  color: #d4d4d4;
+  white-space: pre;
+  word-wrap: normal;
+  overflow-x: auto;
+
+  code {
+    font-family: inherit;
+    background: none;
+    padding: 0;
+    color: inherit;
+  }
+}
+
+// ============================================
+// COPY BUTTON
+// ============================================
+
+.#{$so-prefix}code-block-copy {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: spacing("1") spacing("2");
+  background: rgba($so-white, 0.1);
+  border: none;
+  border-radius: radius("md");
+  color: rgba($so-white, 0.6);
+  font-size: font-size("xs");
+  cursor: pointer;
+  transition: all $so-transition-fast;
+
+  .material-icons {
+    font-size: 16px;
+  }
+
+  &:hover {
+    background: rgba($so-white, 0.2);
+    color: $so-white;
+  }
+
+  &.copied {
+    color: css-var("accent-success");
+    background: alpha($so-success, 0.2);
+  }
+}
+
+// ============================================
+// LINE NUMBERS
+// ============================================
+
+.#{$so-prefix}code-block-with-lines {
+  .#{$so-prefix}code-block-body {
+    display: flex;
+  }
+}
+
+.#{$so-prefix}code-line-numbers {
+  flex-shrink: 0;
+  padding: spacing("4") 0;
+  padding-right: spacing("3");
+  border-right: 1px solid rgba($so-white, 0.1);
+  text-align: right;
+  user-select: none;
+
+  span {
+    display: block;
+    font-family: $so-font-family-mono;
+    font-size: font-size("sm");
+    line-height: line-height("relaxed");
+    color: rgba($so-white, 0.3);
+    padding: 0 spacing("3");
+  }
+}
+
+.#{$so-prefix}code-block-with-lines .#{$so-prefix}code-block-content {
+  flex: 1;
+  padding-left: spacing("4");
+}
+
+// ============================================
+// HIGHLIGHTED LINES
+// ============================================
+
+.#{$so-prefix}code-line {
+  display: block;
+}
+
+.#{$so-prefix}code-line-highlight {
+  background: rgba(css-var("accent-primary"), 0.15);
+  margin: 0 calc(spacing("4") * -1);
+  padding: 0 spacing("4");
+  border-left: 3px solid css-var("accent-primary");
+}
+
+.#{$so-prefix}code-line-added {
+  background: alpha($so-success, 0.15);
+  margin: 0 calc(spacing("4") * -1);
+  padding: 0 spacing("4");
+  border-left: 3px solid css-var("accent-success");
+
+  &::before {
+    content: "+";
+    color: css-var("accent-success");
+    margin-right: spacing("2");
+  }
+}
+
+.#{$so-prefix}code-line-removed {
+  background: alpha($so-danger, 0.15);
+  margin: 0 calc(spacing("4") * -1);
+  padding: 0 spacing("4");
+  border-left: 3px solid css-var("accent-danger");
+
+  &::before {
+    content: "-";
+    color: css-var("accent-danger");
+    margin-right: spacing("2");
+  }
+}
+
+// ============================================
+// SYNTAX HIGHLIGHTING TOKENS
+// Based on common syntax highlighting themes
+// ============================================
+
+.#{$so-prefix}code-keyword {
+  color: #569cd6; // Blue - keywords
+}
+
+.#{$so-prefix}code-string {
+  color: #ce9178; // Orange - strings
+}
+
+.#{$so-prefix}code-comment {
+  color: #6a9955; // Green - comments
+  font-style: italic;
+}
+
+.#{$so-prefix}code-function {
+  color: #dcdcaa; // Yellow - functions
+}
+
+.#{$so-prefix}code-number {
+  color: #b5cea8; // Light green - numbers
+}
+
+.#{$so-prefix}code-operator {
+  color: #d4d4d4; // White - operators
+}
+
+.#{$so-prefix}code-variable {
+  color: #9cdcfe; // Light blue - variables
+}
+
+.#{$so-prefix}code-class {
+  color: #4ec9b0; // Teal - classes
+}
+
+.#{$so-prefix}code-property {
+  color: #9cdcfe; // Light blue - properties
+}
+
+.#{$so-prefix}code-tag {
+  color: #569cd6; // Blue - HTML tags
+}
+
+.#{$so-prefix}code-attribute {
+  color: #9cdcfe; // Light blue - attributes
+}
+
+.#{$so-prefix}code-selector {
+  color: #d7ba7d; // Gold - CSS selectors
+}
+
+.#{$so-prefix}code-regex {
+  color: #d16969; // Red - regex
+}
+
+.#{$so-prefix}code-punctuation {
+  color: #808080; // Gray - punctuation
+}
+
+// ============================================
+// LIGHT THEME CODE BLOCK
+// ============================================
+
+.#{$so-prefix}code-block-light {
+  background: #f5f5f5;
+
+  .#{$so-prefix}code-block-header {
+    background: rgba($so-black, 0.03);
+    border-bottom-color: rgba($so-black, 0.1);
+  }
+
+  .#{$so-prefix}code-block-language {
+    color: rgba($so-black, 0.5);
+  }
+
+  .#{$so-prefix}code-block-filename {
+    color: rgba($so-black, 0.7);
+
+    .material-icons {
+      color: rgba($so-black, 0.4);
+    }
+  }
+
+  .#{$so-prefix}code-block-copy {
+    background: rgba($so-black, 0.05);
+    color: rgba($so-black, 0.5);
+
+    &:hover {
+      background: rgba($so-black, 0.1);
+      color: $so-black;
+    }
+  }
+
+  .#{$so-prefix}code-block-content {
+    color: #24292e;
+  }
+
+  .#{$so-prefix}code-line-numbers span {
+    color: rgba($so-black, 0.3);
+  }
+
+  .#{$so-prefix}code-line-numbers {
+    border-right-color: rgba($so-black, 0.1);
+  }
+
+  // Light theme syntax colors
+  .#{$so-prefix}code-keyword {
+    color: #d73a49;
+  }
+  .#{$so-prefix}code-string {
+    color: #032f62;
+  }
+  .#{$so-prefix}code-comment {
+    color: #6a737d;
+  }
+  .#{$so-prefix}code-function {
+    color: #6f42c1;
+  }
+  .#{$so-prefix}code-number {
+    color: #005cc5;
+  }
+  .#{$so-prefix}code-variable {
+    color: #e36209;
+  }
+  .#{$so-prefix}code-class {
+    color: #22863a;
+  }
+  .#{$so-prefix}code-tag {
+    color: #22863a;
+  }
+  .#{$so-prefix}code-attribute {
+    color: #6f42c1;
+  }
+}
+
+// ============================================
+// SIZE VARIANTS
+// ============================================
+
+.#{$so-prefix}code-block-sm {
+  .#{$so-prefix}code-block-content {
+    font-size: font-size("xs");
+    padding: spacing("3");
+  }
+
+  .#{$so-prefix}code-line-numbers span {
+    font-size: font-size("xs");
+  }
+}
+
+.#{$so-prefix}code-block-lg {
+  .#{$so-prefix}code-block-content {
+    font-size: font-size("base");
+    padding: spacing("5");
+  }
+
+  .#{$so-prefix}code-line-numbers span {
+    font-size: font-size("base");
+  }
+}
+
+// ============================================
+// DIFF VIEW
+// ============================================
+
+.#{$so-prefix}code-diff {
+  .#{$so-prefix}code-block-body {
+    display: flex;
+  }
+
+  .#{$so-prefix}code-diff-old,
+  .#{$so-prefix}code-diff-new {
+    flex: 1;
+    overflow: auto;
+  }
+
+  .#{$so-prefix}code-diff-old {
+    border-right: 1px solid rgba($so-white, 0.1);
+  }
+}
+
+// ============================================
+// TERMINAL/COMMAND LINE STYLE
+// ============================================
+
+.#{$so-prefix}code-terminal {
+  background: #0c0c0c;
+
+  .#{$so-prefix}code-block-header {
+    background: #1a1a1a;
+    padding: spacing("2") spacing("3");
+
+    &::before {
+      content: "";
+      display: flex;
+      gap: 6px;
+      margin-right: spacing("4");
+
+      // Traffic light dots
+      &::after {
+        content: "";
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: #ff5f56;
+        box-shadow:
+          18px 0 0 #ffbd2e,
+          36px 0 0 #27c93f;
+      }
+    }
+  }
+
+  .#{$so-prefix}code-block-content {
+    color: #00ff00;
+  }
+
+  .#{$so-prefix}code-prompt {
+    color: #888;
+    user-select: none;
+  }
+}

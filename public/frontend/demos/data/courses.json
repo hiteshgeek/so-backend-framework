@@ -1,0 +1,656 @@
+{
+    "categories": [
+        { "id": "sales", "name": "Sales", "icon": "point_of_sale", "color": "#1a73e8" },
+        { "id": "procurement", "name": "Procurement", "icon": "shopping_cart", "color": "#34a853" },
+        { "id": "hrm", "name": "HRM", "icon": "people", "color": "#ea4335" },
+        { "id": "finance", "name": "Finance", "icon": "account_balance", "color": "#f9ab00" },
+        { "id": "compliance", "name": "Compliance", "icon": "gavel", "color": "#9c27b0" },
+        { "id": "production", "name": "Production", "icon": "precision_manufacturing", "color": "#00bcd4" }
+    ],
+    "courses": [
+        {
+            "id": "sales-101",
+            "categoryId": "sales",
+            "title": "Introduction to Sales Module",
+            "description": "Learn the fundamentals of the SixOrbit Sales module including lead management, quotations, and sales orders.",
+            "thumbnail": "https://images.unsplash.com/photo-1556745757-8d76bdb6984b?w=400&h=225&fit=crop",
+            "duration": "45 min",
+            "lessons": [
+                {
+                    "id": "s101-l1",
+                    "type": "video",
+                    "title": "Getting Started with Sales Dashboard",
+                    "description": "Overview of the sales dashboard and key metrics",
+                    "videoUrl": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+                    "duration": "5:30"
+                },
+                {
+                    "id": "s101-l2",
+                    "type": "video",
+                    "title": "Creating and Managing Leads",
+                    "description": "Learn how to create, track, and convert leads",
+                    "videoUrl": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+                    "duration": "8:45"
+                },
+                {
+                    "id": "s101-t1",
+                    "type": "task",
+                    "title": "Practice: Create Your First Lead",
+                    "description": "Apply what you learned by creating a sample lead in the system",
+                    "steps": [
+                        "Navigate to Sales > Leads > Create Lead",
+                        "Fill in the customer name and contact details",
+                        "Select the lead source as 'Website'",
+                        "Add a follow-up date for tomorrow",
+                        "Save the lead and verify it appears in the list"
+                    ]
+                },
+                {
+                    "id": "s101-l3",
+                    "type": "video",
+                    "title": "Creating Quotations",
+                    "description": "Step-by-step guide to create professional quotations",
+                    "videoUrl": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+                    "duration": "10:15"
+                },
+                {
+                    "id": "s101-l4",
+                    "type": "video",
+                    "title": "Converting Quotation to Sales Order",
+                    "description": "Learn the conversion workflow from quotation to order",
+                    "videoUrl": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+                    "duration": "6:20"
+                },
+                {
+                    "id": "s101-t2",
+                    "type": "task",
+                    "title": "Practice: Complete Sales Cycle",
+                    "description": "Create a quotation and convert it to a sales order",
+                    "steps": [
+                        "Create a new quotation for an existing customer",
+                        "Add at least 2 line items with quantities",
+                        "Apply a 10% discount on the quotation",
+                        "Send the quotation for approval",
+                        "Once approved, convert it to a Sales Order"
+                    ]
+                }
+            ],
+            "quiz": {
+                "passingScore": 70,
+                "timeLimit": 10,
+                "retakeAllowed": true,
+                "questions": [
+                    {
+                        "id": "q1",
+                        "type": "single",
+                        "question": "What is the first step in the sales cycle in SixOrbit ERP?",
+                        "options": ["Create Sales Order", "Create Invoice", "Create Lead", "Create Payment"],
+                        "correctAnswer": 2
+                    },
+                    {
+                        "id": "q2",
+                        "type": "single",
+                        "question": "Where can you find the sales dashboard?",
+                        "options": ["Finance > Dashboard", "Sales > Dashboard", "Home > Sales", "Reports > Sales"],
+                        "correctAnswer": 1
+                    },
+                    {
+                        "id": "q3",
+                        "type": "multiple",
+                        "question": "Which of the following are valid lead sources? (Select all that apply)",
+                        "options": ["Website", "Phone Call", "Referral", "Walk-in"],
+                        "correctAnswers": [0, 1, 2, 3]
+                    },
+                    {
+                        "id": "q4",
+                        "type": "single",
+                        "question": "What document comes after a Quotation in the sales workflow?",
+                        "options": ["Invoice", "Sales Order", "Delivery Note", "Payment"],
+                        "correctAnswer": 1
+                    },
+                    {
+                        "id": "q5",
+                        "type": "single",
+                        "question": "Can you apply discounts at the line item level in quotations?",
+                        "options": ["Yes, both line and total level", "No, only at total level", "No discounts allowed", "Only for certain items"],
+                        "correctAnswer": 0
+                    }
+                ]
+            }
+        },
+        {
+            "id": "sales-102",
+            "categoryId": "sales",
+            "title": "Advanced Sales Reporting",
+            "description": "Master sales analytics, pipeline management, and performance tracking with advanced reporting tools.",
+            "thumbnail": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400&h=225&fit=crop",
+            "duration": "35 min",
+            "lessons": [
+                {
+                    "id": "s102-l1",
+                    "type": "video",
+                    "title": "Understanding Sales Pipeline",
+                    "description": "Visualize and manage your sales pipeline effectively",
+                    "videoUrl": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+                    "duration": "7:30"
+                },
+                {
+                    "id": "s102-l2",
+                    "type": "video",
+                    "title": "Sales Performance Metrics",
+                    "description": "Key KPIs and how to track them",
+                    "videoUrl": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+                    "duration": "9:15"
+                },
+                {
+                    "id": "s102-t1",
+                    "type": "task",
+                    "title": "Practice: Generate Sales Report",
+                    "description": "Create a monthly sales performance report",
+                    "steps": [
+                        "Navigate to Sales > Reports",
+                        "Select 'Monthly Sales Summary' report",
+                        "Set date range for last month",
+                        "Group by salesperson",
+                        "Export the report to PDF"
+                    ]
+                },
+                {
+                    "id": "s102-l3",
+                    "type": "video",
+                    "title": "Custom Report Builder",
+                    "description": "Create custom reports for specific needs",
+                    "videoUrl": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+                    "duration": "11:00"
+                }
+            ],
+            "quiz": {
+                "passingScore": 70,
+                "timeLimit": 8,
+                "retakeAllowed": true,
+                "questions": [
+                    {
+                        "id": "q1",
+                        "type": "single",
+                        "question": "What does the sales pipeline show?",
+                        "options": ["Completed sales only", "Potential deals at various stages", "Customer list", "Product inventory"],
+                        "correctAnswer": 1
+                    },
+                    {
+                        "id": "q2",
+                        "type": "multiple",
+                        "question": "Which are valid sales KPIs? (Select all that apply)",
+                        "options": ["Conversion Rate", "Average Deal Size", "Inventory Turnover", "Win Rate"],
+                        "correctAnswers": [0, 1, 3]
+                    },
+                    {
+                        "id": "q3",
+                        "type": "single",
+                        "question": "Which export formats are supported for reports?",
+                        "options": ["PDF only", "Excel only", "PDF and Excel", "No export available"],
+                        "correctAnswer": 2
+                    }
+                ]
+            }
+        },
+        {
+            "id": "procurement-101",
+            "categoryId": "procurement",
+            "title": "Procurement Basics",
+            "description": "Learn the complete procurement cycle from purchase requisition to goods receipt.",
+            "thumbnail": "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=400&h=225&fit=crop",
+            "duration": "50 min",
+            "lessons": [
+                {
+                    "id": "p101-l1",
+                    "type": "video",
+                    "title": "Introduction to Procurement",
+                    "description": "Overview of the procurement module and workflow",
+                    "videoUrl": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+                    "duration": "6:00"
+                },
+                {
+                    "id": "p101-l2",
+                    "type": "video",
+                    "title": "Creating Purchase Orders",
+                    "description": "Step-by-step guide to create and manage POs",
+                    "videoUrl": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+                    "duration": "10:30"
+                },
+                {
+                    "id": "p101-t1",
+                    "type": "task",
+                    "title": "Practice: Create a Purchase Order",
+                    "description": "Create a PO for office supplies",
+                    "steps": [
+                        "Navigate to Purchase > Purchase Order > Create",
+                        "Select a vendor from the list",
+                        "Add items with quantities",
+                        "Set delivery date and location",
+                        "Submit for approval"
+                    ]
+                },
+                {
+                    "id": "p101-l3",
+                    "type": "video",
+                    "title": "Goods Receipt Note (GRN)",
+                    "description": "How to receive and verify incoming goods",
+                    "videoUrl": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+                    "duration": "8:45"
+                },
+                {
+                    "id": "p101-l4",
+                    "type": "video",
+                    "title": "Purchase Invoice Processing",
+                    "description": "Match invoices with PO and GRN",
+                    "videoUrl": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+                    "duration": "7:20"
+                }
+            ],
+            "quiz": {
+                "passingScore": 70,
+                "timeLimit": 10,
+                "retakeAllowed": true,
+                "questions": [
+                    {
+                        "id": "q1",
+                        "type": "single",
+                        "question": "What is the correct order of procurement documents?",
+                        "options": ["PO > Invoice > GRN", "GRN > PO > Invoice", "PO > GRN > Invoice", "Invoice > PO > GRN"],
+                        "correctAnswer": 2
+                    },
+                    {
+                        "id": "q2",
+                        "type": "single",
+                        "question": "What does GRN stand for?",
+                        "options": ["General Receipt Note", "Goods Receipt Note", "Goods Return Note", "General Return Note"],
+                        "correctAnswer": 1
+                    },
+                    {
+                        "id": "q3",
+                        "type": "multiple",
+                        "question": "Which fields are mandatory in a Purchase Order?",
+                        "options": ["Vendor", "Items", "Delivery Date", "Internal Notes"],
+                        "correctAnswers": [0, 1]
+                    },
+                    {
+                        "id": "q4",
+                        "type": "single",
+                        "question": "Three-way matching involves which documents?",
+                        "options": ["PO, GRN, and Sales Order", "PO, GRN, and Invoice", "PO, Invoice, and Payment", "GRN, Invoice, and Payment"],
+                        "correctAnswer": 1
+                    }
+                ]
+            }
+        },
+        {
+            "id": "hrm-101",
+            "categoryId": "hrm",
+            "title": "Employee Management Essentials",
+            "description": "Master employee onboarding, attendance tracking, and basic HR operations in SixOrbit.",
+            "thumbnail": "https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=400&h=225&fit=crop",
+            "duration": "40 min",
+            "lessons": [
+                {
+                    "id": "h101-l1",
+                    "type": "video",
+                    "title": "HRM Module Overview",
+                    "description": "Introduction to HR management features",
+                    "videoUrl": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+                    "duration": "5:00"
+                },
+                {
+                    "id": "h101-l2",
+                    "type": "video",
+                    "title": "Adding New Employees",
+                    "description": "Complete employee onboarding process",
+                    "videoUrl": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+                    "duration": "9:30"
+                },
+                {
+                    "id": "h101-t1",
+                    "type": "task",
+                    "title": "Practice: Onboard an Employee",
+                    "description": "Add a new employee to the system",
+                    "steps": [
+                        "Go to HRM > Employees > Add Employee",
+                        "Fill in personal details (name, DOB, contact)",
+                        "Add employment details (department, designation)",
+                        "Upload required documents",
+                        "Set up login credentials",
+                        "Save and verify the employee profile"
+                    ]
+                },
+                {
+                    "id": "h101-l3",
+                    "type": "video",
+                    "title": "Attendance Management",
+                    "description": "Track and manage employee attendance",
+                    "videoUrl": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+                    "duration": "8:15"
+                },
+                {
+                    "id": "h101-l4",
+                    "type": "video",
+                    "title": "Leave Management",
+                    "description": "Configure and process leave requests",
+                    "videoUrl": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+                    "duration": "7:45"
+                }
+            ],
+            "quiz": {
+                "passingScore": 70,
+                "timeLimit": 8,
+                "retakeAllowed": true,
+                "questions": [
+                    {
+                        "id": "q1",
+                        "type": "single",
+                        "question": "Which module handles employee management?",
+                        "options": ["Finance", "Sales", "HRM", "Inventory"],
+                        "correctAnswer": 2
+                    },
+                    {
+                        "id": "q2",
+                        "type": "multiple",
+                        "question": "What information is required for employee onboarding?",
+                        "options": ["Personal Details", "Bank Account", "Emergency Contact", "Favorite Color"],
+                        "correctAnswers": [0, 1, 2]
+                    },
+                    {
+                        "id": "q3",
+                        "type": "single",
+                        "question": "How can attendance be marked in SixOrbit?",
+                        "options": ["Manual entry only", "Biometric only", "Both manual and biometric", "No attendance feature"],
+                        "correctAnswer": 2
+                    },
+                    {
+                        "id": "q4",
+                        "type": "single",
+                        "question": "Who approves leave requests by default?",
+                        "options": ["HR Admin", "Reporting Manager", "CEO", "Self-approved"],
+                        "correctAnswer": 1
+                    }
+                ]
+            }
+        },
+        {
+            "id": "finance-101",
+            "categoryId": "finance",
+            "title": "Financial Accounting Fundamentals",
+            "description": "Understand the chart of accounts, ledgers, and basic accounting entries in SixOrbit Finance.",
+            "thumbnail": "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=400&h=225&fit=crop",
+            "duration": "55 min",
+            "lessons": [
+                {
+                    "id": "f101-l1",
+                    "type": "video",
+                    "title": "Finance Module Overview",
+                    "description": "Introduction to financial management in SixOrbit",
+                    "videoUrl": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+                    "duration": "6:30"
+                },
+                {
+                    "id": "f101-l2",
+                    "type": "video",
+                    "title": "Chart of Accounts Setup",
+                    "description": "Organize your account groups and ledgers",
+                    "videoUrl": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+                    "duration": "11:00"
+                },
+                {
+                    "id": "f101-t1",
+                    "type": "task",
+                    "title": "Practice: Create Account Groups",
+                    "description": "Set up basic account structure",
+                    "steps": [
+                        "Navigate to Finance > Account > Groups",
+                        "Create a new group under 'Current Assets'",
+                        "Name it 'Bank Accounts'",
+                        "Create a ledger under this group",
+                        "Verify the hierarchy in chart of accounts"
+                    ]
+                },
+                {
+                    "id": "f101-l3",
+                    "type": "video",
+                    "title": "Journal Entries",
+                    "description": "Create and post accounting entries",
+                    "videoUrl": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+                    "duration": "9:45"
+                },
+                {
+                    "id": "f101-l4",
+                    "type": "video",
+                    "title": "Financial Reports",
+                    "description": "Generate Trial Balance, P&L, and Balance Sheet",
+                    "videoUrl": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+                    "duration": "12:30"
+                }
+            ],
+            "quiz": {
+                "passingScore": 70,
+                "timeLimit": 12,
+                "retakeAllowed": true,
+                "questions": [
+                    {
+                        "id": "q1",
+                        "type": "single",
+                        "question": "What is the foundation of the accounting system in SixOrbit?",
+                        "options": ["Invoices", "Chart of Accounts", "Bank Statements", "Tax Returns"],
+                        "correctAnswer": 1
+                    },
+                    {
+                        "id": "q2",
+                        "type": "multiple",
+                        "question": "Which are primary financial reports? (Select all that apply)",
+                        "options": ["Trial Balance", "Profit & Loss", "Balance Sheet", "Sales Report"],
+                        "correctAnswers": [0, 1, 2]
+                    },
+                    {
+                        "id": "q3",
+                        "type": "single",
+                        "question": "In double-entry accounting, every transaction affects:",
+                        "options": ["One account", "Two accounts", "Three accounts", "Unlimited accounts"],
+                        "correctAnswer": 1
+                    },
+                    {
+                        "id": "q4",
+                        "type": "single",
+                        "question": "What type of account is 'Accounts Receivable'?",
+                        "options": ["Asset", "Liability", "Income", "Expense"],
+                        "correctAnswer": 0
+                    },
+                    {
+                        "id": "q5",
+                        "type": "single",
+                        "question": "Which report shows the financial position at a specific date?",
+                        "options": ["Profit & Loss", "Trial Balance", "Balance Sheet", "Cash Flow"],
+                        "correctAnswer": 2
+                    }
+                ]
+            }
+        },
+        {
+            "id": "compliance-101",
+            "categoryId": "compliance",
+            "title": "GST Compliance Guide",
+            "description": "Learn GST configuration, return filing, and compliance requirements in SixOrbit ERP.",
+            "thumbnail": "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=400&h=225&fit=crop",
+            "duration": "45 min",
+            "lessons": [
+                {
+                    "id": "c101-l1",
+                    "type": "video",
+                    "title": "GST Overview in SixOrbit",
+                    "description": "Understanding GST module and configuration",
+                    "videoUrl": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+                    "duration": "7:00"
+                },
+                {
+                    "id": "c101-l2",
+                    "type": "video",
+                    "title": "HSN/SAC Code Setup",
+                    "description": "Configure tax codes for items and services",
+                    "videoUrl": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+                    "duration": "8:30"
+                },
+                {
+                    "id": "c101-t1",
+                    "type": "task",
+                    "title": "Practice: Configure GST for an Item",
+                    "description": "Set up GST rates for a product",
+                    "steps": [
+                        "Go to Inventory > Items > Select any item",
+                        "Edit the item and go to Tax section",
+                        "Enter the HSN code",
+                        "Set GST rate (e.g., 18%)",
+                        "Save and verify on a test invoice"
+                    ]
+                },
+                {
+                    "id": "c101-l3",
+                    "type": "video",
+                    "title": "GSTR-1 Filing",
+                    "description": "Generate and file GSTR-1 returns",
+                    "videoUrl": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+                    "duration": "10:15"
+                },
+                {
+                    "id": "c101-l4",
+                    "type": "video",
+                    "title": "GSTR-3B Summary",
+                    "description": "Monthly return summary and payment",
+                    "videoUrl": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+                    "duration": "9:00"
+                }
+            ],
+            "quiz": {
+                "passingScore": 70,
+                "timeLimit": 10,
+                "retakeAllowed": true,
+                "questions": [
+                    {
+                        "id": "q1",
+                        "type": "single",
+                        "question": "What does HSN code stand for?",
+                        "options": ["High Speed Network", "Harmonized System of Nomenclature", "Home Supply Number", "Hardware Serial Number"],
+                        "correctAnswer": 1
+                    },
+                    {
+                        "id": "q2",
+                        "type": "single",
+                        "question": "GSTR-1 contains details of:",
+                        "options": ["Purchases", "Sales", "Both", "Tax payments"],
+                        "correctAnswer": 1
+                    },
+                    {
+                        "id": "q3",
+                        "type": "multiple",
+                        "question": "Which GST rates are applicable in India?",
+                        "options": ["5%", "12%", "18%", "28%"],
+                        "correctAnswers": [0, 1, 2, 3]
+                    },
+                    {
+                        "id": "q4",
+                        "type": "single",
+                        "question": "What is the due date for GSTR-3B filing?",
+                        "options": ["10th of next month", "20th of next month", "End of next month", "11th of next month"],
+                        "correctAnswer": 1
+                    }
+                ]
+            }
+        },
+        {
+            "id": "production-101",
+            "categoryId": "production",
+            "title": "Manufacturing & BOM",
+            "description": "Learn to create Bill of Materials, work orders, and manage production in SixOrbit.",
+            "thumbnail": "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=400&h=225&fit=crop",
+            "duration": "50 min",
+            "lessons": [
+                {
+                    "id": "pr101-l1",
+                    "type": "video",
+                    "title": "Production Module Overview",
+                    "description": "Introduction to manufacturing features",
+                    "videoUrl": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+                    "duration": "5:45"
+                },
+                {
+                    "id": "pr101-l2",
+                    "type": "video",
+                    "title": "Creating Bill of Materials",
+                    "description": "Define product structure and components",
+                    "videoUrl": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+                    "duration": "11:30"
+                },
+                {
+                    "id": "pr101-t1",
+                    "type": "task",
+                    "title": "Practice: Create a BOM",
+                    "description": "Create BOM for a finished product",
+                    "steps": [
+                        "Go to Production > Bill of Materials > Create",
+                        "Select a finished goods item",
+                        "Add raw material components",
+                        "Specify quantities for each component",
+                        "Set wastage percentage if applicable",
+                        "Save and verify the BOM"
+                    ]
+                },
+                {
+                    "id": "pr101-l3",
+                    "type": "video",
+                    "title": "Work Order Management",
+                    "description": "Create and track production work orders",
+                    "videoUrl": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+                    "duration": "10:00"
+                },
+                {
+                    "id": "pr101-l4",
+                    "type": "video",
+                    "title": "Production Completion",
+                    "description": "Record output and manage inventory",
+                    "videoUrl": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+                    "duration": "8:30"
+                }
+            ],
+            "quiz": {
+                "passingScore": 70,
+                "timeLimit": 10,
+                "retakeAllowed": true,
+                "questions": [
+                    {
+                        "id": "q1",
+                        "type": "single",
+                        "question": "What does BOM stand for?",
+                        "options": ["Bill of Materials", "Box of Materials", "Batch of Manufacturing", "Bundle of Materials"],
+                        "correctAnswer": 0
+                    },
+                    {
+                        "id": "q2",
+                        "type": "single",
+                        "question": "A BOM defines:",
+                        "options": ["Sales price", "Components needed to make a product", "Customer list", "Vendor details"],
+                        "correctAnswer": 1
+                    },
+                    {
+                        "id": "q3",
+                        "type": "multiple",
+                        "question": "Work order contains which information?",
+                        "options": ["Product to manufacture", "Quantity", "Start date", "Customer phone"],
+                        "correctAnswers": [0, 1, 2]
+                    },
+                    {
+                        "id": "q4",
+                        "type": "single",
+                        "question": "What happens when a work order is completed?",
+                        "options": ["Raw materials are added to stock", "Finished goods are added to stock", "Nothing changes", "Purchase order is created"],
+                        "correctAnswer": 1
+                    }
+                ]
+            }
+        }
+    ]
+}

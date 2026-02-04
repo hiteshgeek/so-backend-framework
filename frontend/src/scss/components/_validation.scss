@@ -1,0 +1,182 @@
+// ============================================
+// SIXORBIT UI - FORM VALIDATION
+// Reusable validation states and messages
+// ============================================
+
+@use '../abstracts' as *;
+
+// ============================================
+// VALIDATION STATE CLASSES
+// Applied to .so-form-group container
+// ============================================
+
+// Error State
+.#{$so-prefix}form-group.has-error {
+  .#{$so-prefix}form-control,
+  .#{$so-prefix}select {
+    border-color: css-var('accent-danger');
+
+    &:focus {
+      border-color: css-var('accent-danger');
+      box-shadow: 0 0 0 3px alpha($so-danger, 0.15);
+    }
+  }
+
+  .#{$so-prefix}form-label {
+    color: css-var('accent-danger');
+  }
+}
+
+// Success State
+.#{$so-prefix}form-group.has-success {
+  .#{$so-prefix}form-control,
+  .#{$so-prefix}select {
+    border-color: css-var('accent-success');
+
+    &:focus {
+      border-color: css-var('accent-success');
+      box-shadow: 0 0 0 3px alpha($so-success, 0.15);
+    }
+  }
+
+  .#{$so-prefix}form-label {
+    color: css-var('accent-success');
+  }
+}
+
+// Warning State
+.#{$so-prefix}form-group.has-warning {
+  .#{$so-prefix}form-control,
+  .#{$so-prefix}select {
+    border-color: css-var('accent-warning');
+
+    &:focus {
+      border-color: css-var('accent-warning');
+      box-shadow: 0 0 0 3px alpha($so-warning, 0.15);
+    }
+  }
+
+  .#{$so-prefix}form-label {
+    color: css-var('accent-warning');
+  }
+}
+
+// Info State
+.#{$so-prefix}form-group.has-info {
+  .#{$so-prefix}form-control,
+  .#{$so-prefix}select {
+    border-color: css-var('accent-info');
+
+    &:focus {
+      border-color: css-var('accent-info');
+      box-shadow: 0 0 0 3px alpha($so-info, 0.15);
+    }
+  }
+
+  .#{$so-prefix}form-label {
+    color: css-var('accent-info');
+  }
+}
+
+// ============================================
+// VALIDATION MESSAGE CLASSES
+// ============================================
+
+// Base validation message mixin
+@mixin validation-message {
+  display: none; // Hidden by default
+  align-items: flex-start;
+  gap: spacing('1');
+  margin-top: spacing('1');
+  font-size: font-size('xs') + 0.0625rem;
+  line-height: line-height('normal');
+
+  .material-icons {
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+}
+
+// Error Message
+.#{$so-prefix}form-error {
+  @include validation-message;
+  color: css-var('accent-danger');
+}
+
+// Success Message
+.#{$so-prefix}form-success {
+  @include validation-message;
+  color: css-var('accent-success');
+}
+
+// Warning Message
+.#{$so-prefix}form-warning {
+  @include validation-message;
+  color: css-var('accent-warning');
+}
+
+// Info Message
+.#{$so-prefix}form-info {
+  @include validation-message;
+  color: css-var('accent-info');
+}
+
+// Show messages based on validation state
+.#{$so-prefix}form-group.has-error .#{$so-prefix}form-error {
+  display: flex;
+}
+
+.#{$so-prefix}form-group.has-success .#{$so-prefix}form-success {
+  display: flex;
+}
+
+.#{$so-prefix}form-group.has-warning .#{$so-prefix}form-warning {
+  display: flex;
+}
+
+.#{$so-prefix}form-group.has-info .#{$so-prefix}form-info {
+  display: flex;
+}
+
+// ============================================
+// VALIDATION ICONS (Input Wrapper)
+// Optional: Add validation icon inside input
+// ============================================
+
+.#{$so-prefix}input-wrapper.show-validation-icon {
+  position: relative;
+
+  .#{$so-prefix}form-control {
+    padding-right: 40px;
+  }
+
+  &::after {
+    font-family: 'Material Icons';
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 20px;
+    pointer-events: none;
+  }
+}
+
+.#{$so-prefix}form-group.has-error .#{$so-prefix}input-wrapper.show-validation-icon::after {
+  content: 'error';
+  color: css-var('accent-danger');
+}
+
+.#{$so-prefix}form-group.has-success .#{$so-prefix}input-wrapper.show-validation-icon::after {
+  content: 'check_circle';
+  color: css-var('accent-success');
+}
+
+.#{$so-prefix}form-group.has-warning .#{$so-prefix}input-wrapper.show-validation-icon::after {
+  content: 'warning';
+  color: css-var('accent-warning');
+}
+
+.#{$so-prefix}form-group.has-info .#{$so-prefix}input-wrapper.show-validation-icon::after {
+  content: 'info';
+  color: css-var('accent-info');
+}

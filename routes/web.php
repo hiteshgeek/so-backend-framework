@@ -34,6 +34,9 @@ require __DIR__ . '/web/docs.php';
 // Media routes (file upload and access)
 require __DIR__ . '/web/media.php';
 
+// Frontend demo routes (UI Engine showcase)
+require __DIR__ . '/web/frontend.php';
+
 // ==========================================
 // Add more route modules here:
 // ==========================================

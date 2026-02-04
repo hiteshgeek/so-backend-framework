@@ -1,0 +1,355 @@
+// ============================================
+// SIXORBIT UI - COLOR INPUT
+// Styled color picker control
+// ============================================
+
+@use '../abstracts' as *;
+
+// ============================================
+// COLOR INPUT VARIABLES
+// ============================================
+
+$color-swatch-size: 32px !default;
+$color-swatch-size-sm: 24px !default;
+$color-swatch-size-lg: 40px !default;
+$color-swatch-size-xl: 48px !default;
+
+// ============================================
+// COLOR INPUT BASE
+// ============================================
+
+.#{$so-prefix}form-control-color {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: spacing('2');
+
+  // Hidden native color input (positioned over swatch)
+  input[type="color"] {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: $color-swatch-size + 4px;
+    height: $color-swatch-size + 4px;
+    padding: 0;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    opacity: 0;
+
+    &::-webkit-color-swatch-wrapper {
+      padding: 0;
+    }
+
+    &::-webkit-color-swatch {
+      border: none;
+      border-radius: radius('base');
+    }
+
+    &::-moz-color-swatch {
+      border: none;
+      border-radius: radius('base');
+    }
+  }
+
+  // Color swatch display
+  .#{$so-prefix}form-color-swatch {
+    flex-shrink: 0;
+    width: $color-swatch-size;
+    height: $color-swatch-size;
+    border: 2px solid css-var('form-border');
+    border-radius: radius('base');
+    background: var(--selected-color, #{$so-primary});
+    cursor: pointer;
+    transition: border-color $so-transition-base, box-shadow $so-transition-base, transform $so-transition-base;
+
+    &:hover {
+      border-color: css-var('form-border-hover');
+      transform: scale(1.05);
+    }
+  }
+
+  &:focus-within .#{$so-prefix}form-color-swatch {
+    border-color: css-var('form-border-focus');
+    box-shadow: 0 0 0 3px alpha($so-primary, 0.1);
+
+    @include dark-mode {
+      box-shadow: 0 0 0 3px alpha($so-purple, 0.15);
+    }
+  }
+
+  // Hex value display
+  .#{$so-prefix}form-color-value {
+    font-family: 'Roboto Mono', monospace;
+    font-size: font-size('sm');
+    color: css-var('text-secondary');
+    text-transform: uppercase;
+    min-width: 70px;
+    letter-spacing: 0.5px;
+  }
+
+  // Color name display (optional)
+  .#{$so-prefix}form-color-name {
+    font-size: font-size('sm');
+    color: css-var('text-primary');
+    font-weight: font-weight('medium');
+  }
+
+  // Size variants - Small
+  &.#{$so-prefix}form-control-color-sm {
+    gap: spacing('1');
+
+    input[type="color"] {
+      width: $color-swatch-size-sm + 4px;
+      height: $color-swatch-size-sm + 4px;
+    }
+
+    .#{$so-prefix}form-color-swatch {
+      width: $color-swatch-size-sm;
+      height: $color-swatch-size-sm;
+    }
+
+    .#{$so-prefix}form-color-value {
+      font-size: font-size('xs');
+      min-width: 60px;
+    }
+  }
+
+  // Size variants - Large
+  &.#{$so-prefix}form-control-color-lg {
+    gap: spacing('3');
+
+    input[type="color"] {
+      width: $color-swatch-size-lg + 4px;
+      height: $color-swatch-size-lg + 4px;
+    }
+
+    .#{$so-prefix}form-color-swatch {
+      width: $color-swatch-size-lg;
+      height: $color-swatch-size-lg;
+    }
+
+    .#{$so-prefix}form-color-value {
+      font-size: font-size('base');
+      min-width: 80px;
+    }
+  }
+
+  // Size variants - Extra Large
+  &.#{$so-prefix}form-control-color-xl {
+    gap: spacing('3');
+
+    input[type="color"] {
+      width: $color-swatch-size-xl + 4px;
+      height: $color-swatch-size-xl + 4px;
+    }
+
+    .#{$so-prefix}form-color-swatch {
+      width: $color-swatch-size-xl;
+      height: $color-swatch-size-xl;
+      border-radius: radius('md');
+    }
+
+    .#{$so-prefix}form-color-value {
+      font-size: font-size('lg');
+      min-width: 90px;
+    }
+  }
+
+  // Disabled state
+  &.disabled {
+    opacity: 0.6;
+    pointer-events: none;
+
+    .#{$so-prefix}form-color-swatch {
+      cursor: not-allowed;
+    }
+  }
+}
+
+// ============================================
+// SWATCH SHAPE VARIANTS
+// ============================================
+
+.#{$so-prefix}form-control-color-circle {
+  .#{$so-prefix}form-color-swatch {
+    border-radius: radius('full');
+  }
+}
+
+.#{$so-prefix}form-control-color-rounded {
+  .#{$so-prefix}form-color-swatch {
+    border-radius: radius('lg');
+  }
+}
+
+// ============================================
+// COLOR INPUT WITH TEXT FIELD
+// ============================================
+
+.#{$so-prefix}form-color-input {
+  display: flex;
+  align-items: center;
+
+  .#{$so-prefix}form-control-color {
+    position: relative;
+    margin-right: -1px;
+    z-index: 1;
+
+    .#{$so-prefix}form-color-swatch {
+      border-radius: radius('base') 0 0 radius('base');
+      height: $so-form-height-md - 2px;
+      width: $so-form-height-md - 2px;
+    }
+
+    input[type="color"] {
+      width: $so-form-height-md;
+      height: $so-form-height-md;
+    }
+  }
+
+  .#{$so-prefix}form-control {
+    border-radius: 0 radius('base') radius('base') 0;
+    font-family: 'Roboto Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  // Size variants
+  &.#{$so-prefix}form-color-input-sm {
+    .#{$so-prefix}form-control-color {
+      .#{$so-prefix}form-color-swatch {
+        height: $so-form-height-sm - 2px;
+        width: $so-form-height-sm - 2px;
+      }
+
+      input[type="color"] {
+        width: $so-form-height-sm;
+        height: $so-form-height-sm;
+      }
+    }
+  }
+
+  &.#{$so-prefix}form-color-input-lg {
+    .#{$so-prefix}form-control-color {
+      .#{$so-prefix}form-color-swatch {
+        height: $so-form-height-lg - 2px;
+        width: $so-form-height-lg - 2px;
+      }
+
+      input[type="color"] {
+        width: $so-form-height-lg;
+        height: $so-form-height-lg;
+      }
+    }
+  }
+}
+
+// ============================================
+// COLOR SWATCHES GROUP
+// ============================================
+
+.#{$so-prefix}color-swatches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: spacing('2');
+}
+
+.#{$so-prefix}color-swatch {
+  position: relative;
+  width: $color-swatch-size;
+  height: $color-swatch-size;
+  border: 2px solid transparent;
+  border-radius: radius('base');
+  cursor: pointer;
+  transition: border-color $so-transition-base, transform $so-transition-base, box-shadow $so-transition-base;
+
+  &:hover {
+    transform: scale(1.1);
+    box-shadow: shadow('sm');
+  }
+
+  &.#{$so-prefix}selected {
+    border-color: css-var('text-primary');
+    box-shadow: 0 0 0 2px css-var('card-bg'), 0 0 0 4px css-var('text-primary');
+
+    &::after {
+      content: 'check';
+      font-family: 'Material Icons';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: $so-white;
+      font-size: 16px;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    }
+  }
+
+  // Hidden radio input for form integration
+  input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    margin: 0;
+  }
+}
+
+// Swatch sizes
+.#{$so-prefix}color-swatches-sm .#{$so-prefix}color-swatch {
+  width: $color-swatch-size-sm;
+  height: $color-swatch-size-sm;
+
+  &.#{$so-prefix}selected::after {
+    font-size: 14px;
+  }
+}
+
+.#{$so-prefix}color-swatches-lg .#{$so-prefix}color-swatch {
+  width: $color-swatch-size-lg;
+  height: $color-swatch-size-lg;
+
+  &.#{$so-prefix}selected::after {
+    font-size: 20px;
+  }
+}
+
+// Circle swatches
+.#{$so-prefix}color-swatches-circle .#{$so-prefix}color-swatch {
+  border-radius: radius('full');
+}
+
+// ============================================
+// PRESET COLOR PALETTE
+// ============================================
+
+.#{$so-prefix}color-palette {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax($color-swatch-size, 1fr));
+  gap: spacing('1');
+  padding: spacing('2');
+  background: css-var('card-bg');
+  border: 1px solid css-var('card-border');
+  border-radius: radius('lg');
+  max-width: 280px;
+}
+
+.#{$so-prefix}color-palette-item {
+  aspect-ratio: 1;
+  border: none;
+  border-radius: radius('sm');
+  cursor: pointer;
+  transition: transform $so-transition-base, box-shadow $so-transition-base;
+
+  &:hover {
+    transform: scale(1.15);
+    box-shadow: shadow('md');
+    z-index: 1;
+  }
+
+  &:active {
+    transform: scale(1.05);
+  }
+}

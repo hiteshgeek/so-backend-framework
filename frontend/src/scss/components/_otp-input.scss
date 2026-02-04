@@ -1,0 +1,233 @@
+// ============================================
+// SIXORBIT UI - OTP INPUT COMPONENT
+// One-time password / PIN input fields
+// ============================================
+
+@use "../abstracts" as *;
+
+// ============================================
+// OTP GROUP CONTAINER
+// ============================================
+
+.#{$so-prefix}otp-group {
+  text-align: center;
+}
+
+// ============================================
+// OTP INPUTS WRAPPER
+// ============================================
+
+.#{$so-prefix}otp-inputs {
+  display: flex;
+  gap: spacing("3");
+  justify-content: center;
+}
+
+// ============================================
+// INDIVIDUAL OTP INPUT
+// ============================================
+
+.#{$so-prefix}otp-input {
+  width: 52px;
+  height: 60px;
+  text-align: center;
+  font-size: font-size("3xl");
+  font-weight: font-weight("medium");
+  font-family: "Roboto Mono", monospace;
+  color: css-var("form-text");
+  background: css-var("form-bg");
+  border: 2px solid css-var("form-border");
+  border-radius: radius("lg");
+  outline: none;
+  transition:
+    border-color $so-transition-base,
+    box-shadow $so-transition-base;
+
+  &:focus {
+    border-color: css-var("form-border-focus");
+    box-shadow: 0 0 0 3px alpha($so-primary, 0.1);
+  }
+
+  @include dark-mode {
+    &:focus {
+      box-shadow: 0 0 0 3px rgba(115, 103, 240, 0.15);
+    }
+  }
+
+  // Filled state
+  &.filled,
+  &.so-otp-filled {
+    border-color: css-var("accent-success");
+  }
+
+  // Error state
+  &.error,
+  &.so-otp-error {
+    border-color: css-var("accent-danger");
+  }
+
+  // Disabled state
+  &:disabled,
+  &[disabled] {
+    background: css-var("form-bg-disabled", css-var("bg-tertiary"));
+    color: css-var("text-muted");
+    border-color: css-var("border-light");
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  // Readonly state
+  &[readonly] {
+    background: css-var("form-bg-disabled", css-var("bg-tertiary"));
+    cursor: default;
+  }
+
+  // Remove spinners for numeric input
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  &[type="number"] {
+    -moz-appearance: textfield;
+  }
+}
+
+// ============================================
+// SIZE VARIANTS
+// ============================================
+
+// Small OTP inputs
+.#{$so-prefix}otp-group-sm {
+  .#{$so-prefix}otp-inputs {
+    gap: spacing("2");
+  }
+
+  .#{$so-prefix}otp-input {
+    width: 40px;
+    height: 48px;
+    font-size: font-size("xl");
+    border-radius: radius("md");
+  }
+}
+
+// Large OTP inputs
+.#{$so-prefix}otp-group-lg {
+  .#{$so-prefix}otp-inputs {
+    gap: spacing("4");
+  }
+
+  .#{$so-prefix}otp-input {
+    width: 64px;
+    height: 72px;
+    font-size: font-size("4xl");
+    border-radius: radius("xl");
+  }
+}
+
+// ============================================
+// STYLE VARIANTS
+// ============================================
+
+// Default variant (standard border style)
+.#{$so-prefix}otp-group-default {
+  .#{$so-prefix}otp-input {
+    border: 2px solid css-var("form-border");
+    background: css-var("form-bg");
+    border-radius: radius("lg");
+  }
+}
+
+// Outline variant (prominent borders)
+.#{$so-prefix}otp-group-outline {
+  .#{$so-prefix}otp-input {
+    border: 2px solid css-var("accent-primary");
+    background: transparent;
+    border-radius: radius("lg");
+
+    &:focus {
+      border-color: css-var("accent-primary");
+      box-shadow: 0 0 0 3px alpha($so-primary, 0.2);
+    }
+  }
+}
+
+// Filled variant (background color)
+.#{$so-prefix}otp-group-filled {
+  .#{$so-prefix}otp-input {
+    border: 2px solid transparent;
+    background: rgba($so-grey-500, 0.15);
+    border-radius: radius("lg");
+
+    &:focus {
+      border-color: css-var("accent-primary");
+      background: css-var("form-bg");
+    }
+
+    @include dark-mode {
+      background: rgba($so-grey-400, 0.2);
+
+      &:focus {
+        background: css-var("form-bg");
+      }
+    }
+  }
+}
+
+// Underline variant (bottom border only)
+.#{$so-prefix}otp-group-underline {
+  .#{$so-prefix}otp-input {
+    border: none;
+    border-bottom: 2px solid css-var("form-border");
+    background: transparent;
+    border-radius: 0;
+
+    &:focus {
+      border-bottom-color: css-var("accent-primary");
+      box-shadow: none;
+    }
+  }
+}
+
+// ============================================
+// OTP SEPARATOR (for grouped codes like XXXX-XXXX)
+// ============================================
+
+.#{$so-prefix}otp-separator {
+  display: flex;
+  align-items: center;
+  font-size: font-size("2xl");
+  color: css-var("text-muted");
+  padding: 0 spacing("1");
+}
+
+// ============================================
+// RESEND OTP LINK
+// ============================================
+
+.#{$so-prefix}otp-resend {
+  margin-top: spacing("4");
+  font-size: font-size("sm");
+  color: css-var("text-secondary");
+  text-align: center;
+}
+
+.#{$so-prefix}otp-resend-link {
+  color: css-var("accent-primary");
+  text-decoration: none;
+  font-weight: font-weight("medium");
+  cursor: pointer;
+  transition: opacity $so-transition-base;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  &.disabled,
+  &[disabled] {
+    color: css-var("text-muted");
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+}

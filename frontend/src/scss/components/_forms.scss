@@ -1,0 +1,872 @@
+// ============================================
+// SIXORBIT UI - FORMS
+// Form layouts, floating labels, validation display
+// ============================================
+
+@use 'sass:math';
+@use '../abstracts' as *;
+
+// ============================================
+// FORM LAYOUT VARIABLES
+// ============================================
+
+// Floating Label Variables - Match framework input sizes
+$form-floating-height: $so-form-height-md !default; // 40px - matches framework
+$form-floating-height-sm: $so-form-height-sm !default; // 32px
+$form-floating-height-lg: $so-form-height-lg !default; // 48px
+$form-floating-label-scale: 0.75 !default;
+
+$form-horizontal-label-width: 180px !default;
+$form-horizontal-label-width-narrow: 120px !default;
+$form-horizontal-label-width-wide: 240px !default;
+
+// ============================================
+// 1. FLOATING LABELS (Material Design Style)
+// ============================================
+
+.#{$so-prefix}form-floating {
+  position: relative;
+
+  // The input/textarea/select - Matches framework input styles
+  > .#{$so-prefix}form-control {
+    height: $form-floating-height; // 40px - matches framework
+    padding: spacing('4') spacing('3') spacing('2'); // 16px 16px 8px - balanced vertical spacing
+    font-size: font-size('base'); // 14px - matches framework
+    line-height: line-height('normal');
+    border-radius: radius('base');
+    border: 1px solid css-var('form-border');
+    background: css-var('form-bg');
+
+    &::placeholder {
+      color: transparent;
+      transition: color 0.1s ease;
+    }
+
+    // Show placeholder only when focused (Material style)
+    &:focus::placeholder {
+      color: css-var('form-placeholder');
+      transition-delay: 0.1s;
+    }
+
+    &:focus {
+      border-color: css-var('accent-primary');
+      box-shadow: none;
+      outline: none;
+    }
+
+    // When focused or has value - move label up using transform scale
+    &:focus ~ label,
+    &:not(:placeholder-shown) ~ label {
+      top: 2px; // Align label center with border edge
+      transform: translateY(-50%) scale($form-floating-label-scale);
+      padding: 0 4px;
+      background: css-var('form-bg');
+      color: css-var('text-secondary');
+    }
+
+    &:focus ~ label {
+      color: css-var('accent-primary');
+    }
+  }
+
+  // Textarea specific
+  > textarea.#{$so-prefix}form-control {
+    height: auto;
+    min-height: 100px;
+    padding-top: 24px;
+    resize: vertical;
+  }
+
+  // The floating label - Matches framework input styles
+  > label {
+    position: absolute;
+    top: 50%;
+    left: spacing('3'); // Matches input horizontal padding
+    transform: translateY(-50%);
+    transform-origin: left top;
+    padding: 0;
+    margin: 0;
+    pointer-events: none;
+    color: css-var('text-muted');
+    font-size: font-size('base'); // 14px - matches framework
+    font-weight: font-weight('normal');
+    line-height: 1;
+    background: transparent;
+    transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1;
+
+    // Required asterisk
+    &.#{$so-prefix}required::after {
+      content: ' *';
+      color: css-var('accent-danger');
+    }
+  }
+
+  // Textarea label positioning
+  > textarea.#{$so-prefix}form-control ~ label {
+    top: 20px;
+    transform: none;
+  }
+
+  > textarea.#{$so-prefix}form-control:focus ~ label,
+  > textarea.#{$so-prefix}form-control:not(:placeholder-shown) ~ label {
+    top: 2px;
+    transform: translateY(-50%) scale($form-floating-label-scale);
+  }
+
+  // Size variants - Small (32px height - matches framework)
+  &.#{$so-prefix}form-floating-sm {
+    > .#{$so-prefix}form-control {
+      height: $form-floating-height-sm; // 32px
+      padding: 10px spacing('2') 2px;
+      font-size: $so-form-font-size-sm; // 13px
+    }
+
+    > label {
+      left: spacing('2');
+      font-size: $so-form-font-size-sm;
+    }
+
+    > .#{$so-prefix}form-control:focus ~ label,
+    > .#{$so-prefix}form-control:not(:placeholder-shown) ~ label {
+      top: 1px; // Adjusted for smaller height
+      transform: translateY(-50%) scale($form-floating-label-scale);
+    }
+  }
+
+  // Size variants - Large (48px height - matches framework)
+  &.#{$so-prefix}form-floating-lg {
+    > .#{$so-prefix}form-control {
+      height: $form-floating-height-lg; // 48px
+      padding: 18px spacing('4') 6px;
+      font-size: $so-form-font-size-lg; // 15px
+    }
+
+    > label {
+      left: spacing('4');
+      font-size: $so-form-font-size-lg;
+    }
+
+    > .#{$so-prefix}form-control:focus ~ label,
+    > .#{$so-prefix}form-control:not(:placeholder-shown) ~ label {
+      top: 3px; // Adjusted for larger height
+      transform: translateY(-50%) scale($form-floating-label-scale);
+    }
+  }
+
+  // Validation states
+  &.has-error {
+    > .#{$so-prefix}form-control {
+      border-color: css-var('accent-danger');
+
+      &:focus {
+        box-shadow: 0 0 0 3px alpha($so-danger, 0.15);
+      }
+    }
+
+    > label {
+      color: css-var('accent-danger');
+    }
+
+    > .#{$so-prefix}form-control:focus ~ label,
+    > .#{$so-prefix}form-control:not(:placeholder-shown) ~ label {
+      color: css-var('accent-danger');
+    }
+  }
+
+  &.has-success {
+    > .#{$so-prefix}form-control {
+      border-color: css-var('accent-success');
+
+      &:focus {
+        box-shadow: 0 0 0 3px alpha($so-success, 0.15);
+      }
+    }
+
+    > .#{$so-prefix}form-control:focus ~ label,
+    > .#{$so-prefix}form-control:not(:placeholder-shown) ~ label {
+      color: css-var('accent-success');
+    }
+  }
+
+  &.has-warning {
+    > .#{$so-prefix}form-control {
+      border-color: css-var('accent-warning');
+
+      &:focus {
+        box-shadow: 0 0 0 3px alpha($so-warning, 0.15);
+      }
+    }
+
+    > .#{$so-prefix}form-control:focus ~ label,
+    > .#{$so-prefix}form-control:not(:placeholder-shown) ~ label {
+      color: css-var('accent-warning');
+    }
+  }
+
+  // Disabled state
+  &.#{$so-prefix}disabled,
+  &:has(.#{$so-prefix}form-control:disabled) {
+    > .#{$so-prefix}form-control {
+      background: css-var('form-disabled-bg');
+      color: css-var('text-muted');
+      cursor: not-allowed;
+      opacity: 0.7;
+    }
+
+    > label {
+      color: css-var('text-muted');
+    }
+  }
+
+  // Not tabbable (tabindex="-1") - skips in tab order
+  &.#{$so-prefix}form-floating-notab {
+    > .#{$so-prefix}form-control {
+      // Visual indicator that input is not in tab order
+      &:focus {
+        outline: 2px dashed css-var('form-border');
+        outline-offset: 2px;
+      }
+    }
+  }
+
+  // Read-only state (non-editable but tabbable)
+  &:has(.#{$so-prefix}form-control:read-only),
+  &.#{$so-prefix}form-floating-readonly {
+    > .#{$so-prefix}form-control {
+      background: css-var('form-disabled-bg');
+      cursor: default;
+
+      &:focus {
+        border-color: css-var('form-border');
+        box-shadow: none;
+      }
+    }
+
+    > .#{$so-prefix}form-control:focus ~ label,
+    > .#{$so-prefix}form-control:not(:placeholder-shown) ~ label {
+      color: css-var('text-muted');
+    }
+  }
+
+  // Color variants (secondary border/focus color)
+  &.#{$so-prefix}form-floating-secondary {
+    > .#{$so-prefix}form-control:focus {
+      border-color: $so-secondary;
+      box-shadow: 0 0 0 3px alpha($so-secondary, 0.15);
+    }
+
+    > .#{$so-prefix}form-control:focus ~ label {
+      color: $so-secondary;
+    }
+  }
+
+  &.#{$so-prefix}form-floating-info {
+    > .#{$so-prefix}form-control:focus {
+      border-color: css-var('accent-info');
+      box-shadow: 0 0 0 3px alpha($so-info, 0.15);
+    }
+
+    > .#{$so-prefix}form-control:focus ~ label {
+      color: css-var('accent-info');
+    }
+  }
+
+  // With leading icon (adornment start)
+  &.#{$so-prefix}form-floating-icon-start {
+    > .#{$so-prefix}form-control {
+      padding-left: 40px; // Matches framework input-wrapper
+    }
+
+    > label {
+      left: 40px;
+    }
+
+    > .#{$so-prefix}form-control:focus ~ label,
+    > .#{$so-prefix}form-control:not(:placeholder-shown) ~ label {
+      left: spacing('2');
+    }
+
+    > .#{$so-prefix}input-icon {
+      position: absolute;
+      left: 12px; // Matches framework
+      top: 50%;
+      transform: translateY(-50%);
+      color: css-var('text-muted');
+      pointer-events: none;
+      z-index: 2;
+
+      .material-icons {
+        font-size: 20px;
+      }
+    }
+
+    // Icon color on focus
+    &:focus-within > .#{$so-prefix}input-icon {
+      color: css-var('accent-primary');
+    }
+  }
+
+  // With trailing icon (adornment end)
+  &.#{$so-prefix}form-floating-icon-end {
+    > .#{$so-prefix}form-control {
+      padding-right: 44px; // Matches framework input-action
+    }
+
+    > .#{$so-prefix}input-action,
+    > .#{$so-prefix}input-icon-end {
+      position: absolute;
+      right: 12px; // Matches framework
+      top: 50%;
+      transform: translateY(-50%);
+      color: css-var('text-muted');
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .material-icons {
+        font-size: 20px;
+      }
+    }
+
+    > .#{$so-prefix}input-action {
+      cursor: pointer;
+      padding: spacing('1');
+      background: transparent;
+      border: none;
+      border-radius: radius('md');
+      transition: color $so-transition-base, background $so-transition-base;
+
+      &:hover {
+        color: css-var('text-primary');
+        background: css-var('card-hover-bg');
+      }
+    }
+  }
+
+  // Both icons
+  &.#{$so-prefix}form-floating-icon-start.#{$so-prefix}form-floating-icon-end {
+    > .#{$so-prefix}form-control {
+      padding-left: 40px;
+      padding-right: 44px;
+    }
+  }
+
+  // Helper text integration
+  + .#{$so-prefix}form-hint {
+    margin-top: spacing('1');
+  }
+
+  + .#{$so-prefix}form-error,
+  + .#{$so-prefix}form-success,
+  + .#{$so-prefix}form-warning {
+    margin-top: spacing('1');
+  }
+}
+
+// Material Design Outlined variant
+.#{$so-prefix}form-floating-outlined {
+  > .#{$so-prefix}form-control {
+    border-width: 1px; // Matches framework inputs
+
+    &:focus {
+      border-color: css-var('accent-primary');
+    }
+  }
+
+  > .#{$so-prefix}form-control:focus ~ label,
+  > .#{$so-prefix}form-control:not(:placeholder-shown) ~ label {
+    background: css-var('card-bg');
+  }
+}
+
+// Material Design Filled variant
+.#{$so-prefix}form-floating-filled {
+  > .#{$so-prefix}form-control {
+    border: none;
+    border-bottom: 1px solid css-var('form-border');
+    border-radius: radius('base') radius('base') 0 0;
+    background: css-var('card-hover-bg');
+
+    &:hover {
+      background: alpha($so-grey-500, 0.08);
+    }
+
+    &:focus {
+      border-bottom-color: css-var('accent-primary');
+      box-shadow: none;
+    }
+  }
+
+  > label {
+    left: spacing('3');
+  }
+
+  > .#{$so-prefix}form-control:focus ~ label,
+  > .#{$so-prefix}form-control:not(:placeholder-shown) ~ label {
+    top: 2px;
+    left: spacing('3');
+    background: transparent;
+  }
+
+  @include dark-mode {
+    > .#{$so-prefix}form-control {
+      background: alpha($so-grey-500, 0.1);
+
+      &:hover {
+        background: alpha($so-grey-500, 0.15);
+      }
+    }
+  }
+}
+
+// Material Design Standard variant (underline only)
+.#{$so-prefix}form-floating-standard {
+  > .#{$so-prefix}form-control {
+    border: none;
+    border-bottom: 1px solid css-var('form-border');
+    border-radius: 0;
+    background: transparent;
+    padding-left: 0;
+    padding-right: 0;
+
+    &:hover {
+      border-bottom-color: css-var('text-primary');
+    }
+
+    &:focus {
+      border-bottom-color: css-var('accent-primary');
+      box-shadow: none;
+    }
+  }
+
+  > label {
+    left: 0;
+  }
+
+  > .#{$so-prefix}form-control:focus ~ label,
+  > .#{$so-prefix}form-control:not(:placeholder-shown) ~ label {
+    top: 2px;
+    left: 0;
+    background: transparent;
+  }
+
+  // Animated underline effect
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 1px;
+    background: css-var('accent-primary');
+    transition: width 0.2s cubic-bezier(0.4, 0, 0.2, 1), left 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  &:focus-within::after {
+    left: 0;
+    width: 100%;
+  }
+}
+
+// ============================================
+// 2. HORIZONTAL FORM LAYOUT
+// ============================================
+
+.#{$so-prefix}form-horizontal {
+  .#{$so-prefix}form-group {
+    display: grid;
+    grid-template-columns: $form-horizontal-label-width 1fr;
+    gap: spacing('4');
+    align-items: start;
+    margin-bottom: spacing('4');
+
+    // Label alignment
+    > .#{$so-prefix}form-label {
+      margin-bottom: 0;
+      padding-top: spacing('2') + 2px;
+      text-align: right;
+    }
+  }
+
+  // Validation messages span full width under input
+  .#{$so-prefix}form-error,
+  .#{$so-prefix}form-success,
+  .#{$so-prefix}form-warning,
+  .#{$so-prefix}form-info,
+  .#{$so-prefix}form-hint {
+    grid-column: 2;
+  }
+
+  // Checkbox/radio alignment
+  .#{$so-prefix}form-group-check {
+    > .#{$so-prefix}form-label {
+      padding-top: 0;
+    }
+  }
+
+  // Responsive: stack on mobile
+  @media (max-width: 768px) {
+    .#{$so-prefix}form-group {
+      grid-template-columns: 1fr;
+      gap: spacing('1');
+
+      > .#{$so-prefix}form-label {
+        text-align: left;
+        padding-top: 0;
+      }
+    }
+
+    .#{$so-prefix}form-error,
+    .#{$so-prefix}form-success,
+    .#{$so-prefix}form-warning,
+    .#{$so-prefix}form-info,
+    .#{$so-prefix}form-hint {
+      grid-column: 1;
+    }
+  }
+}
+
+// Horizontal form label width variants
+.#{$so-prefix}form-horizontal-narrow {
+  .#{$so-prefix}form-group {
+    grid-template-columns: $form-horizontal-label-width-narrow 1fr;
+  }
+}
+
+.#{$so-prefix}form-horizontal-wide {
+  .#{$so-prefix}form-group {
+    grid-template-columns: $form-horizontal-label-width-wide 1fr;
+  }
+}
+
+.#{$so-prefix}form-horizontal-auto {
+  .#{$so-prefix}form-group {
+    grid-template-columns: auto 1fr;
+  }
+}
+
+// ============================================
+// 3. INLINE FORM LAYOUT
+// ============================================
+
+.#{$so-prefix}form-inline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: spacing('3');
+
+  .#{$so-prefix}form-group {
+    flex: 0 0 auto;
+    margin-bottom: 0;
+  }
+
+  .#{$so-prefix}form-label {
+    margin-bottom: spacing('1');
+  }
+
+  // Auto-width inputs in inline form
+  .#{$so-prefix}form-control {
+    width: auto;
+  }
+
+  // Responsive: stack on mobile
+  @media (max-width: 576px) {
+    flex-direction: column;
+    align-items: stretch;
+
+    .#{$so-prefix}form-group {
+      width: 100%;
+    }
+
+    .#{$so-prefix}form-control {
+      width: 100%;
+    }
+  }
+}
+
+// ============================================
+// 4. PLAINTEXT READONLY
+// ============================================
+
+.#{$so-prefix}form-control-plaintext {
+  display: block;
+  width: 100%;
+  padding: spacing('2') 0;
+  font-size: font-size('base');
+  color: css-var('text-primary');
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid transparent;
+  line-height: line-height('normal');
+
+  &:focus {
+    outline: none;
+  }
+
+  // With underline variant
+  &.#{$so-prefix}form-control-plaintext-underline {
+    border-bottom-color: css-var('border-color');
+  }
+
+  // Size variants - Small
+  &.#{$so-prefix}form-control-plaintext-sm {
+    padding: spacing('1') 0;
+    font-size: $so-form-font-size-sm;
+  }
+
+  // Size variants - Large
+  &.#{$so-prefix}form-control-plaintext-lg {
+    padding: spacing('3') 0;
+    font-size: $so-form-font-size-lg;
+  }
+}
+
+// ============================================
+// 5. FORM ROW (Flexbox Row for Multiple Inputs)
+// ============================================
+
+.#{$so-prefix}form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: spacing('4');
+  margin-bottom: spacing('4');
+
+  > .#{$so-prefix}form-group {
+    flex: 1 1 0;
+    min-width: 0;
+    margin-bottom: 0;
+  }
+
+  // Column sizing - Auto
+  > .#{$so-prefix}col-auto {
+    flex: 0 0 auto;
+    width: auto;
+  }
+
+  // Column sizing - Fixed widths (1-12)
+  @for $i from 1 through 12 {
+    > .#{$so-prefix}col-#{$i} {
+      flex: 0 0 auto;
+      width: calc(#{math.percentage(math.div($i, 12))} - #{spacing('4')} * #{math.div(12 - $i, 12)});
+    }
+  }
+
+  // Responsive stacking
+  @media (max-width: 576px) {
+    flex-direction: column;
+
+    > .#{$so-prefix}form-group,
+    > [class*="#{$so-prefix}col-"] {
+      flex: 1 1 100%;
+      width: 100%;
+    }
+  }
+}
+
+// Gap variants
+.#{$so-prefix}form-row-sm {
+  gap: spacing('2');
+}
+
+.#{$so-prefix}form-row-lg {
+  gap: spacing('6');
+}
+
+// ============================================
+// 6. FORM VALIDATION DISPLAY ENHANCEMENTS
+// ============================================
+
+// Shake animation for errors
+@keyframes #{$so-prefix}form-shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-4px); }
+  40%, 80% { transform: translateX(4px); }
+}
+
+.#{$so-prefix}form-group.#{$so-prefix}shake {
+  animation: #{$so-prefix}form-shake 0.4s ease;
+}
+
+// Success checkmark animation
+@keyframes #{$so-prefix}form-success-pop {
+  0% { transform: translateY(-50%) scale(0); opacity: 0; }
+  50% { transform: translateY(-50%) scale(1.2); }
+  100% { transform: translateY(-50%) scale(1); opacity: 1; }
+}
+
+.#{$so-prefix}form-group.has-success .#{$so-prefix}input-wrapper.#{$so-prefix}show-success-icon::after {
+  content: 'check_circle';
+  font-family: 'Material Icons';
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: css-var('accent-success');
+  font-size: 20px;
+  animation: #{$so-prefix}form-success-pop 0.3s ease;
+}
+
+// Error icon animation
+.#{$so-prefix}form-group.has-error .#{$so-prefix}input-wrapper.#{$so-prefix}show-error-icon::after {
+  content: 'error';
+  font-family: 'Material Icons';
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: css-var('accent-danger');
+  font-size: 20px;
+}
+
+// Input level hinting (character count, etc.)
+.#{$so-prefix}form-hints {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-top: spacing('1');
+  gap: spacing('2');
+}
+
+.#{$so-prefix}form-hint-left {
+  flex: 1;
+}
+
+.#{$so-prefix}form-hint-right {
+  flex-shrink: 0;
+  text-align: right;
+}
+
+// Character counter
+.#{$so-prefix}form-char-counter {
+  font-size: font-size('xs');
+  color: css-var('text-muted');
+  font-variant-numeric: tabular-nums;
+
+  &.#{$so-prefix}warning {
+    color: css-var('accent-warning');
+  }
+
+  &.#{$so-prefix}danger {
+    color: css-var('accent-danger');
+  }
+}
+
+// ============================================
+// 7. FORM CARD (Styled Form Container)
+// ============================================
+
+.#{$so-prefix}form-card {
+  background: css-var('card-bg');
+  border: 1px solid css-var('card-border');
+  border-radius: radius('lg');
+  padding: spacing('6');
+  box-shadow: shadow('sm');
+
+  @include dark-mode {
+    box-shadow: shadow-dark('sm');
+  }
+}
+
+.#{$so-prefix}form-card-header {
+  margin-bottom: spacing('6');
+  padding-bottom: spacing('4');
+  border-bottom: 1px solid css-var('border-color');
+}
+
+.#{$so-prefix}form-card-title {
+  font-size: font-size('lg');
+  font-weight: font-weight('semibold');
+  color: css-var('text-heading');
+  margin: 0 0 spacing('1');
+}
+
+.#{$so-prefix}form-card-subtitle {
+  font-size: font-size('sm');
+  color: css-var('text-secondary');
+  margin: 0;
+}
+
+.#{$so-prefix}form-card-body {
+  // Default body styling if needed
+}
+
+.#{$so-prefix}form-card-footer {
+  margin-top: spacing('6');
+  padding-top: spacing('4');
+  border-top: 1px solid css-var('border-color');
+  display: flex;
+  justify-content: flex-end;
+  gap: spacing('3');
+
+  // Align buttons to start
+  &.#{$so-prefix}form-card-footer-start {
+    justify-content: flex-start;
+  }
+
+  // Spread buttons apart
+  &.#{$so-prefix}form-card-footer-between {
+    justify-content: space-between;
+  }
+
+  // Center buttons
+  &.#{$so-prefix}form-card-footer-center {
+    justify-content: center;
+  }
+}
+
+// ============================================
+// 8. FORM SECTIONS
+// ============================================
+
+.#{$so-prefix}form-section {
+  margin-bottom: spacing('8');
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.#{$so-prefix}form-section-title {
+  font-size: font-size('base');
+  font-weight: font-weight('semibold');
+  color: css-var('text-heading');
+  margin: 0 0 spacing('4');
+  padding-bottom: spacing('2');
+  border-bottom: 1px solid css-var('border-color');
+}
+
+.#{$so-prefix}form-section-subtitle {
+  font-size: font-size('sm');
+  color: css-var('text-secondary');
+  margin: spacing-neg('3') 0 spacing('4');
+}
+
+// ============================================
+// 9. FORM DIVIDER
+// ============================================
+
+.#{$so-prefix}form-divider {
+  height: 1px;
+  background: css-var('border-color');
+  margin: spacing('6') 0;
+  border: none;
+}
+
+.#{$so-prefix}form-divider-text {
+  display: flex;
+  align-items: center;
+  gap: spacing('3');
+  margin: spacing('6') 0;
+  color: css-var('text-muted');
+  font-size: font-size('sm');
+
+  &::before,
+  &::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: css-var('border-color');
+  }
+}

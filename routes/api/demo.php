@@ -849,6 +849,11 @@ Router::fallback(function (Request $request) {
         ]);
     }
 
-    // For non-API routes, throw NotFoundException to trigger HTML error pages
+    // For frontend routes, don't throw exception - let them handle 404 themselves
+    if (str_starts_with($uri, '/frontend/')) {
+        return; // Let the route handle it
+    }
+
+    // For other non-API routes, throw NotFoundException to trigger HTML error pages
     throw new \Core\Exceptions\NotFoundException('Page not found: ' . $uri);
 });

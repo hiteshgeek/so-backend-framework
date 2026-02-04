@@ -1,0 +1,369 @@
+// ============================================
+// SIXORBIT UI - COLLAPSE
+// Toggle visibility of content
+// ============================================
+
+@use '../abstracts' as *;
+
+// ============================================
+// BASE COLLAPSE
+// ============================================
+
+.#{$so-prefix}collapse {
+  &:not(.#{$so-prefix}show) {
+    display: none;
+  }
+}
+
+.#{$so-prefix}collapsing {
+  height: 0;
+  overflow: hidden;
+  transition: height 0.35s ease;
+
+  &.#{$so-prefix}collapse-horizontal {
+    width: 0;
+    height: auto;
+    transition: width 0.35s ease;
+  }
+}
+
+.#{$so-prefix}collapse.#{$so-prefix}show {
+  display: block;
+}
+
+// ============================================
+// COLLAPSE TRIGGER BUTTON
+// ============================================
+
+.#{$so-prefix}collapse-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: spacing('2');
+  cursor: pointer;
+  user-select: none;
+  transition: color $so-transition-fast;
+
+  &:hover {
+    color: $so-primary;
+  }
+
+  // Icon rotation
+  .#{$so-prefix}collapse-icon {
+    transition: transform $so-transition-base;
+  }
+
+  &[aria-expanded="true"] .#{$so-prefix}collapse-icon {
+    transform: rotate(180deg);
+  }
+
+  &[aria-expanded="true"] .#{$so-prefix}collapse-icon-rotate-90 {
+    transform: rotate(90deg);
+  }
+}
+
+// ============================================
+// CARD COLLAPSE (Collapsible Cards)
+// ============================================
+
+.#{$so-prefix}card-collapsible {
+  .#{$so-prefix}card-header {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: background-color $so-transition-fast;
+
+    &:hover {
+      background-color: css-var('hover-bg');
+    }
+
+    .#{$so-prefix}collapse-icon {
+      transition: transform $so-transition-base;
+    }
+
+    &[aria-expanded="true"] .#{$so-prefix}collapse-icon {
+      transform: rotate(180deg);
+    }
+
+    &.#{$so-prefix}collapsed {
+      border-bottom: none;
+      border-radius: css-var('border-radius');
+    }
+  }
+
+  .#{$so-prefix}card-body {
+    border-top: 1px solid css-var('border-color');
+  }
+}
+
+// ============================================
+// INLINE COLLAPSE (Show More/Less pattern)
+// ============================================
+
+.#{$so-prefix}collapse-inline {
+  position: relative;
+
+  .#{$so-prefix}collapse-content {
+    max-height: 100px;
+    overflow: hidden;
+    position: relative;
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 40px;
+      background: linear-gradient(to bottom, transparent, css-var('card-bg'));
+      pointer-events: none;
+    }
+
+    &.#{$so-prefix}show {
+      max-height: none;
+
+      &::after {
+        display: none;
+      }
+    }
+  }
+
+  .#{$so-prefix}collapse-toggle {
+    margin-top: spacing('2');
+  }
+}
+
+// ============================================
+// SIDEBAR COLLAPSE
+// ============================================
+
+.#{$so-prefix}collapse-sidebar {
+  transition: width $so-transition-base, min-width $so-transition-base;
+  overflow: hidden;
+
+  &.#{$so-prefix}collapsed {
+    width: 0 !important;
+    min-width: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+  }
+}
+
+// ============================================
+// MULTI-COLLAPSE (Multiple targets)
+// ============================================
+
+.#{$so-prefix}multi-collapse {
+  // Handled by JS, no additional styles needed
+}
+
+// ============================================
+// COLLAPSE WITH ANIMATION VARIANTS
+// ============================================
+
+// Fade animation
+.#{$so-prefix}collapse-fade {
+  opacity: 0;
+  transition: opacity $so-transition-base, height 0.35s ease;
+
+  &.#{$so-prefix}show {
+    opacity: 1;
+  }
+
+  &.#{$so-prefix}collapsing {
+    opacity: 0;
+  }
+}
+
+// Slide animation (horizontal)
+.#{$so-prefix}collapse-slide {
+  transform: translateX(-100%);
+  transition: transform $so-transition-base;
+
+  &.#{$so-prefix}show {
+    transform: translateX(0);
+  }
+}
+
+// Scale animation
+.#{$so-prefix}collapse-scale {
+  transform: scale(0.95);
+  opacity: 0;
+  transition: transform $so-transition-base, opacity $so-transition-base, height 0.35s ease;
+
+  &.#{$so-prefix}show {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+// ============================================
+// COLLAPSE CONTAINER STYLES
+// ============================================
+
+.#{$so-prefix}collapse-container {
+  border: 1px solid css-var('border-color');
+  border-radius: css-var('border-radius');
+  overflow: hidden;
+
+  .#{$so-prefix}collapse-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: spacing('3') spacing('4');
+    background-color: css-var('card-bg');
+    cursor: pointer;
+    transition: background-color $so-transition-fast;
+
+    &:hover {
+      background-color: css-var('hover-bg');
+    }
+
+    .#{$so-prefix}collapse-title {
+      font-weight: font-weight('medium');
+      margin: 0;
+    }
+
+    .#{$so-prefix}collapse-icon {
+      transition: transform $so-transition-base;
+    }
+
+    &[aria-expanded="true"] .#{$so-prefix}collapse-icon {
+      transform: rotate(180deg);
+    }
+  }
+
+  .#{$so-prefix}collapse-body {
+    padding: spacing('4');
+    border-top: 1px solid css-var('border-color');
+  }
+}
+
+// ============================================
+// NESTED COLLAPSE
+// ============================================
+
+.#{$so-prefix}collapse-nested {
+  margin-left: spacing('4');
+  padding-left: spacing('4');
+  border-left: 2px solid css-var('border-color');
+  margin-top: spacing('2');
+}
+
+// ============================================
+// COLLAPSE GROUP (Exclusive, like radio)
+// ============================================
+
+.#{$so-prefix}collapse-group {
+  > .#{$so-prefix}collapse-container {
+    border-radius: 0;
+    margin-top: -1px;
+
+    &:first-child {
+      border-top-left-radius: css-var('border-radius');
+      border-top-right-radius: css-var('border-radius');
+      margin-top: 0;
+    }
+
+    &:last-child {
+      border-bottom-left-radius: css-var('border-radius');
+      border-bottom-right-radius: css-var('border-radius');
+    }
+  }
+}
+
+// ============================================
+// SIZE VARIANTS
+// ============================================
+
+.#{$so-prefix}collapse-sm {
+  .#{$so-prefix}collapse-header {
+    padding: spacing('2') spacing('3');
+    font-size: font-size('sm');
+  }
+
+  .#{$so-prefix}collapse-body {
+    padding: spacing('3');
+    font-size: font-size('sm');
+  }
+}
+
+.#{$so-prefix}collapse-lg {
+  .#{$so-prefix}collapse-header {
+    padding: spacing('4') spacing('5');
+    font-size: font-size('lg');
+  }
+
+  .#{$so-prefix}collapse-body {
+    padding: spacing('5');
+  }
+}
+
+// ============================================
+// COLOR VARIANTS
+// ============================================
+
+@each $color-name, $color-value in $so-colors {
+  .#{$so-prefix}collapse-#{$color-name} {
+    .#{$so-prefix}collapse-header {
+      &[aria-expanded="true"] {
+        background-color: rgba($color-value, 0.1);
+        color: $color-value;
+      }
+    }
+  }
+}
+
+// ============================================
+// RESPONSIVE COLLAPSE
+// ============================================
+
+// Collapse that only works on mobile
+@include media-down(md) {
+  .#{$so-prefix}collapse-mobile {
+    &:not(.#{$so-prefix}show) {
+      display: none;
+    }
+  }
+}
+
+@include media-up(md) {
+  .#{$so-prefix}collapse-mobile {
+    display: block !important;
+    height: auto !important;
+  }
+
+  .#{$so-prefix}collapse-mobile-toggle {
+    display: none !important;
+  }
+}
+
+// ============================================
+// DARK MODE SUPPORT
+// ============================================
+
+[data-theme='dark'] {
+  .#{$so-prefix}collapse-container {
+    border-color: css-var('border-color');
+
+    .#{$so-prefix}collapse-header {
+      background-color: css-var('card-bg');
+
+      &:hover {
+        background-color: css-var('hover-bg');
+      }
+    }
+
+    .#{$so-prefix}collapse-body {
+      border-top-color: css-var('border-color');
+    }
+  }
+
+  .#{$so-prefix}collapse-inline .#{$so-prefix}collapse-content::after {
+    background: linear-gradient(to bottom, transparent, css-var('card-bg'));
+  }
+
+  .#{$so-prefix}collapse-nested {
+    border-left-color: css-var('border-color');
+  }
+}

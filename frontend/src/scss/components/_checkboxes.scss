@@ -1,0 +1,2129 @@
+// ============================================
+// SIXORBIT UI - CHECKBOXES & RADIOS
+// Comprehensive checkbox and radio components
+// Inspired by Bootstrap 5 and Material Design
+// ============================================
+
+@use "sass:color";
+@use "../abstracts" as *;
+
+// ============================================
+// CHECKBOX
+// ============================================
+
+.#{$so-prefix}checkbox {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: spacing("2");
+  cursor: pointer;
+  user-select: none;
+  position: relative;
+  min-height: 1.5rem;
+
+  input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+    pointer-events: none;
+  }
+}
+
+.#{$so-prefix}checkbox-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  min-width: 20px;
+  border: 2px solid css-var("form-border");
+  border-radius: radius("sm");
+  background: css-var("card-bg");
+  transition: all $so-transition-base;
+  flex-shrink: 0;
+  margin-top: 2px;
+
+  // Icon container
+  .material-icons {
+    font-size: 16px;
+    color: $so-white;
+    opacity: 0;
+    transform: scale(0);
+    transition: all $so-transition-base;
+    line-height: 1;
+  }
+}
+
+// Hover state
+.#{$so-prefix}checkbox:hover:not(.disabled) .#{$so-prefix}checkbox-box {
+  border-color: css-var("accent-primary");
+}
+
+// Checked state
+.#{$so-prefix}checkbox input:checked + .#{$so-prefix}checkbox-box {
+  background: css-var("accent-primary");
+  border-color: css-var("accent-primary");
+
+  .material-icons {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+// Indeterminate state
+.#{$so-prefix}checkbox input:indeterminate + .#{$so-prefix}checkbox-box {
+  background: css-var("accent-primary");
+  border-color: css-var("accent-primary");
+
+  // Hide the check icon
+  .material-icons {
+    opacity: 0;
+    transform: scale(0);
+  }
+
+  // Show a dash instead
+  &::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 10px;
+    height: 2px;
+    background: $so-white;
+    border-radius: 1px;
+  }
+}
+
+// Focus state
+.#{$so-prefix}checkbox input:focus-visible + .#{$so-prefix}checkbox-box {
+  border-color: css-var("accent-primary");
+  box-shadow: 0 0 0 3px alpha($so-primary, 0.25);
+}
+
+// Disabled state
+.#{$so-prefix}checkbox.disabled,
+.#{$so-prefix}checkbox input:disabled + .#{$so-prefix}checkbox-box {
+  cursor: not-allowed;
+}
+
+.#{$so-prefix}checkbox input:disabled + .#{$so-prefix}checkbox-box {
+  border-color: css-var("form-border");
+  background: css-var("form-disabled-bg");
+  opacity: 0.6;
+
+  .material-icons {
+    color: css-var("text-muted");
+  }
+}
+
+.#{$so-prefix}checkbox input:disabled:checked + .#{$so-prefix}checkbox-box {
+  background: css-var("form-border-hover");
+  border-color: css-var("text-muted");
+
+  .material-icons {
+    color: $so-white;
+  }
+}
+
+.#{$so-prefix}checkbox
+  input:disabled:indeterminate
+  + .#{$so-prefix}checkbox-box {
+  background: css-var("form-border-hover");
+  border-color: css-var("text-muted");
+}
+
+// Invalid state
+.#{$so-prefix}checkbox.is-invalid .#{$so-prefix}checkbox-box,
+.#{$so-prefix}checkbox input:invalid + .#{$so-prefix}checkbox-box {
+  border-color: css-var("accent-danger");
+}
+
+.#{$so-prefix}checkbox.is-invalid input:checked + .#{$so-prefix}checkbox-box,
+.#{$so-prefix}checkbox input:invalid:checked + .#{$so-prefix}checkbox-box {
+  background: css-var("accent-danger");
+  border-color: css-var("accent-danger");
+}
+
+// Label
+.#{$so-prefix}checkbox-label {
+  font-size: font-size("base");
+  color: css-var("text-primary");
+  line-height: 1.5;
+  padding-top: 1px;
+}
+
+.#{$so-prefix}checkbox input:disabled ~ .#{$so-prefix}checkbox-label {
+  color: css-var("text-muted");
+  cursor: not-allowed;
+}
+
+.#{$so-prefix}checkbox.is-invalid .#{$so-prefix}checkbox-label {
+  color: css-var("accent-danger");
+}
+
+// ============================================
+// CHECKBOX SIZE VARIANTS
+// ============================================
+
+// Small
+.#{$so-prefix}checkbox-sm {
+  .#{$so-prefix}checkbox-box {
+    width: 16px;
+    height: 16px;
+    min-width: 16px;
+    border-width: 1.5px;
+
+    .material-icons {
+      font-size: 12px;
+    }
+  }
+
+  .#{$so-prefix}checkbox-label {
+    font-size: font-size("sm");
+  }
+}
+
+// Large
+.#{$so-prefix}checkbox-lg {
+  .#{$so-prefix}checkbox-box {
+    width: 24px;
+    height: 24px;
+    min-width: 24px;
+    border-radius: radius("sm");
+
+    .material-icons {
+      font-size: 18px;
+    }
+  }
+
+  .#{$so-prefix}checkbox-label {
+    font-size: font-size("lg");
+  }
+}
+
+// ============================================
+// CHECKBOX COLOR VARIANTS
+// ============================================
+
+@each $name,
+  $color
+    in (
+      "primary": $so-primary,
+      "secondary": $so-secondary,
+      "success": $so-success,
+      "danger": $so-danger,
+      "warning": $so-warning,
+      "info": $so-info,
+      "light": $so-grey-400,
+      "dark": $so-grey-900
+    )
+{
+  .#{$so-prefix}checkbox-#{$name} {
+    &:hover:not(.disabled) .#{$so-prefix}checkbox-box {
+      border-color: $color;
+    }
+
+    input:checked + .#{$so-prefix}checkbox-box,
+    input:indeterminate + .#{$so-prefix}checkbox-box {
+      background: $color;
+      border-color: $color;
+    }
+
+    input:focus-visible + .#{$so-prefix}checkbox-box {
+      border-color: $color;
+      box-shadow: 0 0 0 3px alpha($color, 0.25);
+    }
+
+    // Contextual label color when checked
+    &.#{$so-prefix}checkbox-label-contextual {
+      input:checked ~ .#{$so-prefix}checkbox-label,
+      input:indeterminate ~ .#{$so-prefix}checkbox-label {
+        color: $color;
+      }
+    }
+  }
+}
+
+// ============================================
+// RADIO BUTTON
+// ============================================
+
+.#{$so-prefix}radio {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: spacing("2");
+  cursor: pointer;
+  user-select: none;
+  position: relative;
+  min-height: 1.5rem;
+
+  input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+    pointer-events: none;
+  }
+}
+
+.#{$so-prefix}radio-circle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  min-width: 20px;
+  border: 2px solid css-var("form-border");
+  border-radius: 50%;
+  background: css-var("card-bg");
+  transition: all $so-transition-base;
+  flex-shrink: 0;
+  margin-top: 1px;
+
+  // Inner dot
+  &::after {
+    content: "";
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: css-var("accent-primary");
+    transform: scale(0);
+    transition: transform $so-transition-base;
+  }
+}
+
+// Hover state
+.#{$so-prefix}radio:hover:not(.disabled) .#{$so-prefix}radio-circle {
+  border-color: css-var("accent-primary");
+}
+
+// Checked state
+.#{$so-prefix}radio input:checked + .#{$so-prefix}radio-circle {
+  border-color: css-var("accent-primary");
+
+  &::after {
+    transform: scale(1);
+  }
+}
+
+// Focus state
+.#{$so-prefix}radio input:focus-visible + .#{$so-prefix}radio-circle {
+  border-color: css-var("accent-primary");
+  box-shadow: 0 0 0 3px alpha($so-primary, 0.25);
+}
+
+// Disabled state
+.#{$so-prefix}radio.disabled,
+.#{$so-prefix}radio input:disabled + .#{$so-prefix}radio-circle {
+  cursor: not-allowed;
+}
+
+.#{$so-prefix}radio input:disabled + .#{$so-prefix}radio-circle {
+  border-color: css-var("form-border");
+  background: css-var("form-disabled-bg");
+  opacity: 0.6;
+
+  &::after {
+    background: css-var("form-border-hover");
+  }
+}
+
+.#{$so-prefix}radio input:disabled:checked + .#{$so-prefix}radio-circle {
+  border-color: css-var("text-muted");
+
+  &::after {
+    background: css-var("form-border-hover");
+  }
+}
+
+// Invalid state
+.#{$so-prefix}radio.is-invalid .#{$so-prefix}radio-circle,
+.#{$so-prefix}radio input:invalid + .#{$so-prefix}radio-circle {
+  border-color: css-var("accent-danger");
+}
+
+.#{$so-prefix}radio.is-invalid input:checked + .#{$so-prefix}radio-circle,
+.#{$so-prefix}radio input:invalid:checked + .#{$so-prefix}radio-circle {
+  border-color: css-var("accent-danger");
+
+  &::after {
+    background: css-var("accent-danger");
+  }
+}
+
+// Label
+.#{$so-prefix}radio-label {
+  font-size: font-size("base");
+  color: css-var("text-primary");
+  line-height: 1.5;
+  padding-top: 1px;
+}
+
+.#{$so-prefix}radio input:disabled ~ .#{$so-prefix}radio-label {
+  color: css-var("text-muted");
+  cursor: not-allowed;
+}
+
+.#{$so-prefix}radio.is-invalid .#{$so-prefix}radio-label {
+  color: css-var("accent-danger");
+}
+
+// ============================================
+// RADIO SIZE VARIANTS
+// ============================================
+
+// Small
+.#{$so-prefix}radio-sm {
+  .#{$so-prefix}radio-circle {
+    width: 16px;
+    height: 16px;
+    min-width: 16px;
+    border-width: 1.5px;
+
+    &::after {
+      width: 8px;
+      height: 8px;
+    }
+  }
+
+  .#{$so-prefix}radio-label {
+    font-size: font-size("sm");
+  }
+}
+
+// Large
+.#{$so-prefix}radio-lg {
+  .#{$so-prefix}radio-circle {
+    width: 24px;
+    height: 24px;
+    min-width: 24px;
+
+    &::after {
+      width: 12px;
+      height: 12px;
+    }
+  }
+
+  .#{$so-prefix}radio-label {
+    font-size: font-size("lg");
+  }
+}
+
+// ============================================
+// RADIO COLOR VARIANTS
+// ============================================
+
+@each $name,
+  $color
+    in (
+      "primary": $so-primary,
+      "secondary": $so-secondary,
+      "success": $so-success,
+      "danger": $so-danger,
+      "warning": $so-warning,
+      "info": $so-info,
+      "light": $so-grey-400,
+      "dark": $so-grey-900
+    )
+{
+  .#{$so-prefix}radio-#{$name} {
+    &:hover:not(.disabled) .#{$so-prefix}radio-circle {
+      border-color: $color;
+    }
+
+    input:checked + .#{$so-prefix}radio-circle {
+      border-color: $color;
+
+      &::after {
+        background: $color;
+      }
+    }
+
+    input:focus-visible + .#{$so-prefix}radio-circle {
+      border-color: $color;
+      box-shadow: 0 0 0 3px alpha($color, 0.25);
+    }
+
+    // Contextual label color when checked
+    &.#{$so-prefix}radio-label-contextual {
+      input:checked ~ .#{$so-prefix}radio-label {
+        color: $color;
+      }
+    }
+  }
+}
+
+// ============================================
+// CHECKBOX GROUP
+// ============================================
+
+.#{$so-prefix}checkbox-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: spacing("4");
+
+  // Vertical layout
+  &.#{$so-prefix}checkbox-group-vertical {
+    flex-direction: column;
+    gap: spacing("2");
+  }
+
+  // Inline layout (default is already inline with gap)
+  &.#{$so-prefix}checkbox-group-inline {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+}
+
+// ============================================
+// RADIO GROUP
+// ============================================
+
+.#{$so-prefix}radio-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: spacing("4");
+
+  // Vertical layout
+  &.#{$so-prefix}radio-group-vertical {
+    flex-direction: column;
+    gap: spacing("2");
+  }
+
+  // Inline layout
+  &.#{$so-prefix}radio-group-inline {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+}
+
+// ============================================
+// SWITCH / TOGGLE (Checkbox styled as switch)
+// ============================================
+
+.#{$so-prefix}switch {
+  display: inline-flex;
+  align-items: center;
+  gap: spacing("2");
+  cursor: pointer;
+  user-select: none;
+  position: relative;
+
+  input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+    pointer-events: none;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+}
+
+.#{$so-prefix}switch-track {
+  position: relative;
+  width: 40px;
+  height: 22px;
+  background: css-var("form-border-hover");
+  border-radius: 11px;
+  transition: all $so-transition-base;
+  flex-shrink: 0;
+
+  // Thumb/knob
+  &::after {
+    content: "";
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 18px;
+    height: 18px;
+    background: $so-white;
+    border-radius: 50%;
+    box-shadow: shadow("sm");
+    transition: all $so-transition-base;
+  }
+}
+
+// Hover
+.#{$so-prefix}switch:hover:not(.disabled) .#{$so-prefix}switch-track {
+  background: css-var("text-secondary");
+}
+
+// Checked state
+.#{$so-prefix}switch input:checked + .#{$so-prefix}switch-track {
+  background: css-var("accent-primary");
+
+  &::after {
+    left: calc(100% - 20px);
+  }
+}
+
+// Hover state when checked - lighter shade of primary
+.#{$so-prefix}switch:hover:not(.disabled)
+  input:checked
+  + .#{$so-prefix}switch-track {
+  background: css-var("accent-primary-hover");
+}
+
+// Focus state
+.#{$so-prefix}switch input:focus-visible + .#{$so-prefix}switch-track {
+  box-shadow: 0 0 0 3px alpha($so-primary, 0.25);
+}
+
+// Disabled state
+.#{$so-prefix}switch.disabled,
+.#{$so-prefix}switch input:disabled + .#{$so-prefix}switch-track {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.#{$so-prefix}switch input:disabled + .#{$so-prefix}switch-track {
+  background: css-var("form-disabled-bg");
+}
+
+.#{$so-prefix}switch input:disabled:checked + .#{$so-prefix}switch-track {
+  background: css-var("form-border-hover");
+}
+
+// Switch label
+.#{$so-prefix}switch-label {
+  font-size: font-size("base");
+  color: css-var("text-primary");
+  line-height: 1.5;
+}
+
+.#{$so-prefix}switch input:disabled ~ .#{$so-prefix}switch-label {
+  color: css-var("text-muted");
+  cursor: not-allowed;
+}
+
+// ============================================
+// SWITCH SIZE VARIANTS
+// ============================================
+
+// Small
+.#{$so-prefix}switch-sm {
+  .#{$so-prefix}switch-track {
+    width: 32px;
+    height: 18px;
+    border-radius: 9px;
+
+    &::after {
+      width: 14px;
+      height: 14px;
+    }
+  }
+
+  input:checked + .#{$so-prefix}switch-track::after {
+    left: calc(100% - 16px);
+  }
+
+  .#{$so-prefix}switch-label {
+    font-size: font-size("sm");
+  }
+}
+
+// Large
+.#{$so-prefix}switch-lg {
+  .#{$so-prefix}switch-track {
+    width: 52px;
+    height: 28px;
+    border-radius: 14px;
+
+    &::after {
+      top: 3px;
+      left: 3px;
+      width: 22px;
+      height: 22px;
+    }
+  }
+
+  input:checked + .#{$so-prefix}switch-track::after {
+    left: calc(100% - 25px);
+  }
+
+  .#{$so-prefix}switch-label {
+    font-size: font-size("lg");
+  }
+}
+
+// ============================================
+// SWITCH COLOR VARIANTS
+// ============================================
+
+@each $name,
+  $color
+    in (
+      "primary": $so-primary,
+      "secondary": $so-secondary,
+      "success": $so-success,
+      "danger": $so-danger,
+      "warning": $so-warning,
+      "info": $so-info,
+      "light": $so-grey-400,
+      "dark": $so-grey-900
+    )
+{
+  .#{$so-prefix}switch-#{$name} {
+    input:checked + .#{$so-prefix}switch-track {
+      background: $color;
+    }
+
+    // Hover state when checked - use lighter shade of contextual color
+    &:hover:not(.disabled) input:checked + .#{$so-prefix}switch-track {
+      background: color.adjust($color, $lightness: 10%);
+    }
+
+    input:focus-visible + .#{$so-prefix}switch-track {
+      box-shadow: 0 0 0 3px alpha($color, 0.25);
+    }
+
+    // Contextual label color when checked
+    &.#{$so-prefix}switch-label-contextual {
+      input:checked ~ .#{$so-prefix}switch-label {
+        color: $color;
+      }
+    }
+  }
+}
+
+// ============================================
+// SWITCH WITH INNER CONTENT (Icons/Text)
+// ============================================
+
+// Base for switches with inner content - wider track
+.#{$so-prefix}switch-inner {
+  .#{$so-prefix}switch-track {
+    width: 50px;
+    height: 26px;
+    border-radius: 13px;
+    background: css-var("form-border-hover");
+
+    &::after {
+      top: 3px;
+      left: 3px;
+      width: 20px;
+      height: 20px;
+      z-index: 2;
+    }
+  }
+
+  &:hover:not(.disabled) .#{$so-prefix}switch-track {
+    background: css-var("text-secondary");
+  }
+
+  input:checked + .#{$so-prefix}switch-track::after {
+    left: calc(100% - 23px);
+  }
+
+  // Inner content elements
+  .#{$so-prefix}switch-on,
+  .#{$so-prefix}switch-off {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    transition: opacity $so-transition-base;
+    z-index: 1;
+  }
+
+  .#{$so-prefix}switch-on {
+    left: 6px;
+    color: $so-white;
+    opacity: 0;
+  }
+
+  .#{$so-prefix}switch-off {
+    right: 6px;
+    color: $so-white;
+    opacity: 0.6;
+  }
+
+  // Checked state - show on, hide off
+  input:checked + .#{$so-prefix}switch-track {
+    .#{$so-prefix}switch-on {
+      opacity: 1;
+    }
+    .#{$so-prefix}switch-off {
+      opacity: 0;
+    }
+  }
+}
+
+// Icon variant - uses Material Icons inside
+.#{$so-prefix}switch-icon {
+  .#{$so-prefix}switch-track {
+    width: 50px;
+    height: 26px;
+    border-radius: 13px;
+    background: css-var("form-border-hover");
+
+    &::after {
+      top: 3px;
+      left: 3px;
+      width: 20px;
+      height: 20px;
+      z-index: 2;
+    }
+  }
+
+  &:hover:not(.disabled) .#{$so-prefix}switch-track {
+    background: css-var("text-secondary");
+  }
+
+  input:checked + .#{$so-prefix}switch-track::after {
+    left: calc(100% - 23px);
+  }
+
+  .#{$so-prefix}switch-on,
+  .#{$so-prefix}switch-off {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity $so-transition-base;
+    z-index: 1;
+
+    .material-icons {
+      font-size: 14px;
+      line-height: 1;
+    }
+  }
+
+  .#{$so-prefix}switch-on {
+    left: 6px;
+    color: $so-white;
+    opacity: 0;
+  }
+
+  .#{$so-prefix}switch-off {
+    right: 6px;
+    color: $so-white;
+    opacity: 0.6;
+  }
+
+  input:checked + .#{$so-prefix}switch-track {
+    .#{$so-prefix}switch-on {
+      opacity: 1;
+    }
+    .#{$so-prefix}switch-off {
+      opacity: 0;
+    }
+  }
+}
+
+// Text variant - ON/OFF text inside
+.#{$so-prefix}switch-text {
+  .#{$so-prefix}switch-track {
+    width: 56px;
+    height: 26px;
+    border-radius: 13px;
+    background: css-var("form-border-hover");
+
+    &::after {
+      top: 3px;
+      left: 3px;
+      width: 20px;
+      height: 20px;
+      z-index: 2;
+    }
+  }
+
+  &:hover:not(.disabled) .#{$so-prefix}switch-track {
+    background: css-var("text-secondary");
+  }
+
+  input:checked + .#{$so-prefix}switch-track::after {
+    left: calc(100% - 23px);
+  }
+
+  .#{$so-prefix}switch-on,
+  .#{$so-prefix}switch-off {
+    position: absolute;
+    top: 3px;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: opacity $so-transition-base;
+    z-index: 1;
+  }
+
+  .#{$so-prefix}switch-on {
+    left: 7px;
+    color: $so-white;
+    opacity: 0;
+  }
+
+  .#{$so-prefix}switch-off {
+    right: 7px;
+    color: $so-white;
+    opacity: 0.6;
+  }
+
+  input:checked + .#{$so-prefix}switch-track {
+    .#{$so-prefix}switch-on {
+      opacity: 1;
+    }
+    .#{$so-prefix}switch-off {
+      opacity: 0;
+    }
+  }
+}
+
+// Icon + Text variant - combines icon and text
+.#{$so-prefix}switch-icon-text {
+  .#{$so-prefix}switch-track {
+    width: 70px;
+    height: 28px;
+    border-radius: 14px;
+    background: css-var("form-border-hover");
+
+    &::after {
+      top: 3px;
+      left: 3px;
+      width: 22px;
+      height: 22px;
+      z-index: 2;
+    }
+  }
+
+  &:hover:not(.disabled) .#{$so-prefix}switch-track {
+    background: css-var("text-secondary");
+  }
+
+  input:checked + .#{$so-prefix}switch-track::after {
+    left: calc(100% - 25px);
+  }
+
+  .#{$so-prefix}switch-on,
+  .#{$so-prefix}switch-off {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    font-size: 9px;
+    font-weight: 600;
+    text-transform: uppercase;
+    transition: opacity $so-transition-base;
+    z-index: 1;
+
+    .material-icons {
+      font-size: 12px;
+      line-height: 1;
+    }
+  }
+
+  .#{$so-prefix}switch-on {
+    left: 7px;
+    color: $so-white;
+    opacity: 0;
+  }
+
+  .#{$so-prefix}switch-off {
+    right: 7px;
+    color: $so-white;
+    opacity: 0.6;
+  }
+
+  input:checked + .#{$so-prefix}switch-track {
+    .#{$so-prefix}switch-on {
+      opacity: 1;
+    }
+    .#{$so-prefix}switch-off {
+      opacity: 0;
+    }
+  }
+}
+
+// Size variants for inner switches
+.#{$so-prefix}switch-inner-sm,
+.#{$so-prefix}switch-icon-sm,
+.#{$so-prefix}switch-text-sm {
+  .#{$so-prefix}switch-track {
+    width: 42px;
+    height: 22px;
+    border-radius: 11px;
+
+    &::after {
+      top: 2px;
+      left: 2px;
+      width: 18px;
+      height: 18px;
+    }
+  }
+
+  input:checked + .#{$so-prefix}switch-track::after {
+    left: calc(100% - 20px);
+  }
+
+  .#{$so-prefix}switch-on,
+  .#{$so-prefix}switch-off {
+    font-size: 8px;
+
+    .material-icons {
+      font-size: 12px;
+    }
+  }
+}
+
+.#{$so-prefix}switch-inner-lg,
+.#{$so-prefix}switch-icon-lg,
+.#{$so-prefix}switch-text-lg {
+  .#{$so-prefix}switch-track {
+    width: 64px;
+    height: 32px;
+    border-radius: 16px;
+
+    &::after {
+      top: 4px;
+      left: 4px;
+      width: 24px;
+      height: 24px;
+    }
+  }
+
+  input:checked + .#{$so-prefix}switch-track::after {
+    left: calc(100% - 28px);
+  }
+
+  .#{$so-prefix}switch-on,
+  .#{$so-prefix}switch-off {
+    font-size: 11px;
+
+    .material-icons {
+      font-size: 16px;
+    }
+  }
+
+  .#{$so-prefix}switch-on {
+    left: 8px;
+  }
+
+  .#{$so-prefix}switch-off {
+    right: 8px;
+  }
+}
+
+// ============================================
+// BUTTON STYLE CHECKBOXES (Toggle Buttons)
+// ============================================
+
+.#{$so-prefix}btn-check {
+  position: absolute;
+  clip: rect(0, 0, 0, 0);
+  pointer-events: none;
+
+  // When checked, style the adjacent label as active button
+  &:checked + .#{$so-prefix}btn {
+    background: css-var("accent-primary");
+    border-color: css-var("accent-primary");
+    color: $so-white;
+  }
+
+  // Outline button variants
+  &:checked + .#{$so-prefix}btn-outline-primary {
+    background: $so-primary;
+    color: $so-white;
+  }
+
+  &:checked + .#{$so-prefix}btn-outline-secondary {
+    background: $so-secondary;
+    color: $so-white;
+  }
+
+  &:checked + .#{$so-prefix}btn-outline-success {
+    background: $so-success;
+    color: $so-white;
+  }
+
+  &:checked + .#{$so-prefix}btn-outline-danger {
+    background: $so-danger;
+    color: $so-white;
+  }
+
+  &:checked + .#{$so-prefix}btn-outline-warning {
+    background: $so-warning;
+    color: $so-grey-900;
+  }
+
+  &:checked + .#{$so-prefix}btn-outline-info {
+    background: $so-info;
+    color: $so-white;
+  }
+
+  // Focus state
+  &:focus-visible + .#{$so-prefix}btn {
+    box-shadow: 0 0 0 3px alpha($so-primary, 0.25);
+  }
+
+  // Disabled state
+  &:disabled + .#{$so-prefix}btn {
+    opacity: 0.65;
+    pointer-events: none;
+  }
+}
+
+// ============================================
+// REVERSE LAYOUT (label before input)
+// ============================================
+
+.#{$so-prefix}checkbox-reverse,
+.#{$so-prefix}radio-reverse,
+.#{$so-prefix}switch-reverse {
+  flex-direction: row-reverse;
+}
+
+// ============================================
+// MUI-STYLE VARIANTS
+// Material UI inspired checkbox, radio & switch styles
+// ============================================
+
+// ============================================
+// RIPPLE ANIMATION EFFECT
+// ============================================
+
+@keyframes #{$so-prefix}ripple-effect {
+  0% {
+    transform: scale(0);
+    opacity: 0.4;
+  }
+  100% {
+    transform: scale(2.5);
+    opacity: 0;
+  }
+}
+
+// Ripple mixin for reuse
+@mixin ripple-base($size: 40px) {
+  position: relative;
+  overflow: visible;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: $size;
+    height: $size;
+    margin-top: calc($size / -2);
+    margin-left: calc($size / -2);
+    background: currentColor;
+    border-radius: 50%;
+    opacity: 0;
+    transform: scale(0);
+    pointer-events: none;
+    transition: none;
+  }
+
+  &:active::before {
+    animation: #{$so-prefix}ripple-effect 0.4s ease-out;
+  }
+}
+
+// Checkbox with ripple
+.#{$so-prefix}checkbox-ripple {
+  .#{$so-prefix}checkbox-box {
+    @include ripple-base(36px);
+  }
+
+  &:hover:not(.disabled) .#{$so-prefix}checkbox-box::before {
+    opacity: 0.08;
+    transform: scale(1);
+    transition:
+      opacity 0.15s,
+      transform 0.15s;
+  }
+}
+
+// Radio with ripple
+.#{$so-prefix}radio-ripple {
+  .#{$so-prefix}radio-circle {
+    @include ripple-base(36px);
+  }
+
+  &:hover:not(.disabled) .#{$so-prefix}radio-circle::before {
+    opacity: 0.08;
+    transform: scale(1);
+    transition:
+      opacity 0.15s,
+      transform 0.15s;
+  }
+}
+
+// Switch with ripple (on thumb)
+.#{$so-prefix}switch-ripple {
+  .#{$so-prefix}switch-track::after {
+    @include ripple-base(32px);
+  }
+
+  &:hover:not(.disabled) .#{$so-prefix}switch-track::after::before {
+    opacity: 0.08;
+    transform: scale(1);
+  }
+}
+
+// ============================================
+// LABEL PLACEMENT VARIANTS
+// ============================================
+
+// Label on top
+.#{$so-prefix}checkbox-label-top,
+.#{$so-prefix}radio-label-top,
+.#{$so-prefix}switch-label-top {
+  flex-direction: column-reverse;
+  align-items: flex-start;
+  gap: spacing("1");
+
+  .#{$so-prefix}checkbox-label,
+  .#{$so-prefix}radio-label,
+  .#{$so-prefix}switch-label {
+    padding-top: 0;
+  }
+
+  .#{$so-prefix}checkbox-box,
+  .#{$so-prefix}radio-circle {
+    margin-top: 0;
+  }
+}
+
+// Label on bottom
+.#{$so-prefix}checkbox-label-bottom,
+.#{$so-prefix}radio-label-bottom,
+.#{$so-prefix}switch-label-bottom {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: spacing("1");
+
+  .#{$so-prefix}checkbox-label,
+  .#{$so-prefix}radio-label,
+  .#{$so-prefix}switch-label {
+    padding-top: 0;
+  }
+
+  .#{$so-prefix}checkbox-box,
+  .#{$so-prefix}radio-circle {
+    margin-top: 0;
+  }
+}
+
+// Label on start (same as reverse)
+.#{$so-prefix}checkbox-label-start,
+.#{$so-prefix}radio-label-start,
+.#{$so-prefix}switch-label-start {
+  flex-direction: row-reverse;
+  justify-content: flex-end;
+}
+
+// Label on end (default, explicit class)
+.#{$so-prefix}checkbox-label-end,
+.#{$so-prefix}radio-label-end,
+.#{$so-prefix}switch-label-end {
+  flex-direction: row;
+}
+
+// ============================================
+// SOFT/MUTED COLOR VARIANTS (MUI-style)
+// ============================================
+
+@each $name,
+  $color
+    in (
+      "primary": $so-primary,
+      "secondary": $so-secondary,
+      "success": $so-success,
+      "danger": $so-danger,
+      "warning": $so-warning,
+      "info": $so-info
+    )
+{
+  // Soft checkbox - lighter background, colored border and icon
+  .#{$so-prefix}checkbox-soft-#{$name} {
+    .#{$so-prefix}checkbox-box {
+      background: alpha($color, 0.08);
+      border-color: alpha($color, 0.3);
+    }
+
+    &:hover:not(.disabled) .#{$so-prefix}checkbox-box {
+      background: alpha($color, 0.12);
+      border-color: alpha($color, 0.5);
+    }
+
+    input:checked + .#{$so-prefix}checkbox-box,
+    input:indeterminate + .#{$so-prefix}checkbox-box {
+      background: alpha($color, 0.15);
+      border-color: $color;
+
+      .material-icons {
+        color: $color;
+      }
+    }
+
+    input:focus-visible + .#{$so-prefix}checkbox-box {
+      box-shadow: 0 0 0 3px alpha($color, 0.15);
+    }
+  }
+
+  // Soft radio
+  .#{$so-prefix}radio-soft-#{$name} {
+    .#{$so-prefix}radio-circle {
+      background: alpha($color, 0.08);
+      border-color: alpha($color, 0.3);
+
+      &::after {
+        background: $color;
+      }
+    }
+
+    &:hover:not(.disabled) .#{$so-prefix}radio-circle {
+      background: alpha($color, 0.12);
+      border-color: alpha($color, 0.5);
+    }
+
+    input:checked + .#{$so-prefix}radio-circle {
+      background: alpha($color, 0.15);
+      border-color: $color;
+    }
+
+    input:focus-visible + .#{$so-prefix}radio-circle {
+      box-shadow: 0 0 0 3px alpha($color, 0.15);
+    }
+  }
+
+  // Soft switch
+  .#{$so-prefix}switch-soft-#{$name} {
+    .#{$so-prefix}switch-track {
+      background: alpha($color, 0.2);
+    }
+
+    &:hover:not(.disabled) .#{$so-prefix}switch-track {
+      background: alpha($color, 0.3);
+    }
+
+    input:checked + .#{$so-prefix}switch-track {
+      background: alpha($color, 0.35);
+
+      &::after {
+        background: $color;
+      }
+    }
+
+    &:hover:not(.disabled) input:checked + .#{$so-prefix}switch-track {
+      background: alpha($color, 0.45);
+    }
+
+    input:focus-visible + .#{$so-prefix}switch-track {
+      box-shadow: 0 0 0 3px alpha($color, 0.15);
+    }
+  }
+}
+
+// ============================================
+// OUTLINED VARIANTS (MUI-style)
+// Always shows border, no fill when checked
+// ============================================
+
+@each $name,
+  $color
+    in (
+      "primary": $so-primary,
+      "secondary": $so-secondary,
+      "success": $so-success,
+      "danger": $so-danger,
+      "warning": $so-warning,
+      "info": $so-info
+    )
+{
+  // Outlined checkbox
+  .#{$so-prefix}checkbox-outlined-#{$name} {
+    .#{$so-prefix}checkbox-box {
+      border-color: $color;
+      background: transparent;
+    }
+
+    &:hover:not(.disabled) .#{$so-prefix}checkbox-box {
+      background: alpha($color, 0.08);
+    }
+
+    input:checked + .#{$so-prefix}checkbox-box,
+    input:indeterminate + .#{$so-prefix}checkbox-box {
+      background: transparent;
+      border-color: $color;
+
+      .material-icons {
+        color: $color;
+      }
+    }
+
+    input:focus-visible + .#{$so-prefix}checkbox-box {
+      box-shadow: 0 0 0 3px alpha($color, 0.2);
+    }
+  }
+
+  // Outlined radio
+  .#{$so-prefix}radio-outlined-#{$name} {
+    .#{$so-prefix}radio-circle {
+      border-color: $color;
+      background: transparent;
+
+      &::after {
+        background: $color;
+      }
+    }
+
+    &:hover:not(.disabled) .#{$so-prefix}radio-circle {
+      background: alpha($color, 0.08);
+    }
+
+    input:checked + .#{$so-prefix}radio-circle {
+      background: transparent;
+    }
+
+    input:focus-visible + .#{$so-prefix}radio-circle {
+      box-shadow: 0 0 0 3px alpha($color, 0.2);
+    }
+  }
+}
+
+// ============================================
+// iOS-STYLE SWITCH
+// Clean, rounded iOS aesthetic
+// ============================================
+
+.#{$so-prefix}switch-ios {
+  .#{$so-prefix}switch-track {
+    width: 51px;
+    height: 31px;
+    background: css-var("form-border-hover");
+    border-radius: 15.5px;
+    border: none;
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
+    transition: background $so-transition-material;
+
+    &::after {
+      top: 2px;
+      left: 2px;
+      width: 27px;
+      height: 27px;
+      background: $so-white;
+      border-radius: 50%;
+      box-shadow:
+        0 3px 8px rgba(0, 0, 0, 0.15),
+        0 1px 1px rgba(0, 0, 0, 0.16),
+        0 3px 1px rgba(0, 0, 0, 0.1);
+      transition: transform $so-transition-material;
+    }
+  }
+
+  input:checked + .#{$so-prefix}switch-track {
+    background: #34c759; // iOS green
+
+    &::after {
+      transform: translateX(20px);
+      left: 2px;
+    }
+  }
+
+  &:hover:not(.disabled) input:checked + .#{$so-prefix}switch-track {
+    background: #30d158;
+  }
+
+  input:focus-visible + .#{$so-prefix}switch-track {
+    box-shadow:
+      inset 0 0 0 1px rgba(0, 0, 0, 0.1),
+      0 0 0 4px alpha(#34c759, 0.3);
+  }
+
+  // iOS color variants
+  @each $name,
+    $color
+      in (
+        "primary": $so-primary,
+        "secondary": $so-secondary,
+        "success": #34c759,
+        "danger": #ff3b30,
+        "warning": #ff9500,
+        "info": #007aff
+      )
+  {
+    &.#{$so-prefix}switch-ios-#{$name} {
+      input:checked + .#{$so-prefix}switch-track {
+        background: $color;
+      }
+
+      &:hover:not(.disabled) input:checked + .#{$so-prefix}switch-track {
+        background: color.adjust($color, $lightness: 5%);
+      }
+
+      input:focus-visible + .#{$so-prefix}switch-track {
+        box-shadow:
+          inset 0 0 0 1px rgba(0, 0, 0, 0.1),
+          0 0 0 4px alpha($color, 0.3);
+      }
+    }
+  }
+
+  // Size variants
+  &.#{$so-prefix}switch-ios-sm {
+    .#{$so-prefix}switch-track {
+      width: 40px;
+      height: 24px;
+      border-radius: 12px;
+
+      &::after {
+        width: 20px;
+        height: 20px;
+      }
+    }
+
+    input:checked + .#{$so-prefix}switch-track::after {
+      transform: translateX(16px);
+    }
+  }
+
+  &.#{$so-prefix}switch-ios-lg {
+    .#{$so-prefix}switch-track {
+      width: 64px;
+      height: 38px;
+      border-radius: 19px;
+
+      &::after {
+        top: 3px;
+        left: 3px;
+        width: 32px;
+        height: 32px;
+      }
+    }
+
+    input:checked + .#{$so-prefix}switch-track::after {
+      transform: translateX(26px);
+    }
+  }
+}
+
+// ============================================
+// ANDROID/MATERIAL DESIGN SWITCH
+// Material Design 2 style switch
+// ============================================
+
+.#{$so-prefix}switch-android {
+  .#{$so-prefix}switch-track {
+    width: 36px;
+    height: 14px;
+    background: rgba(0, 0, 0, 0.38);
+    border-radius: 7px;
+    transition: background $so-transition-base;
+
+    &::after {
+      top: -3px;
+      left: 0;
+      width: 20px;
+      height: 20px;
+      background: #fafafa;
+      border-radius: 50%;
+      box-shadow:
+        0 2px 2px rgba(0, 0, 0, 0.24),
+        0 0 2px rgba(0, 0, 0, 0.12);
+      transition:
+        left $so-transition-base,
+        background $so-transition-base;
+    }
+  }
+
+  &:hover:not(.disabled) .#{$so-prefix}switch-track::after {
+    box-shadow:
+      0 2px 2px rgba(0, 0, 0, 0.24),
+      0 0 2px rgba(0, 0, 0, 0.12),
+      0 0 0 8px rgba(0, 0, 0, 0.04);
+  }
+
+  input:checked + .#{$so-prefix}switch-track {
+    background: alpha($so-primary, 0.5);
+
+    &::after {
+      left: calc(100% - 20px);
+      background: $so-primary;
+    }
+  }
+
+  &:hover:not(.disabled) input:checked + .#{$so-prefix}switch-track::after {
+    box-shadow:
+      0 2px 2px rgba(0, 0, 0, 0.24),
+      0 0 2px rgba(0, 0, 0, 0.12),
+      0 0 0 8px alpha($so-primary, 0.12);
+  }
+
+  input:focus-visible + .#{$so-prefix}switch-track::after {
+    box-shadow:
+      0 2px 2px rgba(0, 0, 0, 0.24),
+      0 0 2px rgba(0, 0, 0, 0.12),
+      0 0 0 8px alpha($so-primary, 0.2);
+  }
+
+  // Android color variants
+  @each $name,
+    $color
+      in (
+        "primary": $so-primary,
+        "secondary": $so-secondary,
+        "success": $so-success,
+        "danger": $so-danger,
+        "warning": $so-warning,
+        "info": $so-info
+      )
+  {
+    &.#{$so-prefix}switch-android-#{$name} {
+      input:checked + .#{$so-prefix}switch-track {
+        background: alpha($color, 0.5);
+
+        &::after {
+          background: $color;
+        }
+      }
+
+      &:hover:not(.disabled) input:checked + .#{$so-prefix}switch-track::after {
+        box-shadow:
+          0 2px 2px rgba(0, 0, 0, 0.24),
+          0 0 2px rgba(0, 0, 0, 0.12),
+          0 0 0 8px alpha($color, 0.12);
+      }
+
+      input:focus-visible + .#{$so-prefix}switch-track::after {
+        box-shadow:
+          0 2px 2px rgba(0, 0, 0, 0.24),
+          0 0 2px rgba(0, 0, 0, 0.12),
+          0 0 0 8px alpha($color, 0.2);
+      }
+    }
+  }
+
+  // Size variants
+  &.#{$so-prefix}switch-android-sm {
+    .#{$so-prefix}switch-track {
+      width: 28px;
+      height: 10px;
+      border-radius: 5px;
+
+      &::after {
+        top: -3px;
+        width: 16px;
+        height: 16px;
+      }
+    }
+
+    input:checked + .#{$so-prefix}switch-track::after {
+      left: calc(100% - 16px);
+    }
+  }
+
+  &.#{$so-prefix}switch-android-lg {
+    .#{$so-prefix}switch-track {
+      width: 48px;
+      height: 18px;
+      border-radius: 9px;
+
+      &::after {
+        top: -4px;
+        width: 26px;
+        height: 26px;
+      }
+    }
+
+    input:checked + .#{$so-prefix}switch-track::after {
+      left: calc(100% - 26px);
+    }
+  }
+}
+
+// ============================================
+// MATERIAL 3 STYLE SWITCH
+// Latest Material Design with icon in thumb
+// ============================================
+
+.#{$so-prefix}switch-m3 {
+  .#{$so-prefix}switch-track {
+    width: 52px;
+    height: 32px;
+    background: css-var("form-border");
+    border: 2px solid css-var("text-secondary");
+    border-radius: 16px;
+    transition: all $so-transition-material;
+
+    &::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 6px;
+      width: 16px;
+      height: 16px;
+      margin-top: -8px;
+      background: css-var("text-secondary");
+      border-radius: 50%;
+      transition: all $so-transition-material;
+    }
+  }
+
+  // Icon inside track (optional)
+  .#{$so-prefix}switch-icon-off,
+  .#{$so-prefix}switch-icon-on {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 16px;
+    z-index: 1;
+    transition: opacity $so-transition-base;
+  }
+
+  .#{$so-prefix}switch-icon-off {
+    right: 6px;
+    color: css-var("text-secondary");
+    opacity: 1;
+  }
+
+  .#{$so-prefix}switch-icon-on {
+    left: 6px;
+    color: $so-white;
+    opacity: 0;
+  }
+
+  &:hover:not(.disabled) .#{$so-prefix}switch-track {
+    background: alpha($so-primary, 0.08);
+    border-color: css-var("text-secondary");
+  }
+
+  input:checked + .#{$so-prefix}switch-track {
+    background: css-var("accent-primary");
+    border-color: css-var("accent-primary");
+
+    &::after {
+      left: calc(100% - 22px);
+      width: 24px;
+      height: 24px;
+      margin-top: -12px;
+      background: $so-white;
+    }
+
+    .#{$so-prefix}switch-icon-off {
+      opacity: 0;
+    }
+
+    .#{$so-prefix}switch-icon-on {
+      opacity: 1;
+    }
+  }
+
+  &:hover:not(.disabled) input:checked + .#{$so-prefix}switch-track {
+    background: css-var("accent-primary-hover");
+    border-color: css-var("accent-primary-hover");
+  }
+
+  input:focus-visible + .#{$so-prefix}switch-track {
+    box-shadow: 0 0 0 3px alpha($so-primary, 0.25);
+  }
+
+  // M3 color variants
+  @each $name,
+    $color
+      in (
+        "primary": $so-primary,
+        "secondary": $so-secondary,
+        "success": $so-success,
+        "danger": $so-danger,
+        "warning": $so-warning,
+        "info": $so-info
+      )
+  {
+    &.#{$so-prefix}switch-m3-#{$name} {
+      &:hover:not(.disabled) .#{$so-prefix}switch-track {
+        background: alpha($color, 0.08);
+      }
+
+      input:checked + .#{$so-prefix}switch-track {
+        background: $color;
+        border-color: $color;
+      }
+
+      &:hover:not(.disabled) input:checked + .#{$so-prefix}switch-track {
+        background: color.adjust($color, $lightness: 8%);
+        border-color: color.adjust($color, $lightness: 8%);
+      }
+
+      input:focus-visible + .#{$so-prefix}switch-track {
+        box-shadow: 0 0 0 3px alpha($color, 0.25);
+      }
+    }
+  }
+
+  // Size variants
+  &.#{$so-prefix}switch-m3-sm {
+    .#{$so-prefix}switch-track {
+      width: 40px;
+      height: 24px;
+      border-radius: 12px;
+
+      &::after {
+        left: 4px;
+        width: 12px;
+        height: 12px;
+        margin-top: -6px;
+      }
+    }
+
+    input:checked + .#{$so-prefix}switch-track::after {
+      left: calc(100% - 16px);
+      width: 18px;
+      height: 18px;
+      margin-top: -9px;
+    }
+
+    .#{$so-prefix}switch-icon-off,
+    .#{$so-prefix}switch-icon-on {
+      font-size: 12px;
+    }
+  }
+
+  &.#{$so-prefix}switch-m3-lg {
+    .#{$so-prefix}switch-track {
+      width: 64px;
+      height: 40px;
+      border-radius: 20px;
+
+      &::after {
+        left: 8px;
+        width: 20px;
+        height: 20px;
+        margin-top: -10px;
+      }
+    }
+
+    input:checked + .#{$so-prefix}switch-track::after {
+      left: calc(100% - 28px);
+      width: 30px;
+      height: 30px;
+      margin-top: -15px;
+    }
+
+    .#{$so-prefix}switch-icon-off,
+    .#{$so-prefix}switch-icon-on {
+      font-size: 20px;
+    }
+  }
+}
+
+// ============================================
+// ANT DESIGN STYLE SWITCH
+// Compact, square-ish design
+// ============================================
+
+.#{$so-prefix}switch-ant {
+  .#{$so-prefix}switch-track {
+    width: 44px;
+    height: 22px;
+    background: rgba(0, 0, 0, 0.25);
+    border-radius: 100px;
+    transition: all 0.2s;
+
+    &::after {
+      top: 2px;
+      left: 2px;
+      width: 18px;
+      height: 18px;
+      background: $so-white;
+      border-radius: 50%;
+      box-shadow: 0 2px 4px rgba(0, 35, 11, 0.2);
+      transition: all 0.2s;
+    }
+  }
+
+  // Loading state
+  &.loading .#{$so-prefix}switch-track::after {
+    animation: #{$so-prefix}switch-loading 1s infinite linear;
+  }
+
+  input:checked + .#{$so-prefix}switch-track {
+    background: #1890ff; // Ant Design blue
+
+    &::after {
+      left: calc(100% - 20px);
+    }
+  }
+
+  &:hover:not(.disabled) .#{$so-prefix}switch-track {
+    background: rgba(0, 0, 0, 0.35);
+  }
+
+  &:hover:not(.disabled) input:checked + .#{$so-prefix}switch-track {
+    background: #40a9ff;
+  }
+
+  input:focus-visible + .#{$so-prefix}switch-track {
+    box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+  }
+
+  // Ant color variants
+  @each $name,
+    $color
+      in (
+        "primary": #1890ff,
+        "success": #52c41a,
+        "danger": #ff4d4f,
+        "warning": #faad14
+      )
+  {
+    &.#{$so-prefix}switch-ant-#{$name} {
+      input:checked + .#{$so-prefix}switch-track {
+        background: $color;
+      }
+
+      &:hover:not(.disabled) input:checked + .#{$so-prefix}switch-track {
+        background: color.adjust($color, $lightness: 10%);
+      }
+
+      input:focus-visible + .#{$so-prefix}switch-track {
+        box-shadow: 0 0 0 2px alpha($color, 0.2);
+      }
+    }
+  }
+
+  // Size variants
+  &.#{$so-prefix}switch-ant-sm {
+    .#{$so-prefix}switch-track {
+      width: 28px;
+      height: 16px;
+
+      &::after {
+        width: 12px;
+        height: 12px;
+      }
+    }
+
+    input:checked + .#{$so-prefix}switch-track::after {
+      left: calc(100% - 14px);
+    }
+  }
+}
+
+@keyframes #{$so-prefix}switch-loading {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+// ============================================
+// FILLED STYLE CHECKBOX (Always has bg color)
+// ============================================
+
+.#{$so-prefix}checkbox-filled {
+  .#{$so-prefix}checkbox-box {
+    background: css-var("form-disabled-bg");
+    border-color: transparent;
+  }
+
+  &:hover:not(.disabled) .#{$so-prefix}checkbox-box {
+    background: css-var("card-hover-bg");
+  }
+
+  input:checked + .#{$so-prefix}checkbox-box {
+    background: css-var("accent-primary");
+    border-color: transparent;
+  }
+
+  @each $name,
+    $color
+      in (
+        "primary": $so-primary,
+        "secondary": $so-secondary,
+        "success": $so-success,
+        "danger": $so-danger,
+        "warning": $so-warning,
+        "info": $so-info
+      )
+  {
+    &.#{$so-prefix}checkbox-filled-#{$name} {
+      .#{$so-prefix}checkbox-box {
+        background: alpha($color, 0.1);
+      }
+
+      &:hover:not(.disabled) .#{$so-prefix}checkbox-box {
+        background: alpha($color, 0.15);
+      }
+
+      input:checked + .#{$so-prefix}checkbox-box {
+        background: $color;
+      }
+    }
+  }
+}
+
+// ============================================
+// FILLED STYLE RADIO
+// ============================================
+
+.#{$so-prefix}radio-filled {
+  .#{$so-prefix}radio-circle {
+    background: css-var("form-disabled-bg");
+    border-color: transparent;
+  }
+
+  &:hover:not(.disabled) .#{$so-prefix}radio-circle {
+    background: css-var("card-hover-bg");
+  }
+
+  input:checked + .#{$so-prefix}radio-circle {
+    background: css-var("accent-primary");
+    border-color: transparent;
+
+    &::after {
+      background: $so-white;
+    }
+  }
+
+  @each $name,
+    $color
+      in (
+        "primary": $so-primary,
+        "secondary": $so-secondary,
+        "success": $so-success,
+        "danger": $so-danger,
+        "warning": $so-warning,
+        "info": $so-info
+      )
+  {
+    &.#{$so-prefix}radio-filled-#{$name} {
+      .#{$so-prefix}radio-circle {
+        background: alpha($color, 0.1);
+
+        &::after {
+          background: $color;
+        }
+      }
+
+      &:hover:not(.disabled) .#{$so-prefix}radio-circle {
+        background: alpha($color, 0.15);
+      }
+
+      input:checked + .#{$so-prefix}radio-circle {
+        background: $color;
+
+        &::after {
+          background: $so-white;
+        }
+      }
+    }
+  }
+}
+
+// ============================================
+// CARD STYLE CHECKBOX/RADIO (Selectable cards)
+// ============================================
+
+.#{$so-prefix}checkbox-card,
+.#{$so-prefix}radio-card {
+  display: flex;
+  align-items: flex-start;
+  padding: spacing("4");
+  background: css-var("card-bg");
+  border: 1px solid css-var("card-border");
+  border-radius: radius("lg");
+  cursor: pointer;
+  transition: all $so-transition-base;
+
+  &:hover:not(.disabled) {
+    background: css-var("card-hover-bg");
+    border-color: css-var("form-border-hover");
+  }
+
+  input:checked ~ * {
+    // Visual feedback when checked
+  }
+
+  &:has(input:checked) {
+    border-color: css-var("accent-primary");
+    background: alpha($so-primary, 0.04);
+
+    @include dark-mode {
+      background: alpha($so-purple, 0.08);
+    }
+  }
+
+  &:has(input:focus-visible) {
+    box-shadow: 0 0 0 3px alpha($so-primary, 0.15);
+  }
+
+  &.disabled,
+  &:has(input:disabled) {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background: css-var("form-disabled-bg");
+  }
+
+  // Card content wrapper
+  .#{$so-prefix}checkbox-card-content,
+  .#{$so-prefix}radio-card-content {
+    flex: 1;
+    margin-left: spacing("3");
+  }
+
+  .#{$so-prefix}checkbox-card-title,
+  .#{$so-prefix}radio-card-title {
+    font-size: font-size("base");
+    font-weight: font-weight("medium");
+    color: css-var("text-primary");
+    margin-bottom: spacing("1");
+  }
+
+  .#{$so-prefix}checkbox-card-description,
+  .#{$so-prefix}radio-card-description {
+    font-size: font-size("sm");
+    color: css-var("text-secondary");
+    line-height: line-height("relaxed");
+  }
+
+  // Color variants
+  @each $name,
+    $color
+      in (
+        "primary": $so-primary,
+        "secondary": $so-secondary,
+        "success": $so-success,
+        "danger": $so-danger,
+        "warning": $so-warning,
+        "info": $so-info
+      )
+  {
+    &.#{$so-prefix}checkbox-card-#{$name},
+    &.#{$so-prefix}radio-card-#{$name} {
+      &:has(input:checked) {
+        border-color: $color;
+        background: alpha($color, 0.04);
+
+        @include dark-mode {
+          background: alpha($color, 0.08);
+        }
+      }
+
+      &:has(input:focus-visible) {
+        box-shadow: 0 0 0 3px alpha($color, 0.15);
+      }
+    }
+  }
+}

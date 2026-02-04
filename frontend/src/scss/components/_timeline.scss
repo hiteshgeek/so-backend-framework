@@ -1,0 +1,581 @@
+// ============================================
+// SIXORBIT UI - TIMELINE
+// Vertical and horizontal timeline components
+// ============================================
+
+@use '../abstracts' as *;
+
+// ============================================
+// BASE TIMELINE
+// ============================================
+
+.#{$so-prefix}timeline {
+  position: relative;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+// ============================================
+// TIMELINE ITEM
+// ============================================
+
+.#{$so-prefix}timeline-item {
+  position: relative;
+  padding-left: 40px;
+  padding-bottom: spacing('6');
+
+  &:last-child {
+    padding-bottom: 0;
+
+    .#{$so-prefix}timeline-connector {
+      display: none;
+    }
+  }
+}
+
+// ============================================
+// TIMELINE MARKER (Dot on the line)
+// ============================================
+
+.#{$so-prefix}timeline-marker {
+  position: absolute;
+  left: 0;
+  top: 4px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: css-var('accent-primary');
+  border: 3px solid css-var('card-bg');
+  box-shadow: 0 0 0 2px css-var('accent-primary');
+  z-index: 1;
+}
+
+// Marker color variants (dot style - no icon)
+.#{$so-prefix}timeline-marker-primary {
+  background: css-var('accent-primary');
+  box-shadow: 0 0 0 2px css-var('accent-primary');
+}
+
+.#{$so-prefix}timeline-marker-success {
+  background: css-var('accent-success');
+  box-shadow: 0 0 0 2px css-var('accent-success');
+}
+
+.#{$so-prefix}timeline-marker-danger {
+  background: css-var('accent-danger');
+  box-shadow: 0 0 0 2px css-var('accent-danger');
+}
+
+.#{$so-prefix}timeline-marker-warning {
+  background: css-var('accent-warning');
+  box-shadow: 0 0 0 2px css-var('accent-warning');
+}
+
+.#{$so-prefix}timeline-marker-info {
+  background: css-var('accent-info');
+  box-shadow: 0 0 0 2px css-var('accent-info');
+}
+
+.#{$so-prefix}timeline-marker-secondary {
+  background: $so-secondary;
+  box-shadow: 0 0 0 2px $so-secondary;
+}
+
+// ============================================
+// MARKER WITH ICON
+// When marker contains an icon, expand size and remove ring
+// ============================================
+
+// Base icon marker styles - using :has() for automatic detection
+.#{$so-prefix}timeline-marker:has(.material-icons) {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: css-var('accent-primary');
+  border: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  color: $so-white;
+  left: -8px;
+  top: 0;
+
+  .material-icons {
+    font-size: 18px;
+  }
+}
+
+// Icon marker color variants - must override the base color variant box-shadow
+.#{$so-prefix}timeline-marker-primary:has(.material-icons) {
+  background: css-var('accent-primary');
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.#{$so-prefix}timeline-marker-success:has(.material-icons) {
+  background: css-var('accent-success');
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.#{$so-prefix}timeline-marker-danger:has(.material-icons) {
+  background: css-var('accent-danger');
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.#{$so-prefix}timeline-marker-warning:has(.material-icons) {
+  background: css-var('accent-warning');
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  color: $so-grey-900;
+}
+
+.#{$so-prefix}timeline-marker-info:has(.material-icons) {
+  background: css-var('accent-info');
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.#{$so-prefix}timeline-marker-secondary:has(.material-icons) {
+  background: $so-secondary;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.#{$so-prefix}timeline-marker.#{$so-prefix}timeline-marker-primary:has(.material-icons),
+.#{$so-prefix}timeline-marker.#{$so-prefix}timeline-marker-icon.#{$so-prefix}timeline-marker-primary {
+  background: css-var('accent-primary');
+  border: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.#{$so-prefix}timeline-marker.#{$so-prefix}timeline-marker-secondary:has(.material-icons),
+.#{$so-prefix}timeline-marker.#{$so-prefix}timeline-marker-icon.#{$so-prefix}timeline-marker-secondary {
+  background: $so-secondary;
+  border: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+// ============================================
+// TIMELINE CONNECTOR (Vertical line)
+// ============================================
+
+.#{$so-prefix}timeline-connector {
+  position: absolute;
+  left: 7px;
+  top: 24px;
+  width: 2px;
+  height: calc(100% - 24px);
+  background: css-var('border-color');
+}
+
+// Dashed connector
+.#{$so-prefix}timeline-connector-dashed {
+  background: transparent;
+  border-left: 2px dashed css-var('border-color');
+}
+
+// ============================================
+// TIMELINE CONTENT
+// ============================================
+
+.#{$so-prefix}timeline-content {
+  background: css-var('card-bg');
+  border: 1px solid css-var('border-color');
+  border-radius: radius('lg');
+  padding: spacing('4');
+  position: relative;
+
+  // Arrow pointing to marker
+  &::before {
+    content: '';
+    position: absolute;
+    left: -8px;
+    top: 8px;
+    width: 0;
+    height: 0;
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+    border-right: 8px solid css-var('border-color');
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    left: -6px;
+    top: 9px;
+    width: 0;
+    height: 0;
+    border-top: 7px solid transparent;
+    border-bottom: 7px solid transparent;
+    border-right: 7px solid css-var('card-bg');
+  }
+}
+
+// Content without card styling
+.#{$so-prefix}timeline-content-plain {
+  background: transparent;
+  border: none;
+  padding: 0;
+
+  &::before,
+  &::after {
+    display: none;
+  }
+}
+
+// ============================================
+// TIMELINE TIME/DATE
+// ============================================
+
+.#{$so-prefix}timeline-time {
+  font-size: font-size('xs');
+  color: css-var('text-muted');
+  margin-bottom: spacing('1');
+  display: block;
+}
+
+// ============================================
+// TIMELINE TITLE & BODY
+// ============================================
+
+.#{$so-prefix}timeline-title {
+  font-size: font-size('base');
+  font-weight: font-weight('semibold');
+  color: css-var('text-primary');
+  margin: 0 0 spacing('1');
+}
+
+.#{$so-prefix}timeline-body {
+  font-size: font-size('sm');
+  color: css-var('text-secondary');
+  margin: 0;
+}
+
+// ============================================
+// CENTERED TIMELINE
+// ============================================
+
+.#{$so-prefix}timeline-centered {
+  .#{$so-prefix}timeline-item {
+    padding-left: 50%;
+    padding-right: 0;
+
+    &:nth-child(odd) {
+      padding-left: 0;
+      padding-right: 50%;
+      text-align: right;
+
+      .#{$so-prefix}timeline-marker {
+        left: auto;
+        right: -8px;
+      }
+
+      .#{$so-prefix}timeline-connector {
+        left: auto;
+        right: 7px;
+      }
+
+      .#{$so-prefix}timeline-content {
+        margin-right: spacing('6');
+        margin-left: 0;
+
+        &::before {
+          left: auto;
+          right: -8px;
+          border-left: 8px solid css-var('border-color');
+          border-right: none;
+        }
+
+        &::after {
+          left: auto;
+          right: -6px;
+          border-left: 7px solid css-var('card-bg');
+          border-right: none;
+        }
+      }
+    }
+
+    &:nth-child(even) {
+      .#{$so-prefix}timeline-marker {
+        left: -8px;
+      }
+
+      .#{$so-prefix}timeline-connector {
+        left: -1px;
+      }
+
+      .#{$so-prefix}timeline-content {
+        margin-left: spacing('6');
+      }
+    }
+  }
+
+  // Center line
+  &::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: css-var('border-color');
+    transform: translateX(-50%);
+  }
+
+  .#{$so-prefix}timeline-connector {
+    display: none;
+  }
+}
+
+// ============================================
+// ALTERNATING TIMELINE (Simpler version)
+// ============================================
+
+.#{$so-prefix}timeline-alternate {
+  .#{$so-prefix}timeline-item {
+    width: 50%;
+
+    &:nth-child(odd) {
+      margin-left: 0;
+      padding-left: 0;
+      padding-right: 40px;
+      text-align: right;
+
+      .#{$so-prefix}timeline-marker {
+        left: auto;
+        right: 0;
+      }
+
+      .#{$so-prefix}timeline-connector {
+        left: auto;
+        right: 7px;
+      }
+    }
+
+    &:nth-child(even) {
+      margin-left: 50%;
+      padding-left: 40px;
+      padding-right: 0;
+    }
+  }
+}
+
+// ============================================
+// COMPACT TIMELINE
+// ============================================
+
+.#{$so-prefix}timeline-compact {
+  .#{$so-prefix}timeline-item {
+    padding-left: 32px;
+    padding-bottom: spacing('4');
+  }
+
+  .#{$so-prefix}timeline-marker {
+    width: 12px;
+    height: 12px;
+    border-width: 2px;
+    top: 6px;
+  }
+
+  .#{$so-prefix}timeline-connector {
+    left: 5px;
+    top: 20px;
+    height: calc(100% - 20px);
+  }
+
+  .#{$so-prefix}timeline-content {
+    padding: spacing('2') spacing('3');
+  }
+
+  .#{$so-prefix}timeline-title {
+    font-size: font-size('sm');
+  }
+
+  .#{$so-prefix}timeline-body {
+    font-size: font-size('xs');
+  }
+}
+
+// ============================================
+// HORIZONTAL TIMELINE
+// ============================================
+
+.#{$so-prefix}timeline-horizontal {
+  display: flex;
+  overflow-x: auto;
+  padding: spacing('6') 0;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: css-var('border-color');
+    transform: translateY(-50%);
+  }
+
+  .#{$so-prefix}timeline-item {
+    flex: 0 0 auto;
+    min-width: 200px;
+    padding: 0 spacing('4');
+    padding-bottom: 0;
+    text-align: center;
+  }
+
+  .#{$so-prefix}timeline-marker {
+    position: relative;
+    left: auto;
+    top: auto;
+    margin: 0 auto spacing('3');
+    width: 32px;
+    height: 32px;
+    background: css-var('card-bg');
+    border: 2px solid css-var('border-color');
+    box-shadow: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: font-size('sm');
+    font-weight: font-weight('semibold');
+    color: css-var('text-secondary');
+
+    .material-icons {
+      font-size: 16px;
+    }
+  }
+
+  // Completed items in horizontal timeline
+  .#{$so-prefix}timeline-item-completed .#{$so-prefix}timeline-marker {
+    background: css-var('accent-success');
+    border-color: css-var('accent-success');
+    color: $so-white;
+  }
+
+  // Active item in horizontal timeline
+  .#{$so-prefix}timeline-item-active .#{$so-prefix}timeline-marker {
+    background: css-var('accent-primary');
+    border-color: css-var('accent-primary');
+    color: $so-white;
+  }
+
+  .#{$so-prefix}timeline-connector {
+    display: none;
+  }
+
+  .#{$so-prefix}timeline-content {
+    &::before,
+    &::after {
+      display: none;
+    }
+  }
+}
+
+// ============================================
+// ACTIVITY FEED STYLE
+// ============================================
+
+.#{$so-prefix}timeline-feed {
+  .#{$so-prefix}timeline-item {
+    padding-left: 48px;
+  }
+
+  .#{$so-prefix}timeline-marker {
+    width: 40px;
+    height: 40px;
+    left: 0;
+    top: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: css-var('card-hover-bg');
+    border: none;
+    box-shadow: none;
+    color: css-var('text-secondary');
+
+    .material-icons {
+      font-size: 20px;
+    }
+
+    img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+  }
+
+  .#{$so-prefix}timeline-connector {
+    left: 19px;
+    top: 44px;
+    height: calc(100% - 44px);
+  }
+
+  .#{$so-prefix}timeline-content {
+    background: transparent;
+    border: none;
+    padding: 0;
+
+    &::before,
+    &::after {
+      display: none;
+    }
+  }
+}
+
+// ============================================
+// RESPONSIVE
+// ============================================
+
+@media (max-width: 768px) {
+  .#{$so-prefix}timeline-centered,
+  .#{$so-prefix}timeline-alternate {
+    &::before {
+      left: 8px;
+    }
+
+    .#{$so-prefix}timeline-item {
+      width: 100%;
+      padding-left: 40px;
+      padding-right: 0;
+      margin-left: 0;
+      text-align: left;
+
+      &:nth-child(odd),
+      &:nth-child(even) {
+        padding-left: 40px;
+        padding-right: 0;
+        margin-left: 0;
+        text-align: left;
+
+        .#{$so-prefix}timeline-marker {
+          left: 0;
+          right: auto;
+        }
+
+        .#{$so-prefix}timeline-connector {
+          left: 7px;
+          right: auto;
+          display: block;
+        }
+
+        .#{$so-prefix}timeline-content {
+          margin-left: 0;
+          margin-right: 0;
+
+          &::before {
+            left: -8px;
+            right: auto;
+            border-right: 8px solid css-var('border-color');
+            border-left: none;
+          }
+
+          &::after {
+            left: -6px;
+            right: auto;
+            border-right: 7px solid css-var('card-bg');
+            border-left: none;
+          }
+        }
+      }
+    }
+  }
+}

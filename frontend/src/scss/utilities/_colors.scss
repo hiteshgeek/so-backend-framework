@@ -1,0 +1,328 @@
+// ============================================
+// SIXORBIT UI - COLOR UTILITIES
+// Text color, background color, and opacity
+// ============================================
+
+@use 'sass:color';
+@use '../abstracts' as *;
+
+// ============================================
+// THEME COLORS
+// ============================================
+
+$theme-colors: (
+  'primary': $so-primary,
+  'secondary': $so-secondary,
+  'success': $so-success,
+  'danger': $so-danger,
+  'warning': $so-warning,
+  'info': $so-info,
+  'light': $so-grey-100,
+  'dark': $so-grey-900,
+  'white': $so-white,
+  'black': #000,
+  'muted': $so-grey-500
+);
+
+// ============================================
+// TEXT COLORS
+// ============================================
+
+// Text colors with opacity support (use .so-text-opacity-* to control opacity)
+@each $name, $color in $theme-colors {
+  .#{$so-prefix}text-#{$name} {
+    --so-text-opacity: 1;
+    color: rgba($color, var(--so-text-opacity)) !important;
+  }
+}
+
+// CSS Variable-based text colors (theme-aware)
+.#{$so-prefix}text-body {
+  color: css-var('text-primary') !important;
+}
+
+.#{$so-prefix}text-body-secondary {
+  color: css-var('text-secondary') !important;
+}
+
+.#{$so-prefix}text-body-tertiary {
+  color: css-var('text-muted') !important;
+}
+
+.#{$so-prefix}text-body-emphasis {
+  color: css-var('text-primary') !important;
+}
+
+// Reset/inherit
+.#{$so-prefix}text-reset {
+  color: inherit !important;
+}
+
+// ============================================
+// TEXT OPACITY (for use with text colors)
+// ============================================
+
+$text-opacities: (
+  25: 0.25,
+  50: 0.5,
+  75: 0.75,
+  100: 1
+);
+
+@each $name, $value in $text-opacities {
+  .#{$so-prefix}text-opacity-#{$name} {
+    --so-text-opacity: #{$value};
+  }
+}
+
+// ============================================
+// BACKGROUND COLORS
+// ============================================
+
+// Background colors with opacity support (use .so-bg-opacity-* to control opacity)
+@each $name, $color in $theme-colors {
+  .#{$so-prefix}bg-#{$name} {
+    --so-bg-opacity: 1;
+    background-color: rgba($color, var(--so-bg-opacity)) !important;
+  }
+}
+
+// CSS Variable-based backgrounds (theme-aware)
+.#{$so-prefix}bg-body {
+  background-color: css-var('bg-primary') !important;
+}
+
+.#{$so-prefix}bg-body-secondary {
+  background-color: css-var('bg-secondary') !important;
+}
+
+.#{$so-prefix}bg-body-tertiary {
+  background-color: css-var('bg-subtle') !important;
+}
+
+// Transparent
+.#{$so-prefix}bg-transparent {
+  background-color: transparent !important;
+}
+
+// ============================================
+// BACKGROUND OPACITY
+// ============================================
+
+$bg-opacities: (
+  10: 0.1,
+  25: 0.25,
+  50: 0.5,
+  75: 0.75,
+  100: 1
+);
+
+@each $name, $value in $bg-opacities {
+  .#{$so-prefix}bg-opacity-#{$name} {
+    --so-bg-opacity: #{$value};
+  }
+}
+
+// ============================================
+// SUBTLE BACKGROUNDS (light versions)
+// ============================================
+
+.#{$so-prefix}bg-primary-subtle {
+  background-color: $so-primary-light !important;
+}
+
+.#{$so-prefix}bg-success-subtle {
+  background-color: $so-success-light !important;
+}
+
+.#{$so-prefix}bg-danger-subtle {
+  background-color: $so-danger-light !important;
+}
+
+.#{$so-prefix}bg-warning-subtle {
+  background-color: $so-warning-light !important;
+}
+
+.#{$so-prefix}bg-info-subtle {
+  background-color: $so-info-light !important;
+}
+
+.#{$so-prefix}bg-secondary-subtle {
+  background-color: $so-grey-200 !important;
+}
+
+.#{$so-prefix}bg-light-subtle {
+  background-color: $so-grey-50 !important;
+}
+
+.#{$so-prefix}bg-dark-subtle {
+  background-color: $so-grey-700 !important;
+}
+
+// ============================================
+// LINK COLORS
+// ============================================
+
+.#{$so-prefix}link-primary {
+  color: $so-primary !important;
+
+  &:hover,
+  &:focus {
+    color: $so-primary-hover !important;
+  }
+}
+
+.#{$so-prefix}link-secondary {
+  color: $so-secondary !important;
+
+  &:hover,
+  &:focus {
+    color: color.adjust($so-secondary, $lightness: -15%) !important;
+  }
+}
+
+.#{$so-prefix}link-success {
+  color: $so-success !important;
+
+  &:hover,
+  &:focus {
+    color: color.adjust($so-success, $lightness: -15%) !important;
+  }
+}
+
+.#{$so-prefix}link-danger {
+  color: $so-danger !important;
+
+  &:hover,
+  &:focus {
+    color: color.adjust($so-danger, $lightness: -15%) !important;
+  }
+}
+
+.#{$so-prefix}link-warning {
+  color: $so-warning !important;
+
+  &:hover,
+  &:focus {
+    color: color.adjust($so-warning, $lightness: -15%) !important;
+  }
+}
+
+.#{$so-prefix}link-info {
+  color: $so-info !important;
+
+  &:hover,
+  &:focus {
+    color: color.adjust($so-info, $lightness: -15%) !important;
+  }
+}
+
+.#{$so-prefix}link-light {
+  color: $so-grey-300 !important;
+
+  &:hover,
+  &:focus {
+    color: $so-grey-100 !important;
+  }
+}
+
+.#{$so-prefix}link-dark {
+  color: $so-grey-900 !important;
+
+  &:hover,
+  &:focus {
+    color: $so-grey-700 !important;
+  }
+}
+
+.#{$so-prefix}link-body-emphasis {
+  color: css-var('text-primary') !important;
+
+  &:hover,
+  &:focus {
+    color: css-var('accent-primary') !important;
+  }
+}
+
+// ============================================
+// FOCUS RING
+// ============================================
+
+.#{$so-prefix}focus-ring {
+  &:focus {
+    outline: 0;
+    box-shadow: 0 0 0 0.25rem rgba($so-primary, 0.25) !important;
+  }
+}
+
+.#{$so-prefix}focus-ring-primary:focus {
+  box-shadow: 0 0 0 0.25rem rgba($so-primary, 0.25) !important;
+}
+
+.#{$so-prefix}focus-ring-success:focus {
+  box-shadow: 0 0 0 0.25rem rgba($so-success, 0.25) !important;
+}
+
+.#{$so-prefix}focus-ring-danger:focus {
+  box-shadow: 0 0 0 0.25rem rgba($so-danger, 0.25) !important;
+}
+
+.#{$so-prefix}focus-ring-warning:focus {
+  box-shadow: 0 0 0 0.25rem rgba($so-warning, 0.25) !important;
+}
+
+.#{$so-prefix}focus-ring-info:focus {
+  box-shadow: 0 0 0 0.25rem rgba($so-info, 0.25) !important;
+}
+
+.#{$so-prefix}focus-ring-secondary:focus {
+  box-shadow: 0 0 0 0.25rem rgba($so-secondary, 0.25) !important;
+}
+
+.#{$so-prefix}focus-ring-light:focus {
+  box-shadow: 0 0 0 0.25rem rgba($so-grey-300, 0.25) !important;
+}
+
+.#{$so-prefix}focus-ring-dark:focus {
+  box-shadow: 0 0 0 0.25rem rgba($so-grey-900, 0.25) !important;
+}
+
+// ============================================
+// GRADIENTS
+// ============================================
+
+.#{$so-prefix}bg-gradient {
+  background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0)) !important;
+}
+
+.#{$so-prefix}bg-gradient-primary {
+  background: linear-gradient(135deg, $so-primary, color.adjust($so-primary, $lightness: -15%)) !important;
+}
+
+.#{$so-prefix}bg-gradient-success {
+  background: linear-gradient(135deg, $so-success, color.adjust($so-success, $lightness: -15%)) !important;
+}
+
+.#{$so-prefix}bg-gradient-danger {
+  background: linear-gradient(135deg, $so-danger, color.adjust($so-danger, $lightness: -15%)) !important;
+}
+
+.#{$so-prefix}bg-gradient-warning {
+  background: linear-gradient(135deg, $so-warning, color.adjust($so-warning, $lightness: -15%)) !important;
+}
+
+.#{$so-prefix}bg-gradient-info {
+  background: linear-gradient(135deg, $so-info, color.adjust($so-info, $lightness: -15%)) !important;
+}
+
+.#{$so-prefix}bg-gradient-secondary {
+  background: linear-gradient(135deg, $so-secondary, color.adjust($so-secondary, $lightness: -15%)) !important;
+}
+
+.#{$so-prefix}bg-gradient-light {
+  background: linear-gradient(135deg, $so-grey-100, $so-grey-300) !important;
+}
+
+.#{$so-prefix}bg-gradient-dark {
+  background: linear-gradient(135deg, $so-grey-700, $so-grey-900) !important;
+}

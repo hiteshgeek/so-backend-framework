@@ -1,0 +1,315 @@
+// ============================================
+// SIXORBIT UI - TEXT UTILITIES
+// Typography utility classes
+// ============================================
+
+@use '../abstracts' as *;
+
+// Breakpoints
+$breakpoints: (
+  sm: 576px,
+  md: 768px,
+  lg: 1024px,
+  xl: 1200px,
+  xxl: 1400px
+);
+
+// ============================================
+// TEXT ALIGNMENT
+// ============================================
+
+$text-alignments: (start, end, center, justify);
+
+@each $alignment in $text-alignments {
+  .#{$so-prefix}text-#{$alignment} {
+    text-align: $alignment !important;
+  }
+}
+
+// Responsive text alignment
+@each $breakpoint, $min-width in $breakpoints {
+  @media (min-width: $min-width) {
+    @each $alignment in $text-alignments {
+      .#{$so-prefix}text-#{$breakpoint}-#{$alignment} {
+        text-align: $alignment !important;
+      }
+    }
+  }
+}
+
+// ============================================
+// TEXT TRANSFORM
+// ============================================
+
+.#{$so-prefix}text-lowercase {
+  text-transform: lowercase !important;
+}
+
+.#{$so-prefix}text-uppercase {
+  text-transform: uppercase !important;
+}
+
+.#{$so-prefix}text-capitalize {
+  text-transform: capitalize !important;
+}
+
+.#{$so-prefix}text-none {
+  text-transform: none !important;
+}
+
+// ============================================
+// TEXT DECORATION
+// ============================================
+
+.#{$so-prefix}text-decoration-none {
+  text-decoration: none !important;
+}
+
+.#{$so-prefix}text-decoration-underline {
+  text-decoration: underline !important;
+}
+
+.#{$so-prefix}text-decoration-line-through {
+  text-decoration: line-through !important;
+}
+
+// ============================================
+// FONT WEIGHT
+// ============================================
+
+$font-weights: (
+  'light': 300,
+  'normal': 400,
+  'medium': 500,
+  'semibold': 600,
+  'bold': 700,
+  'bolder': 800,
+  'black': 900
+);
+
+@each $name, $value in $font-weights {
+  .#{$so-prefix}fw-#{$name} {
+    font-weight: $value !important;
+  }
+}
+
+// ============================================
+// FONT STYLE
+// ============================================
+
+.#{$so-prefix}fst-italic {
+  font-style: italic !important;
+}
+
+.#{$so-prefix}fst-normal {
+  font-style: normal !important;
+}
+
+// ============================================
+// FONT SIZE
+// ============================================
+
+$font-sizes: (
+  xs: 0.75rem,     // 12px
+  sm: 0.875rem,    // 14px
+  base: 1rem,      // 16px
+  lg: 1.125rem,    // 18px
+  xl: 1.25rem,     // 20px
+  '2xl': 1.5rem,   // 24px
+  '3xl': 1.875rem, // 30px
+  '4xl': 2.25rem,  // 36px
+  '5xl': 3rem,     // 48px
+  '6xl': 3.75rem,  // 60px
+);
+
+@each $name, $value in $font-sizes {
+  .#{$so-prefix}fs-#{$name} {
+    font-size: $value !important;
+  }
+}
+
+// Bootstrap-style font sizes (1-6)
+.#{$so-prefix}fs-1 {
+  font-size: 2.5rem !important;
+}
+
+.#{$so-prefix}fs-2 {
+  font-size: 2rem !important;
+}
+
+.#{$so-prefix}fs-3 {
+  font-size: 1.75rem !important;
+}
+
+.#{$so-prefix}fs-4 {
+  font-size: 1.5rem !important;
+}
+
+.#{$so-prefix}fs-5 {
+  font-size: 1.25rem !important;
+}
+
+.#{$so-prefix}fs-6 {
+  font-size: 1rem !important;
+}
+
+// ============================================
+// LINE HEIGHT
+// ============================================
+
+$line-heights: (
+  1: 1,
+  none: 1,
+  tight: 1.25,
+  snug: 1.375,
+  normal: 1.5,
+  base: 1.5,
+  relaxed: 1.625,
+  lg: 1.75,
+  loose: 2
+);
+
+@each $name, $value in $line-heights {
+  .#{$so-prefix}lh-#{$name} {
+    line-height: $value !important;
+  }
+}
+
+// ============================================
+// LETTER SPACING
+// ============================================
+
+$letter-spacings: (
+  tighter: -0.05em,
+  tight: -0.025em,
+  normal: 0,
+  wide: 0.025em,
+  wider: 0.05em,
+  widest: 0.1em
+);
+
+@each $name, $value in $letter-spacings {
+  .#{$so-prefix}tracking-#{$name} {
+    letter-spacing: $value !important;
+  }
+}
+
+// ============================================
+// TEXT WRAP & OVERFLOW
+// ============================================
+
+.#{$so-prefix}text-wrap {
+  white-space: normal !important;
+}
+
+.#{$so-prefix}text-nowrap {
+  white-space: nowrap !important;
+}
+
+.#{$so-prefix}text-pre {
+  white-space: pre !important;
+}
+
+.#{$so-prefix}text-pre-wrap {
+  white-space: pre-wrap !important;
+}
+
+.#{$so-prefix}text-pre-line {
+  white-space: pre-line !important;
+}
+
+.#{$so-prefix}text-break {
+  word-wrap: break-word !important;
+  word-break: break-word !important;
+}
+
+// ============================================
+// TEXT TRUNCATION
+// ============================================
+
+.#{$so-prefix}text-truncate {
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+// Line clamp (multi-line truncation)
+@for $i from 1 through 6 {
+  .#{$so-prefix}line-clamp-#{$i} {
+    display: -webkit-box !important;
+    -webkit-line-clamp: $i !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+  }
+}
+
+.#{$so-prefix}line-clamp-none {
+  -webkit-line-clamp: unset !important;
+  -webkit-box-orient: unset !important;
+}
+
+// ============================================
+// WORD BREAK
+// ============================================
+
+.#{$so-prefix}break-normal {
+  word-break: normal !important;
+  overflow-wrap: normal !important;
+}
+
+.#{$so-prefix}break-words {
+  word-break: break-word !important;
+  overflow-wrap: break-word !important;
+}
+
+.#{$so-prefix}break-all {
+  word-break: break-all !important;
+}
+
+// ============================================
+// VERTICAL ALIGN
+// ============================================
+
+$vertical-aligns: (baseline, top, middle, bottom, text-top, text-bottom, sub, super);
+
+@each $align in $vertical-aligns {
+  .#{$so-prefix}align-#{$align} {
+    vertical-align: $align !important;
+  }
+}
+
+// ============================================
+// FONT FAMILY
+// ============================================
+
+.#{$so-prefix}font-sans {
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+}
+
+.#{$so-prefix}font-serif {
+  font-family: Georgia, Cambria, "Times New Roman", Times, serif !important;
+}
+
+.#{$so-prefix}font-mono {
+  font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !important;
+}
+
+// ============================================
+// TEXT SELECTION
+// ============================================
+
+.#{$so-prefix}select-none {
+  user-select: none !important;
+}
+
+.#{$so-prefix}select-text {
+  user-select: text !important;
+}
+
+.#{$so-prefix}select-all {
+  user-select: all !important;
+}
+
+.#{$so-prefix}select-auto {
+  user-select: auto !important;
+}

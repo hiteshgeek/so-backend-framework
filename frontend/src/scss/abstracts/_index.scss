@@ -1,0 +1,22 @@
+// ============================================
+// SIXORBIT UI - ABSTRACTS INDEX
+// Forward all abstract modules
+// ============================================
+
+// Configuration (must be first)
+@forward 'config';
+
+// Design tokens
+@forward 'variables';
+
+// Theme definitions
+@forward 'themes';
+
+// Utility functions
+@forward 'functions';
+
+// Reusable mixins
+@forward 'mixins';
+
+// Placeholder selectors
+@forward 'placeholders';

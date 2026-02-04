@@ -1,0 +1,341 @@
+// ============================================
+// SIXORBIT UI - DROPZONE
+// Drag and drop file upload area
+// ============================================
+
+@use '../abstracts' as *;
+
+// ============================================
+// DROPZONE VARIABLES
+// ============================================
+
+$dropzone-padding: spacing('8') spacing('4') !default;
+$dropzone-padding-compact: spacing('4') spacing('3') !default;
+$dropzone-icon-size: 48px !default;
+$dropzone-icon-size-sm: 36px !default;
+$dropzone-icon-size-lg: 64px !default;
+
+// ============================================
+// DROPZONE BASE
+// ============================================
+
+.#{$so-prefix}form-file-dropzone {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: spacing('3');
+  padding: $dropzone-padding;
+  background: css-var('form-bg');
+  border: 2px dashed css-var('form-border');
+  border-radius: radius('lg');
+  text-align: center;
+  cursor: pointer;
+  transition: border-color $so-transition-base, background $so-transition-base;
+
+  // Hidden file input
+  input[type="file"] {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+  }
+
+  // Icon container
+  .#{$so-prefix}form-file-dropzone-icon {
+    width: $dropzone-icon-size;
+    height: $dropzone-icon-size;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: alpha($so-primary, 0.1);
+    border-radius: radius('full');
+    color: css-var('accent-primary');
+    transition: transform $so-transition-base, background $so-transition-base;
+
+    .material-icons {
+      font-size: 24px;
+    }
+
+    @include dark-mode {
+      background: alpha($so-purple, 0.15);
+    }
+  }
+
+  // Main text
+  .#{$so-prefix}form-file-dropzone-text {
+    font-size: font-size('base');
+    color: css-var('text-primary');
+    line-height: line-height('relaxed');
+
+    span {
+      color: css-var('accent-primary');
+      font-weight: font-weight('medium');
+    }
+  }
+
+  // Hint text
+  .#{$so-prefix}form-file-dropzone-hint {
+    font-size: font-size('sm');
+    color: css-var('text-muted');
+  }
+
+  // File list preview
+  .#{$so-prefix}form-file-dropzone-files {
+    display: flex;
+    flex-wrap: wrap;
+    gap: spacing('2');
+    margin-top: spacing('2');
+    max-width: 100%;
+  }
+
+  .#{$so-prefix}form-file-dropzone-file {
+    display: flex;
+    align-items: center;
+    gap: spacing('1');
+    padding: spacing('1') spacing('2');
+    background: css-var('card-hover-bg');
+    border-radius: radius('base');
+    font-size: font-size('sm');
+    max-width: 200px;
+
+    .file-name {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .file-size {
+      color: css-var('text-muted');
+      white-space: nowrap;
+    }
+
+    .file-remove {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: css-var('text-muted');
+      transition: color $so-transition-base;
+
+      &:hover {
+        color: css-var('accent-danger');
+      }
+
+      .material-icons {
+        font-size: 16px;
+      }
+    }
+  }
+
+  // Hover/drag state
+  &:hover,
+  &.#{$so-prefix}dragover {
+    border-color: css-var('accent-primary');
+    background: alpha($so-primary, 0.02);
+
+    .#{$so-prefix}form-file-dropzone-icon {
+      transform: scale(1.1);
+      background: alpha($so-primary, 0.15);
+    }
+
+    @include dark-mode {
+      background: alpha($so-purple, 0.05);
+
+      .#{$so-prefix}form-file-dropzone-icon {
+        background: alpha($so-purple, 0.2);
+      }
+    }
+  }
+
+  // Disabled state
+  &.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  // Uploading state
+  &.#{$so-prefix}uploading {
+    pointer-events: none;
+
+    .#{$so-prefix}form-file-dropzone-icon {
+      animation: #{$so-prefix}dropzone-pulse 1.5s ease infinite;
+    }
+  }
+}
+
+@keyframes #{$so-prefix}dropzone-pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.7;
+  }
+}
+
+// ============================================
+// SIZE VARIANTS
+// ============================================
+
+// Compact
+.#{$so-prefix}form-file-dropzone-sm {
+  padding: $dropzone-padding-compact;
+  gap: spacing('2');
+
+  .#{$so-prefix}form-file-dropzone-icon {
+    width: $dropzone-icon-size-sm;
+    height: $dropzone-icon-size-sm;
+
+    .material-icons {
+      font-size: 18px;
+    }
+  }
+
+  .#{$so-prefix}form-file-dropzone-text {
+    font-size: font-size('sm');
+  }
+
+  .#{$so-prefix}form-file-dropzone-hint {
+    font-size: font-size('xs');
+  }
+}
+
+// Large
+.#{$so-prefix}form-file-dropzone-lg {
+  padding: spacing('10') spacing('6');
+  gap: spacing('4');
+
+  .#{$so-prefix}form-file-dropzone-icon {
+    width: $dropzone-icon-size-lg;
+    height: $dropzone-icon-size-lg;
+
+    .material-icons {
+      font-size: 32px;
+    }
+  }
+
+  .#{$so-prefix}form-file-dropzone-text {
+    font-size: font-size('lg');
+  }
+}
+
+// ============================================
+// LAYOUT VARIANTS
+// ============================================
+
+// Horizontal layout
+.#{$so-prefix}form-file-dropzone-horizontal {
+  flex-direction: row;
+  padding: spacing('4');
+  gap: spacing('4');
+  text-align: left;
+
+  .#{$so-prefix}form-file-dropzone-content {
+    flex: 1;
+  }
+
+  .#{$so-prefix}form-file-dropzone-text,
+  .#{$so-prefix}form-file-dropzone-hint {
+    margin: 0;
+  }
+
+  .#{$so-prefix}form-file-dropzone-hint {
+    margin-top: spacing('1');
+  }
+}
+
+// ============================================
+// CONTEXTUAL VARIANTS
+// ============================================
+
+.#{$so-prefix}form-file-dropzone-primary {
+  border-color: css-var('accent-primary');
+
+  &:hover,
+  &.#{$so-prefix}dragover {
+    background: alpha($so-primary, 0.05);
+  }
+}
+
+.#{$so-prefix}form-file-dropzone-success {
+  border-color: css-var('accent-success');
+
+  .#{$so-prefix}form-file-dropzone-icon {
+    background: alpha($so-success, 0.1);
+    color: css-var('accent-success');
+  }
+
+  .#{$so-prefix}form-file-dropzone-text span {
+    color: css-var('accent-success');
+  }
+
+  &:hover,
+  &.#{$so-prefix}dragover {
+    border-color: css-var('accent-success');
+    background: alpha($so-success, 0.02);
+
+    .#{$so-prefix}form-file-dropzone-icon {
+      background: alpha($so-success, 0.15);
+    }
+  }
+}
+
+.#{$so-prefix}form-file-dropzone-warning {
+  border-color: css-var('accent-warning');
+
+  .#{$so-prefix}form-file-dropzone-icon {
+    background: alpha($so-warning, 0.1);
+    color: css-var('accent-warning');
+  }
+
+  .#{$so-prefix}form-file-dropzone-text span {
+    color: css-var('accent-warning');
+  }
+
+  &:hover,
+  &.#{$so-prefix}dragover {
+    border-color: css-var('accent-warning');
+    background: alpha($so-warning, 0.02);
+
+    .#{$so-prefix}form-file-dropzone-icon {
+      background: alpha($so-warning, 0.15);
+    }
+  }
+}
+
+// ============================================
+// ERROR STATE
+// ============================================
+
+.#{$so-prefix}form-file-dropzone.has-error {
+  border-color: css-var('accent-danger');
+
+  .#{$so-prefix}form-file-dropzone-icon {
+    background: alpha($so-danger, 0.1);
+    color: css-var('accent-danger');
+  }
+}
+
+// ============================================
+// SUCCESS STATE (File uploaded)
+// ============================================
+
+.#{$so-prefix}form-file-dropzone.has-success {
+  border-color: css-var('accent-success');
+  border-style: solid;
+
+  .#{$so-prefix}form-file-dropzone-icon {
+    background: alpha($so-success, 0.1);
+    color: css-var('accent-success');
+  }
+}

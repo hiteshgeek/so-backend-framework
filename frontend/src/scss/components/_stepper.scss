@@ -1,0 +1,606 @@
+// ============================================
+// SIXORBIT UI - STEPPER / WIZARD
+// Step indicators for multi-step processes
+// ============================================
+
+@use '../abstracts' as *;
+
+// ============================================
+// BASE STEPPER
+// ============================================
+
+.#{$so-prefix}stepper {
+  display: flex;
+  align-items: flex-start;
+  width: 100%;
+}
+
+// ============================================
+// HORIZONTAL STEPPER (Default)
+// ============================================
+
+.#{$so-prefix}stepper-horizontal {
+  flex-direction: row;
+  justify-content: space-between;
+
+  .#{$so-prefix}step {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+
+    &:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      top: 18px;
+      left: calc(50% + 24px);
+      width: calc(100% - 48px);
+      height: 2px;
+      background: css-var('border-color');
+    }
+
+    &.#{$so-prefix}step-completed:not(:last-child)::after {
+      background: css-var('accent-success');
+    }
+
+    &.#{$so-prefix}step-active:not(:last-child)::after {
+      background: linear-gradient(90deg, css-var('accent-primary') 50%, css-var('border-color') 50%);
+    }
+  }
+}
+
+// ============================================
+// VERTICAL STEPPER
+// ============================================
+
+.#{$so-prefix}stepper-vertical {
+  flex-direction: column;
+
+  .#{$so-prefix}step {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    position: relative;
+    padding-bottom: spacing('6');
+
+    &:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      top: 40px;
+      left: 17px;
+      width: 2px;
+      height: calc(100% - 40px);
+      background: css-var('border-color');
+    }
+
+    &.#{$so-prefix}step-completed:not(:last-child)::after {
+      background: css-var('accent-success');
+    }
+
+    &:last-child {
+      padding-bottom: 0;
+    }
+  }
+
+  .#{$so-prefix}step-content {
+    margin-left: spacing('4');
+    text-align: left;
+  }
+}
+
+// ============================================
+// STEP ICON (Number/Icon circle)
+// ============================================
+
+.#{$so-prefix}step-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: css-var('card-bg');
+  border: 2px solid css-var('border-color');
+  color: css-var('text-secondary');
+  font-size: font-size('sm');
+  font-weight: font-weight('semibold');
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+  transition: all $so-transition-base;
+
+  .material-icons {
+    font-size: 20px;
+  }
+}
+
+// ============================================
+// STEP CONTENT
+// ============================================
+
+.#{$so-prefix}step-content {
+  text-align: center;
+  margin-top: spacing('2');
+}
+
+.#{$so-prefix}step-title {
+  font-size: font-size('sm');
+  font-weight: font-weight('medium');
+  color: css-var('text-primary');
+  margin: 0;
+}
+
+.#{$so-prefix}step-subtitle {
+  font-size: font-size('xs');
+  color: css-var('text-muted');
+  margin: spacing('1') 0 0;
+}
+
+// ============================================
+// STEP STATES
+// ============================================
+
+// Active step
+.#{$so-prefix}step-active {
+  .#{$so-prefix}step-icon {
+    background: css-var('accent-primary');
+    border-color: css-var('accent-primary');
+    color: $so-white;
+  }
+
+  .#{$so-prefix}step-title {
+    color: css-var('accent-primary');
+    font-weight: font-weight('semibold');
+  }
+}
+
+// Completed step
+.#{$so-prefix}step-completed {
+  .#{$so-prefix}step-icon {
+    background: css-var('accent-success');
+    border-color: css-var('accent-success');
+    color: $so-white;
+  }
+
+  .#{$so-prefix}step-title {
+    color: css-var('text-primary');
+  }
+}
+
+// Error step
+.#{$so-prefix}step-error {
+  .#{$so-prefix}step-icon {
+    background: css-var('accent-danger');
+    border-color: css-var('accent-danger');
+    color: $so-white;
+  }
+
+  .#{$so-prefix}step-title {
+    color: css-var('accent-danger');
+  }
+}
+
+// Disabled step
+.#{$so-prefix}step-disabled {
+  opacity: 0.5;
+  pointer-events: none;
+
+  .#{$so-prefix}step-icon {
+    background: css-var('form-disabled-bg');
+    border-color: css-var('border-color');
+    color: css-var('text-muted');
+  }
+}
+
+// ============================================
+// CLICKABLE STEPS
+// ============================================
+
+.#{$so-prefix}stepper-clickable {
+  .#{$so-prefix}step:not(.#{$so-prefix}step-disabled) {
+    cursor: pointer;
+
+    &:hover .#{$so-prefix}step-icon {
+      transform: scale(1.1);
+      box-shadow: 0 4px 12px rgba(css-var('accent-primary'), 0.2);
+    }
+  }
+}
+
+// ============================================
+// SIZE VARIANTS
+// ============================================
+
+// Small stepper
+.#{$so-prefix}stepper-sm {
+  .#{$so-prefix}step-icon {
+    width: 28px;
+    height: 28px;
+    font-size: font-size('xs');
+
+    .material-icons {
+      font-size: 16px;
+    }
+  }
+
+  &.#{$so-prefix}stepper-horizontal .#{$so-prefix}step:not(:last-child)::after {
+    top: 14px;
+    left: calc(50% + 18px);
+    width: calc(100% - 36px);
+  }
+
+  &.#{$so-prefix}stepper-vertical .#{$so-prefix}step:not(:last-child)::after {
+    top: 32px;
+    left: 13px;
+    height: calc(100% - 32px);
+  }
+
+  .#{$so-prefix}step-title {
+    font-size: font-size('xs');
+  }
+
+  .#{$so-prefix}step-subtitle {
+    font-size: 10px;
+  }
+}
+
+// Large stepper
+.#{$so-prefix}stepper-lg {
+  .#{$so-prefix}step-icon {
+    width: 48px;
+    height: 48px;
+    font-size: font-size('lg');
+
+    .material-icons {
+      font-size: 28px;
+    }
+  }
+
+  &.#{$so-prefix}stepper-horizontal .#{$so-prefix}step:not(:last-child)::after {
+    top: 24px;
+    left: calc(50% + 32px);
+    width: calc(100% - 64px);
+  }
+
+  &.#{$so-prefix}stepper-vertical .#{$so-prefix}step:not(:last-child)::after {
+    top: 52px;
+    left: 23px;
+    height: calc(100% - 52px);
+  }
+
+  .#{$so-prefix}step-title {
+    font-size: font-size('base');
+  }
+
+  .#{$so-prefix}step-subtitle {
+    font-size: font-size('sm');
+  }
+}
+
+// ============================================
+// ALTERNATE LAYOUTS
+// ============================================
+
+// Stepper with labels below
+.#{$so-prefix}stepper-labels-bottom {
+  .#{$so-prefix}step-content {
+    margin-top: spacing('3');
+  }
+}
+
+// Stepper with labels on alternate sides (horizontal only)
+.#{$so-prefix}stepper-alternate {
+  &.#{$so-prefix}stepper-horizontal {
+    .#{$so-prefix}step:nth-child(even) {
+      .#{$so-prefix}step-content {
+        order: -1;
+        margin-top: 0;
+        margin-bottom: spacing('2');
+      }
+
+      .#{$so-prefix}step-icon {
+        order: 1;
+      }
+    }
+  }
+}
+
+// ============================================
+// PROGRESS CONNECTOR VARIANT
+// ============================================
+
+.#{$so-prefix}stepper-progress {
+  &.#{$so-prefix}stepper-horizontal .#{$so-prefix}step:not(:last-child)::after {
+    height: 4px;
+    border-radius: 2px;
+    background: css-var('border-color');
+  }
+
+  &.#{$so-prefix}stepper-horizontal .#{$so-prefix}step.#{$so-prefix}step-completed:not(:last-child)::after {
+    background: css-var('accent-success');
+  }
+}
+
+// ============================================
+// COMPACT STEPPER (Icons only)
+// ============================================
+
+.#{$so-prefix}stepper-compact {
+  .#{$so-prefix}step-content {
+    display: none;
+  }
+
+  &.#{$so-prefix}stepper-horizontal .#{$so-prefix}step:not(:last-child)::after {
+    left: calc(50% + 20px);
+    width: calc(100% - 40px);
+  }
+}
+
+// ============================================
+// OUTLINE VARIANT
+// ============================================
+
+.#{$so-prefix}stepper-outline {
+  .#{$so-prefix}step-icon {
+    background: transparent;
+    border: 2px solid css-var('border-color');
+    color: css-var('text-secondary');
+  }
+
+  // Active step outline
+  .#{$so-prefix}step-active .#{$so-prefix}step-icon {
+    background: transparent;
+    border-color: css-var('accent-primary');
+    color: css-var('accent-primary');
+  }
+
+  // Completed step outline
+  .#{$so-prefix}step-completed .#{$so-prefix}step-icon {
+    background: transparent;
+    border-color: css-var('accent-success');
+    color: css-var('accent-success');
+  }
+
+  // Error step outline
+  .#{$so-prefix}step-error .#{$so-prefix}step-icon {
+    background: transparent;
+    border-color: css-var('accent-danger');
+    color: css-var('accent-danger');
+  }
+}
+
+// ============================================
+// LIGHT (SOFT) VARIANT
+// ============================================
+
+.#{$so-prefix}stepper-light {
+  .#{$so-prefix}step-icon {
+    background: css-var('card-hover-bg');
+    border: none;
+    color: css-var('text-secondary');
+  }
+
+  // Active step light
+  .#{$so-prefix}step-active .#{$so-prefix}step-icon {
+    background: alpha($so-primary, 0.15);
+    color: css-var('accent-primary');
+  }
+
+  // Completed step light
+  .#{$so-prefix}step-completed .#{$so-prefix}step-icon {
+    background: alpha($so-success, 0.15);
+    color: css-var('accent-success');
+  }
+
+  // Error step light
+  .#{$so-prefix}step-error .#{$so-prefix}step-icon {
+    background: alpha($so-danger, 0.15);
+    color: css-var('accent-danger');
+  }
+}
+
+// ============================================
+// COLOR VARIANTS
+// ============================================
+
+// Primary variant
+.#{$so-prefix}stepper-primary {
+  .#{$so-prefix}step-active .#{$so-prefix}step-icon {
+    background: css-var('accent-primary');
+    border-color: css-var('accent-primary');
+    color: $so-white;
+  }
+
+  &.#{$so-prefix}stepper-horizontal .#{$so-prefix}step.#{$so-prefix}step-completed:not(:last-child)::after,
+  &.#{$so-prefix}stepper-vertical .#{$so-prefix}step.#{$so-prefix}step-completed:not(:last-child)::after {
+    background: css-var('accent-primary');
+  }
+
+  .#{$so-prefix}step-completed .#{$so-prefix}step-icon {
+    background: css-var('accent-primary');
+    border-color: css-var('accent-primary');
+    color: $so-white;
+  }
+
+  &.#{$so-prefix}stepper-outline {
+    .#{$so-prefix}step-active .#{$so-prefix}step-icon,
+    .#{$so-prefix}step-completed .#{$so-prefix}step-icon {
+      background: transparent;
+      border-color: css-var('accent-primary');
+      color: css-var('accent-primary');
+    }
+  }
+
+  &.#{$so-prefix}stepper-light {
+    .#{$so-prefix}step-active .#{$so-prefix}step-icon,
+    .#{$so-prefix}step-completed .#{$so-prefix}step-icon {
+      background: alpha($so-primary, 0.15);
+      color: css-var('accent-primary');
+    }
+  }
+}
+
+// Success variant
+.#{$so-prefix}stepper-success {
+  .#{$so-prefix}step-active .#{$so-prefix}step-icon {
+    background: css-var('accent-success');
+    border-color: css-var('accent-success');
+    color: $so-white;
+  }
+
+  &.#{$so-prefix}stepper-horizontal .#{$so-prefix}step.#{$so-prefix}step-completed:not(:last-child)::after,
+  &.#{$so-prefix}stepper-vertical .#{$so-prefix}step.#{$so-prefix}step-completed:not(:last-child)::after {
+    background: css-var('accent-success');
+  }
+
+  &.#{$so-prefix}stepper-outline {
+    .#{$so-prefix}step-active .#{$so-prefix}step-icon {
+      background: transparent;
+      border-color: css-var('accent-success');
+      color: css-var('accent-success');
+    }
+  }
+
+  &.#{$so-prefix}stepper-light {
+    .#{$so-prefix}step-active .#{$so-prefix}step-icon {
+      background: alpha($so-success, 0.15);
+      color: css-var('accent-success');
+    }
+  }
+}
+
+// Danger variant
+.#{$so-prefix}stepper-danger {
+  .#{$so-prefix}step-active .#{$so-prefix}step-icon {
+    background: css-var('accent-danger');
+    border-color: css-var('accent-danger');
+    color: $so-white;
+  }
+
+  &.#{$so-prefix}stepper-horizontal .#{$so-prefix}step.#{$so-prefix}step-completed:not(:last-child)::after,
+  &.#{$so-prefix}stepper-vertical .#{$so-prefix}step.#{$so-prefix}step-completed:not(:last-child)::after {
+    background: css-var('accent-danger');
+  }
+
+  &.#{$so-prefix}stepper-outline {
+    .#{$so-prefix}step-active .#{$so-prefix}step-icon {
+      background: transparent;
+      border-color: css-var('accent-danger');
+      color: css-var('accent-danger');
+    }
+  }
+
+  &.#{$so-prefix}stepper-light {
+    .#{$so-prefix}step-active .#{$so-prefix}step-icon {
+      background: alpha($so-danger, 0.15);
+      color: css-var('accent-danger');
+    }
+  }
+}
+
+// Warning variant
+.#{$so-prefix}stepper-warning {
+  .#{$so-prefix}step-active .#{$so-prefix}step-icon {
+    background: css-var('accent-warning');
+    border-color: css-var('accent-warning');
+    color: $so-grey-900;
+  }
+
+  &.#{$so-prefix}stepper-horizontal .#{$so-prefix}step.#{$so-prefix}step-completed:not(:last-child)::after,
+  &.#{$so-prefix}stepper-vertical .#{$so-prefix}step.#{$so-prefix}step-completed:not(:last-child)::after {
+    background: css-var('accent-warning');
+  }
+
+  &.#{$so-prefix}stepper-outline {
+    .#{$so-prefix}step-active .#{$so-prefix}step-icon {
+      background: transparent;
+      border-color: css-var('accent-warning');
+      color: css-var('accent-warning');
+    }
+  }
+
+  &.#{$so-prefix}stepper-light {
+    .#{$so-prefix}step-active .#{$so-prefix}step-icon {
+      background: alpha($so-warning, 0.15);
+      color: css-var('accent-warning');
+    }
+  }
+}
+
+// Info variant
+.#{$so-prefix}stepper-info {
+  .#{$so-prefix}step-active .#{$so-prefix}step-icon {
+    background: css-var('accent-info');
+    border-color: css-var('accent-info');
+    color: $so-white;
+  }
+
+  &.#{$so-prefix}stepper-horizontal .#{$so-prefix}step.#{$so-prefix}step-completed:not(:last-child)::after,
+  &.#{$so-prefix}stepper-vertical .#{$so-prefix}step.#{$so-prefix}step-completed:not(:last-child)::after {
+    background: css-var('accent-info');
+  }
+
+  &.#{$so-prefix}stepper-outline {
+    .#{$so-prefix}step-active .#{$so-prefix}step-icon {
+      background: transparent;
+      border-color: css-var('accent-info');
+      color: css-var('accent-info');
+    }
+  }
+
+  &.#{$so-prefix}stepper-light {
+    .#{$so-prefix}step-active .#{$so-prefix}step-icon {
+      background: alpha($so-info, 0.15);
+      color: css-var('accent-info');
+    }
+  }
+}
+
+// ============================================
+// RESPONSIVE
+// ============================================
+
+@media (max-width: 768px) {
+  .#{$so-prefix}stepper-horizontal {
+    flex-direction: column;
+    align-items: stretch;
+
+    .#{$so-prefix}step {
+      flex-direction: row;
+      align-items: flex-start;
+      padding-bottom: spacing('4');
+
+      &:not(:last-child)::after {
+        top: 40px;
+        left: 17px;
+        width: 2px;
+        height: calc(100% - 40px);
+      }
+
+      &:last-child {
+        padding-bottom: 0;
+      }
+    }
+
+    .#{$so-prefix}step-content {
+      margin-left: spacing('4');
+      margin-top: 0;
+      text-align: left;
+    }
+
+    // Small responsive
+    &.#{$so-prefix}stepper-sm .#{$so-prefix}step:not(:last-child)::after {
+      top: 32px;
+      left: 13px;
+      height: calc(100% - 32px);
+    }
+
+    // Large responsive
+    &.#{$so-prefix}stepper-lg .#{$so-prefix}step:not(:last-child)::after {
+      top: 52px;
+      left: 23px;
+      height: calc(100% - 52px);
+    }
+  }
+}

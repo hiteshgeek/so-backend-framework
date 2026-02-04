@@ -1,0 +1,9 @@
+// ============================================
+// SIXORBIT UI - SECTIONS INDEX
+// Forward all section modules
+// ============================================
+
+// Note: auth is now a separate page module (src/pages/auth/)
+@forward 'dashboard';
+@forward 'panel';
+@forward 'lms';

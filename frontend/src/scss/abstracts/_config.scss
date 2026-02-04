@@ -1,0 +1,49 @@
+// ============================================
+// SIXORBIT UI - CONFIGURATION
+// Global prefix and feature toggles
+// ============================================
+
+// Global prefix for all class names
+// Usage: #{$so-prefix}navbar, #{$so-prefix}btn, etc.
+$so-prefix: 'so-' !default;
+
+// CSS custom property prefix
+// Usage: var(--#{$so-css-var-prefix}-primary)
+$so-css-var-prefix: 'so' !default;
+
+// Feature toggles
+$so-enable-dark-mode: true !default;
+$so-enable-sidebar-dark-mode: true !default;
+$so-enable-font-scaling: true !default;
+$so-enable-rtl: false !default;
+$so-enable-responsive: true !default;
+$so-enable-ripple-effect: true !default;
+
+// ============================================
+// HELPER FUNCTIONS
+// ============================================
+
+/// Generate a prefixed class selector
+/// @param {String} $name - The class name without prefix
+/// @return {String} - The prefixed selector
+@function prefix($name) {
+  @return '.#{$so-prefix}#{$name}';
+}
+
+/// Generate a CSS custom property reference
+/// @param {String} $name - The variable name without prefix
+/// @param {*} $fallback - Optional fallback value
+/// @return {String} - The var() function call
+@function css-var($name, $fallback: null) {
+  @if $fallback {
+    @return var(--#{$so-css-var-prefix}-#{$name}, #{$fallback});
+  }
+  @return var(--#{$so-css-var-prefix}-#{$name});
+}
+
+/// Generate a CSS custom property name
+/// @param {String} $name - The variable name without prefix
+/// @return {String} - The custom property name
+@function css-prop($name) {
+  @return --#{$so-css-var-prefix}-#{$name};
+}

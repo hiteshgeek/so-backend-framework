@@ -1,0 +1,271 @@
+// ============================================
+// SIXORBIT UI - FLEX UTILITIES
+// Flexbox utility classes
+// ============================================
+
+@use '../abstracts' as *;
+
+// Breakpoints
+$breakpoints: (
+  sm: 576px,
+  md: 768px,
+  lg: 1024px,
+  xl: 1200px,
+  xxl: 1400px
+);
+
+// ============================================
+// FLEX DIRECTION
+// ============================================
+
+$flex-directions: (
+  row: row,
+  row-reverse: row-reverse,
+  column: column,
+  column-reverse: column-reverse
+);
+
+@each $name, $value in $flex-directions {
+  .#{$so-prefix}flex-#{$name} {
+    flex-direction: $value !important;
+  }
+}
+
+// ============================================
+// FLEX WRAP
+// ============================================
+
+.#{$so-prefix}flex-wrap {
+  flex-wrap: wrap !important;
+}
+
+.#{$so-prefix}flex-nowrap {
+  flex-wrap: nowrap !important;
+}
+
+.#{$so-prefix}flex-wrap-reverse {
+  flex-wrap: wrap-reverse !important;
+}
+
+// ============================================
+// JUSTIFY CONTENT
+// ============================================
+
+$justify-content-values: (
+  start: flex-start,
+  end: flex-end,
+  center: center,
+  between: space-between,
+  around: space-around,
+  evenly: space-evenly
+);
+
+@each $name, $value in $justify-content-values {
+  .#{$so-prefix}justify-content-#{$name} {
+    justify-content: $value !important;
+  }
+}
+
+// ============================================
+// ALIGN ITEMS
+// ============================================
+
+$align-items-values: (
+  start: flex-start,
+  end: flex-end,
+  center: center,
+  baseline: baseline,
+  stretch: stretch
+);
+
+@each $name, $value in $align-items-values {
+  .#{$so-prefix}align-items-#{$name} {
+    align-items: $value !important;
+  }
+}
+
+// ============================================
+// ALIGN CONTENT
+// ============================================
+
+$align-content-values: (
+  start: flex-start,
+  end: flex-end,
+  center: center,
+  between: space-between,
+  around: space-around,
+  stretch: stretch
+);
+
+@each $name, $value in $align-content-values {
+  .#{$so-prefix}align-content-#{$name} {
+    align-content: $value !important;
+  }
+}
+
+// ============================================
+// ALIGN SELF
+// ============================================
+
+$align-self-values: (
+  auto: auto,
+  start: flex-start,
+  end: flex-end,
+  center: center,
+  baseline: baseline,
+  stretch: stretch
+);
+
+@each $name, $value in $align-self-values {
+  .#{$so-prefix}align-self-#{$name} {
+    align-self: $value !important;
+  }
+}
+
+// ============================================
+// FLEX GROW & SHRINK
+// ============================================
+
+.#{$so-prefix}flex-grow-0 {
+  flex-grow: 0 !important;
+}
+
+.#{$so-prefix}flex-grow-1 {
+  flex-grow: 1 !important;
+}
+
+.#{$so-prefix}flex-shrink-0 {
+  flex-shrink: 0 !important;
+}
+
+.#{$so-prefix}flex-shrink-1 {
+  flex-shrink: 1 !important;
+}
+
+// ============================================
+// FLEX (SHORTHAND)
+// ============================================
+
+.#{$so-prefix}flex-fill {
+  flex: 1 1 auto !important;
+}
+
+.#{$so-prefix}flex-1 {
+  flex: 1 !important;
+}
+
+.#{$so-prefix}flex-auto {
+  flex: auto !important;
+}
+
+.#{$so-prefix}flex-initial {
+  flex: initial !important;
+}
+
+.#{$so-prefix}flex-none {
+  flex: none !important;
+}
+
+// ============================================
+// ORDER
+// ============================================
+
+@for $i from 0 through 6 {
+  .#{$so-prefix}order-#{$i} {
+    order: $i !important;
+  }
+}
+
+.#{$so-prefix}order-first {
+  order: -1 !important;
+}
+
+.#{$so-prefix}order-last {
+  order: 9999 !important;
+}
+
+// ============================================
+// RESPONSIVE FLEX UTILITIES
+// ============================================
+
+@each $breakpoint, $min-width in $breakpoints {
+  @media (min-width: $min-width) {
+    // Direction
+    @each $name, $value in $flex-directions {
+      .#{$so-prefix}flex-#{$breakpoint}-#{$name} {
+        flex-direction: $value !important;
+      }
+    }
+
+    // Wrap
+    .#{$so-prefix}flex-#{$breakpoint}-wrap {
+      flex-wrap: wrap !important;
+    }
+
+    .#{$so-prefix}flex-#{$breakpoint}-nowrap {
+      flex-wrap: nowrap !important;
+    }
+
+    .#{$so-prefix}flex-#{$breakpoint}-wrap-reverse {
+      flex-wrap: wrap-reverse !important;
+    }
+
+    // Justify content
+    @each $name, $value in $justify-content-values {
+      .#{$so-prefix}justify-content-#{$breakpoint}-#{$name} {
+        justify-content: $value !important;
+      }
+    }
+
+    // Align items
+    @each $name, $value in $align-items-values {
+      .#{$so-prefix}align-items-#{$breakpoint}-#{$name} {
+        align-items: $value !important;
+      }
+    }
+
+    // Align self
+    @each $name, $value in $align-self-values {
+      .#{$so-prefix}align-self-#{$breakpoint}-#{$name} {
+        align-self: $value !important;
+      }
+    }
+
+    // Grow/Shrink
+    .#{$so-prefix}flex-#{$breakpoint}-grow-0 {
+      flex-grow: 0 !important;
+    }
+
+    .#{$so-prefix}flex-#{$breakpoint}-grow-1 {
+      flex-grow: 1 !important;
+    }
+
+    .#{$so-prefix}flex-#{$breakpoint}-shrink-0 {
+      flex-shrink: 0 !important;
+    }
+
+    .#{$so-prefix}flex-#{$breakpoint}-shrink-1 {
+      flex-shrink: 1 !important;
+    }
+
+    // Fill
+    .#{$so-prefix}flex-#{$breakpoint}-fill {
+      flex: 1 1 auto !important;
+    }
+
+    // Order
+    @for $i from 0 through 6 {
+      .#{$so-prefix}order-#{$breakpoint}-#{$i} {
+        order: $i !important;
+      }
+    }
+
+    .#{$so-prefix}order-#{$breakpoint}-first {
+      order: -1 !important;
+    }
+
+    .#{$so-prefix}order-#{$breakpoint}-last {
+      order: 9999 !important;
+    }
+  }
+}

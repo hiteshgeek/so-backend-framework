@@ -1,0 +1,666 @@
+// ============================================
+// SIXORBIT UI - PAGINATION
+// Page navigation with Bootstrap & Material Design features
+// ============================================
+
+@use 'sass:color';
+@use '../abstracts' as *;
+
+// ============================================
+// VARIABLES
+// ============================================
+
+$pagination-padding-y: spacing('2');
+$pagination-padding-x: spacing('3');
+$pagination-padding-y-sm: spacing('1');
+$pagination-padding-x-sm: spacing('2');
+$pagination-padding-y-lg: spacing('3');
+$pagination-padding-x-lg: spacing('4');
+
+$pagination-font-size: font-size('base');
+$pagination-font-size-sm: font-size('sm');
+$pagination-font-size-lg: font-size('lg');
+
+$pagination-color: css-var('text-primary');
+$pagination-bg: transparent;
+$pagination-border-color: css-var('border-color');
+
+$pagination-hover-color: css-var('accent-primary');
+$pagination-hover-bg: alpha($so-primary, 0.08);
+
+$pagination-active-color: $so-white;
+$pagination-active-bg: css-var('accent-primary');
+
+$pagination-disabled-color: css-var('text-disabled');
+$pagination-disabled-bg: transparent;
+
+$pagination-gap: spacing('1');
+$pagination-border-radius: radius('md');
+
+// ============================================
+// BASE PAGINATION CONTAINER
+// ============================================
+
+.#{$so-prefix}pagination {
+  display: flex;
+  align-items: center;
+  gap: spacing('4');
+  flex-wrap: wrap;
+}
+
+// ============================================
+// NAVIGATION LIST
+// ============================================
+
+.#{$so-prefix}pagination-nav {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  gap: $pagination-gap;
+}
+
+// ============================================
+// PAGE ITEM
+// ============================================
+
+.#{$so-prefix}page-item {
+  // Wrapper for each page link
+}
+
+// ============================================
+// PAGE LINK
+// ============================================
+
+.#{$so-prefix}page-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 36px;
+  height: 36px;
+  padding: $pagination-padding-y $pagination-padding-x;
+  font-size: $pagination-font-size;
+  font-weight: font-weight('medium');
+  color: $pagination-color;
+  text-decoration: none;
+  background: $pagination-bg;
+  border: 1px solid $pagination-border-color;
+  border-radius: $pagination-border-radius;
+  cursor: pointer;
+  transition: all $so-transition-fast;
+
+  &:hover:not(:disabled):not(.#{$so-prefix}disabled) {
+    color: $pagination-hover-color;
+    background: $pagination-hover-bg;
+    border-color: css-var('accent-primary');
+  }
+
+  &:focus-visible,
+  &.#{$so-prefix}focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px alpha($so-primary, 0.2);
+    z-index: 1;
+  }
+
+  // Icon buttons
+  .material-icons {
+    font-size: 20px;
+  }
+}
+
+// ============================================
+// ACTIVE STATE
+// ============================================
+
+.#{$so-prefix}page-item.#{$so-prefix}active {
+  .#{$so-prefix}page-link {
+    color: $pagination-active-color;
+    background: $pagination-active-bg;
+    border-color: $pagination-active-bg;
+
+    &:hover {
+      background: color-hover($so-primary);
+      border-color: color-hover($so-primary);
+    }
+  }
+}
+
+// ============================================
+// DISABLED STATE
+// ============================================
+
+.#{$so-prefix}page-item.#{$so-prefix}disabled {
+  .#{$so-prefix}page-link {
+    color: $pagination-disabled-color;
+    background: $pagination-disabled-bg;
+    border-color: css-var('border-color');
+    pointer-events: none;
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+}
+
+// ============================================
+// ELLIPSIS
+// ============================================
+
+.#{$so-prefix}page-ellipsis {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 36px;
+  height: 36px;
+  color: css-var('text-secondary');
+  font-weight: font-weight('bold');
+  letter-spacing: 2px;
+}
+
+// ============================================
+// SIZE VARIANTS
+// ============================================
+
+// Small
+.#{$so-prefix}pagination-sm {
+  .#{$so-prefix}page-link {
+    min-width: 28px;
+    height: 28px;
+    padding: $pagination-padding-y-sm $pagination-padding-x-sm;
+    font-size: $pagination-font-size-sm;
+
+    .material-icons {
+      font-size: 18px;
+    }
+  }
+
+  .#{$so-prefix}page-ellipsis {
+    min-width: 28px;
+    height: 28px;
+    font-size: $pagination-font-size-sm;
+  }
+}
+
+// Large
+.#{$so-prefix}pagination-lg {
+  .#{$so-prefix}page-link {
+    min-width: 44px;
+    height: 44px;
+    padding: $pagination-padding-y-lg $pagination-padding-x-lg;
+    font-size: $pagination-font-size-lg;
+
+    .material-icons {
+      font-size: 24px;
+    }
+  }
+
+  .#{$so-prefix}page-ellipsis {
+    min-width: 44px;
+    height: 44px;
+    font-size: $pagination-font-size-lg;
+  }
+}
+
+// ============================================
+// ALIGNMENT
+// ============================================
+
+.#{$so-prefix}pagination-center {
+  justify-content: center;
+}
+
+.#{$so-prefix}pagination-end {
+  justify-content: flex-end;
+}
+
+.#{$so-prefix}pagination-between {
+  justify-content: space-between;
+}
+
+// ============================================
+// STYLE VARIANTS
+// ============================================
+
+// Rounded/Pill style
+.#{$so-prefix}pagination-rounded {
+  .#{$so-prefix}page-link {
+    border-radius: radius('full');
+  }
+}
+
+// Outlined (border only, no fill on active)
+.#{$so-prefix}pagination-outlined {
+  .#{$so-prefix}page-item.#{$so-prefix}active {
+    .#{$so-prefix}page-link {
+      color: css-var('accent-primary');
+      background: transparent;
+      border-color: css-var('accent-primary');
+      border-width: 2px;
+
+      &:hover {
+        background: $pagination-hover-bg;
+      }
+    }
+  }
+}
+
+// Minimal (no borders)
+.#{$so-prefix}pagination-minimal {
+  .#{$so-prefix}page-link {
+    border: none;
+    background: transparent;
+
+    &:hover:not(:disabled):not(.#{$so-prefix}disabled) {
+      background: $pagination-hover-bg;
+    }
+  }
+
+  .#{$so-prefix}page-item.#{$so-prefix}active {
+    .#{$so-prefix}page-link {
+      background: css-var('accent-primary');
+      color: $so-white;
+    }
+  }
+}
+
+// Flat (no borders, square)
+.#{$so-prefix}pagination-flat {
+  .#{$so-prefix}page-link {
+    border: none;
+    border-radius: 0;
+    background: transparent;
+
+    &:hover:not(:disabled):not(.#{$so-prefix}disabled) {
+      background: $pagination-hover-bg;
+    }
+  }
+
+  .#{$so-prefix}page-item.#{$so-prefix}active {
+    .#{$so-prefix}page-link {
+      background: css-var('accent-primary');
+      color: $so-white;
+    }
+  }
+}
+
+// Soft (soft background colors)
+.#{$so-prefix}pagination-soft {
+  .#{$so-prefix}page-link {
+    border: none;
+    background: css-var('bg-secondary');
+
+    &:hover:not(:disabled):not(.#{$so-prefix}disabled) {
+      background: $pagination-hover-bg;
+      color: css-var('accent-primary');
+    }
+  }
+
+  .#{$so-prefix}page-item.#{$so-prefix}active {
+    .#{$so-prefix}page-link {
+      background: css-var('accent-primary');
+      color: $so-white;
+    }
+  }
+}
+
+// ============================================
+// PAGE INFO
+// ============================================
+
+.#{$so-prefix}pagination-info {
+  font-size: font-size('sm');
+  color: css-var('text-secondary');
+  white-space: nowrap;
+
+  strong {
+    color: css-var('text-primary');
+    font-weight: font-weight('semibold');
+  }
+}
+
+// ============================================
+// ITEMS PER PAGE SELECTOR
+// ============================================
+
+.#{$so-prefix}pagination-per-page {
+  display: flex;
+  align-items: center;
+  gap: spacing('2');
+}
+
+.#{$so-prefix}pagination-label {
+  font-size: font-size('sm');
+  color: css-var('text-secondary');
+  white-space: nowrap;
+}
+
+.#{$so-prefix}pagination-select {
+  min-width: 70px;
+  height: 32px;
+  padding: spacing('1') spacing('6') spacing('1') spacing('2');
+  font-size: font-size('sm');
+  color: css-var('text-primary');
+  background: css-var('form-bg');
+  border: 1px solid css-var('border-color');
+  border-radius: radius('md');
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6,9 12,15 18,9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right spacing('2') center;
+  background-size: 12px;
+  transition: border-color $so-transition-fast, box-shadow $so-transition-fast;
+
+  &:hover {
+    border-color: css-var('accent-primary');
+  }
+
+  &:focus {
+    outline: none;
+    border-color: css-var('accent-primary');
+    box-shadow: 0 0 0 3px alpha($so-primary, 0.2);
+  }
+}
+
+// ============================================
+// JUMP TO PAGE
+// ============================================
+
+.#{$so-prefix}pagination-jump {
+  display: flex;
+  align-items: center;
+  gap: spacing('2');
+}
+
+.#{$so-prefix}pagination-jump-label {
+  font-size: font-size('sm');
+  color: css-var('text-secondary');
+  white-space: nowrap;
+}
+
+.#{$so-prefix}pagination-jump-input {
+  width: 60px;
+  height: 32px;
+  padding: spacing('1') spacing('2');
+  font-size: font-size('sm');
+  text-align: center;
+  color: css-var('text-primary');
+  background: css-var('form-bg');
+  border: 1px solid css-var('border-color');
+  border-radius: radius('md');
+  transition: border-color $so-transition-fast, box-shadow $so-transition-fast;
+
+  &:hover {
+    border-color: css-var('accent-primary');
+  }
+
+  &:focus {
+    outline: none;
+    border-color: css-var('accent-primary');
+    box-shadow: 0 0 0 3px alpha($so-primary, 0.2);
+  }
+
+  // Hide spinner buttons
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  -moz-appearance: textfield;
+}
+
+.#{$so-prefix}pagination-jump-btn {
+  height: 32px;
+  padding: 0 spacing('3');
+  font-size: font-size('sm');
+  font-weight: font-weight('medium');
+  color: css-var('accent-primary');
+  background: transparent;
+  border: 1px solid css-var('accent-primary');
+  border-radius: radius('md');
+  cursor: pointer;
+  transition: all $so-transition-fast;
+
+  &:hover {
+    background: css-var('accent-primary');
+    color: $so-white;
+  }
+
+  &:focus-visible,
+  &.#{$so-prefix}focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px alpha($so-primary, 0.2);
+  }
+}
+
+// ============================================
+// CONTEXTUAL COLORS
+// ============================================
+
+$pagination-colors: (
+  'primary': $so-primary,
+  'secondary': $so-secondary,
+  'success': $so-success,
+  'danger': $so-danger,
+  'warning': $so-warning,
+  'info': $so-info
+);
+
+@each $name, $color in $pagination-colors {
+  .#{$so-prefix}pagination-#{$name} {
+    .#{$so-prefix}page-link:hover:not(:disabled):not(.#{$so-prefix}disabled) {
+      color: $color;
+      background: alpha($color, 0.08);
+      border-color: $color;
+    }
+
+    .#{$so-prefix}page-item.#{$so-prefix}active .#{$so-prefix}page-link {
+      background: $color;
+      border-color: $color;
+      color: $so-white;
+
+      &:hover {
+        background: color-hover($color);
+        border-color: color-hover($color);
+      }
+    }
+
+    // Outlined variant
+    &.#{$so-prefix}pagination-outlined {
+      .#{$so-prefix}page-item.#{$so-prefix}active .#{$so-prefix}page-link {
+        color: $color;
+        background: transparent;
+        border-color: $color;
+
+        &:hover {
+          background: alpha($color, 0.08);
+        }
+      }
+    }
+  }
+
+  // Light variant (soft background)
+  .#{$so-prefix}pagination-light-#{$name} {
+    .#{$so-prefix}page-link {
+      border-color: alpha($color, 0.3);
+      background: alpha($color, 0.08);
+      color: $color;
+
+      &:hover:not(:disabled):not(.#{$so-prefix}disabled) {
+        background: alpha($color, 0.15);
+        border-color: alpha($color, 0.5);
+      }
+    }
+
+    .#{$so-prefix}page-item.#{$so-prefix}active .#{$so-prefix}page-link {
+      background: alpha($color, 0.2);
+      border-color: $color;
+      color: darken-color($color, 10%);
+      font-weight: font-weight('semibold');
+
+      &:hover {
+        background: alpha($color, 0.25);
+      }
+    }
+
+    .#{$so-prefix}page-item.#{$so-prefix}disabled .#{$so-prefix}page-link {
+      background: alpha($color, 0.05);
+      border-color: alpha($color, 0.15);
+      color: alpha($color, 0.4);
+    }
+  }
+}
+
+// ============================================
+// ICON-ONLY BUTTONS
+// ============================================
+
+.#{$so-prefix}page-link-icon {
+  padding: $pagination-padding-y;
+
+  .material-icons {
+    display: block;
+  }
+}
+
+// ============================================
+// RESPONSIVE
+// ============================================
+
+@include mobile {
+  .#{$so-prefix}pagination {
+    flex-direction: column;
+    align-items: stretch;
+    gap: spacing('3');
+  }
+
+  .#{$so-prefix}pagination-nav {
+    justify-content: center;
+  }
+
+  .#{$so-prefix}pagination-per-page,
+  .#{$so-prefix}pagination-info,
+  .#{$so-prefix}pagination-jump {
+    justify-content: center;
+  }
+
+  // Simplified mobile pagination (only shows prev/next and current)
+  .#{$so-prefix}pagination-mobile-simple {
+    .#{$so-prefix}page-item:not(:first-child):not(:last-child):not(.#{$so-prefix}active) {
+      display: none;
+    }
+
+    .#{$so-prefix}page-ellipsis {
+      display: none;
+    }
+  }
+}
+
+// Responsive show/hide utilities
+.#{$so-prefix}pagination-info-hide-mobile {
+  @include mobile {
+    display: none;
+  }
+}
+
+.#{$so-prefix}pagination-per-page-hide-mobile {
+  @include mobile {
+    display: none;
+  }
+}
+
+.#{$so-prefix}pagination-jump-hide-mobile {
+  @include mobile {
+    display: none;
+  }
+}
+
+// ============================================
+// COMPACT LAYOUT
+// ============================================
+
+.#{$so-prefix}pagination-compact {
+  gap: spacing('2');
+
+  .#{$so-prefix}pagination-nav {
+    gap: 0;
+
+    .#{$so-prefix}page-link {
+      border-radius: 0;
+      margin-left: -1px;
+
+      &:first-child,
+      .#{$so-prefix}page-item:first-child & {
+        border-radius: $pagination-border-radius 0 0 $pagination-border-radius;
+        margin-left: 0;
+      }
+
+      &:last-child,
+      .#{$so-prefix}page-item:last-child & {
+        border-radius: 0 $pagination-border-radius $pagination-border-radius 0;
+      }
+    }
+
+    .#{$so-prefix}page-item:first-child .#{$so-prefix}page-link {
+      border-radius: $pagination-border-radius 0 0 $pagination-border-radius;
+      margin-left: 0;
+    }
+
+    .#{$so-prefix}page-item:last-child .#{$so-prefix}page-link {
+      border-radius: 0 $pagination-border-radius $pagination-border-radius 0;
+    }
+  }
+}
+
+// ============================================
+// SIMPLE PAGINATION (prev/next only)
+// ============================================
+
+.#{$so-prefix}pagination-simple {
+  .#{$so-prefix}pagination-nav {
+    gap: spacing('2');
+  }
+
+  .#{$so-prefix}page-link {
+    padding: $pagination-padding-y spacing('4');
+
+    .material-icons {
+      margin-right: spacing('1');
+
+      &:last-child {
+        margin-right: 0;
+        margin-left: spacing('1');
+      }
+    }
+  }
+}
+
+// ============================================
+// DARK MODE
+// ============================================
+
+@include dark-mode {
+  .#{$so-prefix}page-link {
+    border-color: css-var('border-color');
+
+    &:hover:not(:disabled):not(.#{$so-prefix}disabled) {
+      background: alpha($so-primary, 0.15);
+    }
+  }
+
+  .#{$so-prefix}pagination-select {
+    background-color: css-var('form-bg');
+    border-color: css-var('border-color');
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6,9 12,15 18,9'%3E%3C/polyline%3E%3C/svg%3E");
+  }
+
+  .#{$so-prefix}pagination-jump-input {
+    background-color: css-var('form-bg');
+    border-color: css-var('border-color');
+  }
+
+  .#{$so-prefix}pagination-soft {
+    .#{$so-prefix}page-link {
+      background: css-var('bg-secondary');
+    }
+  }
+}

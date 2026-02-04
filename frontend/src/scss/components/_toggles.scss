@@ -1,0 +1,10 @@
+// ============================================
+// SIXORBIT UI - TOGGLES
+// Toggle components moved to _checkboxes.scss (as .so-switch)
+// This file is kept for backward compatibility
+// ============================================
+
+@use '../abstracts' as *;
+
+// Toggle switches are now implemented as .so-switch in _checkboxes.scss
+// Use .so-switch, .so-switch-track, .so-switch-label instead

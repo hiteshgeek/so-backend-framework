@@ -1,0 +1,949 @@
+// ============================================
+// SIXORBIT UI - CAROUSEL
+// Slideshow component with multiple variants
+// ============================================
+
+@use "sass:color";
+@use "sass:math";
+@use "../abstracts" as *;
+
+// ============================================
+// CAROUSEL VARIABLES
+// ============================================
+$carousel-control-size: 40px !default;
+$carousel-control-size-sm: 32px !default;
+$carousel-control-size-lg: 48px !default;
+
+$carousel-indicator-size: 8px !default;
+$carousel-indicator-active-width: 24px !default;
+
+$carousel-transition-duration: 0.6s !default;
+$carousel-transition-timing: cubic-bezier(0.4, 0, 0.2, 1) !default;
+
+$carousel-peek-amount: 60px !default;
+$carousel-gap: 16px !default;
+
+// ============================================
+// BASE CAROUSEL CONTAINER
+// ============================================
+
+.#{$so-prefix}carousel {
+  --carousel-bg: transparent;
+  --carousel-control-bg: #{alpha($so-white, 0.9)};
+  --carousel-control-color: #{$so-grey-800};
+  --carousel-control-hover-bg: #{$so-white};
+  --carousel-control-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  --carousel-indicator-bg: #{alpha($so-white, 0.5)};
+  --carousel-indicator-active-bg: #{$so-white};
+  --carousel-caption-bg: linear-gradient(transparent, #{alpha($so-black, 0.6)});
+  --carousel-caption-color: #{$so-white};
+  --carousel-transition-duration: #{$carousel-transition-duration};
+  --carousel-transition-timing: #{$carousel-transition-timing};
+
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+  background: var(--carousel-bg);
+  border-radius: radius("lg");
+
+  &:focus {
+    outline: none;
+  }
+
+  &:focus-visible,
+  &.#{$so-prefix}focus-visible {
+    outline: 2px solid css-var("accent-primary");
+    outline-offset: 2px;
+  }
+}
+
+// ============================================
+// CAROUSEL INNER (SLIDES CONTAINER)
+// ============================================
+
+.#{$so-prefix}carousel-inner {
+  position: relative;
+  width: 100%;
+  display: flex;
+  transition: transform var(--carousel-transition-duration)
+    var(--carousel-transition-timing);
+  will-change: transform;
+}
+
+// ============================================
+// CAROUSEL SLIDE
+// ============================================
+
+.#{$so-prefix}carousel-slide {
+  position: relative;
+  flex: 0 0 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backface-visibility: hidden;
+  overflow: hidden;
+
+  img {
+    width: 100%;
+    height: auto;
+    max-height: 100%;
+    object-fit: cover;
+  }
+}
+
+// ============================================
+// FADE TRANSITION VARIANT
+// ============================================
+
+.#{$so-prefix}carousel-fade {
+  .#{$so-prefix}carousel-inner {
+    display: block;
+  }
+
+  .#{$so-prefix}carousel-slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity var(--carousel-transition-duration)
+      var(--carousel-transition-timing);
+
+    &.#{$so-prefix}active {
+      position: relative;
+      opacity: 1;
+      z-index: 1;
+      display: flex;
+    }
+  }
+}
+
+// ============================================
+// NAVIGATION CONTROLS
+// ============================================
+
+.#{$so-prefix}carousel-control {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: $carousel-control-size;
+  height: $carousel-control-size;
+  padding: 0;
+  background: var(--carousel-control-bg);
+  color: var(--carousel-control-color);
+  border: none;
+  border-radius: radius("full");
+  box-shadow: var(--carousel-control-shadow);
+  cursor: pointer;
+  opacity: 0.9;
+  transition: all $so-transition-base;
+
+  &:hover {
+    background: var(--carousel-control-hover-bg);
+    opacity: 1;
+    transform: translateY(-50%) scale(1.05);
+  }
+
+  &:focus-visible,
+  &.#{$so-prefix}focus-visible {
+    outline: 2px solid css-var("accent-primary");
+    outline-offset: 2px;
+  }
+
+  &:disabled,
+  &.#{$so-prefix}disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  .material-icons {
+    font-size: 24px;
+  }
+}
+
+.#{$so-prefix}carousel-control-prev {
+  left: spacing("4");
+}
+
+.#{$so-prefix}carousel-control-next {
+  right: spacing("4");
+}
+
+// Hidden controls on edges for non-loop mode
+.#{$so-prefix}carousel-noloop {
+  &[data-at-start="true"] .#{$so-prefix}carousel-control-prev,
+  &[data-at-end="true"] .#{$so-prefix}carousel-control-next {
+    opacity: 0.3;
+    pointer-events: none;
+  }
+}
+
+// ============================================
+// INDICATORS (DOTS)
+// ============================================
+
+.#{$so-prefix}carousel-indicators {
+  position: absolute;
+  bottom: spacing("4");
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: spacing("2");
+  padding: spacing("2") spacing("3");
+  background: alpha($so-black, 0.3);
+  border-radius: radius("full");
+  list-style: none;
+  margin: 0;
+}
+
+.#{$so-prefix}carousel-indicator {
+  width: $carousel-indicator-size;
+  height: $carousel-indicator-size;
+  padding: 0;
+  background: var(--carousel-indicator-bg);
+  border: none;
+  border-radius: radius("full");
+  cursor: pointer;
+  transition: all $so-transition-base;
+
+  &:hover {
+    background: alpha($so-white, 0.75);
+  }
+
+  &.#{$so-prefix}active {
+    width: $carousel-indicator-active-width;
+    background: var(--carousel-indicator-active-bg);
+    border-radius: radius("full");
+  }
+
+  &:focus-visible,
+  &.#{$so-prefix}focus-visible {
+    outline: 2px solid $so-white;
+    outline-offset: 2px;
+  }
+}
+
+// Line indicators variant
+.#{$so-prefix}carousel-indicators-line {
+  .#{$so-prefix}carousel-indicator {
+    width: 24px;
+    height: 3px;
+    border-radius: radius("sm");
+
+    &.#{$so-prefix}active {
+      width: 36px;
+    }
+  }
+}
+
+// Number indicators variant
+.#{$so-prefix}carousel-indicators-numbers {
+  gap: spacing("1");
+  padding: spacing("1") spacing("2");
+
+  .#{$so-prefix}carousel-indicator {
+    width: 28px;
+    height: 28px;
+    font-size: font-size("sm");
+    font-weight: font-weight("medium");
+    color: alpha($so-white, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &.#{$so-prefix}active {
+      width: 28px;
+      color: $so-grey-800;
+    }
+  }
+}
+
+// ============================================
+// PROGRESS INDICATOR
+// ============================================
+
+.#{$so-prefix}carousel-progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: alpha($so-white, 0.3);
+  z-index: 10;
+}
+
+.#{$so-prefix}carousel-progress-bar {
+  height: 100%;
+  width: 0;
+  background: var(--carousel-indicator-active-bg);
+  transition: width linear;
+}
+
+// Autoplay progress animation
+@keyframes so-carousel-progress {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+.#{$so-prefix}carousel-autoplay {
+  .#{$so-prefix}carousel-progress-bar {
+    animation: so-carousel-progress var(--carousel-interval, 5s) linear;
+  }
+
+  &.#{$so-prefix}paused .#{$so-prefix}carousel-progress-bar {
+    animation-play-state: paused;
+  }
+}
+
+// ============================================
+// CAPTIONS
+// ============================================
+
+.#{$so-prefix}carousel-caption {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: spacing("8") spacing("6") spacing("12"); // Extra bottom padding for indicators
+  background: linear-gradient(transparent, #{alpha($so-black, 0.7)} 50%);
+  color: $so-white;
+  text-align: center;
+  z-index: 5;
+}
+
+.#{$so-prefix}carousel-caption-title {
+  font-size: font-size("xl");
+  font-weight: font-weight("semibold");
+  margin: 0 0 spacing("2");
+  line-height: line-height("tight");
+  color: $so-white;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.#{$so-prefix}carousel-caption-text {
+  font-size: font-size("base");
+  margin: 0;
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+// Caption position variants
+.#{$so-prefix}carousel-caption-top {
+  .#{$so-prefix}carousel-caption {
+    top: 0;
+    bottom: auto;
+    padding: spacing("6") spacing("6") spacing("10");
+    background: linear-gradient(#{alpha($so-black, 0.6)}, transparent);
+  }
+}
+
+.#{$so-prefix}carousel-caption-center {
+  .#{$so-prefix}carousel-caption {
+    top: 50%;
+    bottom: auto;
+    transform: translateY(-50%);
+    background: alpha($so-black, 0.5);
+    padding: spacing("6");
+    margin: 0 spacing("6");
+    left: 0;
+    right: 0;
+    border-radius: radius("lg");
+  }
+}
+
+// ============================================
+// MULTI-ITEM CAROUSEL
+// ============================================
+
+.#{$so-prefix}carousel-multi {
+  --carousel-items-visible: 3;
+  --carousel-gap: #{$carousel-gap};
+
+  .#{$so-prefix}carousel-inner {
+    display: flex;
+    gap: var(--carousel-gap);
+  }
+
+  .#{$so-prefix}carousel-slide {
+    flex: 0 0
+      calc(
+        (100% - (var(--carousel-items-visible) - 1) * var(--carousel-gap)) /
+          var(--carousel-items-visible)
+      );
+    display: flex;
+  }
+
+  @include mobile {
+    --carousel-items-visible: 1;
+  }
+
+  @include tablet {
+    --carousel-items-visible: 2;
+  }
+}
+
+// ============================================
+// HERO CAROUSEL (CENTER ALIGNED WITH PEEK)
+// ============================================
+
+.#{$so-prefix}carousel-hero {
+  --carousel-peek: #{$carousel-peek-amount};
+  --carousel-gap: #{$carousel-gap};
+
+  overflow: hidden;
+  padding: 0 var(--carousel-peek);
+
+  .#{$so-prefix}carousel-inner {
+    display: flex;
+    transition: transform var(--carousel-transition-duration)
+      var(--carousel-transition-timing);
+  }
+
+  .#{$so-prefix}carousel-slide {
+    flex: 0 0 calc(100% - 2 * var(--carousel-peek) + var(--carousel-gap));
+    margin: 0 calc(var(--carousel-gap) / 2);
+    border-radius: radius("xl");
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    display: flex;
+    transition:
+      transform var(--carousel-transition-duration)
+        var(--carousel-transition-timing),
+      box-shadow $so-transition-base,
+      opacity $so-transition-base;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    &.#{$so-prefix}active {
+      transform: scale(1);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    }
+
+    &:not(.#{$so-prefix}active) {
+      transform: scale(0.9);
+      opacity: 0.6;
+    }
+  }
+
+  .#{$so-prefix}carousel-control-prev {
+    left: spacing("2");
+  }
+
+  .#{$so-prefix}carousel-control-next {
+    right: spacing("2");
+  }
+
+  @include mobile {
+    --carousel-peek: 24px;
+  }
+}
+
+// ============================================
+// GALLERY CAROUSEL (WITH THUMBNAILS)
+// ============================================
+
+.#{$so-prefix}carousel-gallery {
+  display: flex;
+  flex-direction: column;
+  gap: spacing("3");
+}
+
+.#{$so-prefix}carousel-thumbnails {
+  display: flex;
+  gap: spacing("2");
+  overflow-x: auto;
+  padding: spacing("2") 0;
+  scrollbar-width: thin;
+  scrollbar-color: $so-grey-300 transparent;
+
+  &::-webkit-scrollbar {
+    height: 4px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: $so-grey-300;
+    border-radius: 2px;
+  }
+}
+
+.#{$so-prefix}carousel-thumbnail {
+  flex: 0 0 auto;
+  width: 72px;
+  height: 54px;
+  padding: 0;
+  border: 2px solid transparent;
+  border-radius: radius("md");
+  overflow: hidden;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: all $so-transition-base;
+  background: none;
+
+  &:hover {
+    opacity: 0.8;
+  }
+
+  &.#{$so-prefix}active {
+    border-color: css-var("accent-primary");
+    opacity: 1;
+  }
+
+  &:focus-visible,
+  &.#{$so-prefix}focus-visible {
+    outline: 2px solid css-var("accent-primary");
+    outline-offset: 2px;
+  }
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+// ============================================
+// VERTICAL CAROUSEL
+// ============================================
+
+.#{$so-prefix}carousel-vertical {
+  .#{$so-prefix}carousel-inner {
+    flex-direction: column;
+  }
+
+  .#{$so-prefix}carousel-slide {
+    flex: 0 0 100%;
+  }
+
+  .#{$so-prefix}carousel-control {
+    top: auto;
+    left: 50%;
+    transform: translateX(-50%);
+
+    &:hover {
+      transform: translateX(-50%) scale(1.05);
+    }
+  }
+
+  .#{$so-prefix}carousel-control-prev {
+    top: spacing("4");
+    bottom: auto;
+    left: 50%;
+    right: auto;
+
+    .material-icons {
+      transform: rotate(90deg);
+    }
+  }
+
+  .#{$so-prefix}carousel-control-next {
+    bottom: spacing("4");
+    top: auto;
+    left: 50%;
+    right: auto;
+
+    .material-icons {
+      transform: rotate(90deg);
+    }
+  }
+
+  .#{$so-prefix}carousel-indicators {
+    flex-direction: column;
+    left: auto;
+    right: spacing("4");
+    bottom: 50%;
+    transform: translateY(50%);
+    padding: spacing("3") spacing("2");
+  }
+}
+
+// ============================================
+// SIZE VARIANTS
+// ============================================
+
+.#{$so-prefix}carousel-sm {
+  .#{$so-prefix}carousel-control {
+    width: $carousel-control-size-sm;
+    height: $carousel-control-size-sm;
+
+    .material-icons {
+      font-size: 20px;
+    }
+  }
+
+  .#{$so-prefix}carousel-control-prev {
+    left: spacing("2");
+  }
+
+  .#{$so-prefix}carousel-control-next {
+    right: spacing("2");
+  }
+
+  .#{$so-prefix}carousel-caption {
+    padding: spacing("6") spacing("4") spacing("4");
+  }
+
+  .#{$so-prefix}carousel-caption-title {
+    font-size: font-size("lg");
+  }
+
+  .#{$so-prefix}carousel-caption-text {
+    font-size: font-size("sm");
+  }
+}
+
+.#{$so-prefix}carousel-lg {
+  .#{$so-prefix}carousel-control {
+    width: $carousel-control-size-lg;
+    height: $carousel-control-size-lg;
+
+    .material-icons {
+      font-size: 28px;
+    }
+  }
+
+  .#{$so-prefix}carousel-caption-title {
+    font-size: font-size("2xl");
+  }
+
+  .#{$so-prefix}carousel-caption-text {
+    font-size: font-size("md");
+  }
+}
+
+// ============================================
+// FULL-BLEED VARIANT
+// ============================================
+
+.#{$so-prefix}carousel-fullbleed {
+  border-radius: 0;
+
+  .#{$so-prefix}carousel-slide {
+    border-radius: 0;
+  }
+}
+
+// ============================================
+// CONTAINED VARIANT
+// ============================================
+
+.#{$so-prefix}carousel-contained {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+// ============================================
+// ASPECT RATIOS
+// ============================================
+
+.#{$so-prefix}carousel-16x9 {
+  aspect-ratio: 16 / 9;
+
+  .#{$so-prefix}carousel-slide {
+    position: absolute;
+    inset: 0;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  .#{$so-prefix}carousel-inner {
+    height: 100%;
+  }
+}
+
+.#{$so-prefix}carousel-4x3 {
+  aspect-ratio: 4 / 3;
+
+  .#{$so-prefix}carousel-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.#{$so-prefix}carousel-1x1 {
+  aspect-ratio: 1 / 1;
+
+  .#{$so-prefix}carousel-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.#{$so-prefix}carousel-21x9 {
+  aspect-ratio: 21 / 9;
+
+  .#{$so-prefix}carousel-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+// ============================================
+// LAZY LOADING
+// ============================================
+
+.#{$so-prefix}carousel-lazy {
+  .#{$so-prefix}carousel-slide img[data-src] {
+    opacity: 0;
+    transition: opacity $so-transition-slow;
+
+    &.#{$so-prefix}loaded {
+      opacity: 1;
+    }
+  }
+
+  .#{$so-prefix}carousel-slide-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 200px;
+
+    &::after {
+      content: "";
+      width: 32px;
+      height: 32px;
+      border: 3px solid alpha($so-grey-400, 0.3);
+      border-top-color: css-var("accent-primary");
+      border-radius: 50%;
+      animation: so-carousel-spinner 0.8s linear infinite;
+    }
+  }
+}
+
+@keyframes so-carousel-spinner {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// ============================================
+// CONTROLS VISIBILITY VARIANTS
+// ============================================
+
+// Show controls on hover only
+.#{$so-prefix}carousel-controls-hover {
+  .#{$so-prefix}carousel-control {
+    opacity: 0;
+    transform: translateY(-50%) scale(0.9);
+  }
+
+  &:hover .#{$so-prefix}carousel-control,
+  &:focus-within .#{$so-prefix}carousel-control {
+    opacity: 0.9;
+    transform: translateY(-50%) scale(1);
+  }
+}
+
+// Controls inside (overlapping content)
+.#{$so-prefix}carousel-controls-inside {
+  .#{$so-prefix}carousel-control-prev {
+    left: spacing("2");
+  }
+
+  .#{$so-prefix}carousel-control-next {
+    right: spacing("2");
+  }
+}
+
+// Controls outside
+.#{$so-prefix}carousel-controls-outside {
+  padding: 0 #{$carousel-control-size + spacing("4")};
+
+  .#{$so-prefix}carousel-control-prev {
+    left: 0;
+  }
+
+  .#{$so-prefix}carousel-control-next {
+    right: 0;
+  }
+}
+
+// ============================================
+// RTL SUPPORT
+// ============================================
+
+[dir="rtl"] {
+  .#{$so-prefix}carousel-control-prev {
+    left: auto;
+    right: spacing("4");
+  }
+
+  .#{$so-prefix}carousel-control-next {
+    right: auto;
+    left: spacing("4");
+  }
+
+  .#{$so-prefix}carousel-hero {
+    .#{$so-prefix}carousel-control-prev {
+      left: auto;
+      right: calc(
+        var(--carousel-peek) - #{math.div($carousel-control-size, 2)} -
+          #{spacing("2")}
+      );
+    }
+
+    .#{$so-prefix}carousel-control-next {
+      right: auto;
+      left: calc(
+        var(--carousel-peek) - #{math.div($carousel-control-size, 2)} -
+          #{spacing("2")}
+      );
+    }
+  }
+}
+
+// ============================================
+// DARK VARIANT
+// ============================================
+
+.#{$so-prefix}carousel-dark {
+  --carousel-control-bg: #{alpha($so-grey-800, 0.9)};
+  --carousel-control-color: #{$so-white};
+  --carousel-control-hover-bg: #{$so-grey-800};
+  --carousel-indicator-bg: #{alpha($so-grey-800, 0.5)};
+  --carousel-indicator-active-bg: #{$so-grey-800};
+
+  .#{$so-prefix}carousel-indicators {
+    background: alpha($so-white, 0.3);
+  }
+}
+
+// ============================================
+// DARK MODE SUPPORT
+// ============================================
+
+[data-theme="dark"] {
+  .#{$so-prefix}carousel {
+    --carousel-control-bg: #{alpha($so-grey-700, 0.9)};
+    --carousel-control-color: #{$so-white};
+    --carousel-control-hover-bg: #{$so-grey-600};
+    --carousel-control-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  }
+
+  .#{$so-prefix}carousel-indicators {
+    background: alpha($so-grey-900, 0.5);
+  }
+
+  .#{$so-prefix}carousel-thumbnail {
+    &.#{$so-prefix}active {
+      border-color: css-var("accent-primary");
+    }
+  }
+
+  .#{$so-prefix}carousel-thumbnails {
+    scrollbar-color: $so-grey-600 transparent;
+
+    &::-webkit-scrollbar-thumb {
+      background: $so-grey-600;
+    }
+  }
+}
+
+// ============================================
+// RESPONSIVE ADJUSTMENTS
+// ============================================
+
+@include mobile {
+  .#{$so-prefix}carousel-control {
+    width: $carousel-control-size-sm;
+    height: $carousel-control-size-sm;
+
+    .material-icons {
+      font-size: 20px;
+    }
+  }
+
+  .#{$so-prefix}carousel-control-prev {
+    left: spacing("2");
+  }
+
+  .#{$so-prefix}carousel-control-next {
+    right: spacing("2");
+  }
+
+  .#{$so-prefix}carousel-caption {
+    padding: spacing("6") spacing("4") spacing("4");
+  }
+
+  .#{$so-prefix}carousel-caption-title {
+    font-size: font-size("lg");
+  }
+
+  .#{$so-prefix}carousel-caption-text {
+    font-size: font-size("sm");
+  }
+
+  .#{$so-prefix}carousel-thumbnail {
+    width: 56px;
+    height: 42px;
+  }
+}
+
+// ============================================
+// ANIMATION STATES
+// ============================================
+
+.#{$so-prefix}carousel-sliding {
+  pointer-events: none;
+
+  .#{$so-prefix}carousel-control {
+    pointer-events: none;
+  }
+}
+
+// Touch/swipe feedback
+.#{$so-prefix}carousel-dragging {
+  .#{$so-prefix}carousel-inner {
+    transition: none;
+    cursor: grabbing;
+  }
+}
+
+.#{$so-prefix}carousel-touchable {
+  .#{$so-prefix}carousel-inner {
+    cursor: grab;
+  }
+}
+
+// ============================================
+// CARD CAROUSEL (Multi-item with cards)
+// ============================================
+
+.#{$so-prefix}carousel-cards {
+  .#{$so-prefix}carousel-slide {
+    padding: spacing("2");
+
+    .#{$so-prefix}card {
+      height: 100%;
+      margin: 0;
+    }
+  }
+}

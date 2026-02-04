@@ -1,0 +1,1295 @@
+// ============================================
+// SIXORBIT UI - MODALS
+// Modal and dialog components
+// ============================================
+
+@use 'sass:color';
+@use '../abstracts' as *;
+
+// ============================================
+// MODAL OVERLAY/BACKDROP
+// ============================================
+
+.#{$so-prefix}modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: z-index('modal-backdrop');
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity $so-transition-normal, visibility $so-transition-normal;
+
+  &.#{$so-prefix}show {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+// Dark mode adjustment
+[data-theme='dark'] .#{$so-prefix}modal-backdrop {
+  background: rgba(0, 0, 0, 0.7);
+}
+
+// ============================================
+// MODAL CONTAINER
+// ============================================
+
+.#{$so-prefix}modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: z-index('modal');
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: spacing('4');
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity $so-transition-normal, visibility $so-transition-normal;
+
+  &.#{$so-prefix}show {
+    opacity: 1;
+    visibility: visible;
+
+    .#{$so-prefix}modal-dialog {
+      transform: scale(1) translateY(0);
+    }
+  }
+}
+
+// ============================================
+// MODAL DIALOG
+// ============================================
+
+.#{$so-prefix}modal-dialog {
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+  max-height: calc(100vh - #{spacing('8')});
+  background: css-var('card-bg');
+  border-radius: radius('xl');
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  transform: scale(0.95) translateY(-20px);
+  transition: transform $so-transition-normal;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.#{$so-prefix}modal-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0; // Important for flex container scrolling
+  overflow: hidden;
+}
+
+// Modal sizes
+.#{$so-prefix}modal-sm .#{$so-prefix}modal-dialog {
+  max-width: 380px;
+}
+
+.#{$so-prefix}modal-lg .#{$so-prefix}modal-dialog {
+  max-width: 720px;
+}
+
+.#{$so-prefix}modal-xl .#{$so-prefix}modal-dialog {
+  max-width: 960px;
+}
+
+.#{$so-prefix}modal-fullscreen {
+  padding: 0;
+
+  .#{$so-prefix}modal-dialog {
+    max-width: none;
+    width: 100%;
+    height: 100%;
+    max-height: none;
+    border-radius: 0;
+  }
+}
+
+// ============================================
+// MODAL SECTIONS
+// ============================================
+
+.#{$so-prefix}modal-header {
+  display: flex;
+  align-items: center;
+  gap: spacing('3');
+  padding: spacing('4') spacing('4') spacing('4') spacing('5');
+  border-bottom: 1px solid css-var('border-color');
+  flex-shrink: 0;
+}
+
+.#{$so-prefix}modal-title {
+  flex: 1;
+  font-size: font-size('lg');
+  font-weight: font-weight('semibold');
+  color: css-var('text-heading');
+  margin: 0;
+}
+
+.#{$so-prefix}modal-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: radius('full');
+  color: css-var('text-secondary');
+  cursor: pointer;
+  transition: all $so-transition-base;
+  margin-left: auto;
+  flex-shrink: 0;
+  position: relative;
+
+  &:hover {
+    background: css-var('card-hover-bg');
+    color: css-var('text-primary');
+  }
+
+  &:focus {
+    outline: none;
+  }
+
+  &:focus-visible,
+  &.#{$so-prefix}focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px alpha($so-grey-500, 0.2);
+  }
+
+  .material-icons {
+    font-size: 20px;
+  }
+}
+
+.#{$so-prefix}modal-body {
+  padding: spacing('5');
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0; // Important for flex container scrolling
+  @include custom-scrollbar;
+}
+
+.#{$so-prefix}modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: spacing('2');
+  padding: spacing('4') spacing('5');
+  border-top: 1px solid css-var('border-color');
+  flex-shrink: 0;
+}
+
+// Footer alignment variants
+.#{$so-prefix}modal-footer.justify-start {
+  justify-content: flex-start;
+}
+
+.#{$so-prefix}modal-footer.justify-center {
+  justify-content: center;
+}
+
+.#{$so-prefix}modal-footer.justify-end {
+  justify-content: flex-end;
+}
+
+.#{$so-prefix}modal-footer.justify-between {
+  justify-content: space-between;
+}
+
+.#{$so-prefix}modal-footer.justify-around {
+  justify-content: space-around;
+}
+
+// Stacked buttons layout (vertical)
+.#{$so-prefix}modal-footer.#{$so-prefix}flex-column {
+  flex-direction: column;
+  gap: spacing('3');
+}
+
+// Footer with sections (left, center, right)
+// Uses CSS Grid for true centering regardless of left/right content width
+.#{$so-prefix}modal-footer.#{$so-prefix}footer-sections {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: spacing('3');
+}
+
+.#{$so-prefix}footer-left,
+.#{$so-prefix}footer-center,
+.#{$so-prefix}footer-right {
+  display: flex;
+  align-items: center;
+  gap: spacing('2');
+}
+
+.#{$so-prefix}footer-left {
+  justify-content: flex-start;
+}
+
+.#{$so-prefix}footer-center {
+  justify-content: center;
+}
+
+.#{$so-prefix}footer-right {
+  justify-content: flex-end;
+}
+
+// ============================================
+// SCROLLABLE MODAL
+// ============================================
+
+.#{$so-prefix}modal-scrollable {
+  .#{$so-prefix}modal-dialog {
+    max-height: calc(100vh - #{spacing('8')});
+    display: flex;
+    flex-direction: column;
+  }
+
+  .#{$so-prefix}modal-body {
+    overflow-y: auto;
+    flex: 1;
+    min-height: 0; // Important for flex container scrolling
+  }
+}
+
+// ============================================
+// CENTERED MODAL (vertically)
+// ============================================
+
+.#{$so-prefix}modal-centered {
+  align-items: center;
+}
+
+// ============================================
+// CONFIRMATION DIALOG
+// ============================================
+
+.#{$so-prefix}confirm-dialog {
+  text-align: center;
+
+  .#{$so-prefix}modal-dialog {
+    max-width: 400px;
+  }
+
+  .#{$so-prefix}modal-header {
+    border-bottom: none;
+    padding-bottom: 0;
+    justify-content: flex-end;
+  }
+
+  .#{$so-prefix}modal-body {
+    padding: spacing('8') spacing('6') spacing('6');
+  }
+
+  .#{$so-prefix}modal-footer {
+    padding: spacing('4') spacing('6') spacing('6');
+    border-top: none;
+  }
+
+  .#{$so-prefix}confirm-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    border-radius: radius('full');
+    margin-bottom: spacing('5');
+
+    .material-icons {
+      font-size: 28px;
+    }
+
+    &.#{$so-prefix}warning {
+      background: alpha($so-warning, 0.1);
+      color: css-var('accent-warning');
+    }
+
+    &.#{$so-prefix}danger {
+      background: alpha($so-danger, 0.1);
+      color: css-var('accent-danger');
+    }
+
+    &.#{$so-prefix}success {
+      background: alpha($so-success, 0.1);
+      color: css-var('accent-success');
+    }
+
+    &.#{$so-prefix}info {
+      background: alpha($so-info, 0.1);
+      color: css-var('accent-info');
+    }
+  }
+
+  .#{$so-prefix}confirm-title {
+    font-size: font-size('lg');
+    font-weight: font-weight('semibold');
+    color: css-var('text-heading');
+    margin-bottom: spacing('3');
+    text-align: center;
+  }
+
+  .#{$so-prefix}confirm-message {
+    font-size: font-size('sm');
+    color: css-var('text-secondary');
+    line-height: line-height('relaxed');
+    max-width: 280px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .#{$so-prefix}modal-footer {
+    justify-content: center;
+    background: transparent;
+    border-top: none;
+  }
+}
+
+// ============================================
+// CONTEXTUAL MODAL HEADERS
+// Colored headers with solid and light variants
+// ============================================
+
+// Primary
+.#{$so-prefix}modal-primary {
+  .#{$so-prefix}modal-header {
+    background: css-var('accent-primary');
+    border-bottom-color: transparent;
+
+    .#{$so-prefix}modal-title {
+      color: $so-white;
+    }
+
+    .#{$so-prefix}modal-close {
+      color: rgba($so-white, 0.8);
+
+      &:hover {
+        background: rgba($so-white, 0.15);
+        color: $so-white;
+      }
+    }
+  }
+}
+
+.#{$so-prefix}modal-primary-light {
+  .#{$so-prefix}modal-header {
+    background: rgba($so-primary, 0.1);
+    border-bottom-color: rgba($so-primary, 0.15);
+
+    .#{$so-prefix}modal-title {
+      color: css-var('accent-primary');
+    }
+
+    .#{$so-prefix}modal-close {
+      color: css-var('accent-primary');
+
+      &:hover {
+        background: rgba($so-primary, 0.15);
+      }
+    }
+  }
+}
+
+// Secondary
+.#{$so-prefix}modal-secondary {
+  .#{$so-prefix}modal-header {
+    background: $so-secondary;
+    border-bottom-color: transparent;
+
+    .#{$so-prefix}modal-title {
+      color: $so-white;
+    }
+
+    .#{$so-prefix}modal-close {
+      color: rgba($so-white, 0.8);
+
+      &:hover {
+        background: rgba($so-white, 0.15);
+        color: $so-white;
+      }
+    }
+  }
+}
+
+.#{$so-prefix}modal-secondary-light {
+  .#{$so-prefix}modal-header {
+    background: rgba($so-secondary, 0.1);
+    border-bottom-color: rgba($so-secondary, 0.15);
+
+    .#{$so-prefix}modal-title {
+      color: $so-secondary;
+    }
+
+    .#{$so-prefix}modal-close {
+      color: $so-secondary;
+
+      &:hover {
+        background: rgba($so-secondary, 0.15);
+      }
+    }
+  }
+}
+
+// Success
+.#{$so-prefix}modal-success {
+  .#{$so-prefix}modal-header {
+    background: css-var('accent-success');
+    border-bottom-color: transparent;
+
+    .#{$so-prefix}modal-title {
+      color: $so-white;
+    }
+
+    .#{$so-prefix}modal-close {
+      color: rgba($so-white, 0.8);
+
+      &:hover {
+        background: rgba($so-white, 0.15);
+        color: $so-white;
+      }
+    }
+  }
+}
+
+.#{$so-prefix}modal-success-light {
+  .#{$so-prefix}modal-header {
+    background: rgba($so-success, 0.1);
+    border-bottom-color: rgba($so-success, 0.15);
+
+    .#{$so-prefix}modal-title {
+      color: css-var('accent-success');
+    }
+
+    .#{$so-prefix}modal-close {
+      color: css-var('accent-success');
+
+      &:hover {
+        background: rgba($so-success, 0.15);
+      }
+    }
+  }
+}
+
+// Danger
+.#{$so-prefix}modal-danger {
+  .#{$so-prefix}modal-header {
+    background: css-var('accent-danger');
+    border-bottom-color: transparent;
+
+    .#{$so-prefix}modal-title {
+      color: $so-white;
+    }
+
+    .#{$so-prefix}modal-close {
+      color: rgba($so-white, 0.8);
+
+      &:hover {
+        background: rgba($so-white, 0.15);
+        color: $so-white;
+      }
+    }
+  }
+}
+
+.#{$so-prefix}modal-danger-light {
+  .#{$so-prefix}modal-header {
+    background: rgba($so-danger, 0.1);
+    border-bottom-color: rgba($so-danger, 0.15);
+
+    .#{$so-prefix}modal-title {
+      color: css-var('accent-danger');
+    }
+
+    .#{$so-prefix}modal-close {
+      color: css-var('accent-danger');
+
+      &:hover {
+        background: rgba($so-danger, 0.15);
+      }
+    }
+  }
+}
+
+// Warning
+.#{$so-prefix}modal-warning {
+  .#{$so-prefix}modal-header {
+    background: css-var('accent-warning');
+    border-bottom-color: transparent;
+
+    .#{$so-prefix}modal-title {
+      color: $so-grey-900;
+    }
+
+    .#{$so-prefix}modal-close {
+      color: rgba($so-grey-900, 0.7);
+
+      &:hover {
+        background: rgba($so-grey-900, 0.1);
+        color: $so-grey-900;
+      }
+    }
+  }
+}
+
+.#{$so-prefix}modal-warning-light {
+  .#{$so-prefix}modal-header {
+    background: rgba($so-warning, 0.15);
+    border-bottom-color: rgba($so-warning, 0.2);
+
+    .#{$so-prefix}modal-title {
+      color: color.adjust($so-warning, $lightness: -15%);
+    }
+
+    .#{$so-prefix}modal-close {
+      color: color.adjust($so-warning, $lightness: -15%);
+
+      &:hover {
+        background: rgba($so-warning, 0.2);
+      }
+    }
+  }
+}
+
+// Info
+.#{$so-prefix}modal-info {
+  .#{$so-prefix}modal-header {
+    background: css-var('accent-info');
+    border-bottom-color: transparent;
+
+    .#{$so-prefix}modal-title {
+      color: $so-white;
+    }
+
+    .#{$so-prefix}modal-close {
+      color: rgba($so-white, 0.8);
+
+      &:hover {
+        background: rgba($so-white, 0.15);
+        color: $so-white;
+      }
+    }
+  }
+}
+
+.#{$so-prefix}modal-info-light {
+  .#{$so-prefix}modal-header {
+    background: rgba($so-info, 0.1);
+    border-bottom-color: rgba($so-info, 0.15);
+
+    .#{$so-prefix}modal-title {
+      color: css-var('accent-info');
+    }
+
+    .#{$so-prefix}modal-close {
+      color: css-var('accent-info');
+
+      &:hover {
+        background: rgba($so-info, 0.15);
+      }
+    }
+  }
+}
+
+// Light
+.#{$so-prefix}modal-light {
+  .#{$so-prefix}modal-header {
+    background: $so-grey-100;
+    border-bottom-color: $so-grey-200;
+
+    .#{$so-prefix}modal-title {
+      color: $so-grey-800;
+    }
+
+    .#{$so-prefix}modal-close {
+      color: $so-grey-600;
+
+      &:hover {
+        background: $so-grey-200;
+        color: $so-grey-800;
+      }
+    }
+  }
+}
+
+// Dark
+.#{$so-prefix}modal-dark {
+  .#{$so-prefix}modal-header {
+    background: $so-grey-900;
+    border-bottom-color: transparent;
+
+    .#{$so-prefix}modal-title {
+      color: $so-white;
+    }
+
+    .#{$so-prefix}modal-close {
+      color: $so-grey-400;
+
+      &:hover {
+        background: rgba($so-white, 0.1);
+        color: $so-white;
+      }
+    }
+  }
+}
+
+.#{$so-prefix}modal-dark-light {
+  .#{$so-prefix}modal-header {
+    background: $so-grey-200;
+    border-bottom-color: $so-grey-300;
+
+    .#{$so-prefix}modal-title {
+      color: $so-grey-900;
+    }
+
+    .#{$so-prefix}modal-close {
+      color: $so-grey-700;
+
+      &:hover {
+        background: $so-grey-300;
+        color: $so-grey-900;
+      }
+    }
+  }
+}
+
+// ============================================
+// SIDE PANEL / DRAWER
+// ============================================
+
+.#{$so-prefix}drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 400px;
+  max-width: 100%;
+  background: css-var('card-bg');
+  box-shadow: -4px 0 20px rgba(0, 0, 0, 0.15);
+  z-index: z-index('modal');
+  transform: translateX(100%);
+  transition: transform $so-transition-normal;
+  display: flex;
+  flex-direction: column;
+
+  &.#{$so-prefix}show {
+    transform: translateX(0);
+  }
+}
+
+// Left-side drawer
+.#{$so-prefix}drawer-left {
+  right: auto;
+  left: 0;
+  transform: translateX(-100%);
+  box-shadow: 4px 0 20px rgba(0, 0, 0, 0.15);
+
+  &.#{$so-prefix}show {
+    transform: translateX(0);
+  }
+}
+
+// Drawer sizes
+.#{$so-prefix}drawer-sm {
+  width: 320px;
+}
+
+.#{$so-prefix}drawer-lg {
+  width: 560px;
+}
+
+.#{$so-prefix}drawer-xl {
+  width: 720px;
+}
+
+// Drawer sections
+.#{$so-prefix}drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: spacing('3');
+  padding: spacing('4') spacing('5');
+  border-bottom: 1px solid css-var('border-color');
+  flex-shrink: 0;
+}
+
+.#{$so-prefix}drawer-title {
+  font-size: font-size('lg');
+  font-weight: font-weight('semibold');
+  color: css-var('text-heading');
+  margin: 0;
+}
+
+.#{$so-prefix}drawer-close {
+  @extend .#{$so-prefix}modal-close;
+}
+
+.#{$so-prefix}drawer-body {
+  flex: 1;
+  padding: spacing('5');
+  overflow-y: auto;
+  @include custom-scrollbar;
+}
+
+.#{$so-prefix}drawer-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: spacing('2');
+  padding: spacing('4') spacing('5');
+  border-top: 1px solid css-var('border-color');
+  flex-shrink: 0;
+}
+
+// ============================================
+// IMAGE LIGHTBOX
+// ============================================
+
+.#{$so-prefix}lightbox {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: z-index('modal') + 10;
+  background: rgba(0, 0, 0, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity $so-transition-normal, visibility $so-transition-normal;
+
+  &.#{$so-prefix}show {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  img {
+    max-width: 90%;
+    max-height: 90%;
+    object-fit: contain;
+    border-radius: radius('md');
+  }
+}
+
+.#{$so-prefix}lightbox-close {
+  position: absolute;
+  top: spacing('4');
+  right: spacing('4');
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  border-radius: radius('full');
+  color: $so-white;
+  cursor: pointer;
+  transition: background $so-transition-base;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+
+  .material-icons {
+    font-size: 24px;
+  }
+}
+
+// ============================================
+// STATIC MODAL (Cannot be dismissed)
+// Use for mandatory actions where user must interact with footer buttons
+// ============================================
+
+.#{$so-prefix}modal-static {
+  // Hide close button - only footer actions can dismiss
+  .#{$so-prefix}modal-close {
+    display: none !important;
+  }
+
+  // Subtle shake animation when backdrop is clicked
+  &.#{$so-prefix}modal-static-shake .#{$so-prefix}modal-dialog {
+    animation: modalStaticShake 0.3s ease-in-out;
+  }
+
+  // Show lock indicator if needed (only when .so-modal-show-lock is present)
+  &.#{$so-prefix}modal-show-lock .#{$so-prefix}modal-header::before {
+    content: '\e897'; // lock icon from Material Icons
+    font-family: 'Material Icons';
+    font-size: 16px;
+    color: css-var('text-secondary');
+    margin-right: spacing('2');
+  }
+}
+
+// Shake animation keyframes
+@keyframes modalStaticShake {
+  0%, 100% {
+    transform: scale(1) translateX(0);
+  }
+  10%, 30%, 50%, 70%, 90% {
+    transform: scale(1) translateX(-5px);
+  }
+  20%, 40%, 60%, 80% {
+    transform: scale(1) translateX(5px);
+  }
+}
+
+// Static drawer variant
+.#{$so-prefix}drawer-static {
+  .#{$so-prefix}drawer-close {
+    display: none !important;
+  }
+}
+
+// Shake animation for static drawer (when open and user clicks backdrop)
+.#{$so-prefix}drawer-static.#{$so-prefix}show.drawer-static-shake {
+  animation: drawerStaticShake 0.3s ease-in-out;
+}
+
+// Left drawer shakes in opposite direction
+.#{$so-prefix}drawer-static.#{$so-prefix}drawer-left.#{$so-prefix}show.drawer-static-shake {
+  animation: drawerStaticShakeLeft 0.3s ease-in-out;
+}
+
+@keyframes drawerStaticShake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(8px);
+  }
+  50% {
+    transform: translateX(-4px);
+  }
+  75% {
+    transform: translateX(4px);
+  }
+}
+
+@keyframes drawerStaticShakeLeft {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-8px);
+  }
+  50% {
+    transform: translateX(4px);
+  }
+  75% {
+    transform: translateX(-4px);
+  }
+}
+
+// ============================================
+// MODAL FEEDBACK ANIMATIONS
+// Used for singleton modals and static modals
+// ============================================
+
+// Shake feedback (default)
+.#{$so-prefix}modal-feedback-shake {
+  .#{$so-prefix}modal-dialog {
+    animation: modalFeedbackShake 0.5s ease-in-out;
+  }
+}
+
+@keyframes modalFeedbackShake {
+  0%, 100% {
+    transform: scale(1) translateX(0);
+  }
+  10%, 30%, 50%, 70%, 90% {
+    transform: scale(1) translateX(-6px);
+  }
+  20%, 40%, 60%, 80% {
+    transform: scale(1) translateX(6px);
+  }
+}
+
+// Pulse feedback
+.#{$so-prefix}modal-feedback-pulse {
+  .#{$so-prefix}modal-dialog {
+    animation: modalFeedbackPulse 0.5s ease-in-out;
+  }
+}
+
+@keyframes modalFeedbackPulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  }
+  50% {
+    transform: scale(1.02);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+  }
+}
+
+// Bounce feedback
+.#{$so-prefix}modal-feedback-bounce {
+  .#{$so-prefix}modal-dialog {
+    animation: modalFeedbackBounce 0.5s ease-in-out;
+  }
+}
+
+@keyframes modalFeedbackBounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  25% {
+    transform: translateY(-15px);
+  }
+  50% {
+    transform: translateY(0);
+  }
+  75% {
+    transform: translateY(-8px);
+  }
+}
+
+// Head shake feedback (horizontal wobble)
+.#{$so-prefix}modal-feedback-headshake {
+  .#{$so-prefix}modal-dialog {
+    animation: modalFeedbackHeadshake 0.5s ease-in-out;
+  }
+}
+
+@keyframes modalFeedbackHeadshake {
+  0%, 100% {
+    transform: translateX(0) rotateY(0);
+  }
+  15% {
+    transform: translateX(-6px) rotateY(-5deg);
+  }
+  30% {
+    transform: translateX(5px) rotateY(4deg);
+  }
+  45% {
+    transform: translateX(-4px) rotateY(-3deg);
+  }
+  60% {
+    transform: translateX(3px) rotateY(2deg);
+  }
+  75% {
+    transform: translateX(-2px) rotateY(-1deg);
+  }
+}
+
+// Legacy class for static modal shake (uses feedback animation)
+.#{$so-prefix}modal-static-shake .#{$so-prefix}modal-dialog {
+  animation: modalFeedbackShake 0.3s ease-in-out;
+}
+
+// ============================================
+// DRAGGABLE MODAL
+// ============================================
+
+.#{$so-prefix}modal-draggable {
+  .#{$so-prefix}modal-header {
+    cursor: move;
+    user-select: none;
+
+    // Don't show move cursor on buttons
+    button {
+      cursor: pointer;
+    }
+  }
+
+  // When actively dragging
+  &.#{$so-prefix}modal-dragging {
+    .#{$so-prefix}modal-dialog {
+      transition: none; // Disable transition during drag
+      user-select: none;
+    }
+  }
+}
+
+// ============================================
+// MAXIMIZABLE MODAL
+// ============================================
+
+.#{$so-prefix}modal-maximize {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: radius('full');
+  color: css-var('text-secondary');
+  cursor: pointer;
+  transition: all $so-transition-base;
+  flex-shrink: 0;
+
+  &:hover {
+    background: css-var('card-hover-bg');
+    color: css-var('text-primary');
+  }
+
+  &:focus {
+    outline: none;
+  }
+
+  &:focus-visible,
+  &.#{$so-prefix}focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px alpha($so-grey-500, 0.2);
+  }
+
+  .material-icons {
+    font-size: 18px;
+  }
+}
+
+// Maximized state
+.#{$so-prefix}modal-maximized {
+  .#{$so-prefix}modal-dialog {
+    width: 100% !important;
+    height: 100% !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
+    border-radius: 0 !important;
+    margin: 0 !important;
+  }
+
+  .#{$so-prefix}modal-header {
+    cursor: default !important;
+  }
+
+  // Adjust content for fullscreen
+  .#{$so-prefix}modal-body {
+    flex: 1;
+    min-height: 0;
+  }
+}
+
+// ============================================
+// MOBILE FULLSCREEN AUTO-SWITCH
+// ============================================
+
+.#{$so-prefix}modal-mobile-fullscreen {
+  padding: 0;
+
+  .#{$so-prefix}modal-dialog {
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 0;
+    margin: 0;
+  }
+
+  // Hide maximize button on mobile fullscreen
+  .#{$so-prefix}modal-maximize {
+    display: none;
+  }
+
+  // Disable dragging
+  .#{$so-prefix}modal-header {
+    cursor: default !important;
+  }
+}
+
+// ============================================
+// MODAL WITH SIDEBAR LAYOUT
+// ============================================
+
+.#{$so-prefix}modal-with-sidebar {
+  .#{$so-prefix}modal-dialog {
+    --so-modal-sidebar-width: 280px;
+    max-width: 900px;
+  }
+
+  .#{$so-prefix}modal-body-with-sidebar {
+    display: flex;
+    padding: 0;
+    min-height: 300px;
+  }
+
+  .#{$so-prefix}modal-sidebar {
+    width: var(--so-modal-sidebar-width);
+    flex-shrink: 0;
+    background: css-var('card-hover-bg');
+    border-right: 1px solid css-var('border-color');
+    padding: spacing('4');
+    overflow-y: auto;
+    @include custom-scrollbar;
+
+    // Sidebar navigation - ensure vertical layout
+    .#{$so-prefix}modal-sidebar-nav {
+      display: flex;
+      flex-direction: column;
+      gap: spacing('1');
+      list-style: none;
+      padding: 0;
+      margin: 0;
+
+      li {
+        display: block;
+      }
+
+      a, button {
+        display: flex;
+        align-items: center;
+        gap: spacing('3');
+        width: 100%;
+        padding: spacing('2') spacing('3');
+        border-radius: radius('md');
+        color: css-var('text-secondary');
+        text-decoration: none;
+        font-size: font-size('sm');
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        text-align: left;
+        transition: all $so-transition-base;
+
+        .material-icons {
+          font-size: 20px;
+          flex-shrink: 0;
+        }
+
+        &:hover {
+          background: css-var('card-bg');
+          color: css-var('text-primary');
+        }
+
+        &.#{$so-prefix}active {
+          background: css-var('accent-primary');
+          color: $so-white;
+        }
+      }
+    }
+
+    // Support for so-list within sidebar
+    .#{$so-prefix}list {
+      display: flex;
+      flex-direction: column;
+      gap: spacing('1');
+    }
+
+    // Sidebar title/heading
+    .#{$so-prefix}modal-sidebar-title {
+      font-size: font-size('xs');
+      font-weight: font-weight('semibold');
+      color: css-var('text-muted');
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: spacing('2') spacing('3');
+      margin-bottom: spacing('1');
+    }
+
+    // Sidebar divider
+    .#{$so-prefix}modal-sidebar-divider {
+      height: 1px;
+      background: css-var('border-color');
+      margin: spacing('3') 0;
+    }
+  }
+
+  .#{$so-prefix}modal-main {
+    flex: 1;
+    min-width: 0;
+    padding: spacing('5');
+    overflow-y: auto;
+    @include custom-scrollbar;
+  }
+
+  // Sidebar on right
+  &.#{$so-prefix}modal-sidebar-right {
+    .#{$so-prefix}modal-body-with-sidebar {
+      flex-direction: row-reverse;
+    }
+
+    .#{$so-prefix}modal-sidebar {
+      border-right: none;
+      border-left: 1px solid css-var('border-color');
+    }
+  }
+}
+
+// ============================================
+// NESTED MODAL IMPROVEMENTS
+// ============================================
+
+// Add subtle dimming for nested modals' backdrops
+.#{$so-prefix}modal-backdrop + .#{$so-prefix}modal-backdrop {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+// ============================================
+// RESPONSIVE ADJUSTMENTS
+// ============================================
+
+@include mobile {
+  .#{$so-prefix}modal {
+    padding: spacing('3');
+  }
+
+  .#{$so-prefix}modal-dialog {
+    max-width: none;
+    max-height: calc(100vh - #{spacing('6')});
+    border-radius: radius('lg');
+  }
+
+  .#{$so-prefix}modal-fullscreen .#{$so-prefix}modal-dialog {
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
+  }
+
+  // Sidebar layout becomes stacked on mobile
+  .#{$so-prefix}modal-with-sidebar {
+    .#{$so-prefix}modal-body-with-sidebar {
+      flex-direction: column;
+    }
+
+    .#{$so-prefix}modal-sidebar {
+      width: 100%;
+      border-right: none;
+      border-bottom: 1px solid css-var('border-color');
+      max-height: 200px;
+    }
+
+    &.#{$so-prefix}modal-sidebar-right {
+      .#{$so-prefix}modal-body-with-sidebar {
+        flex-direction: column;
+      }
+
+      .#{$so-prefix}modal-sidebar {
+        border-left: none;
+        border-bottom: 1px solid css-var('border-color');
+      }
+    }
+  }
+
+  // Disable dragging on mobile
+  .#{$so-prefix}modal-draggable {
+    .#{$so-prefix}modal-header {
+      cursor: default;
+    }
+  }
+
+  .#{$so-prefix}drawer {
+    width: 100%;
+  }
+
+  .#{$so-prefix}drawer-sm,
+  .#{$so-prefix}drawer-lg,
+  .#{$so-prefix}drawer-xl {
+    width: 100%;
+  }
+}

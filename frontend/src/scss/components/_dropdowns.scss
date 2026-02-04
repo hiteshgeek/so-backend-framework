@@ -1,0 +1,1724 @@
+// ============================================
+// SIXORBIT UI - DROPDOWNS
+// Dropdown menu components
+// ============================================
+
+@use '../abstracts' as *;
+
+// ============================================
+// BASE DROPDOWN
+// ============================================
+
+.#{$so-prefix}dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+// Dropdown Trigger - works with .so-btn
+// Usage: <button class="so-btn so-btn-light so-dropdown-trigger">
+.#{$so-prefix}dropdown-trigger {
+  .#{$so-prefix}dropdown-arrow {
+    transition: transform $so-transition-normal;
+  }
+}
+
+// When used with .so-btn, inherit button styles for focus/active
+// The .so-btn class already provides base styling, we just add dropdown-specific adjustments
+.#{$so-prefix}btn.#{$so-prefix}dropdown-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: spacing('2');
+
+  // Text spans inherit line-height from button size variants for proper vertical centering
+  // Don't override line-height here - let .so-btn handle it
+
+  // Default dropdown trigger style (when no btn variant is specified)
+  &:not([class*="#{$so-prefix}btn-primary"]):not([class*="#{$so-prefix}btn-secondary"]):not([class*="#{$so-prefix}btn-success"]):not([class*="#{$so-prefix}btn-danger"]):not([class*="#{$so-prefix}btn-warning"]):not([class*="#{$so-prefix}btn-info"]):not([class*="#{$so-prefix}btn-outline"]):not([class*="#{$so-prefix}btn-ghost"]):not([class*="#{$so-prefix}btn-light"]):not([class*="#{$so-prefix}btn-dark"]) {
+    background: css-var('card-bg');
+    border-color: css-var('border-color');
+    color: css-var('text-secondary');
+
+    &:hover:not(:disabled) {
+      background: css-var('card-hover-bg');
+      border-color: css-var('border-color');
+    }
+
+    &:focus {
+      box-shadow: 0 0 0 3px alpha($so-grey-500, 0.2);
+    }
+
+    &:active:not(:disabled) {
+      background: css-var('card-hover-bg');
+    }
+  }
+}
+
+// Fixed width dropdown trigger - prevents width change based on content
+.#{$so-prefix}dropdown-fixed {
+  .#{$so-prefix}dropdown-trigger {
+    min-width: 160px;
+    max-width: 160px;
+
+    // Allow full width when btn-block is used
+    &.#{$so-prefix}btn-block {
+      max-width: none;
+    }
+
+    .#{$so-prefix}dropdown-selected {
+      flex: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      text-align: left;
+    }
+  }
+
+  // Size variants
+  &.#{$so-prefix}dropdown-fixed-sm .#{$so-prefix}dropdown-trigger {
+    min-width: 120px;
+    max-width: 120px;
+
+    &.#{$so-prefix}btn-block {
+      max-width: none;
+    }
+  }
+
+  &.#{$so-prefix}dropdown-fixed-lg .#{$so-prefix}dropdown-trigger {
+    min-width: 200px;
+    max-width: 200px;
+
+    &.#{$so-prefix}btn-block {
+      max-width: none;
+    }
+  }
+
+  &.#{$so-prefix}dropdown-fixed-xl .#{$so-prefix}dropdown-trigger {
+    min-width: 260px;
+    max-width: 260px;
+
+    &.#{$so-prefix}btn-block {
+      max-width: none;
+    }
+  }
+}
+
+// Open state - show active/pressed state
+.#{$so-prefix}dropdown.#{$so-prefix}open {
+  .#{$so-prefix}dropdown-trigger .#{$so-prefix}dropdown-arrow {
+    transform: rotate(180deg);
+  }
+
+  // Active state for open dropdown (matches button :active)
+  .#{$so-prefix}btn.#{$so-prefix}dropdown-trigger {
+    // Default variant
+    &:not([class*="#{$so-prefix}btn-primary"]):not([class*="#{$so-prefix}btn-secondary"]):not([class*="#{$so-prefix}btn-success"]):not([class*="#{$so-prefix}btn-danger"]):not([class*="#{$so-prefix}btn-warning"]):not([class*="#{$so-prefix}btn-info"]):not([class*="#{$so-prefix}btn-outline"]):not([class*="#{$so-prefix}btn-ghost"]):not([class*="#{$so-prefix}btn-light"]):not([class*="#{$so-prefix}btn-dark"]) {
+      background: css-var('card-hover-bg');
+      box-shadow: 0 0 0 3px alpha($so-grey-500, 0.2);
+    }
+
+    // Primary
+    &.#{$so-prefix}btn-primary {
+      box-shadow: 0 0 0 3px alpha($so-primary, 0.2);
+    }
+
+    // Secondary
+    &.#{$so-prefix}btn-secondary {
+      box-shadow: 0 0 0 3px alpha($so-secondary, 0.2);
+    }
+
+    // Success
+    &.#{$so-prefix}btn-success {
+      box-shadow: 0 0 0 3px alpha($so-success, 0.2);
+    }
+
+    // Danger
+    &.#{$so-prefix}btn-danger {
+      box-shadow: 0 0 0 3px alpha($so-danger, 0.2);
+    }
+
+    // Warning
+    &.#{$so-prefix}btn-warning {
+      box-shadow: 0 0 0 3px alpha($so-warning, 0.2);
+    }
+
+    // Info
+    &.#{$so-prefix}btn-info {
+      box-shadow: 0 0 0 3px alpha($so-info, 0.2);
+    }
+
+    // Outline variants
+    &.#{$so-prefix}btn-outline,
+    &.#{$so-prefix}btn-outline-primary {
+      box-shadow: 0 0 0 3px alpha($so-primary, 0.2);
+    }
+
+    &.#{$so-prefix}btn-outline-success {
+      box-shadow: 0 0 0 3px alpha($so-success, 0.2);
+    }
+
+    &.#{$so-prefix}btn-outline-danger {
+      box-shadow: 0 0 0 3px alpha($so-danger, 0.2);
+    }
+
+    &.#{$so-prefix}btn-outline-warning {
+      box-shadow: 0 0 0 3px alpha($so-warning, 0.2);
+    }
+
+    &.#{$so-prefix}btn-outline-info {
+      box-shadow: 0 0 0 3px alpha($so-info, 0.2);
+    }
+
+    // Ghost variant
+    &.#{$so-prefix}btn-ghost {
+      background: css-var('card-hover-bg');
+      box-shadow: 0 0 0 3px alpha($so-grey-500, 0.15);
+    }
+
+    // Light variants
+    &.#{$so-prefix}btn-light {
+      box-shadow: 0 0 0 3px alpha($so-grey-400, 0.2);
+    }
+
+    &.#{$so-prefix}btn-dark {
+      box-shadow: 0 0 0 3px alpha($so-grey-900, 0.2);
+    }
+  }
+}
+
+// Dropdown Menu
+.#{$so-prefix}dropdown-menu {
+  @include dropdown-menu;
+}
+
+.#{$so-prefix}dropdown.#{$so-prefix}open .#{$so-prefix}dropdown-menu {
+  @include dropdown-open;
+}
+
+// Position right
+.#{$so-prefix}dropdown.dropdown-right .#{$so-prefix}dropdown-menu {
+  left: auto;
+  right: 0;
+}
+
+// Dropdown Header
+.#{$so-prefix}dropdown-header {
+  display: flex;
+  align-items: center;
+  gap: spacing('2');
+  padding: spacing('2') + 2px spacing('3');
+  font-size: font-size('xs');
+  font-weight: font-weight('semibold');
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: css-var('text-muted');
+
+  .material-icons {
+    font-size: 16px;
+  }
+}
+
+// Dropdown Items
+.#{$so-prefix}dropdown-item {
+  @include dropdown-item;
+
+  .material-icons {
+    font-size: 18px;
+    color: css-var('text-secondary');
+  }
+
+  &.#{$so-prefix}active .material-icons {
+    color: css-var('dropdown-item-active-text');
+  }
+
+  .#{$so-prefix}dropdown-check {
+    margin-left: auto;
+    opacity: 0;
+  }
+
+  &.#{$so-prefix}active .#{$so-prefix}dropdown-check {
+    opacity: 1;
+  }
+}
+
+// Dropdown Divider
+.#{$so-prefix}dropdown-divider {
+  height: 1px;
+  margin: spacing('1') 0;
+  background: css-var('dropdown-border');
+}
+
+// Danger item
+.#{$so-prefix}dropdown-item-danger {
+  color: css-var('accent-danger') !important;
+
+  .material-icons {
+    color: css-var('accent-danger') !important;
+  }
+}
+
+// Dropdown with Search
+.#{$so-prefix}dropdown-search {
+  padding: spacing('2');
+  border-bottom: 1px solid css-var('dropdown-border');
+
+  .#{$so-prefix}input {
+    height: 36px;
+  }
+}
+
+// ============================================
+// SEARCHABLE DROPDOWN (modifier of base dropdown)
+// Usage: .so-dropdown.so-dropdown-searchable
+// ============================================
+
+// Searchable modifier - adds search box to dropdown
+.#{$so-prefix}dropdown.#{$so-prefix}dropdown-searchable {
+  display: block; // Full width
+
+  .#{$so-prefix}dropdown-trigger {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .#{$so-prefix}dropdown-menu {
+    left: 0;
+    right: 0;
+    min-width: auto;
+  }
+}
+
+// Dropdown search box inside menu
+.#{$so-prefix}dropdown-search {
+  position: relative;
+  padding: spacing('2') spacing('3');
+  border-bottom: 1px solid css-var('dropdown-border');
+
+  .#{$so-prefix}dropdown-search-input {
+    width: 100%;
+    height: 32px;
+    padding: 0 spacing('2') 0 28px; // Left padding for icon
+    border: none;
+    border-radius: 0;
+    font-size: font-size('sm');
+    background: transparent;
+    color: css-var('text-primary');
+    font-family: inherit;
+
+    &:focus {
+      outline: none;
+    }
+
+    &::placeholder {
+      color: css-var('text-secondary');
+    }
+  }
+
+  // Search icon inside input
+  &::before {
+    content: 'search';
+    font-family: 'Material Icons';
+    position: absolute;
+    left: spacing('3');
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 16px;
+    color: css-var('text-secondary');
+    pointer-events: none;
+  }
+}
+
+// Dropdown items container (scrollable)
+.#{$so-prefix}dropdown-items {
+  max-height: 240px;
+  overflow-y: auto;
+  @include custom-scrollbar;
+}
+
+// ============================================
+// NO SCROLL VARIANT
+// Usage: .so-dropdown.so-dropdown-no-scroll
+// Removes max-height constraint from menu
+// ============================================
+
+.#{$so-prefix}dropdown.#{$so-prefix}dropdown-no-scroll {
+  .#{$so-prefix}dropdown-menu {
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  .#{$so-prefix}dropdown-items {
+    max-height: none !important;
+    overflow: visible !important;
+  }
+}
+
+// Also support on menu element directly
+.#{$so-prefix}dropdown-menu.#{$so-prefix}dropdown-menu-no-scroll {
+  max-height: none !important;
+  overflow: visible !important;
+
+  .#{$so-prefix}dropdown-items {
+    max-height: none !important;
+    overflow: visible !important;
+  }
+}
+
+// When menu has structured content (search, actions, items), remove outer scroll
+.#{$so-prefix}dropdown-menu:has(.#{$so-prefix}dropdown-items),
+.#{$so-prefix}dropdown-menu:has(.#{$so-prefix}dropdown-search),
+.#{$so-prefix}dropdown-menu:has(.#{$so-prefix}dropdown-actions) {
+  max-height: none;
+  overflow: visible;
+}
+
+// Empty state message
+.#{$so-prefix}dropdown-empty {
+  padding: spacing('4');
+  text-align: center;
+  color: css-var('text-secondary');
+  font-size: font-size('sm');
+}
+
+// ============================================
+// LEGACY SEARCHABLE DROPDOWN (for backwards compatibility)
+// ============================================
+
+.#{$so-prefix}searchable-dropdown {
+  position: relative;
+  display: block;
+}
+
+// Legacy trigger - now uses same styling as standard dropdown
+.#{$so-prefix}searchable-dropdown-trigger,
+.#{$so-prefix}searchable-trigger {
+  display: flex;
+  align-items: center;
+  gap: spacing('2');
+  width: 100%;
+  height: $so-form-height-md;
+  padding: 0 spacing('3');
+  padding-right: 36px;
+  font-size: font-size('base');
+  font-weight: font-weight('medium');
+  font-family: inherit;
+  color: css-var('text-secondary');
+  background: css-var('card-bg');
+  border: 1px solid css-var('border-color');
+  border-radius: radius('base');
+  cursor: pointer;
+  text-align: left;
+  transition: all $so-transition-base;
+  position: relative;
+
+  &:hover {
+    background: css-var('card-hover-bg');
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px alpha($so-grey-500, 0.2);
+  }
+
+  &:active:not(:disabled) {
+    background: css-var('card-hover-bg');
+  }
+
+  .placeholder {
+    color: css-var('form-placeholder');
+  }
+
+  .#{$so-prefix}dropdown-arrow {
+    position: absolute;
+    right: 12px;
+    color: css-var('text-secondary');
+    transition: transform $so-transition-normal;
+  }
+}
+
+.#{$so-prefix}searchable-dropdown.#{$so-prefix}open {
+  .#{$so-prefix}searchable-dropdown-trigger,
+  .#{$so-prefix}searchable-trigger {
+    background: css-var('card-hover-bg');
+    box-shadow: 0 0 0 3px alpha($so-grey-500, 0.2);
+
+    .#{$so-prefix}dropdown-arrow {
+      transform: rotate(180deg);
+    }
+  }
+}
+
+.#{$so-prefix}searchable-dropdown-menu,
+.#{$so-prefix}searchable-menu {
+  @include dropdown-menu;
+  left: 0;
+  right: 0;
+  min-width: auto;
+  // Remove outer scroll - items container handles scrolling
+  max-height: none;
+  overflow: visible;
+}
+
+.#{$so-prefix}searchable-dropdown.#{$so-prefix}open .#{$so-prefix}searchable-dropdown-menu,
+.#{$so-prefix}searchable-dropdown.#{$so-prefix}open .#{$so-prefix}searchable-menu {
+  @include dropdown-open;
+}
+
+.#{$so-prefix}searchable-dropdown-search,
+.#{$so-prefix}searchable-search {
+  position: relative;
+  padding: spacing('2') spacing('3');
+  border-bottom: 1px solid css-var('dropdown-border');
+
+  // Hide the external icon - we'll use icon inside input
+  > .material-icons {
+    display: none;
+  }
+
+  .#{$so-prefix}input,
+  .#{$so-prefix}searchable-input,
+  .#{$so-prefix}searchable-dropdown-input {
+    width: 100%;
+    height: 32px;
+    padding: 0 spacing('2') 0 28px; // Left padding for icon
+    border: none;
+    border-radius: 0;
+    font-size: font-size('sm');
+    background: transparent;
+    color: css-var('text-primary');
+
+    &:focus {
+      outline: none;
+    }
+
+    &::placeholder {
+      color: css-var('text-secondary');
+    }
+  }
+
+  // Search icon inside input
+  &::before {
+    content: 'search';
+    font-family: 'Material Icons';
+    position: absolute;
+    left: spacing('3');
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 16px;
+    color: css-var('text-secondary');
+    pointer-events: none;
+  }
+}
+
+.#{$so-prefix}searchable-dropdown-list,
+.#{$so-prefix}searchable-items {
+  max-height: 240px;
+  overflow-y: auto;
+  @include custom-scrollbar;
+}
+
+.#{$so-prefix}searchable-dropdown-item,
+.#{$so-prefix}searchable-item {
+  @include dropdown-item;
+
+  .check-icon {
+    font-size: 18px;
+    margin-left: auto;
+    visibility: hidden;
+  }
+
+  &.#{$so-prefix}selected .check-icon {
+    visibility: visible;
+  }
+}
+
+.#{$so-prefix}searchable-dropdown-empty {
+  padding: spacing('4');
+  text-align: center;
+  color: css-var('text-secondary');
+  font-size: font-size('sm');
+}
+
+// ============================================
+// OUTLET DROPDOWN (Icon + Searchable)
+// ============================================
+
+.#{$so-prefix}outlet-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.#{$so-prefix}outlet-dropdown-trigger {
+  display: flex;
+  align-items: center;
+  gap: spacing('2');
+  height: $so-form-height-md;
+  padding: 0 spacing('3');
+  font-size: font-size('base');
+  font-family: inherit;
+  color: css-var('form-text');
+  background: css-var('form-bg');
+  border: 1px solid css-var('form-border');
+  border-radius: radius('base');
+  cursor: pointer;
+  transition: border-color $so-transition-base, background $so-transition-base, box-shadow $so-transition-base;
+
+  &:hover {
+    border-color: css-var('form-border-hover');
+    background: css-var('dropdown-item-hover');
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px alpha($so-grey-500, 0.2);
+  }
+
+  &:active:not(:disabled) {
+    background: css-var('dropdown-item-hover');
+  }
+
+  .outlet-icon {
+    font-size: 18px;
+    color: css-var('text-secondary');
+  }
+
+  .outlet-text {
+    max-width: 150px;
+    @include text-truncate;
+  }
+
+  .outlet-arrow {
+    font-size: 18px;
+    color: css-var('text-secondary');
+    margin-left: auto;
+    transition: transform $so-transition-normal;
+  }
+}
+
+.#{$so-prefix}outlet-dropdown.#{$so-prefix}open {
+  .#{$so-prefix}outlet-dropdown-trigger {
+    background: css-var('dropdown-item-hover');
+    box-shadow: 0 0 0 3px alpha($so-grey-500, 0.2);
+
+    .outlet-arrow {
+      transform: rotate(180deg);
+    }
+  }
+}
+
+.#{$so-prefix}outlet-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  min-width: 220px;
+  background: css-var('dropdown-bg');
+  border: 1px solid css-var('form-border');
+  border-radius: radius('base');
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: z-index('dropdown');
+  display: none;
+}
+
+.#{$so-prefix}outlet-dropdown.#{$so-prefix}open .#{$so-prefix}outlet-dropdown-menu {
+  display: block;
+}
+
+// Position modifiers
+.#{$so-prefix}outlet-dropdown.position-right .#{$so-prefix}outlet-dropdown-menu {
+  left: auto;
+  right: 0;
+}
+
+.#{$so-prefix}outlet-dropdown.position-top .#{$so-prefix}outlet-dropdown-menu {
+  top: auto;
+  bottom: calc(100% + 4px);
+}
+
+.#{$so-prefix}outlet-dropdown-search {
+  padding: spacing('2');
+  border-bottom: 1px solid css-var('dropdown-border');
+
+  input {
+    width: 100%;
+    padding: spacing('2') spacing('3');
+    font-size: font-size('sm');
+    font-family: inherit;
+    color: css-var('form-text');
+    background: css-var('form-bg');
+    border: 1px solid css-var('form-border');
+    border-radius: radius('base');
+    outline: none;
+    transition: border-color $so-transition-base;
+
+    &::placeholder {
+      color: css-var('form-placeholder');
+    }
+
+    &:focus {
+      border-color: css-var('form-border-focus');
+    }
+  }
+}
+
+.#{$so-prefix}outlet-dropdown-list {
+  max-height: 240px;
+  overflow-y: auto;
+  @include custom-scrollbar;
+}
+
+.#{$so-prefix}outlet-dropdown-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: spacing('2') + 2px spacing('3');
+  font-size: font-size('base');
+  color: css-var('form-text');
+  cursor: pointer;
+  transition: background $so-transition-base;
+
+  &:hover {
+    background: css-var('dropdown-item-hover');
+  }
+
+  &.#{$so-prefix}selected {
+    background: css-var('dropdown-item-active');
+    color: css-var('dropdown-item-active-text');
+  }
+
+  .check-icon {
+    font-size: 18px;
+    visibility: hidden;
+  }
+
+  &.#{$so-prefix}selected .check-icon {
+    visibility: visible;
+  }
+}
+
+.#{$so-prefix}outlet-dropdown-empty {
+  padding: spacing('4');
+  text-align: center;
+  color: css-var('text-secondary');
+  font-size: font-size('sm');
+}
+
+// Size variants
+.#{$so-prefix}outlet-dropdown.#{$so-prefix}outlet-sm {
+  .#{$so-prefix}outlet-dropdown-trigger {
+    height: $so-form-height-sm;
+    padding: 0 spacing('2');
+    font-size: font-size('sm');
+    gap: spacing('1') + 2px;
+
+    .outlet-icon,
+    .outlet-arrow {
+      font-size: 16px;
+    }
+
+    .outlet-text {
+      max-width: 120px;
+    }
+  }
+}
+
+.#{$so-prefix}outlet-dropdown.#{$so-prefix}outlet-lg {
+  .#{$so-prefix}outlet-dropdown-trigger {
+    height: $so-form-height-lg;
+    padding: 0 spacing('4');
+    font-size: font-size('md');
+    gap: spacing('2') + 2px;
+
+    .outlet-text {
+      max-width: 200px;
+    }
+  }
+}
+
+// ============================================
+// OPTIONS DROPDOWN (Icon-only)
+// ============================================
+
+.#{$so-prefix}options-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.#{$so-prefix}options-trigger {
+  display: flex;
+  align-items: center;
+  gap: spacing('1') + 2px;
+  padding: spacing('1') + 2px spacing('3');
+  font-size: font-size('sm');
+  font-weight: font-weight('medium');
+  font-family: inherit;
+  color: css-var('text-secondary');
+  background: css-var('card-bg');
+  border: 1px solid css-var('border-color');
+  border-radius: radius('base');
+  cursor: pointer;
+  transition: all $so-transition-base;
+
+  &:hover {
+    background: css-var('card-hover-bg');
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px alpha($so-grey-500, 0.2);
+  }
+
+  &:active:not(:disabled) {
+    background: css-var('card-hover-bg');
+  }
+
+  .material-icons {
+    font-size: 18px;
+  }
+}
+
+.#{$so-prefix}options-arrow {
+  transition: transform $so-transition-normal;
+}
+
+.#{$so-prefix}options-dropdown.#{$so-prefix}open .#{$so-prefix}options-arrow {
+  transform: rotate(180deg);
+}
+
+.#{$so-prefix}options-dropdown.#{$so-prefix}open .#{$so-prefix}options-trigger {
+  background: css-var('card-hover-bg');
+  box-shadow: 0 0 0 3px alpha($so-grey-500, 0.2);
+}
+
+.#{$so-prefix}options-menu {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  left: auto;
+  bottom: auto;
+  min-width: 220px;
+  background: css-var('dropdown-bg');
+  border: 1px solid css-var('dropdown-border');
+  border-radius: radius('lg');
+  box-shadow: css-var('dropdown-shadow');
+  z-index: z-index('dropdown');
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-8px);
+  transition: opacity $so-transition-normal, visibility $so-transition-normal, transform $so-transition-normal;
+}
+
+.#{$so-prefix}options-dropdown.#{$so-prefix}open .#{$so-prefix}options-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+// Position modifiers
+.#{$so-prefix}options-dropdown.position-left .#{$so-prefix}options-menu {
+  right: auto;
+  left: 0;
+}
+
+.#{$so-prefix}options-dropdown.position-top .#{$so-prefix}options-menu {
+  top: auto;
+  bottom: calc(100% + 4px);
+  transform: translateY(8px);
+}
+
+.#{$so-prefix}options-dropdown.position-top.open .#{$so-prefix}options-menu {
+  transform: translateY(0);
+}
+
+.#{$so-prefix}options-item {
+  display: flex;
+  align-items: center;
+  gap: spacing('2') + 2px;
+  padding: spacing('2') + 2px spacing('3') + 2px;
+  font-size: font-size('base');
+  color: css-var('form-text');
+  text-decoration: none;
+  cursor: pointer;
+  transition: background $so-transition-base;
+
+  &:first-child {
+    border-radius: radius('lg') radius('lg') 0 0;
+  }
+
+  &:last-child {
+    border-radius: 0 0 radius('lg') radius('lg');
+  }
+
+  &:only-child {
+    border-radius: radius('lg');
+  }
+
+  &:hover {
+    background: css-var('dropdown-item-hover');
+    text-decoration: none;
+  }
+
+  .material-icons {
+    font-size: 18px;
+    color: css-var('text-secondary');
+  }
+
+  &:hover .material-icons {
+    color: css-var('dropdown-item-active-text');
+  }
+
+  &.danger {
+    color: css-var('accent-danger');
+
+    .material-icons {
+      color: css-var('accent-danger');
+    }
+  }
+}
+
+.#{$so-prefix}options-divider {
+  height: 1px;
+  margin: spacing('1') 0;
+  background: css-var('dropdown-border');
+}
+
+// ============================================
+// DISABLED STATES
+// ============================================
+
+// Disabled dropdown
+.#{$so-prefix}dropdown.disabled,
+.#{$so-prefix}searchable-dropdown.disabled,
+.#{$so-prefix}options-dropdown.disabled,
+.#{$so-prefix}outlet-dropdown.disabled {
+  opacity: 0.6;
+  pointer-events: none;
+
+  .#{$so-prefix}dropdown-trigger,
+  .#{$so-prefix}searchable-trigger,
+  .#{$so-prefix}options-trigger,
+  .#{$so-prefix}outlet-dropdown-trigger {
+    cursor: not-allowed;
+  }
+}
+
+// Disabled item state
+.#{$so-prefix}dropdown-item,
+.#{$so-prefix}searchable-item,
+.#{$so-prefix}options-item,
+.#{$so-prefix}outlet-dropdown-item {
+  &.#{$so-prefix}disabled,
+  &:disabled,
+  &[aria-disabled="true"] {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+
+    &:hover {
+      background: transparent;
+    }
+  }
+
+  // Focused state (keyboard navigation)
+  &.#{$so-prefix}focused {
+    background: css-var('dropdown-item-hover');
+    outline: none;
+  }
+}
+
+// ============================================
+// NON-INTERACTIVE TEXT ITEM
+// ============================================
+
+.#{$so-prefix}dropdown-item-text {
+  display: block;
+  padding: spacing('2') spacing('3');
+  font-size: font-size('sm');
+  color: css-var('text-secondary');
+  user-select: none;
+
+  &:hover {
+    background: transparent;
+    cursor: default;
+  }
+}
+
+// ============================================
+// DIRECTIONAL VARIANTS
+// ============================================
+
+// Dropup - Opens above trigger
+.#{$so-prefix}dropup {
+  .#{$so-prefix}dropdown-menu {
+    top: auto;
+    bottom: calc(100% + 4px);
+    transform-origin: bottom center;
+  }
+
+  .#{$so-prefix}dropdown-trigger .#{$so-prefix}dropdown-arrow {
+    transform: rotate(180deg);
+  }
+
+  &.#{$so-prefix}open .#{$so-prefix}dropdown-trigger .#{$so-prefix}dropdown-arrow {
+    transform: rotate(0deg);
+  }
+}
+
+// Dropstart - Opens to the left
+.#{$so-prefix}dropstart {
+  .#{$so-prefix}dropdown-menu {
+    top: 0;
+    left: auto;
+    right: calc(100% + 4px);
+    transform-origin: right center;
+  }
+}
+
+// Dropend - Opens to the right
+.#{$so-prefix}dropend {
+  .#{$so-prefix}dropdown-menu {
+    top: 0;
+    left: calc(100% + 4px);
+    right: auto;
+    transform-origin: left center;
+  }
+}
+
+// ============================================
+// MENU ALIGNMENT
+// ============================================
+
+// Right-aligned menu - apply to dropdown container
+.#{$so-prefix}dropdown.#{$so-prefix}dropdown-menu-end,
+.#{$so-prefix}searchable-dropdown.#{$so-prefix}dropdown-menu-end,
+.#{$so-prefix}options-dropdown.#{$so-prefix}dropdown-menu-end {
+  .#{$so-prefix}dropdown-menu,
+  .#{$so-prefix}searchable-menu,
+  .#{$so-prefix}options-menu {
+    left: auto;
+    right: 0;
+  }
+}
+
+// Also support as direct class on menu element
+.#{$so-prefix}dropdown-menu.#{$so-prefix}dropdown-menu-end,
+.#{$so-prefix}searchable-menu.#{$so-prefix}dropdown-menu-end,
+.#{$so-prefix}options-menu.#{$so-prefix}dropdown-menu-end {
+  left: auto;
+  right: 0;
+}
+
+// ============================================
+// SIZE VARIANTS
+// ============================================
+
+// Small dropdown
+.#{$so-prefix}dropdown-sm {
+  .#{$so-prefix}dropdown-trigger {
+    height: $so-form-height-sm;
+    padding: 0 spacing('2');
+    font-size: font-size('sm');
+  }
+
+  .#{$so-prefix}dropdown-menu {
+    min-width: 160px;
+  }
+
+  .#{$so-prefix}dropdown-item {
+    padding: spacing('1') + 2px spacing('2');
+    font-size: font-size('sm');
+  }
+
+  .#{$so-prefix}dropdown-header {
+    padding: spacing('1') + 2px spacing('2');
+    font-size: 10px;
+  }
+}
+
+// Large dropdown
+.#{$so-prefix}dropdown-lg {
+  .#{$so-prefix}dropdown-trigger {
+    height: $so-form-height-lg;
+    padding: 0 spacing('4');
+    font-size: font-size('md');
+  }
+
+  .#{$so-prefix}dropdown-menu {
+    min-width: 280px;
+  }
+
+  .#{$so-prefix}dropdown-item {
+    padding: spacing('3') spacing('4');
+    font-size: font-size('md');
+  }
+
+  .#{$so-prefix}dropdown-header {
+    padding: spacing('2') + 2px spacing('4');
+    font-size: font-size('xs');
+  }
+}
+
+// ============================================
+// SPLIT BUTTON DROPDOWN
+// ============================================
+
+.#{$so-prefix}btn-group {
+  display: inline-flex;
+
+  // Remove gap between buttons
+  > .#{$so-prefix}btn:not(:last-child),
+  > .#{$so-prefix}dropdown:not(:last-child) .#{$so-prefix}btn {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  > .#{$so-prefix}btn:not(:first-child),
+  > .#{$so-prefix}dropdown:not(:first-child) .#{$so-prefix}btn,
+  > .#{$so-prefix}dropdown:not(:first-child) .#{$so-prefix}dropdown-trigger {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    margin-left: -1px;
+  }
+
+  // Split dropdown trigger (caret only)
+  > .#{$so-prefix}dropdown {
+    position: relative;
+
+    .#{$so-prefix}dropdown-trigger {
+      padding: 0 spacing('2');
+
+      // Hide the selected text in split mode
+      .#{$so-prefix}dropdown-selected {
+        display: none;
+      }
+    }
+  }
+
+  // Separator line between buttons - contextual colors
+  > .#{$so-prefix}btn + .#{$so-prefix}dropdown .#{$so-prefix}dropdown-trigger,
+  > .#{$so-prefix}btn + .#{$so-prefix}dropdown .#{$so-prefix}btn {
+    border-left: 1px solid rgba(255, 255, 255, 0.25);
+  }
+
+  // Primary separator
+  > .#{$so-prefix}btn-primary + .#{$so-prefix}dropdown .#{$so-prefix}btn-primary {
+    border-left-color: rgba(255, 255, 255, 0.3);
+  }
+
+  // Secondary separator
+  > .#{$so-prefix}btn-secondary + .#{$so-prefix}dropdown .#{$so-prefix}btn-secondary {
+    border-left-color: rgba(255, 255, 255, 0.3);
+  }
+
+  // Success separator
+  > .#{$so-prefix}btn-success + .#{$so-prefix}dropdown .#{$so-prefix}btn-success {
+    border-left-color: rgba(255, 255, 255, 0.3);
+  }
+
+  // Danger separator
+  > .#{$so-prefix}btn-danger + .#{$so-prefix}dropdown .#{$so-prefix}btn-danger {
+    border-left-color: rgba(255, 255, 255, 0.3);
+  }
+
+  // Warning separator - darker for better visibility on yellow/orange
+  > .#{$so-prefix}btn-warning + .#{$so-prefix}dropdown .#{$so-prefix}btn-warning {
+    border-left-color: rgba(0, 0, 0, 0.15);
+  }
+
+  // Info separator
+  > .#{$so-prefix}btn-info + .#{$so-prefix}dropdown .#{$so-prefix}btn-info {
+    border-left-color: rgba(255, 255, 255, 0.3);
+  }
+
+  // Light separator - dark line for light buttons
+  > .#{$so-prefix}btn-light + .#{$so-prefix}dropdown .#{$so-prefix}btn-light {
+    border-left-color: rgba(0, 0, 0, 0.1);
+  }
+
+  // Outline separators - use border color
+  > .#{$so-prefix}btn-outline + .#{$so-prefix}dropdown .#{$so-prefix}btn-outline {
+    border-left-color: css-var('border-color');
+  }
+
+  > .#{$so-prefix}btn-outline-primary + .#{$so-prefix}dropdown .#{$so-prefix}btn-outline-primary {
+    border-left-color: css-var('accent-primary');
+  }
+
+  > .#{$so-prefix}btn-outline-success + .#{$so-prefix}dropdown .#{$so-prefix}btn-outline-success {
+    border-left-color: css-var('accent-success');
+  }
+
+  > .#{$so-prefix}btn-outline-danger + .#{$so-prefix}dropdown .#{$so-prefix}btn-outline-danger {
+    border-left-color: css-var('accent-danger');
+  }
+
+  > .#{$so-prefix}btn-outline-warning + .#{$so-prefix}dropdown .#{$so-prefix}btn-outline-warning {
+    border-left-color: css-var('accent-warning');
+  }
+
+  > .#{$so-prefix}btn-outline-info + .#{$so-prefix}dropdown .#{$so-prefix}btn-outline-info {
+    border-left-color: css-var('accent-info');
+  }
+
+  > .#{$so-prefix}btn-outline-secondary + .#{$so-prefix}dropdown .#{$so-prefix}btn-outline-secondary {
+    border-left-color: $so-secondary;
+  }
+}
+
+// ============================================
+// ACTIVE/SELECTED ITEM ENHANCEMENT
+// ============================================
+
+.#{$so-prefix}dropdown-item,
+.#{$so-prefix}searchable-item,
+.#{$so-prefix}outlet-dropdown-item {
+  &.#{$so-prefix}active,
+  &.#{$so-prefix}selected {
+    background: css-var('dropdown-item-active');
+    color: css-var('dropdown-item-active-text');
+    font-weight: font-weight('medium');
+
+    // Show checkmark if present
+    .#{$so-prefix}dropdown-check,
+    .check-icon {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+}
+
+// ============================================
+// DROPDOWN WITH ICONS
+// ============================================
+
+.#{$so-prefix}dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: spacing('2');
+
+  .material-icons:first-child {
+    flex-shrink: 0;
+  }
+}
+
+// ============================================
+// SELECTION STYLE VARIANTS
+// ============================================
+
+// Default: background + checkmark (default behavior, no extra class needed)
+
+// Highlight only: background color, no checkmark
+.#{$so-prefix}dropdown-selection-highlight {
+  .#{$so-prefix}dropdown-item,
+  .#{$so-prefix}searchable-item,
+  .#{$so-prefix}outlet-dropdown-item {
+    .#{$so-prefix}dropdown-check,
+    .check-icon {
+      display: none !important;
+    }
+  }
+}
+
+// Check only: checkmark only, no background
+.#{$so-prefix}dropdown-selection-check {
+  .#{$so-prefix}dropdown-item,
+  .#{$so-prefix}searchable-item,
+  .#{$so-prefix}outlet-dropdown-item {
+    &.#{$so-prefix}active,
+    &.#{$so-prefix}selected {
+      background: transparent;
+      color: inherit;
+      font-weight: inherit;
+
+      &:hover {
+        background: css-var('dropdown-item-hover');
+      }
+
+      .#{$so-prefix}dropdown-check,
+      .check-icon {
+        opacity: 1;
+        visibility: visible;
+        color: css-var('accent-primary');
+      }
+    }
+  }
+}
+
+// ============================================
+// MULTIPLE SELECTION STYLES
+// ============================================
+
+// Select All / Select None actions bar
+.#{$so-prefix}dropdown-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: spacing('1');
+  padding: spacing('2') spacing('3');
+  border-bottom: 1px solid css-var('dropdown-border');
+  font-size: font-size('sm');
+
+  .#{$so-prefix}dropdown-action {
+    color: css-var('accent-primary');
+    cursor: pointer;
+    font-weight: font-weight('medium');
+    transition: color $so-transition-base;
+    background: none;
+    border: none;
+    padding: 0;
+    font-family: inherit;
+    font-size: inherit;
+
+    &:hover {
+      color: css-var('accent-primary-hover');
+      text-decoration: underline;
+    }
+
+    &:focus {
+      outline: none;
+      text-decoration: underline;
+    }
+
+    &.disabled,
+    &:disabled {
+      color: css-var('text-disabled');
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+  }
+
+  // Separator between links
+  .#{$so-prefix}dropdown-action-separator {
+    color: css-var('text-muted');
+    user-select: none;
+  }
+}
+
+.#{$so-prefix}dropdown-multiple {
+  // Multiple selection badge in trigger
+  .#{$so-prefix}dropdown-selected,
+  .#{$so-prefix}searchable-selected {
+    &.placeholder {
+      color: css-var('form-placeholder');
+    }
+  }
+
+  // Items with checkbox - using .so-checkbox-box structure
+  .#{$so-prefix}dropdown-item,
+  .#{$so-prefix}searchable-item {
+    // Override space-between to left-align content
+    justify-content: flex-start;
+
+    // Checkbox box element - matching .so-checkbox-box exactly
+    .#{$so-prefix}checkbox-box {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 18px;
+      height: 18px;
+      min-width: 18px;
+      border: 2px solid css-var('form-border');
+      border-radius: radius('xs');
+      background: transparent;
+      flex-shrink: 0;
+      margin-right: spacing('2');
+      transition: all $so-transition-base;
+
+      .material-icons {
+        font-size: 14px;
+        color: $so-white;
+        opacity: 0;
+        transform: scale(0.5);
+        transition: all $so-transition-base;
+      }
+    }
+
+    // Hover state - matching .so-checkbox:hover behavior
+    &:hover .#{$so-prefix}checkbox-box {
+      border-color: css-var('accent-primary');
+    }
+
+    // Selected/checked state - matching .so-checkbox input:checked + .so-checkbox-box
+    &.#{$so-prefix}selected .#{$so-prefix}checkbox-box,
+    &.#{$so-prefix}active .#{$so-prefix}checkbox-box {
+      background: css-var('accent-primary');
+      border-color: css-var('accent-primary');
+
+      .material-icons {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    // Hide the default check icon when using checkbox style
+    .#{$so-prefix}dropdown-check,
+    .check-icon {
+      display: none;
+    }
+  }
+}
+
+// Multiple selection without checkbox (just highlights)
+.#{$so-prefix}dropdown-multiple.#{$so-prefix}dropdown-selection-highlight {
+  .#{$so-prefix}dropdown-item,
+  .#{$so-prefix}searchable-item {
+    .#{$so-prefix}checkbox-box {
+      display: none;
+    }
+  }
+}
+
+// Multiple selection with check icons only (no background - legacy)
+.#{$so-prefix}dropdown-multiple.#{$so-prefix}dropdown-selection-check {
+  .#{$so-prefix}dropdown-item,
+  .#{$so-prefix}searchable-item {
+    .#{$so-prefix}checkbox-box {
+      display: none;
+    }
+
+    .#{$so-prefix}dropdown-check,
+    .check-icon {
+      display: block;
+    }
+  }
+}
+
+// Multiple selection with check icons AND background highlight (multipleStyle="check")
+.#{$so-prefix}dropdown-multiple-check {
+  .#{$so-prefix}dropdown-item,
+  .#{$so-prefix}searchable-item {
+    // Hide checkbox boxes
+    .#{$so-prefix}checkbox-box {
+      display: none;
+    }
+
+    // Show check icons
+    .#{$so-prefix}dropdown-check,
+    .check-icon {
+      display: block;
+      opacity: 0;
+      margin-left: auto;
+    }
+
+    // Selected state - show background AND check icon
+    &.#{$so-prefix}active,
+    &.#{$so-prefix}selected {
+      background: css-var('dropdown-item-active');
+      color: css-var('dropdown-item-active-text');
+      font-weight: font-weight('medium');
+
+      .#{$so-prefix}dropdown-check,
+      .check-icon {
+        opacity: 1;
+        color: css-var('accent-primary');
+      }
+    }
+  }
+}
+
+// ============================================
+// CONTEXTUAL SELECTION VARIANTS
+// ============================================
+
+// Primary (default - same as base)
+.#{$so-prefix}dropdown-primary {
+  .#{$so-prefix}dropdown-item,
+  .#{$so-prefix}searchable-item,
+  .#{$so-prefix}outlet-dropdown-item {
+    &.#{$so-prefix}active,
+    &.#{$so-prefix}selected {
+      background: alpha($so-primary, 0.1);
+      color: css-var('accent-primary');
+
+      .#{$so-prefix}dropdown-check,
+      .check-icon {
+        color: css-var('accent-primary');
+      }
+    }
+  }
+
+  // Multiple selection checkbox color
+  &.#{$so-prefix}dropdown-multiple {
+    .#{$so-prefix}dropdown-item,
+    .#{$so-prefix}searchable-item {
+      &:hover .#{$so-prefix}checkbox-box {
+        border-color: css-var('accent-primary');
+      }
+
+      &.selected .#{$so-prefix}checkbox-box,
+      &.active .#{$so-prefix}checkbox-box {
+        background: css-var('accent-primary');
+        border-color: css-var('accent-primary');
+      }
+    }
+  }
+}
+
+// Success
+.#{$so-prefix}dropdown-success {
+  .#{$so-prefix}dropdown-item,
+  .#{$so-prefix}searchable-item,
+  .#{$so-prefix}outlet-dropdown-item {
+    &.#{$so-prefix}active,
+    &.#{$so-prefix}selected {
+      background: alpha($so-success, 0.1);
+      color: css-var('accent-success');
+
+      .#{$so-prefix}dropdown-check,
+      .check-icon {
+        color: css-var('accent-success');
+      }
+    }
+  }
+
+  &.#{$so-prefix}dropdown-multiple {
+    .#{$so-prefix}dropdown-item,
+    .#{$so-prefix}searchable-item {
+      // Hover state - change checkbox border to contextual color
+      &:hover .#{$so-prefix}checkbox-box {
+        border-color: css-var('accent-success');
+      }
+
+      &.selected .#{$so-prefix}checkbox-box,
+      &.active .#{$so-prefix}checkbox-box {
+        background: css-var('accent-success');
+        border-color: css-var('accent-success');
+      }
+    }
+  }
+}
+
+// Danger
+.#{$so-prefix}dropdown-danger {
+  .#{$so-prefix}dropdown-item,
+  .#{$so-prefix}searchable-item,
+  .#{$so-prefix}outlet-dropdown-item {
+    &.#{$so-prefix}active,
+    &.#{$so-prefix}selected {
+      background: alpha($so-danger, 0.1);
+      color: css-var('accent-danger');
+
+      .#{$so-prefix}dropdown-check,
+      .check-icon {
+        color: css-var('accent-danger');
+      }
+    }
+  }
+
+  &.#{$so-prefix}dropdown-multiple {
+    .#{$so-prefix}dropdown-item,
+    .#{$so-prefix}searchable-item {
+      // Hover state - change checkbox border to contextual color
+      &:hover .#{$so-prefix}checkbox-box {
+        border-color: css-var('accent-danger');
+      }
+
+      &.selected .#{$so-prefix}checkbox-box,
+      &.active .#{$so-prefix}checkbox-box {
+        background: css-var('accent-danger');
+        border-color: css-var('accent-danger');
+      }
+    }
+  }
+}
+
+// Warning
+.#{$so-prefix}dropdown-warning {
+  .#{$so-prefix}dropdown-item,
+  .#{$so-prefix}searchable-item,
+  .#{$so-prefix}outlet-dropdown-item {
+    &.#{$so-prefix}active,
+    &.#{$so-prefix}selected {
+      background: alpha($so-warning, 0.15);
+      color: css-var('accent-warning');
+
+      .#{$so-prefix}dropdown-check,
+      .check-icon {
+        color: css-var('accent-warning');
+      }
+    }
+  }
+
+  &.#{$so-prefix}dropdown-multiple {
+    .#{$so-prefix}dropdown-item,
+    .#{$so-prefix}searchable-item {
+      // Hover state - change checkbox border to contextual color
+      &:hover .#{$so-prefix}checkbox-box {
+        border-color: css-var('accent-warning');
+      }
+
+      &.selected .#{$so-prefix}checkbox-box,
+      &.active .#{$so-prefix}checkbox-box {
+        background: css-var('accent-warning');
+        border-color: css-var('accent-warning');
+      }
+    }
+  }
+}
+
+// Info
+.#{$so-prefix}dropdown-info {
+  .#{$so-prefix}dropdown-item,
+  .#{$so-prefix}searchable-item,
+  .#{$so-prefix}outlet-dropdown-item {
+    &.#{$so-prefix}active,
+    &.#{$so-prefix}selected {
+      background: alpha($so-info, 0.1);
+      color: css-var('accent-info');
+
+      .#{$so-prefix}dropdown-check,
+      .check-icon {
+        color: css-var('accent-info');
+      }
+    }
+  }
+
+  &.#{$so-prefix}dropdown-multiple {
+    .#{$so-prefix}dropdown-item,
+    .#{$so-prefix}searchable-item {
+      // Hover state - change checkbox border to contextual color
+      &:hover .#{$so-prefix}checkbox-box {
+        border-color: css-var('accent-info');
+      }
+
+      &.selected .#{$so-prefix}checkbox-box,
+      &.active .#{$so-prefix}checkbox-box {
+        background: css-var('accent-info');
+        border-color: css-var('accent-info');
+      }
+    }
+  }
+}
+
+// Secondary
+.#{$so-prefix}dropdown-secondary {
+  .#{$so-prefix}dropdown-item,
+  .#{$so-prefix}searchable-item,
+  .#{$so-prefix}outlet-dropdown-item {
+    &.#{$so-prefix}active,
+    &.#{$so-prefix}selected {
+      background: css-var('card-hover-bg');
+      color: css-var('text-primary');
+
+      .#{$so-prefix}dropdown-check,
+      .check-icon {
+        color: css-var('text-secondary');
+      }
+    }
+  }
+
+  &.#{$so-prefix}dropdown-multiple {
+    .#{$so-prefix}dropdown-item,
+    .#{$so-prefix}searchable-item {
+      // Hover state - change checkbox border to contextual color
+      &:hover .#{$so-prefix}checkbox-box {
+        border-color: $so-secondary;
+      }
+
+      &.selected .#{$so-prefix}checkbox-box,
+      &.active .#{$so-prefix}checkbox-box {
+        background: $so-secondary;
+        border-color: $so-secondary;
+      }
+    }
+  }
+}
+
+// Light
+.#{$so-prefix}dropdown-light {
+  .#{$so-prefix}dropdown-item,
+  .#{$so-prefix}searchable-item,
+  .#{$so-prefix}outlet-dropdown-item {
+    &.#{$so-prefix}active,
+    &.#{$so-prefix}selected {
+      background: alpha($so-grey-300, 0.2);
+      color: $so-grey-700;
+
+      .#{$so-prefix}dropdown-check,
+      .check-icon {
+        color: $so-grey-600;
+      }
+    }
+  }
+
+  &.#{$so-prefix}dropdown-multiple {
+    .#{$so-prefix}dropdown-item,
+    .#{$so-prefix}searchable-item {
+      &:hover .#{$so-prefix}checkbox-box {
+        border-color: $so-grey-400;
+      }
+
+      &.selected .#{$so-prefix}checkbox-box,
+      &.active .#{$so-prefix}checkbox-box {
+        background: $so-grey-400;
+        border-color: $so-grey-400;
+      }
+    }
+  }
+}
+
+// Dark
+.#{$so-prefix}dropdown-dark {
+  .#{$so-prefix}dropdown-item,
+  .#{$so-prefix}searchable-item,
+  .#{$so-prefix}outlet-dropdown-item {
+    &.#{$so-prefix}active,
+    &.#{$so-prefix}selected {
+      background: $so-grey-900;
+      color: $so-white;
+
+      .#{$so-prefix}dropdown-check,
+      .check-icon {
+        color: $so-white;
+      }
+    }
+  }
+
+  &.#{$so-prefix}dropdown-multiple {
+    .#{$so-prefix}dropdown-item,
+    .#{$so-prefix}searchable-item {
+      &:hover .#{$so-prefix}checkbox-box {
+        border-color: $so-grey-900;
+      }
+
+      &.selected .#{$so-prefix}checkbox-box,
+      &.active .#{$so-prefix}checkbox-box {
+        background: $so-grey-900;
+        border-color: $so-grey-900;
+      }
+    }
+  }
+}
+
+// ============================================
+// NOWRAP MODIFIER
+// Prevents text wrapping in dropdown items
+// ============================================
+
+.#{$so-prefix}dropdown-nowrap {
+  .#{$so-prefix}dropdown-menu {
+    width: max-content;
+    min-width: 100%;
+    max-width: none;
+
+    // Apply nowrap to all text content
+    * {
+      white-space: nowrap;
+    }
+  }
+}
+
+// Also support on menu directly
+.#{$so-prefix}dropdown-menu-nowrap,
+.#{$so-prefix}searchable-menu-nowrap {
+  width: max-content;
+  min-width: 100%;
+  max-width: none;
+
+  .#{$so-prefix}dropdown-item,
+  .#{$so-prefix}searchable-item {
+    white-space: nowrap;
+  }
+
+  .#{$so-prefix}dropdown-header {
+    white-space: nowrap;
+  }
+}

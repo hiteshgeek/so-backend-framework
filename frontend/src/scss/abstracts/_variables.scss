@@ -1,0 +1,425 @@
+// ============================================
+// SIXORBIT UI - DESIGN TOKENS
+// All design system variables
+// ============================================
+
+@use 'sass:map';
+@use 'config' as *;
+
+// ============================================
+// COLOR PALETTE - PRIMARY (Google Blue Scale)
+// ============================================
+$so-primary: #1a73e8 !default;
+$so-primary-50: #e8f0fe !default;
+$so-primary-100: #d2e3fc !default;
+$so-primary-200: #aecbfa !default;
+$so-primary-300: #8ab4f8 !default;
+$so-primary-400: #669df6 !default;
+$so-primary-500: #4285f4 !default;
+$so-primary-600: #1a73e8 !default;
+$so-primary-700: #1557b0 !default;
+$so-primary-800: #174ea6 !default;
+$so-primary-900: #1a4480 !default;
+
+// Convenient aliases
+$so-primary-light: $so-primary-50 !default;
+$so-primary-lighter: #f0f6ff !default;
+$so-primary-dark: $so-primary-700 !default;
+$so-primary-darker: $so-primary-800 !default;
+$so-primary-hover: $so-primary-700 !default;
+$so-primary-active: $so-primary-800 !default;
+
+// ============================================
+// COLOR PALETTE - INFO (Cyan/Teal Scale)
+// ============================================
+$so-info: #17a2b8 !default;
+$so-info-50: #e0f7fa !default;
+$so-info-100: #b2ebf2 !default;
+$so-info-500: #17a2b8 !default;
+$so-info-700: #138496 !default;
+$so-info-light: $so-info-50 !default;
+$so-info-dark: $so-info-700 !default;
+$so-info-hover: #138496 !default;
+
+// ============================================
+// COLOR PALETTE - SUCCESS (Green Scale)
+// ============================================
+$so-success: #34a853 !default;
+$so-success-50: #e6f4ea !default;
+$so-success-100: #ceead6 !default;
+$so-success-500: #34a853 !default;
+$so-success-700: #2d8f47 !default;
+$so-success-900: #1e7e34 !default;
+$so-success-light: $so-success-50 !default;
+$so-success-lighter: #f0f9f2 !default;
+$so-success-dark: $so-success-700 !default;
+$so-success-darker: $so-success-900 !default;
+$so-success-hover: $so-success-700 !default;
+$so-success-active: $so-success-900 !default;
+
+// ============================================
+// COLOR PALETTE - DANGER (Red Scale)
+// ============================================
+$so-danger: #ea4335 !default;
+$so-danger-50: #fce8e6 !default;
+$so-danger-100: #fad2cf !default;
+$so-danger-500: #ea4335 !default;
+$so-danger-700: #d33426 !default;
+$so-danger-900: #c5221f !default;
+$so-danger-light: $so-danger-50 !default;
+$so-danger-lighter: #fef0ed !default;
+$so-danger-dark: $so-danger-700 !default;
+$so-danger-darker: $so-danger-900 !default;
+$so-danger-hover: $so-danger-700 !default;
+$so-danger-active: $so-danger-900 !default;
+
+// ============================================
+// COLOR PALETTE - WARNING (Orange/Yellow Scale)
+// ============================================
+$so-warning: #f9ab00 !default;
+$so-warning-50: #fef7e0 !default;
+$so-warning-100: #feefc3 !default;
+$so-warning-500: #f9ab00 !default;
+$so-warning-700: #e09b00 !default;
+$so-warning-900: #c68400 !default;
+$so-warning-light: $so-warning-50 !default;
+$so-warning-lighter: #fffbf0 !default;
+$so-warning-dark: $so-warning-700 !default;
+$so-warning-darker: $so-warning-900 !default;
+$so-warning-hover: $so-warning-700 !default;
+$so-warning-active: $so-warning-900 !default;
+
+// ============================================
+// COLOR PALETTE - SECONDARY (Gray Scale)
+// ============================================
+$so-secondary: #6c757d !default;
+$so-secondary-50: #f8f9fa !default;
+$so-secondary-100: #e9ecef !default;
+$so-secondary-500: #6c757d !default;
+$so-secondary-700: #495057 !default;
+$so-secondary-light: $so-secondary-50 !default;
+$so-secondary-dark: $so-secondary-700 !default;
+$so-secondary-hover: #5a6268 !default;
+
+// ============================================
+// COLOR PALETTE - PURPLE (For dark mode accent)
+// ============================================
+$so-purple: #7367f0 !default;
+$so-purple-50: #f3e8fd !default;
+$so-purple-100: #e6d1fb !default;
+$so-purple-500: #7367f0 !default;
+$so-purple-700: #6054e6 !default;
+$so-purple-light: rgba(115, 103, 240, 0.15) !default;
+$so-purple-hover: #9e95f5 !default;
+
+// ============================================
+// COLOR PALETTE - GREY SCALE
+// ============================================
+$so-grey-50: #f8f9fa !default;
+$so-grey-100: #f1f3f4 !default;
+$so-grey-200: #e8eaed !default;
+$so-grey-300: #dadce0 !default;
+$so-grey-400: #bdc1c6 !default;
+$so-grey-500: #9aa0a6 !default;
+$so-grey-600: #80868b !default;
+$so-grey-700: #5f6368 !default;
+$so-grey-800: #3c4043 !default;
+$so-grey-900: #202124 !default;
+
+// White & Black
+$so-white: #ffffff !default;
+$so-black: #000000 !default;
+
+// Light & Dark variants
+$so-light: $so-grey-100 !default;
+$so-dark: $so-grey-800 !default;
+
+// ============================================
+// COLOR MAP (for loops/iterations)
+// ============================================
+$so-colors: (
+  'primary': $so-primary,
+  'secondary': $so-secondary,
+  'success': $so-success,
+  'danger': $so-danger,
+  'warning': $so-warning,
+  'info': $so-info,
+  'light': $so-light,
+  'dark': $so-dark
+) !default;
+
+// ============================================
+// SEMANTIC COLORS - LIGHT MODE
+// ============================================
+$so-page-bg: #f5f5f5 !default;
+$so-card-bg: $so-white !default;
+$so-card-hover-bg: $so-grey-100 !default;
+
+$so-border-color: $so-grey-200 !default;
+$so-border-light: rgba(0, 0, 0, 0.05) !default;
+$so-border-dark: $so-grey-300 !default;
+
+$so-text-primary: $so-grey-900 !default;
+$so-text-heading: $so-grey-900 !default;
+$so-text-secondary: $so-grey-700 !default;
+$so-text-muted: $so-grey-500 !default;
+$so-text-disabled: $so-grey-400 !default;
+$so-text-inverse: $so-white !default;
+
+// ============================================
+// TYPOGRAPHY
+// ============================================
+$so-font-family: 'Google Sans', 'Google Sans Text', 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif !default;
+$so-font-family-mono: 'Roboto Mono', 'SF Mono', 'Monaco', 'Consolas', monospace !default;
+
+// Font sizes (rem-based for accessibility)
+$so-font-sizes: (
+  'xs': 0.6875rem,    // 11px
+  'sm': 0.8125rem,    // 13px
+  'base': 0.875rem,   // 14px
+  'md': 0.9375rem,    // 15px
+  'lg': 1rem,         // 16px
+  'xl': 1.125rem,     // 18px
+  '2xl': 1.25rem,     // 20px
+  '3xl': 1.375rem,    // 22px
+  '4xl': 1.5rem,      // 24px
+  '5xl': 1.75rem,     // 28px
+) !default;
+
+// Font weights
+$so-font-weights: (
+  'light': 300,
+  'regular': 400,
+  'medium': 500,
+  'semibold': 600,
+  'bold': 700,
+) !default;
+
+// Line heights
+$so-line-heights: (
+  'tight': 1.2,
+  'snug': 1.3,
+  'normal': 1.4,
+  'relaxed': 1.5,
+  'loose': 1.6,
+) !default;
+
+// Letter spacing
+$so-letter-spacings: (
+  'tighter': -0.5px,
+  'tight': -0.25px,
+  'normal': 0,
+  'wide': 0.5px,
+  'wider': 0.8px,
+  'widest': 1px,
+) !default;
+
+// ============================================
+// SPACING (4px base grid)
+// ============================================
+$so-spacing-unit: 4px !default;
+
+$so-spacings: (
+  '0': 0,
+  '1': 4px,
+  '2': 8px,
+  '3': 12px,
+  '4': 16px,
+  '5': 20px,
+  '6': 24px,
+  '7': 28px,
+  '8': 32px,
+  '10': 40px,
+  '12': 48px,
+  '16': 64px,
+  '18': 72px,
+  '20': 80px,
+  '24': 96px,
+) !default;
+
+// ============================================
+// LAYOUT DIMENSIONS
+// ============================================
+$so-navbar-height: 56px !default;
+$so-navbar-height-mobile: 50px !default;
+$so-mobile-bottom-bar-height: 60px !default;
+
+$so-sidebar-width: 260px !default;
+$so-sidebar-collapsed-width: 56px !default;
+$so-sidebar-width-tablet: 240px !default;
+$so-sidebar-width-mobile: 280px !default;
+
+// ============================================
+// FORM ELEMENT DIMENSIONS
+// ============================================
+$so-form-height-sm: 32px !default;
+$so-form-height-md: 40px !default;
+$so-form-height-lg: 48px !default;
+
+$so-form-padding-sm: 12px !default;
+$so-form-padding-md: 14px !default;
+$so-form-padding-lg: 16px !default;
+
+$so-form-font-size-sm: 13px !default;
+$so-form-font-size-md: 14px !default;
+$so-form-font-size-lg: 15px !default;
+
+// ============================================
+// BORDER RADIUS
+// ============================================
+$so-radii: (
+  'none': 0,
+  'sm': 3px,
+  'base': 4px,
+  'md': 6px,
+  'lg': 8px,
+  'xl': 10px,
+  '2xl': 12px,
+  '3xl': 16px,
+  'full': 9999px,
+) !default;
+
+// ============================================
+// SHADOWS
+// ============================================
+$so-shadows: (
+  'none': none,
+  'xs': 0 1px 2px 0 rgba(0, 0, 0, 0.08),
+  'sm': 0 1px 3px 0 rgba(0, 0, 0, 0.1),
+  'base': 0 2px 6px 0 rgba(0, 0, 0, 0.15),
+  'md': 0 4px 12px 0 rgba(0, 0, 0, 0.18),
+  'lg': 0 8px 24px 0 rgba(0, 0, 0, 0.22),
+  'xl': 0 12px 32px 0 rgba(0, 0, 0, 0.25),
+  '2xl': 0 16px 48px 0 rgba(0, 0, 0, 0.3),
+) !default;
+
+$so-shadows-dark: (
+  'none': none,
+  'xs': 0 1px 2px 0 rgba(0, 0, 0, 0.15),
+  'sm': 0 1px 3px 0 rgba(0, 0, 0, 0.2),
+  'base': 0 2px 6px 0 rgba(0, 0, 0, 0.25),
+  'md': 0 4px 12px 0 rgba(0, 0, 0, 0.35),
+  'lg': 0 8px 24px 0 rgba(0, 0, 0, 0.45),
+  'xl': 0 12px 32px 0 rgba(0, 0, 0, 0.5),
+  '2xl': 0 16px 48px 0 rgba(0, 0, 0, 0.55),
+) !default;
+
+// ============================================
+// TRANSITIONS
+// ============================================
+$so-transition-durations: (
+  'instant': 0s,
+  'fast': 0.1s,
+  'base': 0.15s,
+  'normal': 0.2s,
+  'slow': 0.25s,
+  'slower': 0.3s,
+  'slowest': 0.4s,
+) !default;
+
+$so-transition-easings: (
+  'linear': linear,
+  'ease': ease,
+  'ease-in': ease-in,
+  'ease-out': ease-out,
+  'ease-in-out': ease-in-out,
+  'material': cubic-bezier(0.4, 0, 0.2, 1),
+  'decelerate': cubic-bezier(0, 0, 0.2, 1),
+  'accelerate': cubic-bezier(0.4, 0, 1, 1),
+  'spring': cubic-bezier(0.175, 0.885, 0.32, 1.275),
+) !default;
+
+// Shorthand transitions
+$so-transition-fast: 0.1s ease !default;
+$so-transition-base: 0.15s ease !default;
+$so-transition-normal: 0.2s ease !default;
+$so-transition-slow: 0.3s ease !default;
+$so-transition-material: 0.2s cubic-bezier(0.4, 0, 0.2, 1) !default;
+$so-transition-sidebar: 0.25s cubic-bezier(0.4, 0, 0.2, 1) !default;
+
+// ============================================
+// Z-INDEX SCALE
+// ============================================
+$so-z-indexes: (
+  'dropdown': 1000,
+  'sticky': 1020,
+  'fixed': 1030,
+  'sidebar': 1040,
+  'modal-backdrop': 1045,
+  'modal': 1050,
+  'popover': 1060,
+  'tooltip': 1070,
+  'toast': 1080,
+  'navbar-dropdown': 1100,
+) !default;
+
+// ============================================
+// BREAKPOINTS
+// ============================================
+$so-breakpoints: (
+  'xs': 0,
+  'sm': 576px,
+  'md': 768px,
+  'lg': 1024px,
+  'xl': 1200px,
+  '2xl': 1400px,
+) !default;
+
+// ============================================
+// HELPER FUNCTIONS FOR VARIABLES
+// ============================================
+
+/// Get font size from map
+@function font-size($size) {
+  @return map.get($so-font-sizes, $size);
+}
+
+/// Get font weight from map
+@function font-weight($weight) {
+  @return map.get($so-font-weights, $weight);
+}
+
+/// Get line height from map
+@function line-height($height) {
+  @return map.get($so-line-heights, $height);
+}
+
+/// Get spacing from map
+@function spacing($key) {
+  @return map.get($so-spacings, $key);
+}
+
+/// Get radius from map
+@function radius($key) {
+  @return map.get($so-radii, $key);
+}
+
+/// Get shadow from map
+@function shadow($key) {
+  @return map.get($so-shadows, $key);
+}
+
+/// Get shadow-dark from map
+@function shadow-dark($key) {
+  @return map.get($so-shadows-dark, $key);
+}
+
+/// Get z-index from map
+@function z-index($key) {
+  @return map.get($so-z-indexes, $key);
+}
+
+/// Get breakpoint from map
+@function breakpoint($key) {
+  @return map.get($so-breakpoints, $key);
+}
+
+/// Get duration from map
+@function duration($key) {
+  @return map.get($so-transition-durations, $key);
+}
+
+/// Get easing from map
+@function easing($key) {
+  @return map.get($so-transition-easings, $key);
+}

@@ -1,0 +1,137 @@
+// ============================================
+// SIXORBIT UI - CSS CUSTOM PROPERTIES
+// Theme variables at :root level
+// ============================================
+
+@use '../abstracts' as *;
+
+// ============================================
+// LIGHT THEME (Default)
+// ============================================
+
+:root {
+  // Generate all light theme variables
+  @include generate-theme-vars($so-theme-light);
+
+  // Layout dimensions
+  --#{$so-css-var-prefix}-navbar-height: #{$so-navbar-height};
+  --#{$so-css-var-prefix}-navbar-height-mobile: #{$so-navbar-height-mobile};
+  --#{$so-css-var-prefix}-sidebar-width: #{$so-sidebar-width};
+  --#{$so-css-var-prefix}-sidebar-collapsed-width: #{$so-sidebar-collapsed-width};
+  --#{$so-css-var-prefix}-mobile-bottom-bar-height: #{$so-mobile-bottom-bar-height};
+
+  // Form heights
+  --#{$so-css-var-prefix}-form-height-sm: #{$so-form-height-sm};
+  --#{$so-css-var-prefix}-form-height-md: #{$so-form-height-md};
+  --#{$so-css-var-prefix}-form-height-lg: #{$so-form-height-lg};
+
+  // Border radius
+  --#{$so-css-var-prefix}-radius-sm: #{radius('sm')};
+  --#{$so-css-var-prefix}-radius-base: #{radius('base')};
+  --#{$so-css-var-prefix}-radius-md: #{radius('md')};
+  --#{$so-css-var-prefix}-radius-lg: #{radius('lg')};
+  --#{$so-css-var-prefix}-radius-xl: #{radius('xl')};
+  --#{$so-css-var-prefix}-radius-full: #{radius('full')};
+
+  // Transitions
+  --#{$so-css-var-prefix}-transition-fast: #{$so-transition-fast};
+  --#{$so-css-var-prefix}-transition-base: #{$so-transition-base};
+  --#{$so-css-var-prefix}-transition-normal: #{$so-transition-normal};
+  --#{$so-css-var-prefix}-transition-slow: #{$so-transition-slow};
+  --#{$so-css-var-prefix}-transition-material: #{$so-transition-material};
+
+  // Typography
+  --#{$so-css-var-prefix}-font-family: #{$so-font-family};
+  --#{$so-css-var-prefix}-font-family-mono: #{$so-font-family-mono};
+
+  // Font sizes (default scale)
+  --#{$so-css-var-prefix}-text-xs: #{font-size('xs')};
+  --#{$so-css-var-prefix}-text-sm: #{font-size('sm')};
+  --#{$so-css-var-prefix}-text-base: #{font-size('base')};
+  --#{$so-css-var-prefix}-text-md: #{font-size('md')};
+  --#{$so-css-var-prefix}-text-lg: #{font-size('lg')};
+  --#{$so-css-var-prefix}-text-xl: #{font-size('xl')};
+  --#{$so-css-var-prefix}-text-2xl: #{font-size('2xl')};
+  --#{$so-css-var-prefix}-text-3xl: #{font-size('3xl')};
+  --#{$so-css-var-prefix}-text-4xl: #{font-size('4xl')};
+
+  // Spacing
+  --#{$so-css-var-prefix}-space-1: #{spacing('1')};
+  --#{$so-css-var-prefix}-space-2: #{spacing('2')};
+  --#{$so-css-var-prefix}-space-3: #{spacing('3')};
+  --#{$so-css-var-prefix}-space-4: #{spacing('4')};
+  --#{$so-css-var-prefix}-space-5: #{spacing('5')};
+  --#{$so-css-var-prefix}-space-6: #{spacing('6')};
+  --#{$so-css-var-prefix}-space-8: #{spacing('8')};
+}
+
+// ============================================
+// DARK THEME
+// ============================================
+
+@if $so-enable-dark-mode {
+  :root[data-theme='dark'],
+  html[data-theme='dark'] {
+    @include generate-theme-vars($so-theme-dark);
+  }
+}
+
+// ============================================
+// FONT SIZE SCALING
+// ============================================
+
+@if $so-enable-font-scaling {
+  // Small font size (compact mode)
+  [data-fontsize='small'] {
+    --#{$so-css-var-prefix}-text-xs: 0.5625rem;   // 9px
+    --#{$so-css-var-prefix}-text-sm: 0.6875rem;   // 11px
+    --#{$so-css-var-prefix}-text-base: 0.75rem;   // 12px
+    --#{$so-css-var-prefix}-text-md: 0.8125rem;   // 13px
+    --#{$so-css-var-prefix}-text-lg: 0.875rem;    // 14px
+    --#{$so-css-var-prefix}-text-xl: 1rem;        // 16px
+    --#{$so-css-var-prefix}-text-2xl: 1.125rem;   // 18px
+    --#{$so-css-var-prefix}-text-3xl: 1.25rem;    // 20px
+    --#{$so-css-var-prefix}-text-4xl: 1.375rem;   // 22px
+  }
+
+  // Large font size (accessibility mode)
+  [data-fontsize='large'] {
+    --#{$so-css-var-prefix}-text-xs: 0.75rem;     // 12px
+    --#{$so-css-var-prefix}-text-sm: 0.875rem;    // 14px
+    --#{$so-css-var-prefix}-text-base: 0.9375rem; // 15px
+    --#{$so-css-var-prefix}-text-md: 1rem;        // 16px
+    --#{$so-css-var-prefix}-text-lg: 1.125rem;    // 18px
+    --#{$so-css-var-prefix}-text-xl: 1.25rem;     // 20px
+    --#{$so-css-var-prefix}-text-2xl: 1.375rem;   // 22px
+    --#{$so-css-var-prefix}-text-3xl: 1.5rem;     // 24px
+    --#{$so-css-var-prefix}-text-4xl: 1.75rem;    // 28px
+  }
+}
+
+// ============================================
+// SIDEBAR-DARK THEME
+// Light page with dark sidebar
+// ============================================
+
+@if $so-enable-sidebar-dark-mode {
+  // Sidebar-specific dark variables
+  // Applied via .sidebar-dark class on the sidebar element
+  .#{$so-prefix}sidebar.sidebar-dark {
+    @include sidebar-dark-vars;
+  }
+}
+
+// ============================================
+// PRINT STYLES
+// ============================================
+
+@media print {
+  :root {
+    --#{$so-css-var-prefix}-page-bg: #ffffff;
+    --#{$so-css-var-prefix}-card-bg: #ffffff;
+    --#{$so-css-var-prefix}-text-primary: #000000;
+    --#{$so-css-var-prefix}-text-secondary: #333333;
+    --#{$so-css-var-prefix}-shadow: none;
+    --#{$so-css-var-prefix}-shadow-lg: none;
+  }
+}
