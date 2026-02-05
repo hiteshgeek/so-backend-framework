@@ -251,17 +251,43 @@ class Badge extends Element {
 
     /**
      * Render the element
-     * @returns {string}
+     * @returns {HTMLElement}
      */
     render() {
-        const badge = super.render();
+        const el = document.createElement(this.getTagName());
+
+        // Apply attributes
+        const attrs = this.buildAttributes();
+        Object.entries(attrs).forEach(([name, value]) => {
+            if (value === true) {
+                el.setAttribute(name, '');
+            } else if (value !== false && value !== null && value !== undefined) {
+                el.setAttribute(name, value);
+            }
+        });
+
+        // Set content from renderContent()
+        const content = this.renderContent();
+        if (content) {
+            el.innerHTML = content;
+        }
+
+        this.element = el;
 
         // For dot badges with label, wrap in container with label
         if (this._dot && this._label) {
-            return `<span class="${SixOrbit.cls('d-inline-flex')} ${SixOrbit.cls('align-items-center')} ${SixOrbit.cls('gap-2')}">${badge}<span>${this._escapeHtml(this._label)}</span></span>`;
+            const wrapper = document.createElement('span');
+            wrapper.className = `${SixOrbit.cls('d-inline-flex')} ${SixOrbit.cls('align-items-center')} ${SixOrbit.cls('gap-2')}`;
+            wrapper.appendChild(el);
+
+            const labelSpan = document.createElement('span');
+            labelSpan.textContent = this._label;
+            wrapper.appendChild(labelSpan);
+
+            return wrapper;
         }
 
-        return badge;
+        return el;
     }
 
     // ==================

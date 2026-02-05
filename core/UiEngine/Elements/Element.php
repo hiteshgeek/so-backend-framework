@@ -331,6 +331,40 @@ abstract class Element implements ElementInterface, RenderableInterface
     }
 
     /**
+     * Render mixed content (Element objects, strings, or arrays)
+     *
+     * This helper method allows any element to accept and render nested Element objects,
+     * enabling composition at any level without needing custom *Html() methods.
+     *
+     * @param Element|string|array|null $content
+     * @return string
+     */
+    protected function renderMixed(Element|string|array|null $content): string
+    {
+        // Null returns empty string
+        if ($content === null) {
+            return '';
+        }
+
+        // Element object - render it
+        if ($content instanceof Element) {
+            return $content->render();
+        }
+
+        // Array - render each item and concatenate
+        if (is_array($content)) {
+            $html = '';
+            foreach ($content as $item) {
+                $html .= $this->renderMixed($item);
+            }
+            return $html;
+        }
+
+        // String - return as-is (already escaped if needed)
+        return (string) $content;
+    }
+
+    /**
      * Clone the element
      *
      * @return static

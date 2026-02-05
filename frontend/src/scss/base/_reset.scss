@@ -320,3 +320,11 @@ sup {
   outline: 2px solid css-var("accent-primary");
   outline-offset: 2px;
 }
+
+.so-code-content {
+  margin: 0 !important;
+}
+
+.so-code-block {
+  border: 3px solid css-var("border-color") !important;
+}

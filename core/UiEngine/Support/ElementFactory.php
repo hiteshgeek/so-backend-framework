@@ -17,9 +17,11 @@ use Core\UiEngine\Elements\Form\Hidden;
 use Core\UiEngine\Elements\Form\Form;
 use Core\UiEngine\Elements\Form\SwitchElement;
 use Core\UiEngine\Elements\Display\Alert;
+use Core\UiEngine\Elements\Display\Avatar;
 use Core\UiEngine\Elements\Display\Badge;
 use Core\UiEngine\Elements\Display\Card;
 use Core\UiEngine\Elements\Display\Modal;
+use Core\UiEngine\Elements\Display\Skeleton;
 use Core\UiEngine\Elements\Display\Tabs;
 use Core\UiEngine\Elements\Display\Accordion;
 use Core\UiEngine\Elements\Display\Progress;
@@ -80,9 +82,11 @@ class ElementFactory
 
         // Display elements
         static::register('alert', Alert::class);
+        static::register('avatar', Avatar::class);
         static::register('badge', Badge::class);
         static::register('card', Card::class);
         static::register('modal', Modal::class);
+        static::register('skeleton', Skeleton::class);
         static::register('tabs', Tabs::class);
         static::register('accordion', Accordion::class);
         static::register('progress', Progress::class);

@@ -14,7 +14,6 @@
 
 .#{$so-prefix}grid {
   display: grid;
-  grid-template-columns: repeat(#{config.$grid-columns}, 1fr);
   gap: var(--#{$so-css-var-prefix}-grid-gap, 1.5rem);
 }
 

@@ -144,6 +144,15 @@ class Element extends SOComponent {
     }
 
     /**
+     * Add CSS class (alias for setClass to match PHP API)
+     * @param {string} className
+     * @returns {this}
+     */
+    addClass(className) {
+        return this.setClass(className);
+    }
+
+    /**
      * Remove CSS class
      * @param {string} className
      * @returns {this}

@@ -18,9 +18,11 @@ use Core\UiEngine\Elements\Form\Slider;
 use Core\UiEngine\Elements\Form\Autocomplete;
 use Core\UiEngine\Elements\Form\Dropzone;
 use Core\UiEngine\Elements\Display\Alert;
+use Core\UiEngine\Elements\Display\Avatar;
 use Core\UiEngine\Elements\Display\Badge;
 use Core\UiEngine\Elements\Display\Card;
 use Core\UiEngine\Elements\Display\Modal;
+use Core\UiEngine\Elements\Display\Skeleton;
 use Core\UiEngine\Elements\Display\Tabs;
 use Core\UiEngine\Elements\Display\Accordion;
 use Core\UiEngine\Elements\Display\Progress;
@@ -478,6 +480,23 @@ class UiEngine
     }
 
     /**
+     * Create an avatar
+     *
+     * @param string|null $image
+     * @return Avatar
+     */
+    public static function avatar(?string $image = null): Avatar
+    {
+        $avatar = Avatar::make();
+
+        if ($image !== null) {
+            $avatar->image($image);
+        }
+
+        return $avatar;
+    }
+
+    /**
      * Create a badge
      *
      * @param string|null $text
@@ -509,6 +528,17 @@ class UiEngine
         }
 
         return $card;
+    }
+
+    /**
+     * Create a skeleton loader
+     *
+     * @param string $shape
+     * @return Skeleton
+     */
+    public static function skeleton(string $shape = 'text'): Skeleton
+    {
+        return Skeleton::make()->shape($shape);
     }
 
     /**

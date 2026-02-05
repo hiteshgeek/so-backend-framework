@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SixOrbit UI Demo - Configuration
  */
@@ -31,7 +32,8 @@ define('DEMO_USER_NAME', 'Rajeev');
 define('DEMO_USER_EMAIL', 'rajeev@trove.com');
 
 // Load manifest for versioned assets
-function loadManifest() {
+function loadManifest()
+{
     $manifestPath = PROJECT_ROOT . '/public/frontend/dist/manifest.json';
     if (file_exists($manifestPath)) {
         return json_decode(file_get_contents($manifestPath), true);
@@ -47,7 +49,8 @@ $GLOBALS['manifest'] = loadManifest();
  * @param string $name - Asset name without extension
  * @return string - Full path to asset
  */
-function so_asset($type, $name) {
+function so_asset($type, $name)
+{
     $manifest = $GLOBALS['manifest'] ?? [];
     $key = $name;
 
@@ -68,7 +71,8 @@ function so_asset($type, $name) {
  * @param string $type - 'css' or 'js'
  * @return string|null - Full path to asset or null if not found
  */
-function so_page_asset($page, $type) {
+function so_page_asset($page, $type)
+{
     $manifest = $GLOBALS['manifest'] ?? [];
 
     // Get versioned filename from manifest pages section
@@ -92,7 +96,8 @@ function so_page_asset($page, $type) {
  * @param string $filename - File name without path
  * @return array - Parsed JSON data
  */
-function load_data($filename) {
+function load_data($filename)
+{
     $path = PROJECT_ROOT . '/public/frontend/demos/data/' . $filename;
     if (file_exists($path)) {
         return json_decode(file_get_contents($path), true);
@@ -104,7 +109,8 @@ function load_data($filename) {
  * Get current page name
  * @return string - Current page name without extension
  */
-function get_current_page() {
+function get_current_page()
+{
     return basename($_SERVER['PHP_SELF'], '.php');
 }
 
@@ -112,7 +118,8 @@ function get_current_page() {
  * Get current page path relative to demo directory
  * @return string - Current page path (e.g., "ui-engine/navigation/collapse.php")
  */
-function get_current_page_path() {
+function get_current_page_path()
+{
     $path = $_SERVER['PHP_SELF'];
     // Extract path after /demo/
     if (preg_match('#/demo/(.+)$#', $path, $matches)) {
@@ -126,7 +133,8 @@ function get_current_page_path() {
  * @param string|array $pages - Page name(s) to check
  * @return bool - Whether current page matches
  */
-function is_page($pages) {
+function is_page($pages)
+{
     $current = get_current_page();
     if (is_array($pages)) {
         return in_array($current, $pages);
@@ -140,7 +148,8 @@ function is_page($pages) {
  * @param string $language - Language for syntax highlighting (html, css, javascript, php, etc.)
  * @return string - HTML for the code block
  */
-function so_code_block($code, $language = 'html') {
+function so_code_block($code, $language = 'html')
+{
     $escaped = htmlspecialchars($code, ENT_QUOTES, 'UTF-8');
     $label = strtoupper($language);
     return <<<HTML
@@ -160,7 +169,8 @@ HTML;
  * @param array $tabs - Array of tabs: [['label' => 'HTML', 'language' => 'html', 'icon' => 'code', 'code' => '...'], ...]
  * @return string - HTML for the tabbed code block
  */
-function so_code_tabs($id, $tabs) {
+function so_code_tabs($id, $tabs)
+{
     $tabButtons = '';
     $tabPanes = '';
 
@@ -209,7 +219,8 @@ HTML;
  * @param string $htmlOutput - HTML output example
  * @return string - HTML for the tabbed code block
  */
-function so_uiengine_code($id, $phpCode, $jsCode, $htmlOutput) {
+function so_uiengine_code($id, $phpCode, $jsCode, $htmlOutput)
+{
     return so_code_tabs($id, [
         ['label' => 'PHP', 'language' => 'php', 'icon' => 'data_object', 'code' => $phpCode],
         ['label' => 'JavaScript', 'language' => 'javascript', 'icon' => 'javascript', 'code' => $jsCode],
@@ -226,7 +237,8 @@ function so_uiengine_code($id, $phpCode, $jsCode, $htmlOutput) {
  * @param string $htmlOutput - HTML output example
  * @return string - HTML for the tabbed code block
  */
-function so_code_tabs_multi($id, $jsCode, $phpCode, $htmlOutput) {
+function so_code_tabs_multi($id, $jsCode, $phpCode, $htmlOutput)
+{
     return so_code_tabs($id, [
         ['label' => 'JavaScript', 'language' => 'javascript', 'icon' => 'javascript', 'code' => $jsCode],
         ['label' => 'PHP', 'language' => 'php', 'icon' => 'data_object', 'code' => $phpCode],
@@ -241,7 +253,8 @@ function so_code_tabs_multi($id, $jsCode, $phpCode, $htmlOutput) {
  * @param array $tabs - Array of tabs: [['id' => 'tab-id', 'label' => 'Tab Label', 'icon' => 'icon_name', 'active' => true, 'content' => '...'], ...]
  * @return string - HTML for the tabs
  */
-function so_tabs($id, $tabs) {
+function so_tabs($id, $tabs)
+{
     $tabButtons = '';
     $tabPanes = '';
 
@@ -277,7 +290,8 @@ HTML;
  * @param string $message - Message content (can include HTML)
  * @return string - HTML for the callout
  */
-function callout($type = 'info', $message = '') {
+function callout($type = 'info', $message = '')
+{
     $typeClass = 'so-alert-' . $type;
     $icons = [
         'info' => 'info',
@@ -300,7 +314,8 @@ HTML;
  * @param string $type - Type of data (name, email, amount, etc.)
  * @return string - Random value
  */
-function demo_random($type = 'name') {
+function demo_random($type = 'name')
+{
     $names = ['Ajay Kumar', 'Priya Sharma', 'Rahul Singh', 'Meera Patel', 'Vikash Gupta'];
     $companies = ['Tech Solutions', 'Global Traders', 'Sunrise Exports', 'Metro Industries'];
 

@@ -421,6 +421,19 @@ class UiEngine {
         return alert;
     }
 
+    /**
+     * Create badge element
+     * @param {string} text
+     * @returns {Element}
+     */
+    static badge(text = null) {
+        const badge = this.fromConfig({
+            type: 'badge',
+            text: text
+        });
+        return badge;
+    }
+
     // ==================
     // HTML Elements
     // ==================

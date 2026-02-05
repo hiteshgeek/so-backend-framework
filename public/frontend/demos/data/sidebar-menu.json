@@ -501,22 +501,16 @@
           ]
         },
         {
-          "id": "ui-engine-forms",
-          "title": "UI Engine Forms",
+          "id": "ui-engine-demos",
+          "title": "UI Engine Demos",
           "icon": "description",
           "badge": "New",
           "children": [
             {
-              "id": "uief-php-form",
-              "title": "PHP Form Demo",
-              "icon": "edit_note",
-              "url": "ui-engine-form/php-form.php"
-            },
-            {
-              "id": "uief-js-form",
-              "title": "JS Form Demo",
-              "icon": "javascript",
-              "url": "ui-engine-form/js-form.php"
+              "id": "uied-card",
+              "title": "1. Card",
+              "icon": "credit_card",
+              "url": "ui-engine-form/card.php"
             }
           ]
         }
