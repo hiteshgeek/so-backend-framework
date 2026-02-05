@@ -511,6 +511,12 @@
               "title": "1. Card",
               "icon": "credit_card",
               "url": "ui-engine-form/card.php"
+            },
+            {
+              "id": "uied-input",
+              "title": "2. Input",
+              "icon": "text_fields",
+              "url": "ui-engine-form/input.php"
             }
           ]
         }

@@ -38,6 +38,9 @@ class Input extends FormElement {
         this._autocomplete = config.autocomplete || null;
         this._prefix = config.prefix || null;
         this._suffix = config.suffix || null;
+        this._prefixIcon = config.prefixIcon || null;
+        this._suffixIcon = config.suffixIcon || null;
+        this._suffixAction = config.suffixAction || null;
     }
 
     // ==================
@@ -195,6 +198,37 @@ class Input extends FormElement {
         return this;
     }
 
+    /**
+     * Set prefix icon
+     * @param {string} icon Material Icons name
+     * @returns {this}
+     */
+    prefixIcon(icon) {
+        this._prefixIcon = icon;
+        return this;
+    }
+
+    /**
+     * Set suffix icon
+     * @param {string} icon Material Icons name
+     * @returns {this}
+     */
+    suffixIcon(icon) {
+        this._suffixIcon = icon;
+        return this;
+    }
+
+    /**
+     * Set suffix action button
+     * @param {string} icon Material Icons name
+     * @param {string} action JavaScript function or event handler
+     * @returns {this}
+     */
+    suffixAction(icon, action = '') {
+        this._suffixAction = { icon, action };
+        return this;
+    }
+
     // ==================
     // Rendering
     // ==================
@@ -240,32 +274,77 @@ class Input extends FormElement {
      * @returns {HTMLElement}
      */
     render() {
-        // If no prefix/suffix, render normally
-        if (!this._prefix && !this._suffix) {
+        // Check if we need any wrapper
+        const hasTextAddon = this._prefix || this._suffix;
+        const hasIconAddon = this._prefixIcon || this._suffixIcon || this._suffixAction;
+
+        // If no addons at all, render normally
+        if (!hasTextAddon && !hasIconAddon) {
             return super.render();
         }
 
-        // Create input group wrapper
-        const group = document.createElement('div');
-        group.className = SixOrbit.cls('input-group');
+        // Icon wrapper (for icons and icon actions)
+        if (hasIconAddon) {
+            const wrapper = document.createElement('div');
+            wrapper.className = SixOrbit.cls('input-wrapper');
 
-        if (this._prefix) {
-            const prefixEl = document.createElement('span');
-            prefixEl.className = SixOrbit.cls('input-group-text');
-            prefixEl.textContent = this._prefix;
-            group.appendChild(prefixEl);
+            // Prefix icon
+            if (this._prefixIcon) {
+                const iconSpan = document.createElement('span');
+                iconSpan.className = SixOrbit.cls('input-icon');
+                iconSpan.innerHTML = `<span class="material-icons">${this._prefixIcon}</span>`;
+                wrapper.appendChild(iconSpan);
+            }
+
+            // The input element
+            wrapper.appendChild(super.render());
+
+            // Suffix icon
+            if (this._suffixIcon) {
+                const iconSpan = document.createElement('span');
+                iconSpan.className = SixOrbit.cls('input-icon');
+                iconSpan.innerHTML = `<span class="material-icons">${this._suffixIcon}</span>`;
+                wrapper.appendChild(iconSpan);
+            }
+
+            // Suffix action button
+            if (this._suffixAction) {
+                const actionBtn = document.createElement('button');
+                actionBtn.type = 'button';
+                actionBtn.className = SixOrbit.cls('input-action');
+                actionBtn.setAttribute('aria-label', 'Action');
+                if (this._suffixAction.action) {
+                    actionBtn.setAttribute('onclick', this._suffixAction.action);
+                }
+                actionBtn.innerHTML = `<span class="material-icons">${this._suffixAction.icon}</span>`;
+                wrapper.appendChild(actionBtn);
+            }
+
+            return wrapper;
         }
+        // Text addon wrapper (for text prefix/suffix)
+        else if (hasTextAddon) {
+            const group = document.createElement('div');
+            group.className = SixOrbit.cls('input-group');
 
-        group.appendChild(super.render());
+            if (this._prefix) {
+                const prefixEl = document.createElement('span');
+                prefixEl.className = SixOrbit.cls('input-group-text');
+                prefixEl.textContent = this._prefix;
+                group.appendChild(prefixEl);
+            }
 
-        if (this._suffix) {
-            const suffixEl = document.createElement('span');
-            suffixEl.className = SixOrbit.cls('input-group-text');
-            suffixEl.textContent = this._suffix;
-            group.appendChild(suffixEl);
+            group.appendChild(super.render());
+
+            if (this._suffix) {
+                const suffixEl = document.createElement('span');
+                suffixEl.className = SixOrbit.cls('input-group-text');
+                suffixEl.textContent = this._suffix;
+                group.appendChild(suffixEl);
+            }
+
+            return group;
         }
-
-        return group;
     }
 
     /**
@@ -273,26 +352,63 @@ class Input extends FormElement {
      * @returns {string}
      */
     toHtml() {
-        if (!this._prefix && !this._suffix) {
+        // Check if we need any wrapper
+        const hasTextAddon = this._prefix || this._suffix;
+        const hasIconAddon = this._prefixIcon || this._suffixIcon || this._suffixAction;
+
+        // If no addons at all, render normally
+        if (!hasTextAddon && !hasIconAddon) {
             return super.toHtml();
         }
 
         // Build input HTML
         const inputHtml = super.toHtml();
+        let html = '';
 
-        let html = `<div class="${SixOrbit.cls('input-group')}">`;
+        // Icon wrapper (for icons and icon actions)
+        if (hasIconAddon) {
+            html = `<div class="${SixOrbit.cls('input-wrapper')}">`;
 
-        if (this._prefix) {
-            html += `<span class="${SixOrbit.cls('input-group-text')}">${this._escapeHtml(this._prefix)}</span>`;
+            // Prefix icon
+            if (this._prefixIcon) {
+                html += `<span class="${SixOrbit.cls('input-icon')}"><span class="material-icons">${this._escapeHtml(this._prefixIcon)}</span></span>`;
+            }
+
+            // The input element
+            html += inputHtml;
+
+            // Suffix icon
+            if (this._suffixIcon) {
+                html += `<span class="${SixOrbit.cls('input-icon')}"><span class="material-icons">${this._escapeHtml(this._suffixIcon)}</span></span>`;
+            }
+
+            // Suffix action button
+            if (this._suffixAction) {
+                html += `<button type="button" class="${SixOrbit.cls('input-action')}" aria-label="Action"`;
+                if (this._suffixAction.action) {
+                    html += ` onclick="${this._escapeHtml(this._suffixAction.action)}"`;
+                }
+                html += `><span class="material-icons">${this._escapeHtml(this._suffixAction.icon)}</span></button>`;
+            }
+
+            html += '</div>';
         }
+        // Text addon wrapper (for text prefix/suffix)
+        else if (hasTextAddon) {
+            html = `<div class="${SixOrbit.cls('input-group')}">`;
 
-        html += inputHtml;
+            if (this._prefix) {
+                html += `<span class="${SixOrbit.cls('input-group-text')}">${this._escapeHtml(this._prefix)}</span>`;
+            }
 
-        if (this._suffix) {
-            html += `<span class="${SixOrbit.cls('input-group-text')}">${this._escapeHtml(this._suffix)}</span>`;
+            html += inputHtml;
+
+            if (this._suffix) {
+                html += `<span class="${SixOrbit.cls('input-group-text')}">${this._escapeHtml(this._suffix)}</span>`;
+            }
+
+            html += '</div>';
         }
-
-        html += '</div>';
 
         return html;
     }
@@ -318,6 +434,9 @@ class Input extends FormElement {
         if (this._autocomplete) config.autocomplete = this._autocomplete;
         if (this._prefix) config.prefix = this._prefix;
         if (this._suffix) config.suffix = this._suffix;
+        if (this._prefixIcon) config.prefixIcon = this._prefixIcon;
+        if (this._suffixIcon) config.suffixIcon = this._suffixIcon;
+        if (this._suffixAction) config.suffixAction = this._suffixAction;
 
         return config;
     }

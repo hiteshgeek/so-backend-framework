@@ -3,6 +3,7 @@
 namespace Core\UiEngine\Elements\Form;
 
 use Core\UiEngine\Elements\ContainerElement;
+use Core\UiEngine\Elements\FormElement;
 use Core\UiEngine\Traits\HasEvents;
 use Core\UiEngine\Validation\ClientRuleExporter;
 use Core\UiEngine\Support\CssPrefix;
@@ -408,6 +409,39 @@ class Form extends ContainerElement
         $attrs = array_merge($attrs, $this->buildEventAttributes());
 
         return $attrs;
+    }
+
+    /**
+     * Render form children (FormElements use renderGroup())
+     *
+     * @return string
+     */
+    public function renderChildren(): string
+    {
+        $html = '';
+
+        foreach ($this->children as $child) {
+            // FormElements with labels should use renderGroup() for proper wrapper
+            if ($child instanceof FormElement) {
+                $label = $child->getLabel();
+                if ($label !== null) {
+                    // Ensure FormElement has an ID for label linking
+                    if ($child->getId() === null) {
+                        $name = $child->getName();
+                        if ($name !== null) {
+                            $child->id($name);
+                        }
+                    }
+                    $html .= $child->renderGroup();
+                } else {
+                    $html .= $child->render();
+                }
+            } else {
+                $html .= $child->render();
+            }
+        }
+
+        return $html;
     }
 
     /**

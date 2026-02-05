@@ -38,6 +38,10 @@ class FormElement extends Element {
         this._required = config.required || false;
         this._error = config.error || null;
 
+        // Styling properties
+        this._size = config.size || 'md';
+        this._variant = config.variant || null;
+
         // Validation
         this._rules = config.rules || {};
         this._messages = config.messages || {};
@@ -207,6 +211,82 @@ class FormElement extends Element {
      */
     isRequired() {
         return this._required || !!this._rules.required;
+    }
+
+    // ==================
+    // Shorthand Fluent API (Aliases matching PHP API)
+    // ==================
+
+    /**
+     * Set field name (shorthand for setName)
+     * @param {string} name
+     * @returns {this}
+     */
+    name(name) {
+        return this.setName(name);
+    }
+
+    /**
+     * Set label (shorthand for setLabel)
+     * @param {string} label
+     * @returns {this}
+     */
+    label(label) {
+        return this.setLabel(label);
+    }
+
+    /**
+     * Set value (shorthand for setValue)
+     * @param {*} value
+     * @returns {this}
+     */
+    value(value) {
+        return this.setValue(value);
+    }
+
+    /**
+     * Set placeholder (shorthand for setPlaceholder)
+     * @param {string} placeholder
+     * @returns {this}
+     */
+    placeholder(placeholder) {
+        return this.setPlaceholder(placeholder);
+    }
+
+    /**
+     * Set help text (shorthand for setHelp)
+     * @param {string} help
+     * @returns {this}
+     */
+    help(help) {
+        return this.setHelp(help);
+    }
+
+    /**
+     * Set disabled state (shorthand for setDisabled)
+     * @param {boolean} disabled
+     * @returns {this}
+     */
+    disabled(disabled = true) {
+        return this.setDisabled(disabled);
+    }
+
+    /**
+     * Set readonly state (shorthand for setReadonly)
+     * @param {boolean} readonly
+     * @returns {this}
+     */
+    readonly(readonly = true) {
+        return this.setReadonly(readonly);
+    }
+
+    /**
+     * Set required state (shorthand for setRequired)
+     * @param {boolean} required
+     * @returns {this}
+     */
+    required(required = true) {
+        return this.setRequired(required);
     }
 
     // ==================
@@ -422,11 +502,112 @@ class FormElement extends Element {
     }
 
     // ==================
-    // Validation Convenience
+    // Styling
     // ==================
 
-    /** Required validation */
-    required() { return this.addRule('required', true); }
+    /**
+     * Set input size
+     * @param {string} size sm|md|lg
+     * @returns {this}
+     */
+    size(size) {
+        this._size = size;
+        return this;
+    }
+
+    /**
+     * Small size shortcut
+     * @returns {this}
+     */
+    small() {
+        return this.size('sm');
+    }
+
+    /**
+     * Large size shortcut
+     * @returns {this}
+     */
+    large() {
+        return this.size('lg');
+    }
+
+    /**
+     * Set input variant
+     * @param {string} variant primary|secondary|success|danger|warning|info|light|dark
+     * @returns {this}
+     */
+    variant(variant) {
+        this._variant = variant;
+        return this;
+    }
+
+    /**
+     * Primary variant shortcut
+     * @returns {this}
+     */
+    variantPrimary() {
+        return this.variant('primary');
+    }
+
+    /**
+     * Secondary variant shortcut
+     * @returns {this}
+     */
+    variantSecondary() {
+        return this.variant('secondary');
+    }
+
+    /**
+     * Success variant shortcut
+     * @returns {this}
+     */
+    variantSuccess() {
+        return this.variant('success');
+    }
+
+    /**
+     * Danger variant shortcut
+     * @returns {this}
+     */
+    variantDanger() {
+        return this.variant('danger');
+    }
+
+    /**
+     * Warning variant shortcut
+     * @returns {this}
+     */
+    variantWarning() {
+        return this.variant('warning');
+    }
+
+    /**
+     * Info variant shortcut
+     * @returns {this}
+     */
+    variantInfo() {
+        return this.variant('info');
+    }
+
+    /**
+     * Light variant shortcut
+     * @returns {this}
+     */
+    variantLight() {
+        return this.variant('light');
+    }
+
+    /**
+     * Dark variant shortcut
+     * @returns {this}
+     */
+    variantDark() {
+        return this.variant('dark');
+    }
+
+    // ==================
+    // Validation Convenience
+    // ==================
 
     /** Email validation */
     email() { return this.addRule('email', true); }
@@ -493,6 +674,16 @@ class FormElement extends Element {
     buildClassString() {
         this._extraClasses.add(SixOrbit.cls('form-control'));
 
+        // Add size class
+        if (this._size && this._size !== 'md') {
+            this._extraClasses.add(SixOrbit.cls('form-control-' + this._size));
+        }
+
+        // Add color variant class
+        if (this._variant) {
+            this._extraClasses.add(SixOrbit.cls('form-control-' + this._variant));
+        }
+
         if (this._error) {
             this._extraClasses.add(SixOrbit.cls('is-invalid'));
         }
@@ -511,16 +702,14 @@ class FormElement extends Element {
         // Label
         if (this._label) {
             const label = document.createElement('label');
-            label.className = SixOrbit.cls('form-label');
+            let labelClass = SixOrbit.cls('form-label');
+            if (this.isRequired()) {
+                labelClass += ' ' + SixOrbit.cls('required');
+            }
+            label.className = labelClass;
             label.textContent = this._label;
             if (this._id) {
                 label.setAttribute('for', this._id);
-            }
-            if (this.isRequired()) {
-                const star = document.createElement('span');
-                star.className = SixOrbit.cls('text-danger');
-                star.textContent = ' *';
-                label.appendChild(star);
             }
             group.appendChild(label);
         }
@@ -593,6 +782,8 @@ class FormElement extends Element {
         if (this._disabled) config.disabled = true;
         if (this._readonly) config.readonly = true;
         if (this._required) config.required = true;
+        if (this._size && this._size !== 'md') config.size = this._size;
+        if (this._variant) config.variant = this._variant;
         if (Object.keys(this._rules).length > 0) config.rules = this._rules;
         if (Object.keys(this._messages).length > 0) config.messages = this._messages;
         if (Object.keys(this._eventHandlers).length > 0) config.events = this._eventHandlers;

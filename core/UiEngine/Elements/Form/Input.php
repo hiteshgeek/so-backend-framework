@@ -98,6 +98,27 @@ class Input extends FormElement
     protected ?string $suffix = null;
 
     /**
+     * Prefix icon (Material Icons name)
+     *
+     * @var string|null
+     */
+    protected ?string $prefixIcon = null;
+
+    /**
+     * Suffix icon (Material Icons name)
+     *
+     * @var string|null
+     */
+    protected ?string $suffixIcon = null;
+
+    /**
+     * Suffix action button configuration
+     *
+     * @var array|null
+     */
+    protected ?array $suffixAction = null;
+
+    /**
      * Initialize element properties from configuration
      *
      * @param array $config
@@ -145,6 +166,18 @@ class Input extends FormElement
 
         if (isset($config['suffix'])) {
             $this->suffix = $config['suffix'];
+        }
+
+        if (isset($config['prefixIcon'])) {
+            $this->prefixIcon = $config['prefixIcon'];
+        }
+
+        if (isset($config['suffixIcon'])) {
+            $this->suffixIcon = $config['suffixIcon'];
+        }
+
+        if (isset($config['suffixAction'])) {
+            $this->suffixAction = $config['suffixAction'];
         }
     }
 
@@ -379,6 +412,46 @@ class Input extends FormElement
     }
 
     /**
+     * Set prefix icon
+     *
+     * @param string $icon Material Icons name
+     * @return static
+     */
+    public function prefixIcon(string $icon): static
+    {
+        $this->prefixIcon = $icon;
+        return $this;
+    }
+
+    /**
+     * Set suffix icon
+     *
+     * @param string $icon Material Icons name
+     * @return static
+     */
+    public function suffixIcon(string $icon): static
+    {
+        $this->suffixIcon = $icon;
+        return $this;
+    }
+
+    /**
+     * Set suffix action button
+     *
+     * @param string $icon Material Icons name
+     * @param string $action JavaScript function or event handler
+     * @return static
+     */
+    public function suffixAction(string $icon, string $action = ''): static
+    {
+        $this->suffixAction = [
+            'icon' => $icon,
+            'action' => $action
+        ];
+        return $this;
+    }
+
+    /**
      * Gather all attributes
      *
      * @return array<string, mixed>
@@ -427,25 +500,68 @@ class Input extends FormElement
      */
     public function render(): string
     {
-        // If no prefix/suffix, render normally
-        if ($this->prefix === null && $this->suffix === null) {
+        // Check if we need any wrapper
+        $hasTextAddon = $this->prefix !== null || $this->suffix !== null;
+        $hasIconAddon = $this->prefixIcon !== null || $this->suffixIcon !== null || $this->suffixAction !== null;
+
+        // If no addons at all, render normally
+        if (!$hasTextAddon && !$hasIconAddon) {
             return parent::render();
         }
 
-        // Wrap in input group for prefix/suffix
-        $html = '<div class="' . CssPrefix::cls('input-group') . '">';
+        $html = '';
 
-        if ($this->prefix !== null) {
-            $html .= '<span class="' . CssPrefix::cls('input-group-text') . '">' . e($this->prefix) . '</span>';
+        // Icon wrapper (for icons and icon actions)
+        if ($hasIconAddon) {
+            $wrapperClass = CssPrefix::cls('input-wrapper');
+            $html .= '<div class="' . $wrapperClass . '">';
+
+            // Prefix icon
+            if ($this->prefixIcon !== null) {
+                $html .= '<span class="' . CssPrefix::cls('input-icon') . '">';
+                $html .= '<span class="material-icons">' . e($this->prefixIcon) . '</span>';
+                $html .= '</span>';
+            }
+
+            // The input element
+            $html .= parent::render();
+
+            // Suffix icon
+            if ($this->suffixIcon !== null) {
+                $html .= '<span class="' . CssPrefix::cls('input-icon') . '">';
+                $html .= '<span class="material-icons">' . e($this->suffixIcon) . '</span>';
+                $html .= '</span>';
+            }
+
+            // Suffix action button
+            if ($this->suffixAction !== null) {
+                $html .= '<button type="button" class="' . CssPrefix::cls('input-action') . '"';
+                if (!empty($this->suffixAction['action'])) {
+                    $html .= ' onclick="' . e($this->suffixAction['action']) . '"';
+                }
+                $html .= ' aria-label="Action">';
+                $html .= '<span class="material-icons">' . e($this->suffixAction['icon']) . '</span>';
+                $html .= '</button>';
+            }
+
+            $html .= '</div>';
         }
+        // Text addon wrapper (for text prefix/suffix)
+        elseif ($hasTextAddon) {
+            $html .= '<div class="' . CssPrefix::cls('input-group') . '">';
 
-        $html .= parent::render();
+            if ($this->prefix !== null) {
+                $html .= '<span class="' . CssPrefix::cls('input-group-text') . '">' . e($this->prefix) . '</span>';
+            }
 
-        if ($this->suffix !== null) {
-            $html .= '<span class="' . CssPrefix::cls('input-group-text') . '">' . e($this->suffix) . '</span>';
+            $html .= parent::render();
+
+            if ($this->suffix !== null) {
+                $html .= '<span class="' . CssPrefix::cls('input-group-text') . '">' . e($this->suffix) . '</span>';
+            }
+
+            $html .= '</div>';
         }
-
-        $html .= '</div>';
 
         return $html;
     }
@@ -497,6 +613,18 @@ class Input extends FormElement
 
         if ($this->suffix !== null) {
             $config['suffix'] = $this->suffix;
+        }
+
+        if ($this->prefixIcon !== null) {
+            $config['prefixIcon'] = $this->prefixIcon;
+        }
+
+        if ($this->suffixIcon !== null) {
+            $config['suffixIcon'] = $this->suffixIcon;
+        }
+
+        if ($this->suffixAction !== null) {
+            $config['suffixAction'] = $this->suffixAction;
         }
 
         return $config;

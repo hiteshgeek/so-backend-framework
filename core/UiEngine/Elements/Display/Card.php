@@ -5,6 +5,7 @@ namespace Core\UiEngine\Elements\Display;
 use Core\UiEngine\Elements\ContainerElement;
 use Core\UiEngine\Elements\Element;
 use Core\UiEngine\Support\CssPrefix;
+use Core\UiEngine\Support\ElementFactory;
 
 /**
  * Card - Simple card container with header, body, and footer
@@ -83,12 +84,30 @@ class Card extends ContainerElement
     /**
      * Variant shortcuts
      */
-    public function primary(): static { return $this->variant('primary'); }
-    public function secondary(): static { return $this->variant('secondary'); }
-    public function success(): static { return $this->variant('success'); }
-    public function danger(): static { return $this->variant('danger'); }
-    public function warning(): static { return $this->variant('warning'); }
-    public function info(): static { return $this->variant('info'); }
+    public function primary(): static
+    {
+        return $this->variant('primary');
+    }
+    public function secondary(): static
+    {
+        return $this->variant('secondary');
+    }
+    public function success(): static
+    {
+        return $this->variant('success');
+    }
+    public function danger(): static
+    {
+        return $this->variant('danger');
+    }
+    public function warning(): static
+    {
+        return $this->variant('warning');
+    }
+    public function info(): static
+    {
+        return $this->variant('info');
+    }
 
     /**
      * Initialize element properties from configuration

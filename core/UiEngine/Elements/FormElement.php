@@ -102,6 +102,13 @@ abstract class FormElement extends Element implements FormElementInterface
     protected string $size = 'md';
 
     /**
+     * Contextual variant (primary, secondary, success, danger, warning, info, light, dark)
+     *
+     * @var string|null
+     */
+    protected ?string $variant = null;
+
+    /**
      * Initialize element properties from configuration
      *
      * @param array $config
@@ -158,6 +165,10 @@ abstract class FormElement extends Element implements FormElementInterface
 
         if (isset($config['size'])) {
             $this->size = $config['size'];
+        }
+
+        if (isset($config['variant'])) {
+            $this->variant = $config['variant'];
         }
 
         // Validation rules
@@ -439,6 +450,98 @@ abstract class FormElement extends Element implements FormElementInterface
     }
 
     /**
+     * Set input variant
+     *
+     * @param string $variant primary|secondary|success|danger|warning|info|light|dark
+     * @return static
+     */
+    public function variant(string $variant): static
+    {
+        $this->variant = $variant;
+        return $this;
+    }
+
+    /**
+     * Primary variant shortcut
+     *
+     * @return static
+     */
+    public function variantPrimary(): static
+    {
+        return $this->variant('primary');
+    }
+
+    /**
+     * Secondary variant shortcut
+     *
+     * @return static
+     */
+    public function variantSecondary(): static
+    {
+        return $this->variant('secondary');
+    }
+
+    /**
+     * Success variant shortcut
+     *
+     * @return static
+     */
+    public function variantSuccess(): static
+    {
+        return $this->variant('success');
+    }
+
+    /**
+     * Danger variant shortcut
+     *
+     * @return static
+     */
+    public function variantDanger(): static
+    {
+        return $this->variant('danger');
+    }
+
+    /**
+     * Warning variant shortcut
+     *
+     * @return static
+     */
+    public function variantWarning(): static
+    {
+        return $this->variant('warning');
+    }
+
+    /**
+     * Info variant shortcut
+     *
+     * @return static
+     */
+    public function variantInfo(): static
+    {
+        return $this->variant('info');
+    }
+
+    /**
+     * Light variant shortcut
+     *
+     * @return static
+     */
+    public function variantLight(): static
+    {
+        return $this->variant('light');
+    }
+
+    /**
+     * Dark variant shortcut
+     *
+     * @return static
+     */
+    public function variantDark(): static
+    {
+        return $this->variant('dark');
+    }
+
+    /**
      * Gather all attributes including form-specific ones
      *
      * @return array<string, mixed>
@@ -507,6 +610,11 @@ abstract class FormElement extends Element implements FormElementInterface
             $this->addClass(CssPrefix::cls('form-control', $this->size));
         }
 
+        // Add color variant class
+        if ($this->variant !== null) {
+            $this->addClass(CssPrefix::cls('form-control', $this->variant));
+        }
+
         // Add error state class
         if ($this->hasError()) {
             $this->addClass(CssPrefix::cls('is-invalid'));
@@ -538,14 +646,17 @@ abstract class FormElement extends Element implements FormElementInterface
             return '';
         }
 
+        $labelClass = CssPrefix::cls('form-label');
+        if ($this->isRequired()) {
+            $labelClass .= ' ' . CssPrefix::cls('required');
+        }
+
         $labelAttrs = '';
         if ($this->id !== null) {
             $labelAttrs = ' for="' . e($this->id) . '"';
         }
 
-        $requiredMark = $this->isRequired() ? ' <span class="' . CssPrefix::cls('text-danger') . '">*</span>' : '';
-
-        return '<label class="' . CssPrefix::cls('form-label') . '"' . $labelAttrs . '>' . e($this->label) . $requiredMark . '</label>';
+        return '<label class="' . $labelClass . '"' . $labelAttrs . '>' . e($this->label) . '</label>';
     }
 
     /**

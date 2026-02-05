@@ -523,6 +523,10 @@ class ContainerElement extends Element {
                     !inlineLabelTypes.includes(child.getType());
 
                 if (shouldUseRenderGroup) {
+                    // Ensure FormElement has an ID for label linking
+                    if (!child.getId() && child.getName && child.getName()) {
+                        child.id(child.getName());
+                    }
                     fragment.appendChild(child.renderGroup());
                 } else {
                     fragment.appendChild(child.render());
@@ -542,6 +546,10 @@ class ContainerElement extends Element {
                         !inlineLabelTypes.includes(element.getType());
 
                     if (shouldUseRenderGroup) {
+                        // Ensure FormElement has an ID for label linking
+                        if (!element.getId() && element.getName && element.getName()) {
+                            element.id(element.getName());
+                        }
                         fragment.appendChild(element.renderGroup());
                     } else {
                         fragment.appendChild(element.render());

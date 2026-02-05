@@ -1,4 +1,5 @@
 <?php
+
 /**
  * UiEngine Card Component Demo
  * Demonstrating PHP and JavaScript implementations
@@ -13,6 +14,7 @@ $pageSubtitle = 'Card component with dual architecture support';
 
 // Load backend autoloader for UiEngine
 require_once dirname(__DIR__, 4) . '/vendor/autoload.php';
+
 use Core\UiEngine\UiEngine;
 
 // Get UI Engine JS path for scripts
@@ -214,71 +216,77 @@ JS;
 </div>
 HTML;
 
-        // Generate PHP Config cards - matching exact structure of fluent API cards
+        // Generate PHP Config cards - full config-based approach
         $phpConfigCards = '<div class="so-grid so-grid-cols-1 so-grid-cols-md-2 so-grid-cols-lg-3 so-gap-4">';
 
-        // Card 1: Card with title and button in header (using fromConfig for child elements)
-        $phpConfigCards .= UiEngine::card()
-            ->header([
-                UiEngine::fromConfig(['type' => 'html', 'tag' => 'h3', 'class' => 'so-card-title', 'textContent' => 'Card Title']),
-                UiEngine::button()->iconOnly('more_vert')->variant('ghost')
-            ])
-            ->body(UiEngine::fromConfig(['type' => 'html', 'tag' => 'p', 'textContent' => 'This is a basic card with header and body sections.']))
-            ->render();
+        // Card 1: Card with title and button in header (full config-based)
+        $phpConfigCards .= UiEngine::fromConfig([
+            'type' => 'card',
+            'header' => [
+                ['type' => 'html', 'tag' => 'h3', 'class' => 'so-card-title', 'textContent' => 'Card Title'],
+                ['type' => 'button', 'iconOnly' => 'more_vert', 'variant' => 'ghost']
+            ],
+            'body' => ['type' => 'html', 'tag' => 'p', 'textContent' => 'This is a basic card with header and body sections.']
+        ])->render();
 
-        // Card 2: Simple card with body content and footer buttons
-        $phpConfigCards .= UiEngine::card()
-            ->body([
-                UiEngine::fromConfig(['type' => 'html', 'tag' => 'h4', 'class' => 'so-mb-2', 'textContent' => 'Simple Card']),
-                UiEngine::fromConfig(['type' => 'html', 'tag' => 'p', 'class' => 'so-text-muted', 'textContent' => 'A card without the header section.'])
-            ])
-            ->footer([
-                UiEngine::button()->text('Cancel')->outline()->small(),
-                UiEngine::button()->text('Save')->primary()->small()
-            ])
-            ->render();
+        // Card 2: Simple card with body and footer (full config-based)
+        $phpConfigCards .= UiEngine::fromConfig([
+            'type' => 'card',
+            'body' => [
+                ['type' => 'html', 'tag' => 'h4', 'class' => 'so-mb-2', 'textContent' => 'Simple Card'],
+                ['type' => 'html', 'tag' => 'p', 'class' => 'so-text-muted', 'textContent' => 'A card without the header section.']
+            ],
+            'footer' => [
+                ['type' => 'button', 'text' => 'Cancel', 'outline' => true, 'small' => true],
+                ['type' => 'button', 'text' => 'Save', 'variant' => 'primary', 'small' => true]
+            ]
+        ])->render();
 
-        // Card 3: Card with title and badge in header
-        $phpConfigCards .= UiEngine::card()
-            ->header([
-                UiEngine::fromConfig(['type' => 'html', 'tag' => 'h3', 'class' => 'so-card-title', 'textContent' => 'With Badge']),
-                UiEngine::badge()->text('New')->soft()->primary()
-            ])
-            ->body(UiEngine::fromConfig(['type' => 'html', 'tag' => 'p', 'textContent' => 'Card header with a badge indicator.']))
-            ->render();
+        // Card 3: Card with title and badge (full config-based)
+        $phpConfigCards .= UiEngine::fromConfig([
+            'type' => 'card',
+            'header' => [
+                ['type' => 'html', 'tag' => 'h3', 'class' => 'so-card-title', 'textContent' => 'With Badge'],
+                ['type' => 'badge', 'text' => 'New', 'soft' => true, 'variant' => 'primary']
+            ],
+            'body' => ['type' => 'html', 'tag' => 'p', 'textContent' => 'Card header with a badge indicator.']
+        ])->render();
 
         $phpConfigCards .= '</div>';
 
         $phpConfigCode = <<<'PHP'
-// Card 1: Hybrid approach - card structure with config-based children
-UiEngine::card()
-    ->header([
-        UiEngine::fromConfig(['type' => 'html', 'tag' => 'h3', 'class' => 'so-card-title', 'textContent' => 'Card Title']),
-        UiEngine::button()->iconOnly('more_vert')->variant('ghost')
-    ])
-    ->body(UiEngine::fromConfig(['type' => 'html', 'tag' => 'p', 'textContent' => 'This is a basic card with header and body sections.']))
-    ->render();
+// Card 1: Card with title and button in header (full config-based)
+UiEngine::fromConfig([
+    'type' => 'card',
+    'header' => [
+        ['type' => 'html', 'tag' => 'h3', 'class' => 'so-card-title', 'textContent' => 'Card Title'],
+        ['type' => 'button', 'iconOnly' => 'more_vert', 'variant' => 'ghost']
+    ],
+    'body' => ['type' => 'html', 'tag' => 'p', 'textContent' => 'This is a basic card with header and body sections.']
+])->render();
 
-// Card 2: Body with config-based elements
-UiEngine::card()
-    ->body([
-        UiEngine::fromConfig(['type' => 'html', 'tag' => 'h4', 'class' => 'so-mb-2', 'textContent' => 'Simple Card']),
-        UiEngine::fromConfig(['type' => 'html', 'tag' => 'p', 'class' => 'so-text-muted', 'textContent' => 'A card without the header section.'])
-    ])
-    ->footer([
-        UiEngine::button()->text('Cancel')->outline()->small(),
-        UiEngine::button()->text('Save')->primary()->small()
-    ])
-    ->render();
+// Card 2: Simple card with body and footer (full config-based)
+UiEngine::fromConfig([
+    'type' => 'card',
+    'body' => [
+        ['type' => 'html', 'tag' => 'h4', 'class' => 'so-mb-2', 'textContent' => 'Simple Card'],
+        ['type' => 'html', 'tag' => 'p', 'class' => 'so-text-muted', 'textContent' => 'A card without the header section.']
+    ],
+    'footer' => [
+        ['type' => 'button', 'text' => 'Cancel', 'outline' => true, 'small' => true],
+        ['type' => 'button', 'text' => 'Save', 'variant' => 'primary', 'small' => true]
+    ]
+])->render();
 
-// Card 3: Header with badge from config
-UiEngine::card()
-    ->header([
-        UiEngine::fromConfig(['type' => 'html', 'tag' => 'h3', 'class' => 'so-card-title', 'textContent' => 'With Badge']),
-        UiEngine::badge()->text('New')->soft()->primary()
-    ])
-    ->body(UiEngine::fromConfig(['type' => 'html', 'tag' => 'p', 'textContent' => 'Card header with a badge indicator.']))
-    ->render();
+// Card 3: Card with title and badge (full config-based)
+UiEngine::fromConfig([
+    'type' => 'card',
+    'header' => [
+        ['type' => 'html', 'tag' => 'h3', 'class' => 'so-card-title', 'textContent' => 'With Badge'],
+        ['type' => 'badge', 'text' => 'New', 'soft' => true, 'variant' => 'primary']
+    ],
+    'body' => ['type' => 'html', 'tag' => 'p', 'textContent' => 'Card header with a badge indicator.']
+])->render();
 PHP;
 
         $jsConfigCode = <<<'JS'
@@ -337,82 +345,125 @@ JS;
         ]);
         ?>
         <script>
-        window.cardConfigs = window.cardConfigs || {};
-        window.cardConfigs['js-basic-container'] = (UiEngine) => {
-            // Card 1: Card with title and button in header
-            const card1 = UiEngine.card()
-                .header([
-                    UiEngine.html().tag('h3').addClass('so-card-title').text('Card Title'),
-                    UiEngine.button().iconOnly('more_vert').variant('ghost')
-                ])
-                .body(UiEngine.html().tag('p').text('This is a basic card with header and body sections.'))
-                .render();
+            window.cardConfigs = window.cardConfigs || {};
+            window.cardConfigs['js-basic-container'] = (UiEngine) => {
+                // Card 1: Card with title and button in header
+                const card1 = UiEngine.card()
+                    .header([
+                        UiEngine.html().tag('h3').addClass('so-card-title').text('Card Title'),
+                        UiEngine.button().iconOnly('more_vert').variant('ghost')
+                    ])
+                    .body(UiEngine.html().tag('p').text('This is a basic card with header and body sections.'))
+                    .render();
 
-            // Card 2: Simple card with body and footer
-            const card2 = UiEngine.card()
-                .body([
-                    UiEngine.html().tag('h4').addClass('so-mb-2').text('Simple Card'),
-                    UiEngine.html().tag('p').addClass('so-text-muted').text('A card without the header section.')
-                ])
-                .footer([
-                    UiEngine.button().text('Cancel').outline().small(),
-                    UiEngine.button().text('Save').primary().small()
-                ])
-                .render();
+                // Card 2: Simple card with body and footer
+                const card2 = UiEngine.card()
+                    .body([
+                        UiEngine.html().tag('h4').addClass('so-mb-2').text('Simple Card'),
+                        UiEngine.html().tag('p').addClass('so-text-muted').text('A card without the header section.')
+                    ])
+                    .footer([
+                        UiEngine.button().text('Cancel').outline().small(),
+                        UiEngine.button().text('Save').primary().small()
+                    ])
+                    .render();
 
-            // Card 3: Card with title and badge
-            const card3 = UiEngine.card()
-                .header([
-                    UiEngine.html().tag('h3').addClass('so-card-title').text('With Badge'),
-                    UiEngine.badge().text('New').soft().primary()
-                ])
-                .body(UiEngine.html().tag('p').text('Card header with a badge indicator.'))
-                .render();
+                // Card 3: Card with title and badge
+                const card3 = UiEngine.card()
+                    .header([
+                        UiEngine.html().tag('h3').addClass('so-card-title').text('With Badge'),
+                        UiEngine.badge().text('New').soft().primary()
+                    ])
+                    .body(UiEngine.html().tag('p').text('Card header with a badge indicator.'))
+                    .render();
 
-            return [card1, card2, card3];
-        };
-
-        // JS Config Basic Cards
-        window.cardConfigs['js-config-basic-container'] = function(UiEngine) {
-            // Card 1: Config-based card with header and button
-            const config1 = {
-                type: 'card',
-                header: [
-                    {type: 'html', tag: 'h3', class: 'so-card-title', textContent: 'Card Title'},
-                    {type: 'button', iconOnly: 'more_vert', variant: 'ghost'}
-                ],
-                body: {type: 'html', tag: 'p', textContent: 'This is a basic card with header and body sections.'}
+                return [card1, card2, card3];
             };
 
-            // Card 2: Config-based card with body and footer
-            const config2 = {
-                type: 'card',
-                body: [
-                    {type: 'html', tag: 'h4', class: 'so-mb-2', textContent: 'Simple Card'},
-                    {type: 'html', tag: 'p', class: 'so-text-muted', textContent: 'A card without the header section.'}
-                ],
-                footer: [
-                    {type: 'button', text: 'Cancel', outline: true, small: true},
-                    {type: 'button', text: 'Save', variant: 'primary', small: true}
-                ]
-            };
+            // JS Config Basic Cards
+            window.cardConfigs['js-config-basic-container'] = function(UiEngine) {
+                // Card 1: Config-based card with header and button
+                const config1 = {
+                    type: 'card',
+                    header: [{
+                            type: 'html',
+                            tag: 'h3',
+                            class: 'so-card-title',
+                            textContent: 'Card Title'
+                        },
+                        {
+                            type: 'button',
+                            iconOnly: 'more_vert',
+                            variant: 'ghost'
+                        }
+                    ],
+                    body: {
+                        type: 'html',
+                        tag: 'p',
+                        textContent: 'This is a basic card with header and body sections.'
+                    }
+                };
 
-            // Card 3: Config-based card with badge
-            const config3 = {
-                type: 'card',
-                header: [
-                    {type: 'html', tag: 'h3', class: 'so-card-title', textContent: 'With Badge'},
-                    {type: 'badge', text: 'New', soft: true, variant: 'primary'}
-                ],
-                body: {type: 'html', tag: 'p', textContent: 'Card header with a badge indicator.'}
-            };
+                // Card 2: Config-based card with body and footer
+                const config2 = {
+                    type: 'card',
+                    body: [{
+                            type: 'html',
+                            tag: 'h4',
+                            class: 'so-mb-2',
+                            textContent: 'Simple Card'
+                        },
+                        {
+                            type: 'html',
+                            tag: 'p',
+                            class: 'so-text-muted',
+                            textContent: 'A card without the header section.'
+                        }
+                    ],
+                    footer: [{
+                            type: 'button',
+                            text: 'Cancel',
+                            outline: true,
+                            small: true
+                        },
+                        {
+                            type: 'button',
+                            text: 'Save',
+                            variant: 'primary',
+                            small: true
+                        }
+                    ]
+                };
 
-            return [
-                UiEngine.fromConfig(config1).render(),
-                UiEngine.fromConfig(config2).render(),
-                UiEngine.fromConfig(config3).render()
-            ];
-        };
+                // Card 3: Config-based card with badge
+                const config3 = {
+                    type: 'card',
+                    header: [{
+                            type: 'html',
+                            tag: 'h3',
+                            class: 'so-card-title',
+                            textContent: 'With Badge'
+                        },
+                        {
+                            type: 'badge',
+                            text: 'New',
+                            soft: true,
+                            variant: 'primary'
+                        }
+                    ],
+                    body: {
+                        type: 'html',
+                        tag: 'p',
+                        textContent: 'Card header with a badge indicator.'
+                    }
+                };
+
+                return [
+                    UiEngine.fromConfig(config1).render(),
+                    UiEngine.fromConfig(config2).render(),
+                    UiEngine.fromConfig(config3).render()
+                ];
+            };
         </script>
     </div>
 </div>
@@ -426,7 +477,8 @@ JS;
         <p class="so-text-muted so-mb-4">Dashboard-style stats cards built with nested UiEngine components. Perfect for KPI displays and metrics.</p>
         <?php
         // Helper function to create a stats card
-        function createStatsCard($label, $value, $trend, $trendText, $icon, $iconColor) {
+        function createStatsCard($label, $value, $trend, $trendText, $icon, $iconColor)
+        {
             return UiEngine::card()
                 ->addClass('so-card-padded')
                 // Header row: Label + Icon badge
@@ -632,61 +684,61 @@ HTML;
         ]);
         ?>
         <script>
-        window.cardConfigs['js-stats-container'] = (UiEngine) => {
-            // Helper function to create stats cards
-            function createStatsCard(label, value, trend, trendText, icon, iconColor) {
-                return UiEngine.card()
-                    .addClass('so-card-padded')
-                    // Header: Label + Icon
-                    .add(
-                        UiEngine.html().tag('div')
+            window.cardConfigs['js-stats-container'] = (UiEngine) => {
+                // Helper function to create stats cards
+                function createStatsCard(label, value, trend, trendText, icon, iconColor) {
+                    return UiEngine.card()
+                        .addClass('so-card-padded')
+                        // Header: Label + Icon
+                        .add(
+                            UiEngine.html().tag('div')
                             .addClass('so-d-flex so-justify-content-between so-align-items-center so-mb-2')
                             .add(
                                 UiEngine.html().tag('span')
-                                    .addClass('so-text-muted so-fs-xs so-text-uppercase so-fw-medium')
-                                    .text(label)
+                                .addClass('so-text-muted so-fs-xs so-text-uppercase so-fw-medium')
+                                .text(label)
                             )
                             .add(
                                 UiEngine.html().tag('span')
-                                    .addClass('so-d-flex so-align-items-center so-justify-content-center so-rounded-full so-bg-' + iconColor + '-subtle so-w-8 so-h-8')
-                                    .add(
-                                        UiEngine.html().tag('span')
-                                            .addClass('material-icons so-text-' + iconColor + ' so-fs-lg')
-                                            .text(icon)
-                                    )
+                                .addClass('so-d-flex so-align-items-center so-justify-content-center so-rounded-full so-bg-' + iconColor + '-subtle so-w-8 so-h-8')
+                                .add(
+                                    UiEngine.html().tag('span')
+                                    .addClass('material-icons so-text-' + iconColor + ' so-fs-lg')
+                                    .text(icon)
+                                )
                             )
-                    )
-                    // Value
-                    .add(
-                        UiEngine.html().tag('div')
+                        )
+                        // Value
+                        .add(
+                            UiEngine.html().tag('div')
                             .addClass('so-fs-2xl so-fw-medium so-mb-1')
                             .text(value)
-                    )
-                    // Trend
-                    .add(
-                        UiEngine.html().tag('div')
+                        )
+                        // Trend
+                        .add(
+                            UiEngine.html().tag('div')
                             .addClass('so-d-flex so-align-items-center so-gap-1')
                             .add(
                                 UiEngine.html().tag('span')
-                                    .addClass('material-icons so-text-' + trend + ' so-fs-base')
-                                    .text(trend === 'success' ? 'arrow_upward' : 'arrow_downward')
+                                .addClass('material-icons so-text-' + trend + ' so-fs-base')
+                                .text(trend === 'success' ? 'arrow_upward' : 'arrow_downward')
                             )
                             .add(
                                 UiEngine.html().tag('span')
-                                    .addClass('so-text-' + trend + ' so-fs-xs so-fw-medium')
-                                    .text(trendText)
+                                .addClass('so-text-' + trend + ' so-fs-xs so-fw-medium')
+                                .text(trendText)
                             )
-                    ).render();
-            }
+                        ).render();
+                }
 
-            // Create stats cards
-            return [
-                createStatsCard('Total Sales', '₹12,45,890', 'success', '12.5% from last month', 'trending_up', 'info'),
-                createStatsCard('Total Purchase', '₹8,34,560', 'danger', '3.2% from last month', 'shopping_cart', 'danger'),
-                createStatsCard('Pending Orders', '47', 'success', '8 new today', 'pending_actions', 'warning'),
-                createStatsCard('Active Customers', '1,284', 'success', '24 new this week', 'people', 'success')
-            ];
-        };
+                // Create stats cards
+                return [
+                    createStatsCard('Total Sales', '₹12,45,890', 'success', '12.5% from last month', 'trending_up', 'info'),
+                    createStatsCard('Total Purchase', '₹8,34,560', 'danger', '3.2% from last month', 'shopping_cart', 'danger'),
+                    createStatsCard('Pending Orders', '47', 'success', '8 new today', 'pending_actions', 'warning'),
+                    createStatsCard('Active Customers', '1,284', 'success', '24 new this week', 'people', 'success')
+                ];
+            };
         </script>
     </div>
 </div>
