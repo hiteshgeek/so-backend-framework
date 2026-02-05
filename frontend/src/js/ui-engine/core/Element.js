@@ -215,6 +215,25 @@ class Element extends SOComponent {
     }
 
     /**
+     * Set HTML attribute (alias for setAttr to match PHP API)
+     * @param {string} name
+     * @param {*} value
+     * @returns {this}
+     */
+    attr(name, value) {
+        return this.setAttr(name, value);
+    }
+
+    /**
+     * Remove CSS class (alias for unsetClass to match PHP API)
+     * @param {string} className
+     * @returns {this}
+     */
+    removeClass(className) {
+        return this.unsetClass(className);
+    }
+
+    /**
      * Set data attribute
      * @param {string} name - Without data- prefix
      * @param {*} value
@@ -226,6 +245,16 @@ class Element extends SOComponent {
             this.element.dataset[this._camelCase(name)] = value;
         }
         return this;
+    }
+
+    /**
+     * Set data attribute (alias for setDataAttr to match PHP API)
+     * @param {string} name - Without data- prefix
+     * @param {*} value
+     * @returns {this}
+     */
+    data(name, value) {
+        return this.setDataAttr(name, value);
     }
 
     /**
@@ -249,6 +278,15 @@ class Element extends SOComponent {
             this.element.textContent = content;
         }
         return this;
+    }
+
+    /**
+     * Set text content (alias for setContent to match PHP API)
+     * @param {string} content
+     * @returns {this}
+     */
+    content(content) {
+        return this.setContent(content);
     }
 
     /**

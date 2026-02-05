@@ -517,6 +517,12 @@
               "title": "2. Input",
               "icon": "text_fields",
               "url": "ui-engine-form/input.php"
+            },
+            {
+              "id": "uied-validation",
+              "title": "3. Validation",
+              "icon": "verified",
+              "url": "ui-engine-form/validation.php"
             }
           ]
         }

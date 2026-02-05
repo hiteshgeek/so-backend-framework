@@ -387,16 +387,36 @@ UiEngine.fromConfig({
 })
 JS;
 
+        // HTML Output
+        $htmlOutput = <<<'HTML'
+<form action="/submit" method="POST" class="so-form">
+    <div class="so-form-group">
+        <label for="small" class="so-form-label">Small Input</label>
+        <input id="small" class="so-form-control so-form-control-sm" name="small" placeholder="Small input" type="text">
+    </div>
+    <div class="so-form-group">
+        <label for="medium" class="so-form-label">Medium Input</label>
+        <input id="medium" class="so-form-control" name="medium" placeholder="Medium input (default)" type="text">
+    </div>
+    <div class="so-form-group">
+        <label for="large" class="so-form-label">Large Input</label>
+        <input id="large" class="so-form-control so-form-control-lg" name="large" placeholder="Large input" type="text">
+    </div>
+</form>
+HTML;
+
         $phpContent = $phpSizes . '<div class="so-mt-4">' . so_code_block($phpCode, 'php') . '</div>';
         $phpConfigContent = $phpConfigSizes . '<div class="so-mt-4">' . so_code_block($phpConfigCode, 'php') . '</div>';
         $jsContent = '<div id="js-sizes-container"></div><div class="so-mt-4">' . so_code_block($jsCode, 'javascript') . '</div>';
         $jsConfigContent = '<div id="js-config-sizes-container"></div><div class="so-mt-4">' . so_code_block($jsConfigCode, 'javascript') . '</div>';
+        $htmlContent = so_code_block($htmlOutput, 'html');
 
         echo so_tabs('sizes', [
             ['id' => 'php-sizes', 'label' => 'PHP', 'icon' => 'data_object', 'active' => true, 'content' => $phpContent],
             ['id' => 'php-config-sizes', 'label' => 'PHP Config', 'icon' => 'settings', 'active' => false, 'content' => $phpConfigContent],
             ['id' => 'js-sizes', 'label' => 'JavaScript', 'icon' => 'javascript', 'active' => false, 'content' => $jsContent],
-            ['id' => 'js-config-sizes', 'label' => 'JS Config', 'icon' => 'settings', 'active' => false, 'content' => $jsConfigContent]
+            ['id' => 'js-config-sizes', 'label' => 'JS Config', 'icon' => 'settings', 'active' => false, 'content' => $jsConfigContent],
+            ['id' => 'html-sizes', 'label' => 'HTML Output', 'icon' => 'code', 'active' => false, 'content' => $htmlContent]
         ]);
         ?>
         <script>
@@ -507,16 +527,40 @@ UiEngine.fromConfig({
 })
 JS;
 
+        // HTML Output
+        $htmlOutput = <<<'HTML'
+<form action="/submit" method="POST" class="so-form">
+    <div class="so-form-group">
+        <label for="primary" class="so-form-label">Primary</label>
+        <input id="primary" class="so-form-control so-form-control-primary" name="primary" placeholder="Primary variant" type="text">
+    </div>
+    <div class="so-form-group">
+        <label for="success" class="so-form-label">Success</label>
+        <input id="success" class="so-form-control so-form-control-success" name="success" placeholder="Success variant" type="text">
+    </div>
+    <div class="so-form-group">
+        <label for="danger" class="so-form-label">Danger</label>
+        <input id="danger" class="so-form-control so-form-control-danger" name="danger" placeholder="Danger variant" type="text">
+    </div>
+    <div class="so-form-group">
+        <label for="warning" class="so-form-label">Warning</label>
+        <input id="warning" class="so-form-control so-form-control-warning" name="warning" placeholder="Warning variant" type="text">
+    </div>
+</form>
+HTML;
+
         $phpContent = $phpVariants . '<div class="so-mt-4">' . so_code_block($phpCode, 'php') . '</div>';
         $phpConfigContent = $phpConfigVariants . '<div class="so-mt-4">' . so_code_block($phpConfigCode, 'php') . '</div>';
         $jsContent = '<div id="js-variants-container"></div><div class="so-mt-4">' . so_code_block($jsCode, 'javascript') . '</div>';
         $jsConfigContent = '<div id="js-config-variants-container"></div><div class="so-mt-4">' . so_code_block($jsConfigCode, 'javascript') . '</div>';
+        $htmlContent = so_code_block($htmlOutput, 'html');
 
         echo so_tabs('variants', [
             ['id' => 'php-variants', 'label' => 'PHP', 'icon' => 'data_object', 'active' => true, 'content' => $phpContent],
             ['id' => 'php-config-variants', 'label' => 'PHP Config', 'icon' => 'settings', 'active' => false, 'content' => $phpConfigContent],
             ['id' => 'js-variants', 'label' => 'JavaScript', 'icon' => 'javascript', 'active' => false, 'content' => $jsContent],
-            ['id' => 'js-config-variants', 'label' => 'JS Config', 'icon' => 'settings', 'active' => false, 'content' => $jsConfigContent]
+            ['id' => 'js-config-variants', 'label' => 'JS Config', 'icon' => 'settings', 'active' => false, 'content' => $jsConfigContent],
+            ['id' => 'html-variants', 'label' => 'HTML Output', 'icon' => 'code', 'active' => false, 'content' => $htmlContent]
         ]);
         ?>
         <script>
@@ -580,6 +624,7 @@ JS;
         $phpIcons = UiEngine::form()
             ->add(UiEngine::input()->name('search')->label('Search')->prefixIcon('search')->placeholder('Search...'))
             ->add(UiEngine::input()->name('email')->label('Email')->prefixIcon('email')->suffixIcon('check_circle')->placeholder('your@email.com'))
+            ->add(UiEngine::input()->name('website')->label('Website')->prefixIcon('link')->suffixIcon('open_in_new')->placeholder('https://example.com'))
             ->add(UiEngine::input()->inputType('password')->name('password')->label('Password')->prefixIcon('lock')->suffixAction('visibility', 'togglePassword(this)'))
             ->render();
 
@@ -589,14 +634,19 @@ JS;
             'children' => [
                 ['type' => 'input', 'name' => 'search', 'label' => 'Search', 'prefixIcon' => 'search', 'placeholder' => 'Search...'],
                 ['type' => 'input', 'name' => 'email', 'label' => 'Email', 'prefixIcon' => 'email', 'suffixIcon' => 'check_circle', 'placeholder' => 'your@email.com'],
+                ['type' => 'input', 'name' => 'website', 'label' => 'Website', 'prefixIcon' => 'link', 'suffixIcon' => 'open_in_new', 'placeholder' => 'https://example.com'],
                 ['type' => 'input', 'inputType' => 'password', 'name' => 'password', 'label' => 'Password', 'prefixIcon' => 'lock', 'suffixAction' => ['icon' => 'visibility', 'action' => 'togglePassword(this)']]
             ]
         ])->render();
 
         $phpCode = <<<'PHP'
 UiEngine::form()
+    // Prefix icon only
     ->add(UiEngine::input()->prefixIcon('search')->placeholder('Search...'))
+    // Two icons: prefix + suffix
     ->add(UiEngine::input()->prefixIcon('email')->suffixIcon('check_circle'))
+    ->add(UiEngine::input()->prefixIcon('link')->suffixIcon('open_in_new'))
+    // Prefix icon + action button
     ->add(UiEngine::input()
         ->inputType('password')
         ->prefixIcon('lock')
@@ -607,8 +657,12 @@ PHP;
 UiEngine::fromConfig([
     'type' => 'form',
     'children' => [
+        // Prefix icon only
         ['type' => 'input', 'prefixIcon' => 'search'],
+        // Two icons: prefix + suffix
         ['type' => 'input', 'prefixIcon' => 'email', 'suffixIcon' => 'check_circle'],
+        ['type' => 'input', 'prefixIcon' => 'link', 'suffixIcon' => 'open_in_new'],
+        // Prefix icon + action button
         ['type' => 'input', 'inputType' => 'password', 'prefixIcon' => 'lock',
          'suffixAction' => ['icon' => 'visibility', 'action' => 'togglePassword(this)']]
     ]
@@ -617,8 +671,12 @@ PHP;
 
         $jsCode = <<<'JS'
 UiEngine.form()
+    // Prefix icon only
     .add(UiEngine.input().prefixIcon('search').placeholder('Search...'))
+    // Two icons: prefix + suffix
     .add(UiEngine.input().prefixIcon('email').suffixIcon('check_circle'))
+    .add(UiEngine.input().prefixIcon('link').suffixIcon('open_in_new'))
+    // Prefix icon + action button
     .add(UiEngine.input()
         .inputType('password')
         .prefixIcon('lock')
@@ -629,24 +687,75 @@ JS;
 UiEngine.fromConfig({
     type: 'form',
     children: [
+        // Prefix icon only
         {type: 'input', prefixIcon: 'search'},
+        // Two icons: prefix + suffix
         {type: 'input', prefixIcon: 'email', suffixIcon: 'check_circle'},
+        {type: 'input', prefixIcon: 'link', suffixIcon: 'open_in_new'},
+        // Prefix icon + action button
         {type: 'input', inputType: 'password', prefixIcon: 'lock',
          suffixAction: {icon: 'visibility', action: 'togglePassword(this)'}}
     ]
 })
 JS;
 
+        // HTML Output
+        $htmlOutput = <<<'HTML'
+<form action="/submit" method="POST" class="so-form">
+    <!-- Prefix icon only -->
+    <div class="so-form-group">
+        <label for="search" class="so-form-label">Search</label>
+        <div class="so-input-wrapper">
+            <span class="so-input-icon"><span class="material-icons">search</span></span>
+            <input id="search" class="so-form-control" name="search" placeholder="Search..." type="text">
+        </div>
+    </div>
+
+    <!-- Two icons: prefix + suffix -->
+    <div class="so-form-group">
+        <label for="email" class="so-form-label">Email</label>
+        <div class="so-input-wrapper">
+            <span class="so-input-icon"><span class="material-icons">email</span></span>
+            <input id="email" class="so-form-control" name="email" placeholder="your@email.com" type="text">
+            <span class="so-input-icon"><span class="material-icons">check_circle</span></span>
+        </div>
+    </div>
+
+    <div class="so-form-group">
+        <label for="website" class="so-form-label">Website</label>
+        <div class="so-input-wrapper">
+            <span class="so-input-icon"><span class="material-icons">link</span></span>
+            <input id="website" class="so-form-control" name="website" placeholder="https://example.com" type="text">
+            <span class="so-input-icon"><span class="material-icons">open_in_new</span></span>
+        </div>
+    </div>
+
+    <!-- Prefix icon + action button -->
+    <div class="so-form-group">
+        <label for="password" class="so-form-label">Password</label>
+        <div class="so-input-wrapper">
+            <span class="so-input-icon"><span class="material-icons">lock</span></span>
+            <input id="password" class="so-form-control" name="password" type="password">
+            <button type="button" class="so-input-action" onclick="togglePassword(this)" aria-label="Action">
+                <span class="material-icons">visibility</span>
+            </button>
+        </div>
+    </div>
+</form>
+HTML;
+
         $phpContent = $phpIcons . '<div class="so-mt-4">' . so_code_block($phpCode, 'php') . '</div>';
         $phpConfigContent = $phpConfigIcons . '<div class="so-mt-4">' . so_code_block($phpConfigCode, 'php') . '</div>';
         $jsContent = '<div id="js-icons-container"></div><div class="so-mt-4">' . so_code_block($jsCode, 'javascript') . '</div>';
         $jsConfigContent = '<div id="js-config-icons-container"></div><div class="so-mt-4">' . so_code_block($jsConfigCode, 'javascript') . '</div>';
+        $htmlContent = so_code_block($htmlOutput, 'html');
 
         echo so_tabs('icons', [
             ['id' => 'php-icons', 'label' => 'PHP', 'icon' => 'data_object', 'active' => true, 'content' => $phpContent],
             ['id' => 'php-config-icons', 'label' => 'PHP Config', 'icon' => 'settings', 'active' => false, 'content' => $phpConfigContent],
             ['id' => 'js-icons', 'label' => 'JavaScript', 'icon' => 'javascript', 'active' => false, 'content' => $jsContent],
-            ['id' => 'js-config-icons', 'label' => 'JS Config', 'icon' => 'settings', 'active' => false, 'content' => $jsConfigContent]
+            ['id' => 'js-config-icons', 'label' => 'JS Config', 'icon' => 'settings', 'active' => false, 'content' => $jsConfigContent],
+            ['id' => 'html-icons', 'label' => 'HTML Output', 'icon' => 'code', 'active' => false, 'content' => $htmlContent]
         ]);
         ?>
         <script>
@@ -654,6 +763,7 @@ JS;
                 return [UiEngine.form()
                     .add(UiEngine.input().name('search').label('Search').prefixIcon('search').placeholder('Search...'))
                     .add(UiEngine.input().name('email').label('Email').prefixIcon('email').suffixIcon('check_circle').placeholder('your@email.com'))
+                    .add(UiEngine.input().name('website').label('Website').prefixIcon('link').suffixIcon('open_in_new').placeholder('https://example.com'))
                     .add(UiEngine.input().inputType('password').name('password').label('Password').prefixIcon('lock').suffixAction('visibility', 'togglePassword(this)'))
                     .render()
                 ];
@@ -676,6 +786,14 @@ JS;
                             prefixIcon: 'email',
                             suffixIcon: 'check_circle',
                             placeholder: 'your@email.com'
+                        },
+                        {
+                            type: 'input',
+                            name: 'website',
+                            label: 'Website',
+                            prefixIcon: 'link',
+                            suffixIcon: 'open_in_new',
+                            placeholder: 'https://example.com'
                         },
                         {
                             type: 'input',

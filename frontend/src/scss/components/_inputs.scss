@@ -170,7 +170,7 @@ textarea.#{$so-prefix}form-control-lg,
     justify-content: center;
 
     .material-icons {
-      font-size: 20px;
+      font-size: 19px;
     }
   }
 
@@ -227,7 +227,7 @@ textarea.#{$so-prefix}form-control-lg,
     }
 
     .material-icons {
-      font-size: 20px;
+      font-size: 19px;
     }
   }
 
@@ -243,6 +243,20 @@ textarea.#{$so-prefix}form-control-lg,
     .#{$so-prefix}form-control {
       padding-left: 40px;
       padding-right: 44px;
+    }
+  }
+
+  // Two icons (prefix + suffix) - position second icon on the right
+  .#{$so-prefix}input-icon:last-of-type:not(:first-of-type) {
+    left: auto;
+    right: 12px;
+  }
+
+  // When has two input-icon elements, add both left and right padding
+  &:has(.#{$so-prefix}input-icon:nth-of-type(2)) {
+    .#{$so-prefix}form-control {
+      padding-left: 40px;
+      padding-right: 40px;
     }
   }
 

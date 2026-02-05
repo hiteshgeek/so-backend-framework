@@ -129,8 +129,40 @@ require_once '../includes/navbar.php';
                             </div>
                         </div>
 
+                        <!-- Two Icons Section -->
+                        <h5 class="so-mt-5 so-mb-3">Two Static Icons (Prefix + Suffix)</h5>
+                        <p class="so-text-secondary so-mb-4">Use two <code>so-input-icon</code> elements for static prefix and suffix icons. The second icon automatically positions on the right.</p>
+                        <div class="so-grid so-grid-cols-3 so-grid-cols-sm-1">
+                            <div class="so-form-group">
+                                <label class="so-form-label" for="input-email-verified">Email with Verification</label>
+                                <div class="so-input-wrapper">
+                                    <span class="so-input-icon"><span class="material-icons">email</span></span>
+                                    <input type="email" id="input-email-verified" class="so-form-control" placeholder="your@email.com" value="user@example.com">
+                                    <span class="so-input-icon"><span class="material-icons">check_circle</span></span>
+                                </div>
+                            </div>
+
+                            <div class="so-form-group">
+                                <label class="so-form-label" for="input-website">Website URL</label>
+                                <div class="so-input-wrapper">
+                                    <span class="so-input-icon"><span class="material-icons">link</span></span>
+                                    <input type="url" id="input-website" class="so-form-control" placeholder="https://example.com" value="https://sixorbit.com">
+                                    <span class="so-input-icon"><span class="material-icons">open_in_new</span></span>
+                                </div>
+                            </div>
+
+                            <div class="so-form-group">
+                                <label class="so-form-label" for="input-location">Location</label>
+                                <div class="so-input-wrapper">
+                                    <span class="so-input-icon"><span class="material-icons">place</span></span>
+                                    <input type="text" id="input-location" class="so-form-control" placeholder="Enter location" value="New York, USA">
+                                    <span class="so-input-icon"><span class="material-icons">navigation</span></span>
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- Dual Icons Section -->
-                        <h5 class="so-mt-5 so-mb-3">Dual Icons (Left Icon + Right Action)</h5>
+                        <h5 class="so-mt-5 so-mb-3">Icon + Action Button</h5>
                         <p class="so-text-secondary so-mb-4">Use <code>so-input-icon</code> for left icon and <code>so-input-action</code> for clickable right actions like password toggles.</p>
                         <div class="so-grid so-grid-cols-3 so-grid-cols-sm-1">
                             <div class="so-form-group">
@@ -179,7 +211,20 @@ require_once '../includes/navbar.php';
     <span class="so-input-icon"><span class="material-icons">email</span></span>
 </div>
 
-<!-- Dual Icons: Left Icon + Right Action (password toggle) -->
+<!-- Two Static Icons: Prefix + Suffix -->
+<div class="so-input-wrapper">
+    <span class="so-input-icon"><span class="material-icons">email</span></span>
+    <input type="email" class="so-form-control" placeholder="your@email.com">
+    <span class="so-input-icon"><span class="material-icons">check_circle</span></span>
+</div>
+
+<div class="so-input-wrapper">
+    <span class="so-input-icon"><span class="material-icons">link</span></span>
+    <input type="url" class="so-form-control" placeholder="https://example.com">
+    <span class="so-input-icon"><span class="material-icons">open_in_new</span></span>
+</div>
+
+<!-- Icon + Action Button (password toggle) -->
 <div class="so-input-wrapper">
     <span class="so-input-icon"><span class="material-icons">lock</span></span>
     <input type="password" class="so-form-control" placeholder="Enter password">

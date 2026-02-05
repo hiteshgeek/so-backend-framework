@@ -294,27 +294,95 @@ class Input extends FormElement
     }
 
     /**
-     * Set minimum value (HTML attribute)
+     * Set as email input and add email validation
+     * Overrides parent to set input type in addition to validation
      *
-     * @param int|float|string $min Minimum value
+     * @param string|null $message Custom validation message
      * @return static
      */
-    public function minValue(mixed $min): static
+    public function email(?string $message = null): static
     {
-        $this->min = $min;
+        $this->inputType('email');
+        parent::email($message);
         return $this;
     }
 
     /**
-     * Set maximum value (HTML attribute)
+     * Set as number input
+     *
+     * @return static
+     */
+    public function number(): static
+    {
+        return $this->inputType('number');
+    }
+
+    /**
+     * Set as URL input and add URL validation
+     * Overrides parent to set input type in addition to validation
+     *
+     * @param string|null $message Custom validation message
+     * @return static
+     */
+    public function url(?string $message = null): static
+    {
+        $this->inputType('url');
+        parent::url($message);
+        return $this;
+    }
+
+    /**
+     * Set minimum value (HTML attribute) and add min validation
+     * Overrides parent to set HTML attribute in addition to validation
+     *
+     * @param int|float|string $min Minimum value
+     * @param string|null $message Custom validation message
+     * @return static
+     */
+    public function min(mixed $min, ?string $message = null): static
+    {
+        $this->min = $min;
+        parent::min((int)$min, $message);
+        return $this;
+    }
+
+    /**
+     * Set minimum value (HTML attribute) - DEPRECATED alias for min()
+     *
+     * @param int|float|string $min Minimum value
+     * @return static
+     * @deprecated Use min() instead
+     */
+    public function minValue(mixed $min): static
+    {
+        return $this->min($min);
+    }
+
+    /**
+     * Set maximum value (HTML attribute) and add max validation
+     * Overrides parent to set HTML attribute in addition to validation
+     *
+     * @param int|float|string $max Maximum value
+     * @param string|null $message Custom validation message
+     * @return static
+     */
+    public function max(mixed $max, ?string $message = null): static
+    {
+        $this->max = $max;
+        parent::max((int)$max, $message);
+        return $this;
+    }
+
+    /**
+     * Set maximum value (HTML attribute) - DEPRECATED alias for max()
      *
      * @param int|float|string $max Maximum value
      * @return static
+     * @deprecated Use max() instead
      */
     public function maxValue(mixed $max): static
     {
-        $this->max = $max;
-        return $this;
+        return $this->max($max);
     }
 
     /**
@@ -354,15 +422,30 @@ class Input extends FormElement
     }
 
     /**
-     * Set validation pattern (HTML attribute)
+     * Set validation pattern (HTML attribute) and add regex validation
+     * Overrides parent to set HTML attribute in addition to validation
+     *
+     * @param string $pattern Regex pattern
+     * @param string|null $message Custom validation message
+     * @return static
+     */
+    public function pattern(string $pattern, ?string $message = null): static
+    {
+        $this->pattern = $pattern;
+        parent::pattern($pattern, $message);
+        return $this;
+    }
+
+    /**
+     * Set validation pattern (HTML attribute) - DEPRECATED alias for pattern()
      *
      * @param string $pattern Regex pattern
      * @return static
+     * @deprecated Use pattern() instead
      */
     public function inputPattern(string $pattern): static
     {
-        $this->pattern = $pattern;
-        return $this;
+        return $this->pattern($pattern);
     }
 
     /**
