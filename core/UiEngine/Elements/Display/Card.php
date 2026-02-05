@@ -91,6 +91,73 @@ class Card extends ContainerElement
     public function info(): static { return $this->variant('info'); }
 
     /**
+     * Initialize element properties from configuration
+     *
+     * @param array $config
+     * @return void
+     */
+    protected function initializeFromConfig(array $config): void
+    {
+        parent::initializeFromConfig($config);
+
+        // Header content (accepts array of configs, Element, or string)
+        if (isset($config['header'])) {
+            $this->header = $this->processConfigContent($config['header']);
+        }
+
+        // Body content (accepts array of configs, Element, or string)
+        if (isset($config['body'])) {
+            $this->body = $this->processConfigContent($config['body']);
+        }
+
+        // Footer content (accepts array of configs, Element, or string)
+        if (isset($config['footer'])) {
+            $this->footer = $this->processConfigContent($config['footer']);
+        }
+
+        // Variant
+        if (isset($config['variant'])) {
+            $this->variant = $config['variant'];
+        }
+    }
+
+    /**
+     * Process config content (convert config arrays to Elements)
+     *
+     * @param mixed $content
+     * @return Element|string|array|null
+     */
+    protected function processConfigContent(mixed $content): Element|string|array|null
+    {
+        // Already an Element or string - return as-is
+        if ($content instanceof Element || is_string($content)) {
+            return $content;
+        }
+
+        // Array of items - process each
+        if (is_array($content)) {
+            // Check if it's a config array (has 'type' key) or array of items
+            if (isset($content['type'])) {
+                // Single config object - convert to Element
+                return ElementFactory::create($content);
+            }
+
+            // Array of items - convert each config to Element
+            return array_map(function ($item) {
+                if ($item instanceof Element) {
+                    return $item;
+                }
+                if (is_array($item) && isset($item['type'])) {
+                    return ElementFactory::create($item);
+                }
+                return $item;
+            }, $content);
+        }
+
+        return $content;
+    }
+
+    /**
      * Build CSS classes
      */
     public function buildClassString(): string

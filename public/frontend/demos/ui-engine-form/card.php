@@ -214,13 +214,125 @@ JS;
 </div>
 HTML;
 
+        // Generate PHP Config cards - matching exact structure of fluent API cards
+        $phpConfigCards = '<div class="so-grid so-grid-cols-1 so-grid-cols-md-2 so-grid-cols-lg-3 so-gap-4">';
+
+        // Card 1: Card with title and button in header (using fromConfig for child elements)
+        $phpConfigCards .= UiEngine::card()
+            ->header([
+                UiEngine::fromConfig(['type' => 'html', 'tag' => 'h3', 'class' => 'so-card-title', 'textContent' => 'Card Title']),
+                UiEngine::button()->iconOnly('more_vert')->variant('ghost')
+            ])
+            ->body(UiEngine::fromConfig(['type' => 'html', 'tag' => 'p', 'textContent' => 'This is a basic card with header and body sections.']))
+            ->render();
+
+        // Card 2: Simple card with body content and footer buttons
+        $phpConfigCards .= UiEngine::card()
+            ->body([
+                UiEngine::fromConfig(['type' => 'html', 'tag' => 'h4', 'class' => 'so-mb-2', 'textContent' => 'Simple Card']),
+                UiEngine::fromConfig(['type' => 'html', 'tag' => 'p', 'class' => 'so-text-muted', 'textContent' => 'A card without the header section.'])
+            ])
+            ->footer([
+                UiEngine::button()->text('Cancel')->outline()->small(),
+                UiEngine::button()->text('Save')->primary()->small()
+            ])
+            ->render();
+
+        // Card 3: Card with title and badge in header
+        $phpConfigCards .= UiEngine::card()
+            ->header([
+                UiEngine::fromConfig(['type' => 'html', 'tag' => 'h3', 'class' => 'so-card-title', 'textContent' => 'With Badge']),
+                UiEngine::badge()->text('New')->soft()->primary()
+            ])
+            ->body(UiEngine::fromConfig(['type' => 'html', 'tag' => 'p', 'textContent' => 'Card header with a badge indicator.']))
+            ->render();
+
+        $phpConfigCards .= '</div>';
+
+        $phpConfigCode = <<<'PHP'
+// Card 1: Hybrid approach - card structure with config-based children
+UiEngine::card()
+    ->header([
+        UiEngine::fromConfig(['type' => 'html', 'tag' => 'h3', 'class' => 'so-card-title', 'textContent' => 'Card Title']),
+        UiEngine::button()->iconOnly('more_vert')->variant('ghost')
+    ])
+    ->body(UiEngine::fromConfig(['type' => 'html', 'tag' => 'p', 'textContent' => 'This is a basic card with header and body sections.']))
+    ->render();
+
+// Card 2: Body with config-based elements
+UiEngine::card()
+    ->body([
+        UiEngine::fromConfig(['type' => 'html', 'tag' => 'h4', 'class' => 'so-mb-2', 'textContent' => 'Simple Card']),
+        UiEngine::fromConfig(['type' => 'html', 'tag' => 'p', 'class' => 'so-text-muted', 'textContent' => 'A card without the header section.'])
+    ])
+    ->footer([
+        UiEngine::button()->text('Cancel')->outline()->small(),
+        UiEngine::button()->text('Save')->primary()->small()
+    ])
+    ->render();
+
+// Card 3: Header with badge from config
+UiEngine::card()
+    ->header([
+        UiEngine::fromConfig(['type' => 'html', 'tag' => 'h3', 'class' => 'so-card-title', 'textContent' => 'With Badge']),
+        UiEngine::badge()->text('New')->soft()->primary()
+    ])
+    ->body(UiEngine::fromConfig(['type' => 'html', 'tag' => 'p', 'textContent' => 'Card header with a badge indicator.']))
+    ->render();
+PHP;
+
+        $jsConfigCode = <<<'JS'
+// Card with title and button in header (config-based)
+const config1 = {
+    type: 'card',
+    header: [
+        {type: 'html', tag: 'h3', class: 'so-card-title', textContent: 'Card Title'},
+        {type: 'button', iconOnly: 'more_vert', variant: 'ghost'}
+    ],
+    body: {type: 'html', tag: 'p', textContent: 'This is a basic card with header and body sections.'}
+};
+
+// Simple card with body and footer (config-based)
+const config2 = {
+    type: 'card',
+    body: [
+        {type: 'html', tag: 'h4', class: 'so-mb-2', textContent: 'Simple Card'},
+        {type: 'html', tag: 'p', class: 'so-text-muted', textContent: 'A card without the header section.'}
+    ],
+    footer: [
+        {type: 'button', text: 'Cancel', outline: true, small: true},
+        {type: 'button', text: 'Save', variant: 'primary', small: true}
+    ]
+};
+
+// Card with title and badge (config-based)
+const config3 = {
+    type: 'card',
+    header: [
+        {type: 'html', tag: 'h3', class: 'so-card-title', textContent: 'With Badge'},
+        {type: 'badge', text: 'New', soft: true, variant: 'primary'}
+    ],
+    body: {type: 'html', tag: 'p', textContent: 'Card header with a badge indicator.'}
+};
+
+// Render to container
+const container = document.getElementById('container');
+container.appendChild(UiEngine.fromConfig(config1).render());
+container.appendChild(UiEngine.fromConfig(config2).render());
+container.appendChild(UiEngine.fromConfig(config3).render());
+JS;
+
         $phpContent = $phpCards . '<div class="so-mt-4">' . so_code_block($phpCode, 'php') . '</div>';
+        $phpConfigContent = $phpConfigCards . '<div class="so-mt-4">' . so_code_block($phpConfigCode, 'php') . '</div>';
         $jsContent = '<div class="so-grid so-grid-cols-1 so-grid-cols-md-2 so-grid-cols-lg-3 so-gap-4" id="js-basic-container"></div><div class="so-mt-4">' . so_code_block($jsCode, 'javascript') . '</div>';
+        $jsConfigContent = '<div class="so-grid so-grid-cols-1 so-grid-cols-md-2 so-grid-cols-lg-3 so-gap-4" id="js-config-basic-container"></div><div class="so-mt-4">' . so_code_block($jsConfigCode, 'javascript') . '</div>';
         $htmlContent = so_code_block($htmlOutput, 'html');
 
         echo so_tabs('basic-card', [
             ['id' => 'php-basic', 'label' => 'PHP', 'icon' => 'data_object', 'active' => true, 'content' => $phpContent],
+            ['id' => 'php-config-basic', 'label' => 'PHP Config', 'icon' => 'settings', 'active' => false, 'content' => $phpConfigContent],
             ['id' => 'js-basic', 'label' => 'JavaScript', 'icon' => 'javascript', 'active' => false, 'content' => $jsContent],
+            ['id' => 'js-config-basic', 'label' => 'JS Config', 'icon' => 'settings', 'active' => false, 'content' => $jsConfigContent],
             ['id' => 'html-basic', 'label' => 'HTML Output', 'icon' => 'code', 'active' => false, 'content' => $htmlContent]
         ]);
         ?>
@@ -258,6 +370,48 @@ HTML;
                 .render();
 
             return [card1, card2, card3];
+        };
+
+        // JS Config Basic Cards
+        window.cardConfigs['js-config-basic-container'] = function(UiEngine) {
+            // Card 1: Config-based card with header and button
+            const config1 = {
+                type: 'card',
+                header: [
+                    {type: 'html', tag: 'h3', class: 'so-card-title', textContent: 'Card Title'},
+                    {type: 'button', iconOnly: 'more_vert', variant: 'ghost'}
+                ],
+                body: {type: 'html', tag: 'p', textContent: 'This is a basic card with header and body sections.'}
+            };
+
+            // Card 2: Config-based card with body and footer
+            const config2 = {
+                type: 'card',
+                body: [
+                    {type: 'html', tag: 'h4', class: 'so-mb-2', textContent: 'Simple Card'},
+                    {type: 'html', tag: 'p', class: 'so-text-muted', textContent: 'A card without the header section.'}
+                ],
+                footer: [
+                    {type: 'button', text: 'Cancel', outline: true, small: true},
+                    {type: 'button', text: 'Save', variant: 'primary', small: true}
+                ]
+            };
+
+            // Card 3: Config-based card with badge
+            const config3 = {
+                type: 'card',
+                header: [
+                    {type: 'html', tag: 'h3', class: 'so-card-title', textContent: 'With Badge'},
+                    {type: 'badge', text: 'New', soft: true, variant: 'primary'}
+                ],
+                body: {type: 'html', tag: 'p', textContent: 'Card header with a badge indicator.'}
+            };
+
+            return [
+                UiEngine.fromConfig(config1).render(),
+                UiEngine.fromConfig(config2).render(),
+                UiEngine.fromConfig(config3).render()
+            ];
         };
         </script>
     </div>

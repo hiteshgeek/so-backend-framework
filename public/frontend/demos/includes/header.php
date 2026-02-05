@@ -614,6 +614,26 @@ $includeSearch = $includeSearch ?? true;
             display: flex;
             gap: 0;
             flex: 1;
+            overflow-x: auto;
+            overflow-y: hidden;
+            scrollbar-width: thin;
+        }
+
+        .so-code-tabs::-webkit-scrollbar {
+            height: 4px;
+        }
+
+        .so-code-tabs::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .so-code-tabs::-webkit-scrollbar-thumb {
+            background: var(--so-border-color);
+            border-radius: 2px;
+        }
+
+        .so-code-tabs::-webkit-scrollbar-thumb:hover {
+            background: var(--so-text-muted);
         }
 
         .so-code-tab {
@@ -629,6 +649,8 @@ $includeSearch = $includeSearch ?? true;
             cursor: pointer;
             transition: all 0.15s ease;
             border-bottom: 2px solid transparent;
+            white-space: nowrap;
+            flex-shrink: 0;
         }
 
         .so-code-tab:hover {

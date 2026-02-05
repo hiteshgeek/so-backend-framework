@@ -74,6 +74,31 @@ echo \$card->render();
 echo \$card2->render();"
                     ],
                     [
+                        'label' => 'PHP Config',
+                        'language' => 'php',
+                        'icon' => 'settings',
+                        'code' => "<?php
+use Core\UiEngine\UiEngine;
+
+\$config = [
+    'type' => 'card',
+    'header' => 'Card Title',
+    'body' => 'This is a basic card with header and body sections.'
+];
+
+echo UiEngine::fromConfig(\$config)->render();
+
+// Card with title and footer
+\$config2 = [
+    'type' => 'card',
+    'title' => 'Simple Card',
+    'body' => 'A card without the header section.',
+    'footer' => 'Card footer'
+];
+
+echo UiEngine::fromConfig(\$config2)->render();"
+                    ],
+                    [
                         'label' => 'JavaScript',
                         'language' => 'javascript',
                         'icon' => 'javascript',
@@ -90,6 +115,30 @@ const card2 = UiEngine.card()
     .footer('Card footer');
 
 document.getElementById('container').innerHTML += card2.toHtml();"
+                    ],
+                    [
+                        'label' => 'JS Config',
+                        'language' => 'javascript',
+                        'icon' => 'settings',
+                        'code' => "const config = {
+    type: 'card',
+    header: 'Card Title',
+    body: 'This is a basic card with header and body sections.'
+};
+
+document.getElementById('container').innerHTML =
+    UiEngine.fromConfig(config).toHtml();
+
+// Card with title and footer
+const config2 = {
+    type: 'card',
+    title: 'Simple Card',
+    body: 'A card without the header section.',
+    footer: 'Card footer'
+};
+
+document.getElementById('container').innerHTML +=
+    UiEngine.fromConfig(config2).toHtml();"
                     ],
                     [
                         'label' => 'HTML Output',

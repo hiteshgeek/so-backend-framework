@@ -106,6 +106,52 @@ class Card extends ContainerElement {
     }
 
     /**
+     * Render mixed content to HTML string
+     * @param {Element|string|array|Object} content
+     * @returns {string}
+     * @private
+     */
+    _renderMixed(content) {
+        if (content === null || content === undefined) return '';
+
+        if (Array.isArray(content)) {
+            return content.map(item => this._renderMixed(item)).join('');
+        }
+
+        if (content instanceof Element) {
+            return content.toHtml();
+        }
+
+        if (content instanceof HTMLElement) {
+            return content.outerHTML;
+        }
+
+        if (typeof content === 'object' && content.type) {
+            // Config object - convert to Element using UiEngine
+            if (window.UiEngine) {
+                const element = window.UiEngine.fromConfig(content);
+                return element.toHtml();
+            }
+            return '';
+        }
+
+        // String content - escape HTML
+        return this._escapeHtml(String(content));
+    }
+
+    /**
+     * Escape HTML special characters
+     * @param {string} str
+     * @returns {string}
+     * @private
+     */
+    _escapeHtml(str) {
+        const div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
+    }
+
+    /**
      * Render card content (HTML string version for toHtml())
      * @returns {string}
      */
@@ -190,7 +236,7 @@ class Card extends ContainerElement {
     /**
      * Append mixed content to a container element
      * @param {HTMLElement} container
-     * @param {Element|string|array} content
+     * @param {Element|string|array|Object} content
      * @private
      */
     _appendMixed(container, content) {
@@ -205,6 +251,12 @@ class Card extends ContainerElement {
             container.appendChild(content.render());
         } else if (content instanceof HTMLElement) {
             container.appendChild(content);
+        } else if (typeof content === 'object' && content.type) {
+            // Config object - convert to Element using UiEngine
+            if (window.UiEngine) {
+                const element = window.UiEngine.fromConfig(content);
+                container.appendChild(element.render());
+            }
         } else {
             // String content
             const wrapper = document.createElement('div');

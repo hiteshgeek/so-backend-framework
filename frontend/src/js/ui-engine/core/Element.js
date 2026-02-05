@@ -33,18 +33,25 @@ class Element extends SOComponent {
 
             this.element = null;
             this._config = config;
+
+            // Initialize properties BEFORE _initFromConfig (but AFTER super)
+            this._extraClasses = new Set();
+            this._extraAttributes = new Map();
+            this._dataAttributes = new Map();
+            this._children = [];
+
             this._initFromConfig(config);
         } else {
             // Normal SOComponent mode - element exists
             super(elementOrConfig, options);
             this._config = options;
-        }
 
-        // Additional properties
-        this._extraClasses = new Set();
-        this._extraAttributes = new Map();
-        this._dataAttributes = new Map();
-        this._children = [];
+            // Initialize properties for fluent API mode
+            this._extraClasses = new Set();
+            this._extraAttributes = new Map();
+            this._dataAttributes = new Map();
+            this._children = [];
+        }
     }
 
     /**
