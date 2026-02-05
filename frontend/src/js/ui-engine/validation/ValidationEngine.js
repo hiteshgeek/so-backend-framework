@@ -379,6 +379,532 @@ class ValidationEngine {
         formEl.querySelectorAll(SixOrbit.sel('invalid-feedback')).forEach(el => {
             el.style.display = 'none';
         });
+
+        // Remove error elements and has-error class from form-groups
+        formEl.querySelectorAll(SixOrbit.sel('form-error')).forEach(el => {
+            el.remove();
+        });
+
+        formEl.querySelectorAll('.has-error').forEach(el => {
+            el.classList.remove('has-error');
+        });
+    }
+
+    /**
+     * Attach live validation to form fields
+     * @param {HTMLFormElement|string} form
+     * @param {Object} options
+     * @returns {Object} Controller object with methods
+     */
+    static attachLiveValidation(form, options = {}) {
+        const formEl = typeof form === 'string' ? document.querySelector(form) : form;
+        if (!formEl) return null;
+
+        // Default options
+        const defaults = {
+            // Validation Events
+            events: {
+                input: false,       // Validate on input (real-time)
+                change: true,       // Validate on change
+                blur: true,         // Validate on blur
+            },
+
+            // Error Display
+            errorDisplay: {
+                inline: true,           // Show inline errors below fields
+                reporter: false,        // Show errors in ErrorReporter
+                reporterPosition: 'top-right',
+                clearOnValid: true,     // Auto-clear errors when field becomes valid
+                showOn: 'all',          // 'all' | 'blur' | 'change' - when to show errors
+            },
+
+            // Debouncing
+            debounce: {
+                enabled: false,
+                delay: 300,             // ms
+                validateOnEnter: true,  // Skip debounce on Enter key
+            },
+
+            // Field Filtering
+            fields: {
+                include: [],            // Only validate these fields (empty = all)
+                exclude: [],            // Exclude these fields
+                skipEmpty: false,       // Skip validation for empty optional fields
+            },
+
+            // First Error Focus
+            focusFirstError: true,
+            scrollToError: false,
+        };
+
+        const opts = this._deepMerge(defaults, options);
+        const listeners = [];
+        const debounceTimers = {};
+
+        // Get fields to validate
+        const getFields = () => {
+            const allFields = Array.from(formEl.elements).filter(el =>
+                el.name && ['INPUT', 'SELECT', 'TEXTAREA'].includes(el.tagName)
+            );
+
+            return allFields.filter(field => {
+                if (opts.fields.include.length > 0 && !opts.fields.include.includes(field.name)) {
+                    return false;
+                }
+                if (opts.fields.exclude.includes(field.name)) {
+                    return false;
+                }
+                return true;
+            });
+        };
+
+        // Validate a field
+        const validateFieldLive = (element, eventType) => {
+            // Skip if empty and skipEmpty is enabled
+            if (opts.fields.skipEmpty && !element.value && !this.getRulesForField(element.name)?.rules?.required) {
+                return;
+            }
+
+            const result = this.validateField(element);
+
+            // Determine if we should show errors based on showOn setting
+            let shouldShowError = false;
+            if (opts.errorDisplay.showOn === 'all') {
+                shouldShowError = true;
+            } else if (opts.errorDisplay.showOn === eventType) {
+                shouldShowError = true;
+            }
+
+            // Handle inline errors
+            if (opts.errorDisplay.inline) {
+                const formGroup = element.closest(SixOrbit.sel('form-group'));
+                if (formGroup) {
+                    let feedbackEl = formGroup.querySelector(SixOrbit.sel('form-error'));
+
+                    if (!result.valid && shouldShowError) {
+                        // Show error
+                        if (!feedbackEl) {
+                            feedbackEl = document.createElement('div');
+                            feedbackEl.className = SixOrbit.cls('form-error');
+                            feedbackEl.innerHTML = '<span class="material-icons">error</span><span></span>';
+
+                            // Insert after input wrapper or input
+                            const inputWrapper = formGroup.querySelector(SixOrbit.sel('input-wrapper')) || element;
+                            inputWrapper.insertAdjacentElement('afterend', feedbackEl);
+                        }
+
+                        // Update error message
+                        const messageSpan = feedbackEl.querySelector('span:not(.material-icons)');
+                        if (messageSpan) {
+                            messageSpan.textContent = result.errors[0];
+                        }
+                        feedbackEl.style.display = 'flex';
+                        element.classList.add(SixOrbit.cls('is-invalid'));
+                        formGroup.classList.add('has-error'); // Add error state to form-group for label styling
+                    } else if (result.valid && opts.errorDisplay.clearOnValid) {
+                        // Clear error
+                        if (feedbackEl) {
+                            feedbackEl.remove();
+                        }
+                        element.classList.remove(SixOrbit.cls('is-invalid'));
+                        formGroup.classList.remove('has-error'); // Remove error state from form-group
+                    }
+                }
+            }
+
+            // Handle ErrorReporter
+            if (opts.errorDisplay.reporter && window.ErrorReporter) {
+                const reporter = window.ErrorReporter.getInstance({
+                    position: opts.errorDisplay.reporterPosition
+                });
+
+                if (!result.valid && shouldShowError) {
+                    reporter.addError(element.name, result.errors);
+                } else if (result.valid && opts.errorDisplay.clearOnValid) {
+                    reporter.clearField(element.name);
+                }
+            }
+
+            return result;
+        };
+
+        // Attach event listeners
+        const fields = getFields();
+        fields.forEach(field => {
+            // Input event
+            if (opts.events.input) {
+                const inputHandler = (e) => {
+                    if (opts.debounce.enabled) {
+                        // Handle Enter key
+                        if (opts.debounce.validateOnEnter && e.keyCode === 13) {
+                            clearTimeout(debounceTimers[field.name]);
+                            validateFieldLive(field, 'input');
+                            return;
+                        }
+
+                        // Debounced validation
+                        clearTimeout(debounceTimers[field.name]);
+                        debounceTimers[field.name] = setTimeout(() => {
+                            validateFieldLive(field, 'input');
+                        }, opts.debounce.delay);
+                    } else {
+                        validateFieldLive(field, 'input');
+                    }
+                };
+
+                field.addEventListener('input', inputHandler);
+                listeners.push({ element: field, event: 'input', handler: inputHandler });
+            }
+
+            // Change event
+            if (opts.events.change) {
+                const changeHandler = () => {
+                    validateFieldLive(field, 'change');
+                };
+
+                field.addEventListener('change', changeHandler);
+                listeners.push({ element: field, event: 'change', handler: changeHandler });
+            }
+
+            // Blur event
+            if (opts.events.blur) {
+                const blurHandler = () => {
+                    validateFieldLive(field, 'blur');
+                };
+
+                field.addEventListener('blur', blurHandler);
+                listeners.push({ element: field, event: 'blur', handler: blurHandler });
+            }
+        });
+
+        // Controller object
+        return {
+            validate: () => this.validateForm(formEl),
+            validateField: (fieldName) => {
+                const field = formEl.elements[fieldName];
+                return field ? validateFieldLive(field, 'manual') : null;
+            },
+            clearErrors: () => {
+                this.clearFormErrors(formEl);
+                if (opts.errorDisplay.reporter && window.ErrorReporter) {
+                    window.ErrorReporter.getInstance().clearAll();
+                }
+            },
+            detach: () => {
+                listeners.forEach(({ element, event, handler }) => {
+                    element.removeEventListener(event, handler);
+                });
+                Object.values(debounceTimers).forEach(timer => clearTimeout(timer));
+            },
+            pause: () => {
+                fields.forEach(field => {
+                    field.dataset.validationPaused = 'true';
+                });
+            },
+            resume: () => {
+                fields.forEach(field => {
+                    delete field.dataset.validationPaused;
+                });
+            },
+        };
+    }
+
+    /**
+     * Central event handler - attach all validation behaviors at once
+     * @param {HTMLFormElement|string} form
+     * @param {Object} options
+     * @returns {Object} Controller object
+     */
+    static attachTo(form, options = {}) {
+        const formEl = typeof form === 'string' ? document.querySelector(form) : form;
+        if (!formEl) return null;
+
+        // Default options
+        const defaults = {
+            // Event Strategy
+            strategy: 'balanced', // 'aggressive' | 'balanced' | 'lazy' | 'minimal'
+
+            // Or custom event configuration
+            events: {
+                submit: true,
+                blur: true,
+                change: false,
+                input: false,
+            },
+
+            // Live Validation Options (same as attachLiveValidation)
+            live: {
+                errorDisplay: {
+                    inline: true,
+                    reporter: true,
+                    reporterPosition: 'bottom-right',
+                    clearOnValid: true,
+                    showOn: 'blur',
+                },
+                debounce: {
+                    enabled: false,
+                    delay: 300,
+                    validateOnEnter: true,
+                },
+                fields: {
+                    include: [],
+                    exclude: [],
+                    skipEmpty: false,
+                },
+            },
+
+            // Submit Behavior
+            submit: {
+                preventDefault: true,
+                focusFirstError: true,
+                scrollToError: true,
+                scrollBehavior: 'smooth',
+                scrollBlock: 'center',
+            },
+
+            // Callbacks
+            callbacks: {
+                onSubmit: null,         // Called on submit (before validation)
+                onValid: null,          // Called when form is valid
+                onInvalid: null,        // Called when form is invalid
+                onFieldValid: null,     // Called when a field becomes valid
+                onFieldInvalid: null,   // Called when a field becomes invalid
+            },
+        };
+
+        const opts = this._deepMerge(defaults, options);
+
+        // Apply preset strategy
+        if (opts.strategy !== 'balanced') {
+            const preset = this.getPreset(opts.strategy);
+            if (preset) {
+                opts.events = preset.events;
+                Object.assign(opts.live, preset.live || {});
+            }
+        }
+
+        let liveController = null;
+        const controllers = [];
+
+        // Attach live validation if any live events are enabled
+        if (opts.events.blur || opts.events.change || opts.events.input) {
+            liveController = this.attachLiveValidation(formEl, {
+                events: {
+                    input: opts.events.input,
+                    change: opts.events.change,
+                    blur: opts.events.blur,
+                },
+                ...opts.live,
+            });
+
+            controllers.push(liveController);
+        }
+
+        // Attach submit validation
+        if (opts.events.submit) {
+            const submitHandler = (e) => {
+                // Callback: onSubmit
+                if (opts.callbacks.onSubmit) {
+                    opts.callbacks.onSubmit(e, formEl);
+                }
+
+                const result = this.validateForm(formEl);
+
+                if (!result.valid) {
+                    if (opts.submit.preventDefault) {
+                        e.preventDefault();
+                    }
+
+                    // Show errors in reporter
+                    if (opts.live.errorDisplay.reporter && window.ErrorReporter) {
+                        const reporter = window.ErrorReporter.getInstance({
+                            position: opts.live.errorDisplay.reporterPosition
+                        });
+                        reporter.showAll(result.errors);
+                    }
+
+                    // Show inline errors
+                    if (opts.live.errorDisplay.inline) {
+                        Object.entries(result.errors).forEach(([fieldName, errors]) => {
+                            const field = formEl.elements[fieldName];
+                            if (!field) return;
+
+                            const formGroup = field.closest(SixOrbit.sel('form-group'));
+                            if (!formGroup) return;
+
+                            let feedbackEl = formGroup.querySelector(SixOrbit.sel('form-error'));
+
+                            // Show error
+                            if (!feedbackEl) {
+                                feedbackEl = document.createElement('div');
+                                feedbackEl.className = SixOrbit.cls('form-error');
+                                feedbackEl.innerHTML = '<span class="material-icons">error</span><span></span>';
+
+                                // Insert after input wrapper or input
+                                const inputWrapper = formGroup.querySelector(SixOrbit.sel('input-wrapper')) || field;
+                                inputWrapper.insertAdjacentElement('afterend', feedbackEl);
+                            }
+
+                            // Update error message
+                            const messageSpan = feedbackEl.querySelector('span:not(.material-icons)');
+                            if (messageSpan) {
+                                const errorMessage = Array.isArray(errors) ? errors[0] : errors;
+                                messageSpan.textContent = errorMessage;
+                            }
+                            feedbackEl.style.display = 'flex';
+                            field.classList.add(SixOrbit.cls('is-invalid'));
+                            formGroup.classList.add('has-error'); // Add error state to form-group for label styling
+                        });
+                    }
+
+                    // Focus first error
+                    if (opts.submit.focusFirstError) {
+                        const firstErrorField = Object.keys(result.errors)[0];
+                        const field = formEl.elements[firstErrorField];
+                        if (field) {
+                            field.focus();
+
+                            if (opts.submit.scrollToError) {
+                                field.scrollIntoView({
+                                    behavior: opts.submit.scrollBehavior,
+                                    block: opts.submit.scrollBlock,
+                                });
+                            }
+                        }
+                    }
+
+                    // Callback: onInvalid
+                    if (opts.callbacks.onInvalid) {
+                        opts.callbacks.onInvalid(result.errors, e, formEl);
+                    }
+                } else {
+                    // Clear errors in reporter when form is valid
+                    if (opts.live.errorDisplay.reporter && window.ErrorReporter) {
+                        const reporter = window.ErrorReporter.getInstance();
+                        reporter.clearAll();
+                    }
+
+                    // Callback: onValid
+                    if (opts.callbacks.onValid) {
+                        opts.callbacks.onValid(e, formEl);
+                    }
+                }
+            };
+
+            formEl.addEventListener('submit', submitHandler);
+            controllers.push({
+                detach: () => formEl.removeEventListener('submit', submitHandler)
+            });
+        }
+
+        // Return unified controller
+        return {
+            validate: () => this.validateForm(formEl),
+            validateField: (fieldName) => {
+                return liveController ? liveController.validateField(fieldName) : null;
+            },
+            clearErrors: () => {
+                this.clearFormErrors(formEl);
+                if (opts.live.errorDisplay.reporter && window.ErrorReporter) {
+                    window.ErrorReporter.getInstance().clearAll();
+                }
+            },
+            detach: () => {
+                controllers.forEach(ctrl => ctrl.detach && ctrl.detach());
+            },
+            pause: () => {
+                liveController && liveController.pause();
+            },
+            resume: () => {
+                liveController && liveController.resume();
+            },
+            getState: () => ({
+                valid: this.validateForm(formEl).valid,
+                errors: this.validateForm(formEl).errors,
+            }),
+        };
+    }
+
+    /**
+     * Get validation preset configuration
+     * @param {string} name - Preset name
+     * @returns {Object|null}
+     */
+    static getPreset(name) {
+        const presets = {
+            // Validate on every input + blur + submit
+            aggressive: {
+                events: { submit: true, blur: true, change: true, input: true },
+                live: {
+                    errorDisplay: { inline: true, reporter: true, clearOnValid: true, showOn: 'all' },
+                    debounce: { enabled: false },
+                },
+            },
+
+            // Validate on blur + submit (default)
+            balanced: {
+                events: { submit: true, blur: true, change: false, input: false },
+                live: {
+                    errorDisplay: { inline: true, reporter: true, clearOnValid: true, showOn: 'blur' },
+                    debounce: { enabled: false },
+                },
+            },
+
+            // Validate only on submit, then on blur after first error
+            lazy: {
+                events: { submit: true, blur: false, change: false, input: false },
+                live: {
+                    errorDisplay: { inline: true, reporter: true, clearOnValid: false, showOn: 'blur' },
+                },
+            },
+
+            // Validate only on submit
+            minimal: {
+                events: { submit: true, blur: false, change: false, input: false },
+                live: {
+                    errorDisplay: { inline: false, reporter: true, clearOnValid: false, showOn: 'all' },
+                },
+            },
+        };
+
+        return presets[name] || null;
+    }
+
+    /**
+     * Deep merge utility
+     * @param {Object} target
+     * @param {Object} source
+     * @returns {Object}
+     * @private
+     */
+    static _deepMerge(target, source) {
+        const output = { ...target };
+
+        if (this._isObject(target) && this._isObject(source)) {
+            Object.keys(source).forEach(key => {
+                if (this._isObject(source[key])) {
+                    if (!(key in target)) {
+                        output[key] = source[key];
+                    } else {
+                        output[key] = this._deepMerge(target[key], source[key]);
+                    }
+                } else {
+                    output[key] = source[key];
+                }
+            });
+        }
+
+        return output;
+    }
+
+    /**
+     * Check if value is an object
+     * @param {*} item
+     * @returns {boolean}
+     * @private
+     */
+    static _isObject(item) {
+        return item && typeof item === 'object' && !Array.isArray(item);
     }
 }
 

@@ -397,29 +397,8 @@ class Input extends FormElement
         return $this;
     }
 
-    /**
-     * Set maximum length
-     *
-     * @param int $maxlength
-     * @return static
-     */
-    public function maxlength(int $maxlength): static
-    {
-        $this->maxlength = $maxlength;
-        return $this;
-    }
-
-    /**
-     * Set minimum length
-     *
-     * @param int $minlength
-     * @return static
-     */
-    public function minlength(int $minlength): static
-    {
-        $this->minlength = $minlength;
-        return $this;
-    }
+    // minlength() and maxlength() methods removed - use minLength() and maxLength() from HasValidation trait
+    // These methods also set HTML attributes automatically
 
     /**
      * Set validation pattern (HTML attribute) and add regex validation

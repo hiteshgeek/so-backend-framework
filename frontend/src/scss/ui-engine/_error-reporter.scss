@@ -3,361 +3,686 @@
 // Centralized error display component
 // ============================================
 
-@use '../abstracts' as *;
+@use "../abstracts" as *;
 
 // Variables
 $error-reporter-bg: #fff;
 $error-reporter-border: #dc3545;
 $error-reporter-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 $error-reporter-radius: 8px;
-$error-reporter-max-width: 400px;
 $error-reporter-z-index: 1050;
 
-// Main container
+// Main container - fixed position, no width/height transitions
 .#{$so-prefix}error-reporter {
-    position: fixed;
-    z-index: $error-reporter-z-index;
-    max-width: $error-reporter-max-width;
-    width: 100%;
-    padding: 0;
-    pointer-events: none;
-    opacity: 0;
-    transform: translateY(-20px);
-    transition: opacity 0.3s ease, transform 0.3s ease;
+  position: fixed;
+  z-index: $error-reporter-z-index;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease;
 
-    &.#{$so-prefix}show {
-        opacity: 1;
-        transform: translateY(0);
-        pointer-events: auto;
-    }
+  &.#{$so-prefix}show {
+    opacity: 1;
+    pointer-events: auto;
+  }
 
-    // Position variations
-    &-top-right {
-        top: 20px;
-        right: 20px;
-    }
+  // Position classes - 4 corners only
+  &-top-right {
+    top: 20px;
+    right: 20px;
+  }
 
-    &-top-left {
-        top: 20px;
-        left: 20px;
-    }
+  &-top-left {
+    top: 20px;
+    left: 20px;
+  }
 
-    &-top-center {
-        top: 20px;
-        left: 50%;
-        transform: translateX(-50%) translateY(-20px);
+  &-bottom-right {
+    bottom: 20px;
+    right: 20px;
+  }
 
-        &.#{$so-prefix}show {
-            transform: translateX(-50%) translateY(0);
-        }
-    }
-
-    &-bottom-right {
-        bottom: 20px;
-        right: 20px;
-        transform: translateY(20px);
-
-        &.#{$so-prefix}show {
-            transform: translateY(0);
-        }
-    }
-
-    &-bottom-left {
-        bottom: 20px;
-        left: 20px;
-        transform: translateY(20px);
-
-        &.#{$so-prefix}show {
-            transform: translateY(0);
-        }
-    }
-
-    &-bottom-center {
-        bottom: 20px;
-        left: 50%;
-        transform: translateX(-50%) translateY(20px);
-
-        &.#{$so-prefix}show {
-            transform: translateX(-50%) translateY(0);
-        }
-    }
-
-    &-inline-top,
-    &-inline-bottom {
-        position: relative;
-        max-width: none;
-        top: auto;
-        right: auto;
-        bottom: auto;
-        left: auto;
-        transform: none;
-        margin-bottom: 1rem;
-
-        &.#{$so-prefix}show {
-            transform: none;
-        }
-    }
-
-    &-inline-bottom {
-        margin-bottom: 0;
-        margin-top: 1rem;
-    }
+  &-bottom-left {
+    bottom: 20px;
+    left: 20px;
+  }
 }
 
-// Content wrapper
+// Badge (collapsed state and mobile)
+.#{$so-prefix}error-reporter-badge {
+  &-btn {
+    position: relative;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: none;
+    background: var(--so-danger, $error-reporter-border);
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    transition:
+      transform 0.2s ease,
+      box-shadow 0.2s ease;
+
+    &:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    &:active {
+      transform: scale(0.98);
+    }
+
+    .material-icons {
+      font-size: 24px;
+    }
+  }
+}
+
+.#{$so-prefix}error-reporter-count {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  min-width: 20px;
+  height: 20px;
+  background: white;
+  color: var(--so-danger, $error-reporter-border);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 0 6px;
+  border: 2px solid var(--so-danger, $error-reporter-border);
+}
+
+// Content (expanded state)
 .#{$so-prefix}error-reporter-content {
-    background: $error-reporter-bg;
-    border: 1px solid $error-reporter-border;
-    border-left: 4px solid $error-reporter-border;
-    border-radius: $error-reporter-radius;
-    box-shadow: $error-reporter-shadow;
-    overflow: hidden;
+  max-width: 400px;
+  width: 400px;
+  background: $error-reporter-bg;
+  border: 1px solid $error-reporter-border;
+  border-radius: $error-reporter-radius;
+  box-shadow: $error-reporter-shadow;
+  overflow: visible; // Changed from hidden to allow dropdown overflow
+  display: flex;
+  flex-direction: column;
+  transition: width 0.3s ease, max-width 0.3s ease;
+}
+
+// Size variants
+.#{$so-prefix}error-reporter-sm {
+  .#{$so-prefix}error-reporter-content {
+    max-width: 340px;
+    width: 340px;
+  }
+
+  .#{$so-prefix}error-reporter-header {
+    padding: 10px 14px;
+    gap: 6px;
+  }
+
+  .#{$so-prefix}error-reporter-title {
+    font-size: 13px;
+  }
+
+  .#{$so-prefix}error-reporter-item {
+    padding: 8px 14px;
+    font-size: 12px;
+  }
+}
+
+.#{$so-prefix}error-reporter-xs {
+  .#{$so-prefix}error-reporter-content {
+    max-width: 280px;
+    width: 280px;
+  }
+
+  .#{$so-prefix}error-reporter-header {
+    padding: 8px 12px;
+    gap: 4px;
+  }
+
+  .#{$so-prefix}error-reporter-title {
+    font-size: 12px;
+  }
+
+  .#{$so-prefix}error-reporter-item {
+    padding: 6px 12px;
+    font-size: 11px;
+  }
+
+  .#{$so-prefix}error-reporter-count {
+    width: 16px;
+    height: 16px;
+    min-width: 16px;
+    min-height: 16px;
+    font-size: 9px;
+    top: -4px;
+    right: -4px;
+  }
 }
 
 // Header
 .#{$so-prefix}error-reporter-header {
-    display: flex;
-    align-items: center;
-    padding: 12px 16px;
-    background: rgba($error-reporter-border, 0.1);
-    border-bottom: 1px solid rgba($error-reporter-border, 0.2);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background: rgba($error-reporter-border, 0.15);
+  border-bottom: 1px solid rgba($error-reporter-border, 0.2);
+  overflow: visible !important;
 
-    .material-icons {
-        font-size: 20px;
-        margin-right: 8px;
-    }
+  .material-icons {
+    font-size: 20px;
+  }
 }
 
 .#{$so-prefix}error-reporter-title {
-    flex: 1;
-    font-weight: 600;
-    font-size: 14px;
-    color: #333;
+  flex: 1;
+  font-weight: 600;
+  font-size: 14px;
+  color: #333;
 }
 
-.#{$so-prefix}error-reporter-close {
-    background: none;
-    border: none;
-    padding: 4px;
-    cursor: pointer;
-    color: #666;
+.#{$so-prefix}error-reporter-icon {
+  flex-shrink: 0;
+}
+
+// Left positions: right-align all content
+.#{$so-prefix}error-reporter-top-left,
+.#{$so-prefix}error-reporter-bottom-left {
+  .#{$so-prefix}error-reporter-header {
+    justify-content: flex-end;
+  }
+
+  // Right-align text content
+  .#{$so-prefix}error-reporter-title {
+    text-align: right;
+  }
+
+  // Right-align error messages
+  .#{$so-prefix}error-message {
+    text-align: right;
+  }
+
+  // Right-align error fields
+  .#{$so-prefix}error-field {
+    order: 2; // Move field label after message for RTL appearance
+  }
+
+  .#{$so-prefix}error-reporter-item {
+    flex-direction: row-reverse; // Reverse the order of field and message
+  }
+}
+
+// Reverse layout for bottom positions (header at bottom, errors above)
+.#{$so-prefix}error-reporter-bottom-right,
+.#{$so-prefix}error-reporter-bottom-left {
+  .#{$so-prefix}error-reporter-content {
+    flex-direction: column-reverse;
+  }
+
+  // Adjust border position for reversed layout
+  .#{$so-prefix}error-reporter-header {
+    border-bottom: none;
+    border-top: 1px solid rgba($error-reporter-border, 0.2);
+  }
+}
+
+// Position dropdown specific styles
+.#{$so-prefix}error-reporter-position-dropdown {
+  overflow: visible !important;
+  position: relative;
+  z-index: 1100; // Higher than modal to ensure dropdown is above
+
+  // Ensure the dropdown component itself has overflow visible
+  &.#{$so-prefix}dropdown {
+    overflow: visible !important;
+  }
+
+  .#{$so-prefix}dropdown-trigger {
+    overflow: visible !important;
+  }
+
+  .#{$so-prefix}dropdown-menu {
+    overflow: visible !important;
+    z-index: 1101; // Higher z-index for menu
+  }
+
+  .#{$so-prefix}dropdown-item {
     display: flex;
     align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    font-weight: normal !important;
+
+    > span:first-child {
+      flex: 1;
+      font-weight: normal !important;
+    }
+  }
+
+  .#{$so-prefix}dropdown-check {
+    flex-shrink: 0;
+    font-size: 16px;
+    color: var(--so-success, #28a745);
+  }
+
+  // Dropup positioning (for bottom positions)
+  &.#{$so-prefix}dropup {
+    .#{$so-prefix}dropdown-menu {
+      bottom: 100%;
+      top: auto;
+      margin-bottom: 4px;
+      margin-top: 0;
+    }
+  }
+
+  // Right alignment (for right positions)
+  &.#{$so-prefix}dropdown-right {
+    .#{$so-prefix}dropdown-menu {
+      right: 0;
+      left: auto;
+    }
+  }
+
+  // Left alignment (for left positions)
+  &.#{$so-prefix}dropdown-left {
+    .#{$so-prefix}dropdown-menu {
+      left: 0;
+      right: auto;
+    }
+  }
+}
+
+// Size selector dropdown item
+.#{$so-prefix}error-reporter-size-selector {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 12px !important;
+  cursor: default !important; // Don't close dropdown when clicking this item
+  pointer-events: none; // Make the item itself non-interactive
+
+  &:hover {
+    background: transparent !important; // Don't highlight on hover
+  }
+
+  .#{$so-prefix}btn-group {
+    pointer-events: auto; // Re-enable pointer events for buttons
+    margin: 0 auto; // Center the button group
+    display: flex;
     justify-content: center;
-    border-radius: 4px;
-    transition: background-color 0.2s ease, color 0.2s ease;
 
-    &:hover {
-        background-color: rgba(0, 0, 0, 0.1);
-        color: #333;
+    .#{$so-prefix}btn {
+      min-width: 40px;
+      padding: 6px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 500;
     }
-
-    .material-icons {
-        font-size: 18px;
-        margin: 0;
-    }
+  }
 }
 
 // Error list
 .#{$so-prefix}error-reporter-list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    max-height: 300px;
-    overflow-y: auto;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 300px;
+  overflow-y: auto;
+  overflow-x: hidden; // Prevent horizontal overflow
+  transition: max-height 0.3s ease, opacity 0.3s ease;
+  opacity: 1;
 }
 
-// Error item
-.#{$so-prefix}error-reporter-item {
-    display: flex;
-    align-items: flex-start;
-    padding: 10px 16px;
-    border-bottom: 1px solid #eee;
-    font-size: 13px;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
+// Collapsed state - hide elements except toggle button
+.#{$so-prefix}error-reporter.#{$so-prefix}collapsed {
+  .#{$so-prefix}error-reporter-content {
+    // Keep dimensions to maintain button position
+    background: transparent;
+    border-color: transparent;
+    box-shadow: none;
+    overflow: visible; // Allow badge to overflow
+  }
 
-    &:last-child {
-        border-bottom: none;
+  .#{$so-prefix}error-reporter-header {
+    // Keep padding to maintain button position
+    background: transparent;
+    border-color: transparent;
+    overflow: visible; // Allow badge to overflow
+  }
+
+  // Hide icon, title, and position dropdown using visibility
+  // This maintains their layout space so button stays in same position
+  .#{$so-prefix}error-reporter-icon,
+  .#{$so-prefix}error-reporter-title,
+  .#{$so-prefix}error-reporter-position-dropdown {
+    visibility: hidden;
+  }
+
+  // Hide error list completely
+  .#{$so-prefix}error-reporter-list {
+    display: none;
+  }
+
+  .#{$so-prefix}error-reporter-toggle {
+    position: relative; // For badge positioning
+    overflow: visible !important; // Allow badge to overflow, override inline styles
+
+    .material-icons {
+      transform: rotate(180deg);
     }
+
+    // Show error count badge on toggle button
+    .#{$so-prefix}error-reporter-count {
+      opacity: 1;
+      pointer-events: auto;
+      position: absolute;
+      top: -6px;
+      right: -6px;
+    }
+  }
+}
+
+// Expanded state: icon not rotated
+.#{$so-prefix}error-reporter:not(.#{$so-prefix}collapsed) {
+  .#{$so-prefix}error-reporter-toggle {
+    .material-icons {
+      transform: rotate(0deg);
+    }
+  }
+}
+
+// Left positions: adjust badge position for mirrored layout
+.#{$so-prefix}error-reporter-top-left.#{$so-prefix}collapsed,
+.#{$so-prefix}error-reporter-bottom-left.#{$so-prefix}collapsed {
+  .#{$so-prefix}error-reporter-toggle {
+    .#{$so-prefix}error-reporter-count {
+      right: auto;
+      left: -6px;
+    }
+  }
+}
+
+// Error count badge (hidden when expanded, shown when collapsed)
+.#{$so-prefix}error-reporter-count {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  min-width: 20px;
+  min-height: 20px;
+  background: white;
+  color: var(--so-danger, $error-reporter-border);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 0;
+  border: 2px solid var(--so-danger, $error-reporter-border);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  z-index: 10;
+  aspect-ratio: 1 / 1;
+}
+
+// Toggle button icon with smooth rotation
+.#{$so-prefix}error-reporter-toggle {
+  .material-icons {
+    transition: transform 0.3s ease;
+    display: inline-block;
+  }
+}
+
+// Smooth transitions for collapsing elements
+.#{$so-prefix}error-reporter-icon,
+.#{$so-prefix}error-reporter-title,
+.#{$so-prefix}error-reporter-position-dropdown {
+  transition: opacity 0.3s ease, width 0.3s ease;
+}
+
+.#{$so-prefix}error-reporter-item {
+  display: flex;
+  align-items: flex-start;
+  padding: 10px 16px;
+  margin: 0;
+  border-bottom: 1px solid #eee;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  position: relative;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:hover {
+    background: rgba($error-reporter-border, 0.05);
+  }
+
+  // Active state - when field is focused
+  &.#{$so-prefix}active {
+    background: rgba($error-reporter-border, 0.08);
+
+    // Vertical bar before the entry
+    &::before {
+      content: '';
+      position: absolute;
+      left: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      height: calc(100% - 12px);
+      width: 3px;
+      background: $error-reporter-border;
+      border-radius: 2px;
+    }
+  }
+
+  &.#{$so-prefix}error-reporter-more {
+    cursor: default;
+    background-color: #f8f9fa;
+    font-style: italic;
 
     &:hover {
-        background-color: rgba(0, 0, 0, 0.02);
+      background-color: #f8f9fa;
     }
-
-    &.#{$so-prefix}error-reporter-more {
-        cursor: default;
-        background-color: #f8f9fa;
-        font-style: italic;
-
-        &:hover {
-            background-color: #f8f9fa;
-        }
-    }
+  }
 }
 
 .#{$so-prefix}error-field {
-    font-weight: 600;
-    color: #dc3545;
-    margin-right: 6px;
-    flex-shrink: 0;
+  font-weight: 600;
+  color: $error-reporter-border;
+  margin-right: 6px;
+  flex-shrink: 0;
 }
 
 .#{$so-prefix}error-message {
-    flex: 1;
-    color: #333;
-    word-break: break-word;
+  flex: 1;
+  color: #333;
+  word-break: break-word;
 }
 
-.#{$so-prefix}error-item-close {
-    background: none;
-    border: none;
-    padding: 2px;
-    margin-left: 8px;
-    cursor: pointer;
-    color: #999;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    transition: opacity 0.2s ease, color 0.2s ease;
-    flex-shrink: 0;
+// Modal specific styles
+.#{$so-prefix}error-reporter-modal {
+  // Position modal at the top of the screen
+  .#{$so-prefix}modal-dialog {
+    margin-top: 20px;
+    margin-bottom: auto;
+  }
 
-    .#{$so-prefix}error-reporter-item:hover & {
-        opacity: 1;
-    }
+  .#{$so-prefix}error-reporter-list {
+    max-height: none;
+  }
 
-    &:hover {
-        color: #dc3545;
-    }
+  .#{$so-prefix}modal-body {
+    padding: 0;
+  }
 
-    .material-icons {
-        font-size: 16px;
+  .#{$so-prefix}error-reporter-item {
+    &:first-child {
+      border-top: 1px solid #eee;
     }
+  }
+
+  // Position dropdown in modal footer
+  .#{$so-prefix}modal-footer {
+    .#{$so-prefix}dropdown {
+      width: 100%;
+
+      .#{$so-prefix}btn {
+        width: 100%;
+        justify-content: space-between;
+
+        .material-icons:last-child {
+          margin-left: auto;
+        }
+      }
+    }
+  }
 }
 
 // Dark theme variant
 .#{$so-prefix}error-reporter-dark {
-    .#{$so-prefix}error-reporter-content {
-        background: #2d2d2d;
-        border-color: #dc3545;
+  .#{$so-prefix}error-reporter-content {
+    background: #2d2d2d;
+    border-color: $error-reporter-border;
+  }
+
+  .#{$so-prefix}error-reporter-header {
+    background: rgba($error-reporter-border, 0.2);
+  }
+
+  .#{$so-prefix}error-reporter-title {
+    color: #fff;
+  }
+
+  .#{$so-prefix}error-reporter-item {
+    border-bottom-color: #444;
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.05);
     }
 
-    .#{$so-prefix}error-reporter-header {
-        background: rgba($error-reporter-border, 0.2);
+    &.#{$so-prefix}error-reporter-more {
+      background-color: #333;
+
+      &:hover {
+        background-color: #333;
+      }
     }
+  }
 
-    .#{$so-prefix}error-reporter-title {
-        color: #fff;
-    }
-
-    .#{$so-prefix}error-reporter-close {
-        color: #ccc;
-
-        &:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-            color: #fff;
-        }
-    }
-
-    .#{$so-prefix}error-reporter-item {
-        border-bottom-color: #444;
-
-        &:hover {
-            background-color: rgba(255, 255, 255, 0.05);
-        }
-
-        &.#{$so-prefix}error-reporter-more {
-            background-color: #333;
-
-            &:hover {
-                background-color: #333;
-            }
-        }
-    }
-
-    .#{$so-prefix}error-message {
-        color: #eee;
-    }
-
-    .#{$so-prefix}error-item-close {
-        color: #777;
-
-        &:hover {
-            color: #dc3545;
-        }
-    }
+  .#{$so-prefix}error-message {
+    color: #eee;
+  }
 }
 
-// Minimal theme variant
-.#{$so-prefix}error-reporter-minimal {
-    .#{$so-prefix}error-reporter-content {
-        border: none;
-        border-left: 4px solid $error-reporter-border;
-        border-radius: 0;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
+// Mobile button styles
+.#{$so-prefix}error-reporter-mobile-btn {
+  position: relative;
+  overflow: visible !important;
 
-    .#{$so-prefix}error-reporter-header {
-        padding: 8px 12px;
-        background: transparent;
-        border-bottom: none;
-    }
-
-    .#{$so-prefix}error-reporter-item {
-        padding: 6px 12px;
-        border-bottom: none;
-    }
-}
-
-// Animation variants
-.#{$so-prefix}error-reporter-slide {
-    transform: translateX(100%);
-
-    &.#{$so-prefix}show {
-        transform: translateX(0);
-    }
-
-    &.#{$so-prefix}error-reporter-top-left,
-    &.#{$so-prefix}error-reporter-bottom-left {
-        transform: translateX(-100%);
-
-        &.#{$so-prefix}show {
-            transform: translateX(0);
-        }
-    }
+  .#{$so-prefix}error-reporter-count {
+    opacity: 1;
+    pointer-events: auto;
+    position: absolute;
+    top: -6px;
+    right: -6px;
+  }
 }
 
 // Mobile responsive
-@media (max-width: 480px) {
-    .#{$so-prefix}error-reporter {
-        max-width: calc(100% - 20px);
-        margin: 0 10px;
+@media (max-width: 767px) {
+  .#{$so-prefix}error-reporter {
+    // On mobile, adjust positions
+    &-mobile {
+      &.#{$so-prefix}error-reporter-top-right,
+      &.#{$so-prefix}error-reporter-top-left {
+        top: 16px;
+      }
 
-        &-top-right,
-        &-top-left,
-        &-top-center {
-            top: 10px;
-            right: 10px;
-            left: 10px;
-            transform: translateY(-20px);
+      &.#{$so-prefix}error-reporter-bottom-right,
+      &.#{$so-prefix}error-reporter-bottom-left {
+        bottom: 16px;
+      }
 
-            &.#{$so-prefix}show {
-                transform: translateY(0);
-            }
-        }
+      &.#{$so-prefix}error-reporter-top-right,
+      &.#{$so-prefix}error-reporter-bottom-right {
+        right: 16px;
+      }
 
-        &-bottom-right,
-        &-bottom-left,
-        &-bottom-center {
-            bottom: 10px;
-            right: 10px;
-            left: 10px;
-            transform: translateY(20px);
-
-            &.#{$so-prefix}show {
-                transform: translateY(0);
-            }
-        }
+      &.#{$so-prefix}error-reporter-top-left,
+      &.#{$so-prefix}error-reporter-bottom-left {
+        left: 16px;
+      }
     }
+  }
+
+  // Make content responsive on mobile (in case it's still used)
+  .#{$so-prefix}error-reporter-content {
+    max-width: calc(100vw - 32px);
+    width: calc(100vw - 32px);
+  }
+}
+
+// Modal header dropdown styles
+.#{$so-prefix}error-reporter-modal {
+  // Ensure all parent containers have overflow visible
+  overflow: visible !important;
+
+  .#{$so-prefix}modal {
+    overflow: visible !important;
+  }
+
+  .#{$so-prefix}modal-dialog {
+    overflow: visible !important;
+  }
+
+  .#{$so-prefix}modal-content {
+    overflow: visible !important;
+  }
+
+  .#{$so-prefix}modal-header {
+    overflow: visible !important;
+
+    .#{$so-prefix}modal-title {
+      overflow: visible !important;
+    }
+
+    .#{$so-prefix}error-reporter-position-dropdown {
+      margin-left: auto;
+      overflow: visible !important;
+
+      .#{$so-prefix}dropdown-trigger {
+        overflow: visible !important;
+      }
+
+      .#{$so-prefix}dropdown-menu {
+        overflow: visible !important;
+      }
+    }
+  }
+
+  // Modal title layout
+  .#{$so-prefix}error-reporter-modal-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    overflow: visible !important;
+  }
+
+  .#{$so-prefix}error-reporter-modal-title-text {
+    flex: 1;
+    overflow: visible !important;
+  }
 }

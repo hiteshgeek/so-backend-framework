@@ -23,10 +23,14 @@ export { default } from './UiEngine.js';
 
 // Import UiEngine for initialization
 import { UiEngine } from './UiEngine.js';
+import { ValidationEngine } from './validation/ValidationEngine.js';
+import { ErrorReporter } from './validation/ErrorReporter.js';
 
 // Global registration
 window.UiEngine = UiEngine;
 window.SixOrbit = SixOrbit;
+window.ValidationEngine = ValidationEngine;
+window.ErrorReporter = ErrorReporter;
 
 // Auto-initialize on DOM ready
 if (document.readyState === 'loading') {

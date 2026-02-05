@@ -1012,12 +1012,6 @@
 
 // Small dropdown
 .#{$so-prefix}dropdown-sm {
-  .#{$so-prefix}dropdown-trigger {
-    height: $so-form-height-sm;
-    padding: 0 spacing('2');
-    font-size: font-size('sm');
-  }
-
   .#{$so-prefix}dropdown-menu {
     min-width: 160px;
   }

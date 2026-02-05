@@ -294,6 +294,42 @@ trait HasValidation
     }
 
     /**
+     * Alias for min() method (for clarity when dealing with string length)
+     * Also sets HTML minlength attribute for Input elements
+     *
+     * @param int $min
+     * @param string|null $message
+     * @return static
+     */
+    public function minLength(int $min, ?string $message = null): static
+    {
+        // Set HTML attribute for Input elements
+        if (property_exists($this, 'minlength')) {
+            $this->minlength = $min;
+        }
+
+        return $this->min($min, $message);
+    }
+
+    /**
+     * Alias for max() method (for clarity when dealing with string length)
+     * Also sets HTML maxlength attribute for Input elements
+     *
+     * @param int $max
+     * @param string|null $message
+     * @return static
+     */
+    public function maxLength(int $max, ?string $message = null): static
+    {
+        // Set HTML attribute for Input elements
+        if (property_exists($this, 'maxlength')) {
+            $this->maxlength = $max;
+        }
+
+        return $this->max($max, $message);
+    }
+
+    /**
      * Add between rule
      *
      * @param int $min
