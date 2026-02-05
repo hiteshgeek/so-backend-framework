@@ -238,8 +238,10 @@
   color: #b5cea8; // Light green - numbers
 }
 
-.#{$so-prefix}code-operator {
-  color: #d4d4d4; // White - operators
+// Override Prism.js operator styling - operators should inherit default text color
+.token.operator {
+  color: inherit !important;
+  background: inherit !important;
 }
 
 .#{$so-prefix}code-variable {

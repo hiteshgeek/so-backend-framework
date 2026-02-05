@@ -263,4 +263,278 @@ HTML;
     </div>
 </div>
 
+<!-- 2. Stats Cards -->
+<div class="so-card so-mb-4">
+    <div class="so-card-header">
+        <h3 class="so-card-title">2. Stats Cards</h3>
+    </div>
+    <div class="so-card-body">
+        <p class="so-text-muted so-mb-4">Dashboard-style stats cards built with nested UiEngine components. Perfect for KPI displays and metrics.</p>
+        <?php
+        // Helper function to create a stats card
+        function createStatsCard($label, $value, $trend, $trendText, $icon, $iconColor) {
+            return UiEngine::card()
+                ->addClass('so-card-padded')
+                // Header row: Label + Icon badge
+                ->add(
+                    UiEngine::html()->tag('div')
+                        ->addClass('so-d-flex so-justify-content-between so-align-items-center so-mb-2')
+                        ->add(
+                            UiEngine::html()->tag('span')
+                                ->addClass('so-text-muted so-fs-xs so-text-uppercase so-fw-medium')
+                                ->text($label)
+                        )
+                        ->add(
+                            UiEngine::html()->tag('span')
+                                ->addClass('so-d-flex so-align-items-center so-justify-content-center so-rounded-full so-bg-' . $iconColor . '-subtle so-w-8 so-h-8')
+                                ->add(
+                                    UiEngine::html()->tag('span')
+                                        ->addClass('material-icons so-text-' . $iconColor . ' so-fs-lg')
+                                        ->text($icon)
+                                )
+                        )
+                )
+                // Value
+                ->add(
+                    UiEngine::html()->tag('div')
+                        ->addClass('so-fs-2xl so-fw-medium so-mb-1')
+                        ->text($value)
+                )
+                // Trend
+                ->add(
+                    UiEngine::html()->tag('div')
+                        ->addClass('so-d-flex so-align-items-center so-gap-1')
+                        ->add(
+                            UiEngine::html()->tag('span')
+                                ->addClass('material-icons so-text-' . $trend . ' so-fs-base')
+                                ->text($trend === 'success' ? 'arrow_upward' : 'arrow_downward')
+                        )
+                        ->add(
+                            UiEngine::html()->tag('span')
+                                ->addClass('so-text-' . $trend . ' so-fs-xs so-fw-medium')
+                                ->text($trendText)
+                        )
+                );
+        }
+
+        $phpStats = UiEngine::html()->tag('div')
+            ->addClass('so-grid so-grid-cols-1 so-grid-cols-md-2 so-grid-cols-lg-4 so-gap-3')
+            ->add(createStatsCard('Total Sales', '₹12,45,890', 'success', '12.5% from last month', 'trending_up', 'info'))
+            ->add(createStatsCard('Total Purchase', '₹8,34,560', 'danger', '3.2% from last month', 'shopping_cart', 'danger'))
+            ->add(createStatsCard('Pending Orders', '47', 'success', '8 new today', 'pending_actions', 'warning'))
+            ->add(createStatsCard('Active Customers', '1,284', 'success', '24 new this week', 'people', 'success'))
+            ->render();
+
+        // PHP Code Example
+        $phpCode = <<<'PHP'
+// Helper function to create stats cards
+function createStatsCard($label, $value, $trend, $trendText, $icon, $iconColor) {
+    return UiEngine::card()
+        ->addClass('so-card-padded')
+        // Header: Label + Icon
+        ->add(
+            UiEngine::html()->tag('div')
+                ->addClass('so-d-flex so-justify-content-between so-align-items-center so-mb-2')
+                ->add(
+                    UiEngine::html()->tag('span')
+                        ->addClass('so-text-muted so-fs-xs so-text-uppercase so-fw-medium')
+                        ->text($label)
+                )
+                ->add(
+                    UiEngine::html()->tag('span')
+                        ->addClass('so-d-flex so-align-items-center so-justify-content-center so-rounded-full so-bg-' . $iconColor . '-subtle so-w-8 so-h-8')
+                        ->add(
+                            UiEngine::html()->tag('span')
+                                ->addClass('material-icons so-text-' . $iconColor . ' so-fs-lg')
+                                ->text($icon)
+                        )
+                )
+        )
+        // Value
+        ->add(
+            UiEngine::html()->tag('div')
+                ->addClass('so-fs-2xl so-fw-medium so-mb-1')
+                ->text($value)
+        )
+        // Trend
+        ->add(
+            UiEngine::html()->tag('div')
+                ->addClass('so-d-flex so-align-items-center so-gap-1')
+                ->add(
+                    UiEngine::html()->tag('span')
+                        ->addClass('material-icons so-text-' . $trend . ' so-fs-base')
+                        ->text($trend === 'success' ? 'arrow_upward' : 'arrow_downward')
+                )
+                ->add(
+                    UiEngine::html()->tag('span')
+                        ->addClass('so-text-' . $trend . ' so-fs-xs so-fw-medium')
+                        ->text($trendText)
+                )
+        );
+}
+
+// Create stats cards grid
+$stats = UiEngine::html()->tag('div')
+    ->addClass('so-grid so-grid-cols-1 so-grid-cols-md-2 so-grid-cols-lg-4 so-gap-3')
+    ->add(createStatsCard('Total Sales', '₹12,45,890', 'success', '12.5% from last month', 'trending_up', 'info'))
+    ->add(createStatsCard('Total Purchase', '₹8,34,560', 'danger', '3.2% from last month', 'shopping_cart', 'danger'))
+    ->add(createStatsCard('Pending Orders', '47', 'success', '8 new today', 'pending_actions', 'warning'))
+    ->add(createStatsCard('Active Customers', '1,284', 'success', '24 new this week', 'people', 'success'))
+    ->render();
+
+echo $stats;
+PHP;
+
+        // JavaScript Code Example
+        $jsCode = <<<'JAVASCRIPT'
+// Helper function to create stats cards
+function createStatsCard(label, value, trend, trendText, icon, iconColor) {
+    return UiEngine.card()
+        .addClass('so-card-padded')
+        // Header: Label + Icon
+        .add(
+            UiEngine.html().tag('div')
+                .addClass('so-d-flex so-justify-content-between so-align-items-center so-mb-2')
+                .add(
+                    UiEngine.html().tag('span')
+                        .addClass('so-text-muted so-fs-xs so-text-uppercase so-fw-medium')
+                        .text(label)
+                )
+                .add(
+                    UiEngine.html().tag('span')
+                        .addClass('so-d-flex so-align-items-center so-justify-content-center so-rounded-full so-bg-' + iconColor + '-subtle so-w-8 so-h-8')
+                        .add(
+                            UiEngine.html().tag('span')
+                                .addClass('material-icons so-text-' + iconColor + ' so-fs-lg')
+                                .text(icon)
+                        )
+                )
+        )
+        // Value
+        .add(
+            UiEngine.html().tag('div')
+                .addClass('so-fs-2xl so-fw-medium so-mb-1')
+                .text(value)
+        )
+        // Trend
+        .add(
+            UiEngine.html().tag('div')
+                .addClass('so-d-flex so-align-items-center so-gap-1')
+                .add(
+                    UiEngine.html().tag('span')
+                        .addClass('material-icons so-text-' + trend + ' so-fs-base')
+                        .text(trend === 'success' ? 'arrow_upward' : 'arrow_downward')
+                )
+                .add(
+                    UiEngine.html().tag('span')
+                        .addClass('so-text-' + trend + ' so-fs-xs so-fw-medium')
+                        .text(trendText)
+                )
+        );
+}
+
+// Create stats cards
+const stats = [
+    createStatsCard('Total Sales', '₹12,45,890', 'success', '12.5% from last month', 'trending_up', 'info'),
+    createStatsCard('Total Purchase', '₹8,34,560', 'danger', '3.2% from last month', 'shopping_cart', 'danger'),
+    createStatsCard('Pending Orders', '47', 'success', '8 new today', 'pending_actions', 'warning'),
+    createStatsCard('Active Customers', '1,284', 'success', '24 new this week', 'people', 'success')
+];
+JAVASCRIPT;
+
+        // HTML Output Example
+        $htmlOutput = <<<'HTML'
+<div class="so-card so-card-padded">
+    <div class="so-d-flex so-justify-content-between so-align-items-center so-mb-2">
+        <span class="so-text-muted so-fs-xs so-text-uppercase so-fw-medium">Total Sales</span>
+        <span class="so-d-flex so-align-items-center so-justify-content-center so-rounded-full so-bg-info-subtle so-w-8 so-h-8">
+            <span class="material-icons so-text-info so-fs-lg">trending_up</span>
+        </span>
+    </div>
+    <div class="so-fs-2xl so-fw-medium so-mb-1">₹12,45,890</div>
+    <div class="so-d-flex so-align-items-center so-gap-1">
+        <span class="material-icons so-text-success so-fs-base">arrow_upward</span>
+        <span class="so-text-success so-fs-xs so-fw-medium">12.5% from last month</span>
+    </div>
+</div>
+
+<!-- Utility Classes Used:
+     Card: so-card-padded (compact padding)
+     Label: so-fs-xs, so-text-uppercase, so-fw-medium, so-text-muted
+     Icon Container: so-w-8 so-h-8 (32px), so-rounded-full, so-bg-{color}-subtle
+     Value: so-fs-2xl (24px), so-fw-medium
+     Trend: so-fs-xs, so-fw-medium, so-text-{success|danger}
+-->
+HTML;
+
+        $phpContent = $phpStats . '<div class="so-mt-4">' . so_code_block($phpCode, 'php') . '</div>';
+        $jsContent = '<div class="so-grid so-grid-cols-1 so-grid-cols-md-2 so-grid-cols-lg-4 so-gap-3" id="js-stats-container"></div><div class="so-mt-4">' . so_code_block($jsCode, 'javascript') . '</div>';
+        $htmlContent = so_code_block($htmlOutput, 'html');
+
+        echo so_tabs('stats-card', [
+            ['id' => 'php-stats', 'label' => 'PHP', 'icon' => 'data_object', 'active' => true, 'content' => $phpContent],
+            ['id' => 'js-stats', 'label' => 'JavaScript', 'icon' => 'javascript', 'active' => false, 'content' => $jsContent],
+            ['id' => 'html-stats', 'label' => 'HTML Output', 'icon' => 'code', 'active' => false, 'content' => $htmlContent]
+        ]);
+        ?>
+        <script>
+        window.cardConfigs['js-stats-container'] = (UiEngine) => {
+            // Helper function to create stats cards
+            function createStatsCard(label, value, trend, trendText, icon, iconColor) {
+                return UiEngine.card()
+                    .addClass('so-card-padded')
+                    // Header: Label + Icon
+                    .add(
+                        UiEngine.html().tag('div')
+                            .addClass('so-d-flex so-justify-content-between so-align-items-center so-mb-2')
+                            .add(
+                                UiEngine.html().tag('span')
+                                    .addClass('so-text-muted so-fs-xs so-text-uppercase so-fw-medium')
+                                    .text(label)
+                            )
+                            .add(
+                                UiEngine.html().tag('span')
+                                    .addClass('so-d-flex so-align-items-center so-justify-content-center so-rounded-full so-bg-' + iconColor + '-subtle so-w-8 so-h-8')
+                                    .add(
+                                        UiEngine.html().tag('span')
+                                            .addClass('material-icons so-text-' + iconColor + ' so-fs-lg')
+                                            .text(icon)
+                                    )
+                            )
+                    )
+                    // Value
+                    .add(
+                        UiEngine.html().tag('div')
+                            .addClass('so-fs-2xl so-fw-medium so-mb-1')
+                            .text(value)
+                    )
+                    // Trend
+                    .add(
+                        UiEngine.html().tag('div')
+                            .addClass('so-d-flex so-align-items-center so-gap-1')
+                            .add(
+                                UiEngine.html().tag('span')
+                                    .addClass('material-icons so-text-' + trend + ' so-fs-base')
+                                    .text(trend === 'success' ? 'arrow_upward' : 'arrow_downward')
+                            )
+                            .add(
+                                UiEngine.html().tag('span')
+                                    .addClass('so-text-' + trend + ' so-fs-xs so-fw-medium')
+                                    .text(trendText)
+                            )
+                    ).render();
+            }
+
+            // Create stats cards
+            return [
+                createStatsCard('Total Sales', '₹12,45,890', 'success', '12.5% from last month', 'trending_up', 'info'),
+                createStatsCard('Total Purchase', '₹8,34,560', 'danger', '3.2% from last month', 'shopping_cart', 'danger'),
+                createStatsCard('Pending Orders', '47', 'success', '8 new today', 'pending_actions', 'warning'),
+                createStatsCard('Active Customers', '1,284', 'success', '24 new this week', 'people', 'success')
+            ];
+        };
+        </script>
+    </div>
+</div>
+
 <?php require_once '../includes/layout-end.php'; ?>

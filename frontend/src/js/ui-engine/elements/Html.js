@@ -182,13 +182,37 @@ class Html extends ContainerElement {
             return el;
         }
 
-        // Copy _textContent to _content so Element.render() can use it
-        if (this._textContent !== null && !this._content) {
-            this._content = this._textContent;
+        // Create element
+        const el = document.createElement(this.getTagName());
+
+        // Apply attributes
+        const attrs = this.buildAttributes();
+        Object.entries(attrs).forEach(([name, value]) => {
+            if (value === true) {
+                el.setAttribute(name, '');
+            } else if (value !== false && value !== null && value !== undefined) {
+                el.setAttribute(name, value);
+            }
+        });
+
+        // Handle content
+        // Raw innerHTML takes precedence
+        if (this._innerHTML !== null) {
+            el.innerHTML = this._innerHTML;
+        }
+        // Then text content (escaped)
+        else if (this._textContent !== null) {
+            el.textContent = this._textContent;
         }
 
-        // Normal tags
-        return super.render();
+        // Render children (if using add() method)
+        const childrenFragment = this.renderChildren();
+        if (childrenFragment && childrenFragment.childNodes.length > 0) {
+            el.appendChild(childrenFragment);
+        }
+
+        this.element = el;
+        return el;
     }
 
     /**
