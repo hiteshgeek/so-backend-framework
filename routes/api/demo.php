@@ -27,12 +27,25 @@ use Core\Http\Request;
 use Core\Http\JsonResponse;
 use App\Controllers\Api\Demo\DemoProductController;
 use App\Controllers\Api\Demo\DemoReviewController;
+use App\Controllers\Api\Demo\ValidationDemoController;
 use App\Middleware\AuthMiddleware;
 use App\Middleware\ThrottleMiddleware;
 use App\Middleware\LogRequestMiddleware;
 
 // =============================================
-// A) Basic HTTP Methods - Closure Routes
+// A) Frontend Validation Demo
+// =============================================
+
+Router::group(['prefix' => 'api/demo'], function () {
+
+    // Validation demo for frontend validation page
+    Router::post('/validate-contact', [ValidationDemoController::class, 'validateContact'])
+        ->name('demo.validate.contact');
+
+});
+
+// =============================================
+// B) Basic HTTP Methods - Closure Routes
 // =============================================
 
 Router::group(['prefix' => 'api/demo'], function () {

@@ -173,8 +173,9 @@ class ErrorReporter extends SOComponent {
    */
   _init() {
     // SOComponent stores options as this.options, but ErrorReporter uses this._opts
-    // Set this before any method that needs options
-    this._opts = this.options;
+    // Filter undefined from options BEFORE merging to prevent overwriting DEFAULTS
+    const filteredOptions = this._filterUndefined(this.options || {});
+    this._opts = { ...ErrorReporter.DEFAULTS, ...filteredOptions };
 
     this._updatePosition();
     this._updateSize();
@@ -184,10 +185,29 @@ class ErrorReporter extends SOComponent {
   }
 
   /**
+   * Filter undefined values from an object
+   * @private
+   */
+  _filterUndefined(obj) {
+    const filtered = {};
+    if (obj) {
+      Object.keys(obj).forEach(key => {
+        if (obj[key] !== undefined) {
+          filtered[key] = obj[key];
+        }
+      });
+    }
+    return filtered;
+  }
+
+  /**
    * Update size class
    * @private
    */
   _updateSize() {
+    if (!this._opts) {
+      this._opts = { ...ErrorReporter.DEFAULTS };
+    }
     const size = this._opts.size;
 
     // Remove existing size classes
@@ -288,6 +308,9 @@ class ErrorReporter extends SOComponent {
    * @private
    */
   _updatePosition() {
+    if (!this._opts) {
+      this._opts = { ...ErrorReporter.DEFAULTS };
+    }
     const position = this._opts.position;
 
     // Remove existing position classes
@@ -306,27 +329,62 @@ class ErrorReporter extends SOComponent {
   /**
    * Configure the reporter
    * @param {Object} options
+   * @param {boolean} force - Force configuration even if errors are displayed
    * @returns {this}
    */
-  configure(options) {
-    this.setOptions(options);
+  configure(options, force = false) {
+    // If errors are already displayed and not forcing, ignore position changes
+    // This prevents forms from changing position while errors are visible
+    const hasErrors = Object.keys(this._errors).length > 0;
 
-    if (options.position) {
+    if (hasErrors && !force && options && options.position) {
+      // Skip position change, but allow other options
+      const { position, ...otherOptions } = options;
+      options = otherOptions;
+    }
+
+    // Store old position to check if it changed
+    const oldPosition = this._opts ? this._opts.position : null;
+
+    // Filter undefined from both _opts and new options BEFORE merging
+    const filteredOpts = this._filterUndefined(this._opts || {});
+    const filteredOptions = this._filterUndefined(options || {});
+    this._opts = { ...ErrorReporter.DEFAULTS, ...filteredOpts, ...filteredOptions };
+
+    if (options && options.position) {
       this._updatePosition();
+
+      // Check if position changed at all
+      if (oldPosition !== this._opts.position) {
+        // Position changed - invalidate cache to force re-render with new position
+        this._lastRenderedErrors = null;
+
+        // Check if position side changed (left ↔ right) which requires DOM structure change
+        const oldIsLeft = oldPosition && oldPosition.includes('left');
+        const newIsLeft = this._opts.position.includes('left');
+
+        if (oldIsLeft !== newIsLeft) {
+          // Position side changed - DOM structure will be rebuilt in next render
+          // (cache already invalidated above)
+        }
+      }
+    }
+
+    if (options && options.size) {
+      this._updateSize();
     }
 
     return this;
   }
 
   /**
-   * Set position
+   * Set position (with force - used by settings dropdown)
    * @param {string} position
    * @returns {this}
    */
   setPosition(position) {
-    this._opts.position = position;
-    this._updatePosition();
-    return this;
+    // Use configure with force=true to allow position change even with errors displayed
+    return this.configure({ position }, true);
   }
 
   // ==================
@@ -391,7 +449,35 @@ class ErrorReporter extends SOComponent {
     this._errors = { ...errors };
     this._render();
     this._startAutoHide();
+    this._focusFirstErrorField();
     return this;
+  }
+
+  /**
+   * Focus the first field with an error
+   * @private
+   */
+  _focusFirstErrorField() {
+    // Get the first field name from errors
+    const firstFieldName = Object.keys(this._errors)[0];
+    if (!firstFieldName) return;
+
+    // Try to find and focus the field in the document
+    // Look for input, textarea, or select with matching name
+    const field = document.querySelector(
+      `input[name="${firstFieldName}"], ` +
+      `textarea[name="${firstFieldName}"], ` +
+      `select[name="${firstFieldName}"]`
+    );
+
+    if (field && typeof field.focus === 'function') {
+      // Small delay to ensure DOM is updated and field is visible
+      setTimeout(() => {
+        field.focus();
+        // Scroll field into view if needed
+        field.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 100);
+    }
   }
 
   /**
@@ -551,6 +637,11 @@ class ErrorReporter extends SOComponent {
     // Remove mobile class if present
     this.element.classList.remove(SixOrbit.cls("error-reporter-mobile"));
 
+    // Ensure _opts is initialized
+    if (!this._opts) {
+      this._opts = { ...ErrorReporter.DEFAULTS };
+    }
+
     const isLeftPosition = this._opts.position.includes('left');
     const btnSizeClass = this._getButtonSizeClass();
 
@@ -631,38 +722,49 @@ class ErrorReporter extends SOComponent {
    */
   _renderErrors() {
     const maxErrors = this._opts.maxErrors;
-    let renderedCount = 0;
+    let renderedFieldCount = 0;
     let html = "";
 
     for (const [field, messages] of Object.entries(this._errors)) {
+      // Check if we've exceeded max errors (count by fields, not individual messages)
+      if (renderedFieldCount >= maxErrors) {
+        const remainingFields = Object.keys(this._errors).length - maxErrors;
+        html += `
+          <li class="${SixOrbit.cls("error-reporter-item")} ${SixOrbit.cls("error-reporter-more")}">
+            <span class="${SixOrbit.cls("text-muted")}">... and ${remainingFields} more field(s) with errors</span>
+          </li>
+        `;
+        return html;
+      }
+
       const fieldMessages = Array.isArray(messages) ? messages : [messages];
 
-      for (const message of fieldMessages) {
-        if (renderedCount >= maxErrors) {
-          const remaining = this.getErrorCount() - maxErrors;
-          html += `
-                        <li class="${SixOrbit.cls("error-reporter-item")} ${SixOrbit.cls("error-reporter-more")}">
-                            <span class="${SixOrbit.cls("text-muted")}">... and ${remaining} more error(s)</span>
-                        </li>
-                    `;
-          return html;
-        }
-
-        html += `
-                    <li class="${SixOrbit.cls("error-reporter-item")}" data-field="${this._escapeHtml(field)}">
-                        ${
-                          this._opts.groupByField
-                            ? `
-                            <span class="${SixOrbit.cls("error-field")}">${this._formatFieldName(field)}:</span>
-                        `
-                            : ""
-                        }
-                        <span class="${SixOrbit.cls("error-message")}">${this._escapeHtml(message)}</span>
-                    </li>
-                `;
-
-        renderedCount++;
+      // Combine all messages for this field into a single list item
+      let messageContent = "";
+      if (fieldMessages.length === 1) {
+        // Single message - just show it
+        messageContent = this._escapeHtml(fieldMessages[0]);
+      } else {
+        // Multiple messages - show as bullet list
+        messageContent = '<ul class="' + SixOrbit.cls("error-message-list") + '">';
+        fieldMessages.forEach(msg => {
+          messageContent += '<li>' + this._escapeHtml(msg) + '</li>';
+        });
+        messageContent += '</ul>';
       }
+
+      html += `
+        <li class="${SixOrbit.cls("error-reporter-item")}" data-field="${this._escapeHtml(field)}">
+          ${
+            this._opts.groupByField
+              ? `<span class="${SixOrbit.cls("error-field")}">${this._formatFieldName(field)}</span>`
+              : ""
+          }
+          <span class="${SixOrbit.cls("error-message")}">${messageContent}</span>
+        </li>
+      `;
+
+      renderedFieldCount++;
     }
 
     return html;

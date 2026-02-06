@@ -10,6 +10,9 @@ $pageDescription = 'Demonstrates form validation in both frontend and backend us
 
 require_once '../includes/layout-start.php';
 
+// Load backend autoloader for UiEngine
+require_once dirname(__DIR__, 4) . '/vendor/autoload.php';
+
 use Core\UiEngine\UiEngine;
 
 // Get UI Engine JS paths
@@ -75,6 +78,20 @@ document.addEventListener('DOMContentLoaded', function() {
             alert('Validation system is still loading. Please try again.');
             return false;
         }
+
+        // Configure ErrorReporter position based on section
+        const positionMap = {
+            'php': 'top-right',
+            'php-config': 'top-right',
+            'live': 'bottom-left',
+            'preset': 'top-left'
+        };
+
+        window.errorReporter.configure({
+            position: positionMap[source] || 'top-right',
+            theme: 'light',
+            animation: 'slide'
+        });
 
         const form = event.target;
         const emailInput = form.querySelector('input[name="email"]');
@@ -259,6 +276,21 @@ SCRIPT;
                     <li>Click on error in top-right - watch it jump to the field!</li>
                     <li>Enter valid email and submit - success!</li>
                 </ul>
+            </div>
+        </div>
+
+        <div class="so-alert so-alert-warning so-mb-3">
+            <span class="material-icons">settings</span>
+            <div>
+                <strong>ErrorReporter Configuration:</strong>
+                <ul class="so-mb-0 so-mt-2">
+                    <li><strong>Position:</strong> <code>top-right</code></li>
+                    <li><strong>Theme:</strong> <code>light</code></li>
+                    <li><strong>Animation:</strong> <code>slide</code></li>
+                </ul>
+                <small class="so-text-muted">
+                    Errors appear in top-right corner with click-to-focus functionality
+                </small>
             </div>
         </div>
 
@@ -637,6 +669,21 @@ HTML;
             </div>
         </div>
 
+        <div class="so-alert so-alert-warning so-mb-3">
+            <span class="material-icons">settings</span>
+            <div>
+                <strong>ErrorReporter Configuration:</strong>
+                <ul class="so-mb-0 so-mt-2">
+                    <li><strong>Position:</strong> <code>bottom-left</code></li>
+                    <li><strong>Theme:</strong> <code>light</code></li>
+                    <li><strong>Animation:</strong> <code>slide</code></li>
+                </ul>
+                <small class="so-text-muted">
+                    Live validation errors appear in bottom-left corner
+                </small>
+            </div>
+        </div>
+
         <?php
         // PHP Code Example for Live Validation
         $liveValidationCode = <<<'PHP'
@@ -703,7 +750,7 @@ echo '    events: { input: true, change: true, blur: true },';
 echo '    errorDisplay: {';
 echo '      inline: true,';
 echo '      reporter: true,';
-echo '      reporterPosition: "bottom-right",';
+echo '      reporterPosition: "bottom-left",';
 echo '      clearOnValid: true,';
 echo '      showOn: "blur"';
 echo '    },';
@@ -789,7 +836,7 @@ PHP;
                 errorDisplay: {
                     inline: true,           // Show errors below fields
                     reporter: true,         // Show in ErrorReporter
-                    reporterPosition: 'bottom-right',
+                    reporterPosition: 'bottom-left',
                     clearOnValid: true,     // Auto-clear when valid
                     showOn: 'blur'          // Only show errors on blur
                 },
@@ -866,6 +913,21 @@ SCRIPT;
             </div>
         </div>
 
+        <div class="so-alert so-alert-warning so-mb-3">
+            <span class="material-icons">settings</span>
+            <div>
+                <strong>ErrorReporter Configuration:</strong>
+                <ul class="so-mb-0 so-mt-2">
+                    <li><strong>Position:</strong> <code>top-left</code></li>
+                    <li><strong>Theme:</strong> <code>light</code></li>
+                    <li><strong>Animation:</strong> <code>slide</code></li>
+                </ul>
+                <small class="so-text-muted">
+                    Preset validation errors appear in top-left position
+                </small>
+            </div>
+        </div>
+
         <!-- Strategy selector -->
         <div class="so-form-group so-mb-4">
             <label class="so-form-label">Choose Validation Strategy:</label>
@@ -928,7 +990,7 @@ echo '    strategy: "aggressive",  // or "balanced", "lazy", "minimal"';
 echo '    errorDisplay: {';
 echo '      inline: true,';
 echo '      reporter: true,';
-echo '      reporterPosition: "bottom-right"';
+echo '      reporterPosition: "top-left"';
 echo '    },';
 echo '    callbacks: {';
 echo '      onValid: (e, form) => alert("Form is valid!")';
@@ -1008,7 +1070,7 @@ PHP;
                 errorDisplay: {
                     inline: true,
                     reporter: true,
-                    reporterPosition: 'bottom-right'
+                    reporterPosition: 'top-left'
                 },
                 submit: {
                     preventDefault: true,
@@ -1050,6 +1112,421 @@ SCRIPT;
 
         echo '<div class="so-mt-4">' . $presetOutput . '</div>';
         echo '<div class="so-mt-4">' . so_code_block($centralHandlerCode, 'php') . '</div>';
+        ?>
+    </div>
+</div>
+
+<!-- ============================================ -->
+<!-- SECTION: Backend-Only Validation with ErrorReporter -->
+<!-- ============================================ -->
+<div class="so-card so-mb-4">
+    <div class="so-card-header">
+        <h3 class="so-card-title">Backend-Only Validation with ErrorReporter</h3>
+    </div>
+    <div class="so-card-body">
+        <p class="so-text-muted so-mb-4">
+            Demonstrates <strong>real PHP backend validation</strong> with <strong>ErrorReporter</strong> displaying server errors.
+            Form submits via AJAX to PHP API endpoint, which validates and returns errors in JSON format.
+        </p>
+        <div class="so-alert so-alert-info so-mb-3">
+            <span class="material-icons">info</span>
+            <div>
+                <strong>How It Works:</strong>
+                <ul class="so-mb-0 so-mt-2">
+                    <li><strong>No client-side validation</strong> - all validation happens in PHP</li>
+                    <li><strong>AJAX submission</strong> to <code>/api/demo/validate-contact</code></li>
+                    <li><strong>PHP validates</strong> and returns JSON with errors</li>
+                    <li><strong>ErrorReporter displays</strong> server errors automatically</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="so-alert so-alert-success so-mb-3">
+            <span class="material-icons">rule</span>
+            <div>
+                <strong>Server-Side Validation Rules:</strong>
+                <ul class="so-mb-0 so-mt-2">
+                    <li><strong>Name:</strong> required, min:3, max:100</li>
+                    <li><strong>Email:</strong> required, valid email, blocked domains (spam.com, blocked.com, test.com)</li>
+                    <li><strong>Phone:</strong> required, must be 10 digits</li>
+                    <li><strong>Message:</strong> required, min:10, max:500</li>
+                </ul>
+                <small class="so-text-muted">Try submitting invalid data to see server-side validation in action.</small>
+            </div>
+        </div>
+
+        <div class="so-alert so-alert-warning so-mb-3">
+            <span class="material-icons">settings</span>
+            <div>
+                <strong>ErrorReporter Configuration:</strong>
+                <ul class="so-mb-0 so-mt-2">
+                    <li><strong>Position:</strong> <code>bottom-right</code> (configured explicitly for this demo)</li>
+                    <li><strong>Theme:</strong> <code>light</code></li>
+                    <li><strong>Animation:</strong> <code>slide</code></li>
+                </ul>
+                <small class="so-text-muted">
+                    <strong>Available positions:</strong> top-left, top-right, bottom-left, bottom-right
+                    <br>Each demo section can configure its own position using <code>errorReporter.configure()</code>
+                </small>
+            </div>
+        </div>
+
+        <?php
+        // PHP Code Example for Backend Validation
+        $backendValidationCode = <<<'PHP'
+// Create contact form (no client-side validation)
+$form = UiEngine::form()
+    ->id('backend-validation-form')
+    ->novalidate()  // Disable browser validation
+    ->addMany([
+        UiEngine::input()
+            ->name('name')
+            ->label('Full Name')
+            ->placeholder('John Doe')
+            ->prefixIcon('person')
+            ->help('Enter your full name (3-100 characters)'),
+
+        UiEngine::input()
+            ->inputType('email')
+            ->name('email')
+            ->label('Email Address')
+            ->placeholder('john@example.com')
+            ->prefixIcon('email')
+            ->help('Valid email required'),
+
+        UiEngine::input()
+            ->inputType('tel')
+            ->name('phone')
+            ->label('Phone Number')
+            ->placeholder('1234567890')
+            ->prefixIcon('phone')
+            ->help('10 digits, no spaces or dashes'),
+
+        UiEngine::input()
+            ->inputType('text')
+            ->name('message')
+            ->label('Message')
+            ->placeholder('Enter your message...')
+            ->help('Message between 10-500 characters'),
+
+        UiEngine::button()
+            ->submit()
+            ->text('Submit to Backend')
+            ->primary()
+            ->icon('cloud_upload')
+    ]);
+
+echo $form->render();
+
+// JavaScript handles AJAX submission (see JavaScript tab)
+PHP;
+
+        // Render the actual form (NO client-side validation class)
+        $backendForm = UiEngine::form()
+            ->id('backend-validation-form')
+            ->novalidate();
+
+        $backendForm->add(
+            UiEngine::input()
+                ->name('name')
+                ->label('Full Name')
+                ->placeholder('John Doe')
+                ->prefixIcon('person')
+                ->help('Enter your full name (3-100 characters)')
+        );
+
+        $backendForm->add(
+            UiEngine::input()
+                ->inputType('email')
+                ->name('email')
+                ->label('Email Address')
+                ->placeholder('john@example.com')
+                ->prefixIcon('email')
+                ->help('Valid email required')
+        );
+
+        $backendForm->add(
+            UiEngine::input()
+                ->inputType('tel')
+                ->name('phone')
+                ->label('Phone Number')
+                ->placeholder('1234567890')
+                ->prefixIcon('phone')
+                ->help('10 digits, no spaces or dashes')
+        );
+
+        $backendForm->add(
+            UiEngine::input()
+                ->inputType('text')
+                ->name('message')
+                ->label('Message')
+                ->placeholder('Enter your message...')
+                ->help('Message between 10-500 characters')
+        );
+
+        $backendForm->add(
+            UiEngine::button()
+                ->submit()
+                ->text('Submit to Backend')
+                ->primary()
+                ->icon('cloud_upload')
+        );
+
+        $backendOutput = $backendForm->render();
+
+        // Add AJAX submission handler
+        $backendOutput .= <<<'SCRIPT'
+<script>
+(function() {
+    const form = document.getElementById('backend-validation-form');
+    if (!form) return;
+
+    form.addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const submitBtn = form.querySelector('button[type="submit"]');
+        const errorReporter = window.ErrorReporter ? window.ErrorReporter.getInstance() : null;
+
+        if (!errorReporter) {
+            alert('ErrorReporter not loaded');
+            return;
+        }
+
+        // Clear previous errors first
+        errorReporter.clearAll();
+
+        // Configure ErrorReporter with consistent position for this demo
+        errorReporter.configure({
+            position: 'bottom-right',
+            theme: 'light',
+            animation: 'slide'
+        });
+
+        form.querySelectorAll('.so-form-group').forEach(group => {
+            group.classList.remove('has-error', 'has-success');
+            const existingError = group.querySelector('.so-form-error');
+            if (existingError) existingError.remove();
+        });
+
+        // Show loading state
+        submitBtn.disabled = true;
+        const originalHTML = submitBtn.innerHTML;
+        submitBtn.innerHTML = '<span class="material-icons so-btn-icon so-btn-icon-prefix">hourglass_empty</span><span class="so-btn-label">Validating...</span>';
+
+        try {
+            // Collect form data
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData);
+
+            // Submit to backend
+            const response = await fetch('/api/demo/validate-contact', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            });
+
+            const result = await response.json();
+
+            if (response.ok && result.success) {
+                // Success
+                alert('✅ ' + result.message);
+                form.reset();
+                form.querySelectorAll('.so-form-group').forEach(g => g.classList.add('has-success'));
+                setTimeout(() => {
+                    form.querySelectorAll('.so-form-group').forEach(g => g.classList.remove('has-success'));
+                }, 3000);
+            } else {
+                // Validation errors from backend
+                if (result.errors) {
+                    // Display in ErrorReporter
+                    errorReporter.showAll(result.errors);
+
+                    // Also show inline errors
+                    Object.entries(result.errors).forEach(([field, messages]) => {
+                        const input = form.querySelector(`[name="${field}"]`);
+                        if (input) {
+                            const formGroup = input.closest('.so-form-group');
+                            formGroup.classList.add('has-error');
+
+                            const errorDiv = document.createElement('div');
+                            errorDiv.className = 'so-form-error';
+                            errorDiv.innerHTML = '<span class="material-icons">error</span><span>' + messages[0] + '</span>';
+
+                            const inputWrapper = formGroup.querySelector('.so-input-wrapper') || input;
+                            inputWrapper.insertAdjacentElement('afterend', errorDiv);
+                        }
+                    });
+                } else {
+                    alert('❌ ' + (result.message || 'Validation failed'));
+                }
+            }
+        } catch (error) {
+            console.error('Network error:', error);
+            alert('Network error: ' + error.message);
+        } finally {
+            // Reset button
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalHTML;
+        }
+    });
+})();
+</script>
+SCRIPT;
+
+        // JavaScript handler code
+        $jsHandlerCode = <<<'JS'
+// AJAX submission handler
+form.addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const submitBtn = form.querySelector('button[type="submit"]');
+    const errorReporter = window.ErrorReporter.getInstance();
+
+    // Clear previous errors first
+    errorReporter.clearAll();
+
+    // Configure ErrorReporter with consistent position for this demo
+    errorReporter.configure({
+        position: 'bottom-right',
+        theme: 'light',
+        animation: 'slide'
+    });
+
+    // Show loading state
+    submitBtn.disabled = true;
+
+    try {
+        // Collect form data
+        const formData = new FormData(form);
+        const data = Object.fromEntries(formData);
+
+        // Submit to backend
+        const response = await fetch('/api/demo/validate-contact', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+
+        if (response.ok && result.success) {
+            // Success - form validated!
+            alert('✅ ' + result.message);
+            form.reset();
+        } else {
+            // Show validation errors in ErrorReporter
+            if (result.errors) {
+                errorReporter.showAll(result.errors);
+
+                // Also show inline errors
+                Object.entries(result.errors).forEach(([field, messages]) => {
+                    const input = form.querySelector(`[name="${field}"]`);
+                    const formGroup = input.closest('.so-form-group');
+                    formGroup.classList.add('has-error');
+
+                    const errorDiv = document.createElement('div');
+                    errorDiv.className = 'so-form-error';
+                    errorDiv.innerHTML = '<span class="material-icons">error</span>' +
+                                        '<span>' + messages[0] + '</span>';
+                    input.insertAdjacentElement('afterend', errorDiv);
+                });
+            }
+        }
+    } catch (error) {
+        alert('Network error: ' + error.message);
+    } finally {
+        submitBtn.disabled = false;
+    }
+});
+JS;
+
+        // Controller code example
+        $controllerCode = <<<'PHP'
+// ValidationDemoController.php
+public function validateContact(Request $request): JsonResponse
+{
+    $validator = Validator::make($request->all(), [
+        'name' => 'required|min:3|max:100',
+        'email' => 'required|email',
+        'phone' => 'required|regex:/^[0-9]{10}$/',
+        'message' => 'required|min:10|max:500',
+    ], [
+        // Custom messages
+        'name.required' => 'Please enter your full name',
+        'email.email' => 'Please enter a valid email address',
+        'phone.regex' => 'Phone must be 10 digits (e.g., 1234567890)',
+        'message.min' => 'Message must be at least 10 characters',
+    ]);
+
+    if ($validator->fails()) {
+        return JsonResponse::error('Validation failed', 422, $validator->errors());
+    }
+
+    // Additional business logic
+    $email = $request->input('email');
+    $blockedDomains = ['spam.com', 'blocked.com', 'test.com'];
+    $emailDomain = substr(strrchr($email, "@"), 1);
+
+    if (in_array($emailDomain, $blockedDomains)) {
+        return JsonResponse::error('Validation failed', 422, [
+            'email' => ['This email domain is not allowed']
+        ]);
+    }
+
+    // Success
+    return JsonResponse::success([
+        'message' => 'Form validated successfully!'
+    ]);
+}
+PHP;
+
+        // JSON Response examples
+        $jsonSuccessCode = <<<'JSON'
+// Success Response (200 OK)
+{
+    "success": true,
+    "message": "Form validated successfully! Data received.",
+    "data": {
+        "name": "John Doe",
+        "email": "john@example.com",
+        "phone": "1234567890",
+        "message": "This is my message"
+    }
+}
+JSON;
+
+        $jsonErrorCode = <<<'JSON'
+// Error Response (422 Unprocessable Entity)
+{
+    "success": false,
+    "message": "Validation failed",
+    "errors": {
+        "name": ["Name must be at least 3 characters"],
+        "email": ["Please enter a valid email address"],
+        "phone": ["Phone must be 10 digits (e.g., 1234567890)"],
+        "message": ["Message must be at least 10 characters"]
+    }
+}
+JSON;
+
+        // Display PHP code and output
+        $phpContent = '<div class="so-mt-4">' . $backendOutput . '</div><div class="so-mt-4">' . so_code_block($backendValidationCode, 'php') . '</div>';
+
+        $jsContent = '<div class="so-mt-4">' . so_code_block($jsHandlerCode, 'javascript') . '</div>';
+        $controllerContent = '<div class="so-mt-4">' . so_code_block($controllerCode, 'php') . '</div>';
+
+        $jsonContent = '<div class="so-mt-4"><h5>Success Response:</h5>' . so_code_block($jsonSuccessCode, 'json') . '</div>';
+        $jsonContent .= '<div class="so-mt-4"><h5>Error Response:</h5>' . so_code_block($jsonErrorCode, 'json') . '</div>';
+
+        // Display tabs
+        echo so_tabs('backend-validation', [
+            ['id' => 'php-backend', 'label' => 'PHP Form', 'icon' => 'data_object', 'active' => true, 'content' => $phpContent],
+            ['id' => 'js-backend', 'label' => 'JavaScript Handler', 'icon' => 'javascript', 'active' => false, 'content' => $jsContent],
+            ['id' => 'controller-backend', 'label' => 'PHP Controller', 'icon' => 'code', 'active' => false, 'content' => $controllerContent],
+            ['id' => 'json-backend', 'label' => 'JSON Responses', 'icon' => 'api', 'active' => false, 'content' => $jsonContent],
+        ]);
         ?>
     </div>
 </div>

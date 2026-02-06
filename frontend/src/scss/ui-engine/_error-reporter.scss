@@ -4,6 +4,7 @@
 // ============================================
 
 @use "../abstracts" as *;
+@use "sass:color";
 
 // Variables
 $error-reporter-bg: #fff;
@@ -192,31 +193,19 @@ $error-reporter-z-index: 1050;
   flex-shrink: 0;
 }
 
-// Left positions: right-align all content
+// Left positions: header alignment only
 .#{$so-prefix}error-reporter-top-left,
 .#{$so-prefix}error-reporter-bottom-left {
   .#{$so-prefix}error-reporter-header {
     justify-content: flex-end;
   }
 
-  // Right-align text content
+  // Right-align title only (in header)
   .#{$so-prefix}error-reporter-title {
     text-align: right;
   }
 
-  // Right-align error messages
-  .#{$so-prefix}error-message {
-    text-align: right;
-  }
-
-  // Right-align error fields
-  .#{$so-prefix}error-field {
-    order: 2; // Move field label after message for RTL appearance
-  }
-
-  .#{$so-prefix}error-reporter-item {
-    flex-direction: row-reverse; // Reverse the order of field and message
-  }
+  // Error items remain left-aligned (same as right positions)
 }
 
 // Reverse layout for bottom positions (header at bottom, errors above)
@@ -452,6 +441,7 @@ $error-reporter-z-index: 1050;
 
 .#{$so-prefix}error-reporter-item {
   display: flex;
+  flex-direction: column;
   align-items: flex-start;
   padding: 10px 16px;
   margin: 0;
@@ -500,15 +490,37 @@ $error-reporter-z-index: 1050;
 
 .#{$so-prefix}error-field {
   font-weight: 600;
+  font-size: 11px;
   color: $error-reporter-border;
-  margin-right: 6px;
-  flex-shrink: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: block;
+  margin-bottom: 4px;
 }
 
 .#{$so-prefix}error-message {
-  flex: 1;
+  display: block;
   color: #333;
   word-break: break-word;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+// Nested error message list (when a field has multiple errors)
+.#{$so-prefix}error-message-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  li {
+    margin: 3px 0;
+    padding: 0;
+    border: none;
+
+    &:hover {
+      background: transparent;
+    }
+  }
 }
 
 // Modal specific styles
@@ -684,5 +696,129 @@ $error-reporter-z-index: 1050;
   .#{$so-prefix}error-reporter-modal-title-text {
     flex: 1;
     overflow: visible !important;
+  }
+}
+
+// ============================================
+// THEME SUPPORT - Dark Mode & System Theme
+// ============================================
+
+// Dark theme (when [data-theme="dark"] is set on document)
+[data-theme="dark"] {
+  .#{$so-prefix}error-reporter {
+    .#{$so-prefix}error-reporter-content {
+      background: #2d2d2d;
+      border-color: $error-reporter-border;
+    }
+
+    .#{$so-prefix}error-reporter-header {
+      background: rgba($error-reporter-border, 0.2);
+      border-bottom-color: rgba($error-reporter-border, 0.3);
+    }
+
+    .#{$so-prefix}error-reporter-title {
+      color: #fff;
+    }
+
+    .#{$so-prefix}error-reporter-item {
+      border-bottom-color: #444;
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.05);
+      }
+
+      &.#{$so-prefix}active {
+        background: rgba($error-reporter-border, 0.15);
+      }
+
+      &.#{$so-prefix}error-reporter-more {
+        background-color: #333;
+
+        &:hover {
+          background-color: #333;
+        }
+      }
+    }
+
+    .#{$so-prefix}error-message {
+      color: #eee;
+    }
+
+    .#{$so-prefix}error-field {
+      color: color.adjust($error-reporter-border, $lightness: 10%);
+    }
+
+    .#{$so-prefix}error-message-list li {
+      color: #eee;
+    }
+  }
+
+  // Bottom positions: adjust top border color for dark theme
+  .#{$so-prefix}error-reporter-bottom-right,
+  .#{$so-prefix}error-reporter-bottom-left {
+    .#{$so-prefix}error-reporter-header {
+      border-top-color: rgba($error-reporter-border, 0.3);
+    }
+  }
+}
+
+// System theme (respects OS preference when [data-theme="system"] is set)
+[data-theme="system"] {
+  @media (prefers-color-scheme: dark) {
+    .#{$so-prefix}error-reporter {
+      .#{$so-prefix}error-reporter-content {
+        background: #2d2d2d;
+        border-color: $error-reporter-border;
+      }
+
+      .#{$so-prefix}error-reporter-header {
+        background: rgba($error-reporter-border, 0.2);
+        border-bottom-color: rgba($error-reporter-border, 0.3);
+      }
+
+      .#{$so-prefix}error-reporter-title {
+        color: #fff;
+      }
+
+      .#{$so-prefix}error-reporter-item {
+        border-bottom-color: #444;
+
+        &:hover {
+          background: rgba(255, 255, 255, 0.05);
+        }
+
+        &.#{$so-prefix}active {
+          background: rgba($error-reporter-border, 0.15);
+        }
+
+        &.#{$so-prefix}error-reporter-more {
+          background-color: #333;
+
+          &:hover {
+            background-color: #333;
+          }
+        }
+      }
+
+      .#{$so-prefix}error-message {
+        color: #eee;
+      }
+
+      .#{$so-prefix}error-field {
+        color: color.adjust($error-reporter-border, $lightness: 10%);
+      }
+
+      .#{$so-prefix}error-message-list li {
+        color: #eee;
+      }
+    }
+
+    // Bottom positions: adjust top border color for dark theme
+    .#{$so-prefix}error-reporter-bottom-right,
+    .#{$so-prefix}error-reporter-bottom-left {
+      .#{$so-prefix}error-reporter-header {
+        border-top-color: rgba($error-reporter-border, 0.3);
+      }
+    }
   }
 }

@@ -514,7 +514,10 @@ class ValidationEngine {
 
             // Handle ErrorReporter
             if (opts.errorDisplay.reporter && window.ErrorReporter) {
-                const reporter = window.ErrorReporter.getInstance({
+                const reporter = window.ErrorReporter.getInstance();
+
+                // Configure position every time to ensure it's correct for this section
+                reporter.configure({
                     position: opts.errorDisplay.reporterPosition
                 });
 
@@ -717,9 +720,16 @@ class ValidationEngine {
 
                     // Show errors in reporter
                     if (opts.live.errorDisplay.reporter && window.ErrorReporter) {
-                        const reporter = window.ErrorReporter.getInstance({
+                        const reporter = window.ErrorReporter.getInstance();
+
+                        // Clear previous errors first
+                        reporter.clearAll();
+
+                        // Configure position every time to ensure it's correct for this section
+                        reporter.configure({
                             position: opts.live.errorDisplay.reporterPosition
                         });
+
                         reporter.showAll(result.errors);
                     }
 
