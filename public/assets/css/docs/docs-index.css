@@ -459,8 +459,8 @@
 .doc-card-badges {
   display: flex;
   flex-wrap: wrap;
-  gap: 4px;
-  margin-top: 8px;
+  gap: 6px;
+  margin-top: 10px;
 }
 
 /* Individual badges within container */
@@ -675,6 +675,36 @@
   box-shadow: 0 1px 4px rgba(3, 105, 161, 0.3);
 }
 
+.badge-ui {
+  background: #ede9fe;
+  color: #6d28d9;
+  box-shadow: 0 1px 4px rgba(109, 40, 217, 0.3);
+}
+
+.badge-validation {
+  background: #fef3c7;
+  color: #b45309;
+  box-shadow: 0 1px 4px rgba(180, 83, 9, 0.3);
+}
+
+.badge-step-by-step {
+  background: #dcfce7;
+  color: #166534;
+  box-shadow: 0 1px 4px rgba(22, 101, 52, 0.3);
+}
+
+.badge-dual {
+  background: #e0e7ff;
+  color: #4338ca;
+  box-shadow: 0 1px 4px rgba(67, 56, 202, 0.3);
+}
+
+.badge-future {
+  background: #f3f4f6;
+  color: #6b7280;
+  box-shadow: 0 1px 4px rgba(107, 114, 128, 0.3);
+}
+
 /* Footer */
 .docs-footer {
   background: var(--surface);
@@ -851,6 +881,26 @@
 [data-theme="dark"] .badge-accessibility {
   background: #0c4a6e;
   color: #7dd3fc;
+}
+[data-theme="dark"] .badge-ui {
+  background: #4c1d95;
+  color: #ddd6fe;
+}
+[data-theme="dark"] .badge-validation {
+  background: #451a03;
+  color: #fde68a;
+}
+[data-theme="dark"] .badge-step-by-step {
+  background: #14532d;
+  color: #bbf7d0;
+}
+[data-theme="dark"] .badge-dual {
+  background: #312e81;
+  color: #c7d2fe;
+}
+[data-theme="dark"] .badge-future {
+  background: #374151;
+  color: #d1d5db;
 }
 [data-theme="dark"] .docs-tab-button:hover {
   color: var(--text);

@@ -78,6 +78,7 @@ class DocsController
             // Security & Validation
             'security-layer' => 'SECURITY-LAYER.md',
             'validation-system' => 'VALIDATION-SYSTEM.md',
+            'error-reporter' => 'ERROR-REPORTER.md',
             'auth-lockout' => 'AUTH-LOCKOUT.md',
 
             // Enterprise Features
@@ -114,6 +115,7 @@ class DocsController
             'dev-web-controllers' => 'DEV-WEB-CONTROLLERS.md',
             'dev-api-controllers' => 'DEV-API-CONTROLLERS.md',
             'dev-forms-validation' => 'DEV-FORMS-VALIDATION.md',
+            'dev-error-reporter' => 'DEV-ERROR-REPORTER.md',
             'dev-assets' => 'DEV-ASSETS.md',
             'dev-auth' => 'DEV-AUTH.md',
             'dev-security' => 'DEV-SECURITY.md',

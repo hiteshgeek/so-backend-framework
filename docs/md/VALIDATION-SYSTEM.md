@@ -21,7 +21,7 @@
 
 ## Overview
 
-The Validation System provides a clean, expressive way to validate user input before processing. Inspired by Laravel's validator, it includes 27+ built-in rules and supports custom validation logic.
+The Validation System provides a clean, expressive way to validate user input before processing. Inspired by Laravel's validator, it includes **66+ built-in rules** and supports custom validation logic.
 
 ### Why Validation Matters
 
@@ -47,10 +47,11 @@ $user = User::create($validated);
 
 ### Features
 
-- [x] **27+ Built-in Rules** - Required, email, min/max, unique, etc.
+- [x] **66+ Built-in Rules** - Required, email, min/max, unique, file uploads, etc.
 - [x] **Custom Rules** - Closures or rule classes
 - [x] **Custom Messages** - Per-field error messages
 - [x] **Database Rules** - `unique`, `exists` validation
+- [x] **File Validation** - Images, documents, size, dimensions
 - [x] **Array/Nested Validation** - Validate complex structures
 - [x] **Exception Handling** - ValidationException with 422 status
 
@@ -159,6 +160,38 @@ Required if any of the other fields are present.
 // If password exists, password_confirmation is required
 ```
 
+#### `required_with_all:field1,field2`
+Required if ALL of the other fields are present.
+
+```php
+'signature' => 'required_with_all:terms,privacy_policy'
+// Required only if both terms AND privacy_policy are present
+```
+
+#### `required_without:field1,field2`
+Required if any of the other fields are absent.
+
+```php
+'email' => 'required_without:phone'
+// Email required if phone is not provided
+```
+
+#### `required_without_all:field1,field2`
+Required if ALL of the other fields are absent.
+
+```php
+'contact_info' => 'required_without_all:email,phone'
+// Required only if both email AND phone are missing
+```
+
+#### `required_unless:field,value1,value2`
+Required unless another field has one of the specified values.
+
+```php
+'tax_id' => 'required_unless:account_type,personal,student'
+// Not required if account_type is 'personal' or 'student'
+```
+
 ---
 
 ### Type Rules
@@ -215,10 +248,6 @@ Must be an array.
 // [X] 'tag1,tag2'
 ```
 
----
-
-### String Rules
-
 #### `email`
 Must be a valid email address.
 
@@ -250,6 +279,59 @@ Must be a valid IP address.
 // [X] '999.999.999.999'
 ```
 
+#### `uuid`
+Must be a valid UUID (versions 1-5).
+
+```php
+'user_id' => 'uuid'
+// [x] '550e8400-e29b-41d4-a716-446655440000'
+// [X] 'invalid-uuid'
+```
+
+#### `ulid`
+Must be a valid ULID (Universally Unique Lexicographically Sortable Identifier).
+
+```php
+'order_id' => 'ulid'
+// [x] '01H4M8Z1XVQY9X8N5G7K3W2Z4T'
+// [X] 'invalid-ulid'
+```
+
+#### `json`
+Must be valid JSON string.
+
+```php
+'metadata' => 'json'
+// [x] '{"key":"value"}'
+// [x] '["item1","item2"]'
+// [X] '{invalid}'
+```
+
+#### `timezone`
+Must be a valid timezone identifier.
+
+```php
+'timezone' => 'timezone'
+// [x] 'America/New_York'
+// [x] 'UTC'
+// [x] 'Europe/London'
+// [X] 'Invalid/Zone'
+```
+
+#### `mac_address`
+Must be a valid MAC address.
+
+```php
+'device_mac' => 'mac_address'
+// [x] '00:11:22:33:44:55'
+// [x] '00-11-22-33-44-55'
+// [X] '00:11:22:33:44'
+```
+
+---
+
+### String Rules
+
 #### `alpha`
 Only alphabetic characters.
 
@@ -278,6 +360,60 @@ Alphanumeric plus dashes and underscores.
 // [x] 'my-awesome-post'
 // [x] 'my_post_2024'
 // [X] 'my post'
+```
+
+#### `lowercase`
+Value must be all lowercase.
+
+```php
+'username' => 'lowercase|alpha_num'
+// [x] 'john123'
+// [X] 'John123'
+```
+
+#### `uppercase`
+Value must be all uppercase.
+
+```php
+'country_code' => 'uppercase|alpha|size:2'
+// [x] 'US'
+// [X] 'us'
+```
+
+#### `starts_with:value1,value2`
+String must start with one of the given values.
+
+```php
+'phone' => 'starts_with:+1,+44,+91'
+// [x] '+1-555-1234'
+// [X] '555-1234'
+```
+
+#### `ends_with:value1,value2`
+String must end with one of the given values.
+
+```php
+'email' => 'ends_with:@company.com,@subsidiary.com'
+// [x] 'user@company.com'
+// [X] 'user@gmail.com'
+```
+
+#### `doesnt_start_with:value1,value2`
+String must NOT start with given values.
+
+```php
+'username' => 'doesnt_start_with:admin,root,system'
+// [X] 'admin123'
+// [x] 'john123'
+```
+
+#### `doesnt_end_with:value1,value2`
+String must NOT end with given values.
+
+```php
+'filename' => 'doesnt_end_with:.exe,.bat'
+// [X] 'virus.exe'
+// [x] 'document.pdf'
 ```
 
 ---
@@ -325,6 +461,48 @@ Between min and max (inclusive).
 // [X] 'jo' (2 chars)
 ```
 
+#### `digits:length`
+Must have exactly N digits.
+
+```php
+'pin' => 'digits:4'
+// [x] '1234'
+// [X] '12345'
+// [X] '123'
+```
+
+#### `digits_between:min,max`
+Must have between min and max digits.
+
+```php
+'phone' => 'digits_between:10,15'
+// [x] '1234567890' (10 digits)
+// [x] '123456789012345' (15 digits)
+// [X] '12345' (5 digits)
+```
+
+#### `decimal:min,max`
+Decimal with specified precision.
+
+```php
+'price' => 'decimal:2' // Exactly 2 decimal places
+// [x] 99.99
+// [X] 99, 99.9, 99.999
+
+'rating' => 'decimal:1,2' // Between 1-2 decimal places
+// [x] 4.5, 4.75
+// [X] 4, 4.999
+```
+
+#### `multiple_of:value`
+Must be a multiple of given number.
+
+```php
+'quantity' => 'multiple_of:5'
+// [x] 5, 10, 15, 20
+// [X] 3, 7, 12
+```
+
 ---
 
 ### Comparison Rules
@@ -353,6 +531,41 @@ Shorthand for `same:field_confirmation`.
 'password' => 'required|min:8|confirmed'
 // Looks for 'password_confirmation' field
 // Equivalent to: same:password_confirmation
+```
+
+#### `gt:field`
+Must be greater than another field.
+
+```php
+'end_date' => 'date|gt:start_date'
+'max_price' => 'numeric|gt:min_price'
+// [x] max_price=100, min_price=50
+// [X] max_price=50, min_price=100
+```
+
+#### `gte:field`
+Greater than or equal to another field.
+
+```php
+'end_date' => 'date|gte:start_date'
+// [x] Same date or later
+// [X] Earlier date
+```
+
+#### `lt:field`
+Less than another field.
+
+```php
+'discount' => 'numeric|lt:price'
+// [x] discount=10, price=100
+// [X] discount=100, price=10
+```
+
+#### `lte:field`
+Less than or equal to another field.
+
+```php
+'down_payment' => 'numeric|lte:total_price'
 ```
 
 ---
@@ -392,6 +605,18 @@ Must be a valid date.
 // [X] 'not-a-date'
 ```
 
+#### `date_format:format`
+Date must match specific format.
+
+```php
+'birth_date' => 'date_format:Y-m-d'
+// [x] '2024-01-15'
+// [X] '01/15/2024' (wrong format)
+
+'time' => 'date_format:H:i:s'
+// [x] '14:30:00'
+```
+
 #### `before:date`
 Must be before a given date.
 
@@ -400,6 +625,15 @@ Must be before a given date.
 // [x] '2024-12-31'
 // [X] '2025-01-01'
 // [X] '2025-06-15'
+```
+
+#### `before_or_equal:date`
+Must be before or equal to given date.
+
+```php
+'registration_date' => 'date|before_or_equal:today'
+// [x] Today or earlier
+// [X] Future date
 ```
 
 #### `after:date`
@@ -411,6 +645,15 @@ Must be after a given date.
 // [x] '2024-06-15'
 // [X] '2024-01-01'
 // [X] '2023-12-31'
+```
+
+#### `after_or_equal:date`
+Must be after or equal to given date.
+
+```php
+'start_date' => 'date|after_or_equal:today'
+// [x] Today or later
+// [X] Past date
 ```
 
 ---
@@ -466,6 +709,165 @@ protected function validateExists($field, $params): bool
 
     return $result[0]['count'] > 0;
 }
+```
+
+---
+
+### File Validation Rules
+
+#### `file`
+Field must be a valid uploaded file.
+
+```php
+'document' => 'required|file'
+// Validates PHP file upload array structure
+```
+
+#### `image`
+Must be a valid image file.
+
+```php
+'avatar' => 'required|file|image'
+// Supports: GIF, JPEG, PNG, BMP, WEBP
+```
+
+#### `mimes:ext1,ext2`
+File extension must match allowed types.
+
+```php
+'avatar' => 'required|file|image|mimes:jpg,png,gif'
+// [x] profile.jpg, avatar.png
+// [X] document.pdf
+
+'document' => 'required|file|mimes:pdf,doc,docx'
+// [x] report.pdf, letter.docx
+// [X] image.jpg
+```
+
+#### `max_file_size:kilobytes`
+Maximum file size in KB.
+
+```php
+'upload' => 'file|max_file_size:2048' // 2MB max
+'avatar' => 'image|max_file_size:512'  // 512KB max
+```
+
+#### `min_file_size:kilobytes`
+Minimum file size in KB.
+
+```php
+'document' => 'file|min_file_size:10' // At least 10KB
+```
+
+#### `dimensions:constraints`
+Image dimension constraints.
+
+```php
+// Minimum/maximum dimensions
+'avatar' => 'image|dimensions:min_width=100,min_height=100,max_width=1000,max_height=1000'
+
+// Exact dimensions
+'banner' => 'image|dimensions:width=1200,height=400'
+
+// Aspect ratio
+'thumbnail' => 'image|dimensions:ratio=1.5' // 3:2 ratio
+```
+
+**Available Constraints**:
+- `min_width` - Minimum width in pixels
+- `max_width` - Maximum width in pixels
+- `min_height` - Minimum height in pixels
+- `max_height` - Maximum height in pixels
+- `width` - Exact width
+- `height` - Exact height
+- `ratio` - Aspect ratio (width/height)
+
+---
+
+### Pattern Matching Rules
+
+#### `regex:pattern`
+Value must match regular expression.
+
+```php
+'code' => 'regex:/^[A-Z]{3}\d{3}$/' // ABC123 format
+// [x] 'ABC123'
+// [X] 'abc123', 'AB123'
+
+'slug' => 'regex:/^[a-z0-9-]+$/'
+// [x] 'my-post-title'
+// [X] 'My Post Title'
+```
+
+#### `not_regex:pattern`
+Value must NOT match regular expression.
+
+```php
+'username' => 'not_regex:/[<>]/' // No HTML brackets
+// [x] 'john_doe'
+// [X] 'john<script>'
+
+'description' => 'not_regex:/\b(spam|scam)\b/i' // No spam words
+```
+
+---
+
+### Conditional Rules
+
+#### `nullable`
+Allows the field to be null without failing validation.
+
+```php
+'middle_name' => 'nullable|string|max:50'
+// [x] null
+// [x] 'Marie'
+// [x] (field not present)
+
+'phone' => 'nullable|string|min:10'
+// Validates only if present, allows null
+```
+
+**Use Case**: Optional fields that may or may not be submitted.
+
+#### `sometimes`
+Only validate if the field is present in the data.
+
+```php
+'bio' => 'sometimes|string|max:500'
+// If 'bio' is present, validates it
+// If 'bio' is absent, no validation
+```
+
+**Difference from `nullable`**: `sometimes` skips validation if field is missing, `nullable` allows null values.
+
+#### `bail`
+Stop running validation rules after the first failure.
+
+```php
+'email' => 'bail|required|email|unique:users'
+// If 'required' fails, stops (won't check email or unique)
+// If 'email' fails, stops (won't check unique)
+```
+
+**Use Case**: Performance optimization, prevents expensive checks when basic validation fails.
+
+#### `exclude_if:field,value`
+Excludes field from validated data if condition is met.
+
+```php
+'discount_code' => 'exclude_if:account_type,free|string'
+// If account_type = 'free', discount_code is excluded from validated()
+// Field won't appear in the returned validated data
+```
+
+**Use Case**: Conditional fields, dynamic forms.
+
+#### `exclude_unless:field,value`
+Excludes field from validated data unless condition is met.
+
+```php
+'vat_number' => 'exclude_unless:country,EU|string'
+// Only include vat_number if country = 'EU'
 ```
 
 ---
@@ -810,6 +1212,27 @@ $addressRules = [
 ];
 ```
 
+### 6. Use `bail` for Expensive Operations
+
+```php
+// [x] Prevent expensive unique check if email format is invalid
+'email' => 'bail|required|email|unique:users,email'
+```
+
+### 7. File Upload Validation
+
+```php
+// [x] Comprehensive file validation
+'avatar' => [
+    'required',
+    'file',
+    'image',
+    'mimes:jpg,png,gif',
+    'max_file_size:2048', // 2MB
+    'dimensions:min_width=100,max_width=2000',
+]
+```
+
 ---
 
 ## Troubleshooting
@@ -863,9 +1286,18 @@ $messages = [
 
 The Validation System provides:
 
-- [x] **27+ Built-in Rules** - Cover 99% of validation needs
+- [x] **66+ Built-in Rules** - Cover 99% of validation needs
+- [x] **7 Required Rules** - Conditional requirements
+- [x] **16 Type Rules** - Type checking and format validation
+- [x] **12 String Rules** - Text manipulation and validation
+- [x] **7 Numeric Rules** - Number and precision validation
+- [x] **9 Comparison Rules** - Field comparisons
+- [x] **6 Date Rules** - Date and time validation
+- [x] **2 Database Rules** - `unique`, `exists`
+- [x] **6 File Rules** - File upload validation
+- [x] **2 Pattern Rules** - Regex matching
+- [x] **5 Conditional Rules** - Control flow and exclusion
 - [x] **Custom Rules** - Closures and rule classes
-- [x] **Database Validation** - `unique`, `exists`
 - [x] **Custom Messages** - Per-field error messages
 - [x] **Array Validation** - Nested data structures
 - [x] **Exception Handling** - 422 status codes
@@ -876,6 +1308,6 @@ The Validation System provides:
 
 ---
 
-**Documentation Version**: 1.0
-**Last Updated**: 2026-01-29
+**Documentation Version**: 2.0
+**Last Updated**: 2026-02-06
 **Maintained By**: SO Backend Framework Team

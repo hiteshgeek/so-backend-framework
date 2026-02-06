@@ -466,40 +466,130 @@ This is useful on edit forms where you want to display the existing database val
 
 ---
 
-## Common Validation Rules
+## Available Validation Rules
 
-The following table lists the most frequently used built-in rules. Rules can be combined with the pipe `|` character, for example `'required|email|max:255'`.
+The framework includes **66+ built-in validation rules**. Rules can be combined with the pipe `|` character, for example `'required|email|max:255'`.
+
+For complete documentation with examples, see [Validation System Guide](/docs/validation-system).
+
+### Required Rules
 
 | Rule | Description | Example |
 |------|-------------|---------|
 | `required` | Field must be present and not empty | `'name' => 'required'` |
+| `required_if:field,value` | Required when another field equals a value | `'billing' => 'required_if:payment,card'` |
+| `required_with:field` | Required when another field is present | `'confirm' => 'required_with:password'` |
+| `required_with_all:field1,field2` | Required when ALL other fields are present | `'signature' => 'required_with_all:terms,privacy'` |
+| `required_without:field` | Required when another field is absent | `'email' => 'required_without:phone'` |
+| `required_without_all:field1,field2` | Required when ALL other fields are absent | `'contact' => 'required_without_all:email,phone'` |
+| `required_unless:field,val1,val2` | Required unless another field has specified values | `'tax_id' => 'required_unless:type,personal'` |
+
+### Type Rules
+
+| Rule | Description | Example |
+|------|-------------|---------|
 | `string` | Field must be a string | `'name' => 'required|string'` |
-| `numeric` | Field must be a number (int or float) | `'price' => 'required|numeric'` |
 | `integer` | Field must be an integer | `'age' => 'required|integer'` |
-| `boolean` | Field must be `true`, `false`, `1`, `0`, `'1'`, or `'0'` | `'active' => 'boolean'` |
+| `numeric` | Field must be a number (int or float) | `'price' => 'required|numeric'` |
+| `boolean` | Field must be boolean (`true`, `false`, `1`, `0`, `'1'`, `'0'`) | `'active' => 'boolean'` |
+| `array` | Field must be an array | `'tags' => 'array'` |
 | `email` | Field must be a valid email address | `'email' => 'required|email'` |
 | `url` | Field must be a valid URL | `'website' => 'url'` |
-| `date` | Field must be a parseable date string | `'dob' => 'required|date'` |
-| `min:N` | Minimum value (numbers) or length (strings) | `'password' => 'required|min:8'` |
-| `max:N` | Maximum value (numbers) or length (strings) | `'name' => 'required|max:255'` |
-| `between:min,max` | Value/length must be between min and max (inclusive) | `'age' => 'integer|between:18,120'` |
-| `in:val1,val2,...` | Field must be one of the listed values | `'status' => 'required|in:draft,published'` |
-| `not_in:val1,val2` | Field must not be one of the listed values | `'role' => 'not_in:superadmin'` |
-| `confirmed` | A matching `{field}_confirmation` field must exist | `'password' => 'required|confirmed'` |
-| `same:field` | Field must match the value of another field | `'confirm_email' => 'same:email'` |
-| `different:field` | Field must differ from another field | `'new_pass' => 'different:old_pass'` |
-| `unique:table,column` | Value must not already exist in the database table | `'email' => 'unique:users,email'` |
-| `unique:table,column,except` | Same as `unique` but ignores a row by ID (for updates) | `'email' => 'unique:users,email,' . $id` |
-| `exists:table,column` | Value must exist in the database table | `'category_id' => 'exists:categories,id'` |
+| `ip` | Must be a valid IP address (IPv4 or IPv6) | `'server_ip' => 'ip'` |
+| `uuid` | Must be a valid UUID (versions 1-5) | `'user_id' => 'uuid'` |
+| `ulid` | Must be a valid ULID | `'order_id' => 'ulid'` |
+| `json` | Must be valid JSON string | `'metadata' => 'json'` |
+| `timezone` | Must be a valid timezone identifier | `'timezone' => 'timezone'` |
+| `mac_address` | Must be a valid MAC address | `'device_mac' => 'mac_address'` |
+
+### String Rules
+
+| Rule | Description | Example |
+|------|-------------|---------|
 | `alpha` | Only alphabetic characters (a-z, A-Z) | `'code' => 'alpha'` |
 | `alpha_num` | Only letters and numbers | `'username' => 'alpha_num'` |
 | `alpha_dash` | Letters, numbers, dashes, and underscores | `'slug' => 'alpha_dash'` |
-| `ip` | Must be a valid IP address | `'server_ip' => 'ip'` |
-| `before:date` | Must be a date before the given date | `'start' => 'date|before:2026-12-31'` |
-| `after:date` | Must be a date after the given date | `'end' => 'date|after:2026-01-01'` |
-| `array` | Field must be an array | `'tags' => 'array'` |
-| `required_if:field,value` | Required only when another field equals a value | `'billing' => 'required_if:payment,card'` |
-| `required_with:field` | Required only when another field is present | `'confirm' => 'required_with:password'` |
+| `lowercase` | Value must be all lowercase | `'username' => 'lowercase'` |
+| `uppercase` | Value must be all uppercase | `'country_code' => 'uppercase'` |
+| `starts_with:val1,val2` | String must start with one of the values | `'phone' => 'starts_with:+1,+44'` |
+| `ends_with:val1,val2` | String must end with one of the values | `'email' => 'ends_with:@company.com'` |
+| `doesnt_start_with:val1,val2` | String must NOT start with values | `'username' => 'doesnt_start_with:admin,root'` |
+| `doesnt_end_with:val1,val2` | String must NOT end with values | `'file' => 'doesnt_end_with:.exe,.bat'` |
+
+### Numeric Rules
+
+| Rule | Description | Example |
+|------|-------------|---------|
+| `min:N` | Minimum value (numbers) or length (strings) | `'password' => 'required|min:8'` |
+| `max:N` | Maximum value (numbers) or length (strings) | `'name' => 'required|max:255'` |
+| `between:min,max` | Value/length between min and max (inclusive) | `'age' => 'integer|between:18,120'` |
+| `digits:N` | Must have exactly N digits | `'pin' => 'digits:4'` |
+| `digits_between:min,max` | Must have between min and max digits | `'phone' => 'digits_between:10,15'` |
+| `decimal:min,max` | Decimal with specified precision | `'price' => 'decimal:2'` |
+| `multiple_of:value` | Must be a multiple of value | `'quantity' => 'multiple_of:5'` |
+
+### Comparison Rules
+
+| Rule | Description | Example |
+|------|-------------|---------|
+| `same:field` | Must match the value of another field | `'confirm_email' => 'same:email'` |
+| `different:field` | Must differ from another field | `'new_pass' => 'different:old_pass'` |
+| `confirmed` | A matching `{field}_confirmation` field must exist | `'password' => 'required|confirmed'` |
+| `gt:field` | Must be greater than another field | `'end_date' => 'gt:start_date'` |
+| `gte:field` | Must be greater than or equal to another field | `'end_date' => 'gte:start_date'` |
+| `lt:field` | Must be less than another field | `'discount' => 'lt:price'` |
+| `lte:field` | Must be less than or equal to another field | `'down_payment' => 'lte:total'` |
+| `in:val1,val2,...` | Field must be one of the listed values | `'status' => 'in:draft,published'` |
+| `not_in:val1,val2` | Field must NOT be one of the listed values | `'role' => 'not_in:admin,superadmin'` |
+
+### Date Rules
+
+| Rule | Description | Example |
+|------|-------------|---------|
+| `date` | Must be a parseable date string | `'dob' => 'required|date'` |
+| `date_format:format` | Must match specific date format | `'dob' => 'date_format:Y-m-d'` |
+| `before:date` | Must be before the given date | `'start' => 'date|before:2026-12-31'` |
+| `before_or_equal:date` | Must be before or equal to date | `'registration' => 'before_or_equal:today'` |
+| `after:date` | Must be after the given date | `'end' => 'date|after:2026-01-01'` |
+| `after_or_equal:date` | Must be after or equal to date | `'start' => 'after_or_equal:today'` |
+
+### Database Rules
+
+| Rule | Description | Example |
+|------|-------------|---------|
+| `unique:table,column` | Value must not exist in database table | `'email' => 'unique:users,email'` |
+| `unique:table,column,except` | Same as `unique` but ignores a row by ID | `'email' => 'unique:users,email,' . $id` |
+| `exists:table,column` | Value must exist in the database table | `'category_id' => 'exists:categories,id'` |
+
+### File Validation Rules
+
+| Rule | Description | Example |
+|------|-------------|---------|
+| `file` | Field must be a valid uploaded file | `'document' => 'required|file'` |
+| `image` | Must be a valid image (GIF, JPEG, PNG, BMP, WEBP) | `'avatar' => 'required|image'` |
+| `mimes:ext1,ext2` | File extension must match allowed types | `'avatar' => 'mimes:jpg,png,gif'` |
+| `max_file_size:kb` | Maximum file size in kilobytes | `'upload' => 'max_file_size:2048'` |
+| `min_file_size:kb` | Minimum file size in kilobytes | `'document' => 'min_file_size:10'` |
+| `dimensions:constraints` | Image dimension constraints | `'avatar' => 'dimensions:min_width=100,max_width=1000'` |
+
+**Dimension Constraints**: `min_width`, `max_width`, `min_height`, `max_height`, `width`, `height`, `ratio`
+
+### Pattern Matching Rules
+
+| Rule | Description | Example |
+|------|-------------|---------|
+| `regex:pattern` | Value must match regular expression | `'code' => 'regex:/^[A-Z]{3}\d{3}$/'` |
+| `not_regex:pattern` | Value must NOT match regular expression | `'username' => 'not_regex:/[<>]/'` |
+
+### Conditional Rules
+
+| Rule | Description | Example |
+|------|-------------|---------|
+| `nullable` | Allows the field to be null | `'middle_name' => 'nullable|string'` |
+| `sometimes` | Only validate if field is present | `'bio' => 'sometimes|string|max:500'` |
+| `bail` | Stop validation after first failure | `'email' => 'bail|required|email|unique:users'` |
+| `exclude_if:field,value` | Exclude field if condition is met | `'discount' => 'exclude_if:type,free'` |
+| `exclude_unless:field,value` | Exclude field unless condition is met | `'vat' => 'exclude_unless:country,EU'` |
 
 ### Array Syntax for Rules
 

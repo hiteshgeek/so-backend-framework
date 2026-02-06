@@ -55,6 +55,9 @@
             <a href="<?= htmlspecialchars(config('app.url')) ?>/docs" class="link-btn link-btn--outline">
                 <span class="mdi mdi-book-open-variant"></span> Documentation
             </a>
+            <a href="<?= htmlspecialchars(config('app.url')) ?>/frontend" class="link-btn link-btn--outline">
+                <span class="mdi mdi-view-dashboard"></span> Frontend Demos
+            </a>
         </div>
 
         <div class="version">
