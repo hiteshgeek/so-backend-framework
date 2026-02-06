@@ -550,11 +550,8 @@ class ErrorReporter extends SOComponent {
    * @returns {number}
    */
   getErrorCount() {
-    let count = 0;
-    Object.values(this._errors).forEach((messages) => {
-      count += Array.isArray(messages) ? messages.length : 1;
-    });
-    return count;
+    // Count number of fields with errors, not total number of error messages
+    return Object.keys(this._errors).length;
   }
 
   // ==================
@@ -806,6 +803,11 @@ class ErrorReporter extends SOComponent {
     const btnSizeClass = this._getButtonSizeClass();
     const dropdownSizeClass = this._getDropdownSizeClass();
 
+    // Button group size based on error reporter size
+    const btnGroupSizeClass = (currentSize === 'xs' || currentSize === 'sm')
+      ? SixOrbit.cls('btn-group-xs')
+      : SixOrbit.cls('btn-group-sm');
+
     // Determine dropdown positioning classes based on error reporter position
     const dropdownClasses = [];
 
@@ -833,29 +835,27 @@ class ErrorReporter extends SOComponent {
         </button>
         <div class="${SixOrbit.cls("dropdown-menu")}">
           <div class="${SixOrbit.cls("dropdown-item")} ${SixOrbit.cls("error-reporter-size-selector")}">
-            <div class="${SixOrbit.cls("btn-group")} ${SixOrbit.cls("btn-group-sm")}">
-              <button type="button" class="${SixOrbit.cls("btn")} ${SixOrbit.cls("btn-sm")} ${currentSize === "xs" ? SixOrbit.cls("btn-primary") : SixOrbit.cls("btn-outline")}" data-size="xs" title="Extra Small">XS</button>
-              <button type="button" class="${SixOrbit.cls("btn")} ${SixOrbit.cls("btn-sm")} ${currentSize === "sm" ? SixOrbit.cls("btn-primary") : SixOrbit.cls("btn-outline")}" data-size="sm" title="Small">SM</button>
-              <button type="button" class="${SixOrbit.cls("btn")} ${SixOrbit.cls("btn-sm")} ${currentSize === "normal" ? SixOrbit.cls("btn-primary") : SixOrbit.cls("btn-outline")}" data-size="normal" title="Medium">MD</button>
+            <div class="${SixOrbit.cls("btn-group")} ${btnGroupSizeClass}">
+              <button type="button" class="${SixOrbit.cls("btn")} ${btnSizeClass} ${currentSize === "xs" ? SixOrbit.cls("btn-primary") : SixOrbit.cls("btn-outline")}" data-size="xs" title="Extra Small">XS</button>
+              <button type="button" class="${SixOrbit.cls("btn")} ${btnSizeClass} ${currentSize === "sm" ? SixOrbit.cls("btn-primary") : SixOrbit.cls("btn-outline")}" data-size="sm" title="Small">SM</button>
+              <button type="button" class="${SixOrbit.cls("btn")} ${btnSizeClass} ${currentSize === "normal" ? SixOrbit.cls("btn-primary") : SixOrbit.cls("btn-outline")}" data-size="normal" title="Medium">MD</button>
             </div>
           </div>
           <div class="${SixOrbit.cls("dropdown-divider")}"></div>
-          <div class="${SixOrbit.cls("dropdown-item")} ${currentPosition === "top-right" ? SixOrbit.cls("selected") : ""}" data-position="top-right">
-            <span>Top Right</span>
-            ${currentPosition === "top-right" ? '<span class="material-icons ' + SixOrbit.cls("dropdown-check") + '">check</span>' : ""}
-          </div>
-          <div class="${SixOrbit.cls("dropdown-item")} ${currentPosition === "top-left" ? SixOrbit.cls("selected") : ""}" data-position="top-left">
-            <span>Top Left</span>
-            ${currentPosition === "top-left" ? '<span class="material-icons ' + SixOrbit.cls("dropdown-check") + '">check</span>' : ""}
+          <div class="${SixOrbit.cls("dropdown-item")} ${SixOrbit.cls("error-reporter-position-row")}">
+            <span class="${SixOrbit.cls("error-reporter-position-label")}">Top</span>
+            <div class="${SixOrbit.cls("btn-group")} ${btnGroupSizeClass}">
+              <button type="button" class="${SixOrbit.cls("btn")} ${btnSizeClass} ${currentPosition === "top-left" ? SixOrbit.cls("btn-primary") : SixOrbit.cls("btn-outline")}" data-position="top-left">Left</button>
+              <button type="button" class="${SixOrbit.cls("btn")} ${btnSizeClass} ${currentPosition === "top-right" ? SixOrbit.cls("btn-primary") : SixOrbit.cls("btn-outline")}" data-position="top-right">Right</button>
+            </div>
           </div>
           <div class="${SixOrbit.cls("dropdown-divider")}"></div>
-          <div class="${SixOrbit.cls("dropdown-item")} ${currentPosition === "bottom-right" ? SixOrbit.cls("selected") : ""}" data-position="bottom-right">
-            <span>Bottom Right</span>
-            ${currentPosition === "bottom-right" ? '<span class="material-icons ' + SixOrbit.cls("dropdown-check") + '">check</span>' : ""}
-          </div>
-          <div class="${SixOrbit.cls("dropdown-item")} ${currentPosition === "bottom-left" ? SixOrbit.cls("selected") : ""}" data-position="bottom-left">
-            <span>Bottom Left</span>
-            ${currentPosition === "bottom-left" ? '<span class="material-icons ' + SixOrbit.cls("dropdown-check") + '">check</span>' : ""}
+          <div class="${SixOrbit.cls("dropdown-item")} ${SixOrbit.cls("error-reporter-position-row")}">
+            <span class="${SixOrbit.cls("error-reporter-position-label")}">Bottom</span>
+            <div class="${SixOrbit.cls("btn-group")} ${btnGroupSizeClass}">
+              <button type="button" class="${SixOrbit.cls("btn")} ${btnSizeClass} ${currentPosition === "bottom-left" ? SixOrbit.cls("btn-primary") : SixOrbit.cls("btn-outline")}" data-position="bottom-left">Left</button>
+              <button type="button" class="${SixOrbit.cls("btn")} ${btnSizeClass} ${currentPosition === "bottom-right" ? SixOrbit.cls("btn-primary") : SixOrbit.cls("btn-outline")}" data-position="bottom-right">Right</button>
+            </div>
           </div>
         </div>
       </div>
@@ -874,13 +874,12 @@ class ErrorReporter extends SOComponent {
 
     this._positionDropdown = window.SODropdown.getInstance(dropdownEl);
 
-    // Listen for position item clicks
-    dropdownEl.querySelectorAll(SixOrbit.sel("dropdown-item")).forEach((item) => {
-      item.addEventListener("click", (e) => {
-        // Handle position change
-        const position = item.dataset.position;
+    // Listen for position button clicks
+    dropdownEl.querySelectorAll('button[data-position]').forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        e.stopPropagation(); // Prevent event bubbling and dropdown close
+        const position = btn.dataset.position;
         if (position) {
-          e.stopPropagation(); // Prevent event bubbling
           this.setPosition(position);
           // Re-render to update dropdown selection
           this._lastRenderedErrors = null;

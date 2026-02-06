@@ -111,7 +111,9 @@ $error-reporter-z-index: 1050;
   overflow: visible; // Changed from hidden to allow dropdown overflow
   display: flex;
   flex-direction: column;
-  transition: width 0.3s ease, max-width 0.3s ease;
+  transition:
+    width 0.3s ease,
+    max-width 0.3s ease;
 }
 
 // Size variants
@@ -131,7 +133,15 @@ $error-reporter-z-index: 1050;
   }
 
   .#{$so-prefix}error-reporter-item {
-    padding: 8px 14px;
+    padding: 6px 10px 6px 14px;
+    font-size: 12px;
+  }
+
+  .#{$so-prefix}error-field {
+    font-size: 10px;
+  }
+
+  .#{$so-prefix}error-message {
     font-size: 12px;
   }
 }
@@ -152,7 +162,15 @@ $error-reporter-z-index: 1050;
   }
 
   .#{$so-prefix}error-reporter-item {
-    padding: 6px 12px;
+    padding: 5px 8px 5px 14px;
+    font-size: 11px;
+  }
+
+  .#{$so-prefix}error-field {
+    font-size: 9px;
+  }
+
+  .#{$so-prefix}error-message {
     font-size: 11px;
   }
 
@@ -292,7 +310,7 @@ $error-reporter-z-index: 1050;
 .#{$so-prefix}error-reporter-size-selector {
   display: flex !important;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-end;
   padding: 8px 12px !important;
   cursor: default !important; // Don't close dropdown when clicking this item
   pointer-events: none; // Make the item itself non-interactive
@@ -303,9 +321,9 @@ $error-reporter-z-index: 1050;
 
   .#{$so-prefix}btn-group {
     pointer-events: auto; // Re-enable pointer events for buttons
-    margin: 0 auto; // Center the button group
     display: flex;
-    justify-content: center;
+    justify-content: flex-end;
+    margin-left: auto;
 
     .#{$so-prefix}btn {
       min-width: 40px;
@@ -319,6 +337,46 @@ $error-reporter-z-index: 1050;
   }
 }
 
+// Position row selector
+.#{$so-prefix}error-reporter-position-row {
+  display: flex !important;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 12px !important;
+  cursor: default !important; // Don't close dropdown when clicking this item
+  pointer-events: none; // Make the item itself non-interactive
+
+  &:hover {
+    background: transparent !important; // Don't highlight on hover
+  }
+
+  .#{$so-prefix}error-reporter-position-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: #666;
+    text-transform: capitalize;
+    min-width: 50px;
+    pointer-events: none;
+  }
+
+  .#{$so-prefix}btn-group {
+    pointer-events: auto; // Re-enable pointer events for buttons
+    display: flex;
+    gap: 0;
+
+    .#{$so-prefix}btn {
+      min-width: 50px;
+      padding: 6px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 500;
+    }
+  }
+}
+
 // Error list
 .#{$so-prefix}error-reporter-list {
   list-style: none;
@@ -327,33 +385,42 @@ $error-reporter-z-index: 1050;
   max-height: 300px;
   overflow-y: auto;
   overflow-x: hidden; // Prevent horizontal overflow
-  transition: max-height 0.3s ease, opacity 0.3s ease;
+  transition:
+    max-height 0.3s ease,
+    opacity 0.3s ease;
   opacity: 1;
+
+  // Apply framework's custom scrollbar
+  @include custom-scrollbar(6px, rgba($so-grey-400, 0.6), transparent);
 }
 
 // Collapsed state - hide elements except toggle button
 .#{$so-prefix}error-reporter.#{$so-prefix}collapsed {
+  pointer-events: none; // Allow clicks through entire container
+
   .#{$so-prefix}error-reporter-content {
-    // Keep dimensions to maintain button position
+    width: auto;
+    min-width: auto;
     background: transparent;
     border-color: transparent;
     box-shadow: none;
-    overflow: visible; // Allow badge to overflow
+    overflow: visible;
+    pointer-events: none; // Allow clicks through transparent areas
   }
 
   .#{$so-prefix}error-reporter-header {
-    // Keep padding to maintain button position
     background: transparent;
     border-color: transparent;
-    overflow: visible; // Allow badge to overflow
+    overflow: visible;
+    pointer-events: none; // Allow clicks through padding area
+    // Keep normal padding so button stays in same position
   }
 
-  // Hide icon, title, and position dropdown using visibility
-  // This maintains their layout space so button stays in same position
+  // Hide icon, title, and position dropdown completely
   .#{$so-prefix}error-reporter-icon,
   .#{$so-prefix}error-reporter-title,
   .#{$so-prefix}error-reporter-position-dropdown {
-    visibility: hidden;
+    display: none;
   }
 
   // Hide error list completely
@@ -362,8 +429,8 @@ $error-reporter-z-index: 1050;
   }
 
   .#{$so-prefix}error-reporter-toggle {
-    position: relative; // For badge positioning
-    overflow: visible !important; // Allow badge to overflow, override inline styles
+    pointer-events: auto; // Keep button clickable
+    overflow: visible !important;
 
     .material-icons {
       transform: rotate(180deg);
@@ -385,17 +452,6 @@ $error-reporter-z-index: 1050;
   .#{$so-prefix}error-reporter-toggle {
     .material-icons {
       transform: rotate(0deg);
-    }
-  }
-}
-
-// Left positions: adjust badge position for mirrored layout
-.#{$so-prefix}error-reporter-top-left.#{$so-prefix}collapsed,
-.#{$so-prefix}error-reporter-bottom-left.#{$so-prefix}collapsed {
-  .#{$so-prefix}error-reporter-toggle {
-    .#{$so-prefix}error-reporter-count {
-      right: auto;
-      left: -6px;
     }
   }
 }
@@ -436,14 +492,16 @@ $error-reporter-z-index: 1050;
 .#{$so-prefix}error-reporter-icon,
 .#{$so-prefix}error-reporter-title,
 .#{$so-prefix}error-reporter-position-dropdown {
-  transition: opacity 0.3s ease, width 0.3s ease;
+  transition:
+    opacity 0.3s ease,
+    width 0.3s ease;
 }
 
 .#{$so-prefix}error-reporter-item {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  padding: 10px 16px;
+  padding: 8px 12px 8px 16px;
   margin: 0;
   border-bottom: 1px solid #eee;
   font-size: 13px;
@@ -465,7 +523,7 @@ $error-reporter-z-index: 1050;
 
     // Vertical bar before the entry
     &::before {
-      content: '';
+      content: "";
       position: absolute;
       left: 8px;
       top: 50%;
@@ -495,7 +553,6 @@ $error-reporter-z-index: 1050;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   display: block;
-  margin-bottom: 4px;
 }
 
 .#{$so-prefix}error-message {
@@ -751,6 +808,30 @@ $error-reporter-z-index: 1050;
     .#{$so-prefix}error-message-list li {
       color: #eee;
     }
+
+    // Position label styling for dark mode
+    .#{$so-prefix}error-reporter-position-label {
+      color: #aaa;
+    }
+
+    // Toggle button styling for dark mode
+    .#{$so-prefix}error-reporter-toggle {
+      background: rgba($error-reporter-border, 0.9);
+      border-color: rgba($error-reporter-border, 0.9);
+      color: #fff;
+
+      &:hover {
+        background: $error-reporter-border;
+        border-color: $error-reporter-border;
+      }
+    }
+
+    // Count badge styling for dark mode
+    .#{$so-prefix}error-reporter-count {
+      background: #fff;
+      color: $error-reporter-border;
+      border: 2px solid #2d2d2d;
+    }
   }
 
   // Bottom positions: adjust top border color for dark theme
@@ -810,6 +891,30 @@ $error-reporter-z-index: 1050;
 
       .#{$so-prefix}error-message-list li {
         color: #eee;
+      }
+
+      // Position label styling for dark mode
+      .#{$so-prefix}error-reporter-position-label {
+        color: #aaa;
+      }
+
+      // Toggle button styling for dark mode
+      .#{$so-prefix}error-reporter-toggle {
+        background: rgba($error-reporter-border, 0.9);
+        border-color: rgba($error-reporter-border, 0.9);
+        color: #fff;
+
+        &:hover {
+          background: $error-reporter-border;
+          border-color: $error-reporter-border;
+        }
+      }
+
+      // Count badge styling for dark mode
+      .#{$so-prefix}error-reporter-count {
+        background: #fff;
+        color: $error-reporter-border;
+        border: 2px solid #2d2d2d;
       }
     }
 
