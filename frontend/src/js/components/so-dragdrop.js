@@ -505,8 +505,14 @@ class SODragDrop extends SOComponent {
     // Append to body temporarily
     document.body.appendChild(ghost);
 
-    // Set as drag image - center it on the cursor
-    e.dataTransfer.setDragImage(ghost, ghost.offsetWidth / 2, ghost.offsetHeight / 2);
+    // Calculate offset from cursor to element's top-left corner
+    // This preserves the exact grab position instead of centering
+    const rect = target.getBoundingClientRect();
+    const offsetX = e.clientX - rect.left;
+    const offsetY = e.clientY - rect.top;
+
+    // Set as drag image with the actual grab offset
+    e.dataTransfer.setDragImage(ghost, offsetX, offsetY);
 
     // Remove ghost after a brief delay (browser has captured it)
     setTimeout(() => {
