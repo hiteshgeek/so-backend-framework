@@ -24,6 +24,7 @@ class SODragDrop extends SOComponent {
     chosenClass: 'so-chosen', // Class for chosen element
     dropPlaceholder: true,    // Show placeholder during drag
     dragRotation: true,       // Apply rotation to drag ghost (true = inclined, false = straight)
+    liveReorder: false,       // Live reorder while dragging (true) or only on drop (false)
     accept: null,             // Function(dragged, target) or selector to accept drops
     storage: null,            // 'localStorage' | 'sessionStorage' | null
     storageKey: null,         // Key for storage
@@ -100,6 +101,11 @@ class SODragDrop extends SOComponent {
     // disabled
     if (el.hasAttribute('data-so-disabled')) {
       this.options.disabled = el.getAttribute('data-so-disabled') !== 'false';
+    }
+
+    // liveReorder
+    if (el.hasAttribute('data-so-live-reorder')) {
+      this.options.liveReorder = el.getAttribute('data-so-live-reorder') !== 'false';
     }
   }
 
@@ -292,8 +298,36 @@ class SODragDrop extends SOComponent {
 
     this._dragOverElement = target;
 
-    // Add drag-over indicator (visual feedback only, no DOM manipulation)
+    // Add drag-over indicator
     target.classList.add(SixOrbit.cls('drag-over'));
+
+    // Live reorder: move element while dragging
+    if (this.options.liveReorder) {
+      const draggedIndex = this._getElementIndex(this._draggedEl);
+      const targetIndex = this._getElementIndex(target);
+
+      if (draggedIndex === targetIndex) return;
+
+      // Perform DOM manipulation based on direction
+      if (draggedIndex < targetIndex) {
+        // Moving left to right: insert AFTER target
+        this.element.insertBefore(this._draggedEl, target.nextElementSibling);
+      } else {
+        // Moving right to left: insert BEFORE target
+        this.element.insertBefore(this._draggedEl, target);
+      }
+
+      // Update indices immediately for next dragover
+      this._updateIndices();
+
+      // Emit move event
+      this.emit('dragdrop:move', {
+        element: this._draggedEl,
+        target: target,
+        fromIndex: draggedIndex,
+        toIndex: this._getElementIndex(this._draggedEl)
+      });
+    }
   }
 
   /**
@@ -352,17 +386,8 @@ class SODragDrop extends SOComponent {
     e.stopPropagation();
     e.preventDefault();
 
-    console.log('🎯 DROP EVENT', {
-      draggedEl: this._draggedEl,
-      target: target,
-      draggedIndex: this._draggedIndex,
-      targetDataIndex: target.dataset.dragIndex,
-      isSameElement: target === this._draggedEl
-    });
-
     // Check if drop is accepted
     if (!this._canAcceptDrop(this._draggedEl, target)) {
-      console.warn('❌ Drop not accepted');
       return;
     }
 
@@ -373,53 +398,36 @@ class SODragDrop extends SOComponent {
     }
 
     const oldIndex = this._draggedIndex;
-    const targetIndex = parseInt(target.dataset.dragIndex);
 
-    console.log('📊 INDICES', {
-      oldIndex: oldIndex,
-      targetIndex: targetIndex,
-      direction: oldIndex < targetIndex ? 'LEFT → RIGHT' : 'RIGHT → LEFT'
-    });
+    // For liveReorder, DOM was already manipulated during dragover
+    // For non-liveReorder, do DOM manipulation now
+    if (!this.options.liveReorder) {
+      const targetIndex = parseInt(target.dataset.dragIndex);
 
-    // Skip if dropping on itself
-    if (oldIndex === targetIndex || target === this._draggedEl) {
-      console.log('⏭️ Skipping - same element or index');
-      return;
+      // Skip if dropping on itself
+      if (oldIndex === targetIndex || target === this._draggedEl) {
+        return;
+      }
+
+      // Perform DOM manipulation based on direction
+      if (oldIndex < targetIndex) {
+        // Moving left to right: insert AFTER target
+        this.element.insertBefore(this._draggedEl, target.nextElementSibling);
+      } else {
+        // Moving right to left: insert BEFORE target
+        this.element.insertBefore(this._draggedEl, target);
+      }
+
+      // Update indices after DOM change
+      this._updateIndices();
     }
 
-    // Log current order BEFORE move
-    const beforeOrder = Array.from(this.element.children).map((el, i) => ({
-      index: i,
-      dragIndex: el.dataset.dragIndex,
-      text: el.textContent.substring(0, 20)
-    }));
-    console.log('📋 BEFORE move:', beforeOrder);
-
-    // Perform DOM manipulation based on direction
-    // The dragged element should take the target's position
-    if (oldIndex < targetIndex) {
-      // Moving left to right: insert AFTER target
-      console.log('➡️ Moving LEFT→RIGHT: inserting AFTER target');
-      this.element.insertBefore(this._draggedEl, target.nextElementSibling);
-    } else {
-      // Moving right to left: insert BEFORE target
-      console.log('⬅️ Moving RIGHT→LEFT: inserting BEFORE target');
-      this.element.insertBefore(this._draggedEl, target);
-    }
-
-    // Log current order AFTER move
-    const afterOrder = Array.from(this.element.children).map((el, i) => ({
-      index: i,
-      dragIndex: el.dataset.dragIndex,
-      text: el.textContent.substring(0, 20)
-    }));
-    console.log('📋 AFTER move:', afterOrder);
-
-    // Update indices after DOM change
-    this._updateIndices();
     const newIndex = this._getElementIndex(this._draggedEl);
 
-    console.log('✅ FINAL newIndex:', newIndex);
+    // Skip if no change occurred
+    if (oldIndex === newIndex) {
+      return;
+    }
 
     this._saveOrder();
 

@@ -1340,7 +1340,7 @@ echo $card->render();', 'php') ?>
             </div>
             <div class="so-card-body">
                 <p class="so-text-muted so-mb-4">
-                    Drag cards by their headers to reorder. The order is automatically saved to localStorage and restored on page reload.
+                    Drag cards by their headers to reorder. <strong>Live reorder enabled</strong> - cards move as you drag over them. The order is automatically saved to localStorage.
                 </p>
 
                 <div id="draggable-cards-demo" class="so-grid so-grid-cols-3 so-gap-4">
@@ -1353,14 +1353,15 @@ echo $card->render();', 'php') ?>
                             ->draggable([
                                 'handle' => '.so-card-header',
                                 'storage' => 'localStorage',
-                                'storageKey' => 'demo-cards-order'
+                                'storageKey' => 'demo-cards-order',
+                                'liveReorder' => true
                             ])
                             ->render();
                     }
                     ?>
                 </div>
 
-                <?= so_code_block('// Enable dragging on cards
+                <?= so_code_block('// Enable dragging on cards with live reorder
 $card = UiEngine::card()
     ->id(\'my-card\')
     ->header(\'Draggable Card\')
@@ -1368,7 +1369,8 @@ $card = UiEngine::card()
     ->draggable([
         \'handle\' => \'.so-card-header\',  // Only drag by header
         \'storage\' => \'localStorage\',     // Save order
-        \'storageKey\' => \'my-cards-order\'
+        \'storageKey\' => \'my-cards-order\',
+        \'liveReorder\' => true            // Reorder while dragging
     ]);
 
 echo $card->render();', 'php') ?>
@@ -1382,7 +1384,7 @@ echo $card->render();', 'php') ?>
             </div>
             <div class="so-card-body">
                 <p class="so-text-muted so-mb-4">
-                    Cards with both actions and drag-drop functionality. Drag to reorder, use actions to interact.
+                    Cards with both actions and drag-drop functionality. <strong>Drop-only reorder</strong> - cards move only when dropped on target. Use actions to interact.
                 </p>
 
                 <div id="combined-demo" class="so-grid so-grid-cols-2 so-gap-4">
@@ -1398,14 +1400,15 @@ echo $card->render();', 'php') ?>
                             ->draggable([
                                 'handle' => '.so-card-header',
                                 'storage' => 'localStorage',
-                                'storageKey' => 'combined-cards-order'
+                                'storageKey' => 'combined-cards-order',
+                                'liveReorder' => false
                             ])
                             ->render();
                     }
                     ?>
                 </div>
 
-                <?= so_code_block('// Create cards with both actions and draggable
+                <?= so_code_block('// Create cards with both actions and draggable (drop-only reorder)
 $card = UiEngine::card()
     ->id(\'widget-1\')
     ->header(\'Dashboard Widget\')
@@ -1416,7 +1419,8 @@ $card = UiEngine::card()
     ->draggable([
         \'handle\' => \'.so-card-header\',
         \'storage\' => \'localStorage\',
-        \'storageKey\' => \'dashboard-widgets-order\'
+        \'storageKey\' => \'dashboard-widgets-order\',
+        \'liveReorder\' => false           // Only reorder on drop
     ]);
 
 echo $card->render();', 'php') ?>
@@ -1519,9 +1523,10 @@ echo $card->render();', 'php') ?>
                             items: '.so-card',
                             handle: '.so-card-header',
                             storage: 'localStorage',
-                            storageKey: 'demo-cards-order'
+                            storageKey: 'demo-cards-order',
+                            liveReorder: true
                         });
-                        console.log('✅ Draggable demo initialized');
+                        console.log('✅ Draggable demo initialized (liveReorder: true)');
 
                         // Debug info
                         const cards = draggableDemo.querySelectorAll('.so-card');
@@ -1543,9 +1548,10 @@ echo $card->render();', 'php') ?>
                             items: '.so-card',
                             handle: '.so-card-header',
                             storage: 'localStorage',
-                            storageKey: 'combined-cards-order'
+                            storageKey: 'combined-cards-order',
+                            liveReorder: false
                         });
-                        console.log('✅ Combined demo initialized');
+                        console.log('✅ Combined demo initialized (liveReorder: false)');
                         console.log(`   Found ${combinedDemo.querySelectorAll('.so-card').length} cards`);
                     } catch (error) {
                         console.error('❌ Failed to initialize combined demo:', error);
