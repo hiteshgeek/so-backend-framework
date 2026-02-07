@@ -44,6 +44,9 @@ $so-theme-light: (
   'accent-info': #17a2b8,
   'accent-info-hover': #138496,
   'accent-info-light': #e0f7fa,
+  'accent-secondary': #6c757d,
+  'accent-secondary-hover': #5a6268,
+  'accent-secondary-light': #f8f9fa,
 
   // Shadows (natural downward offset)
   'shadow': 0 2px 6px 0 rgba(0, 0, 0, 0.15),
@@ -139,6 +142,9 @@ $so-theme-dark: (
   'accent-info': #00cfe8,
   'accent-info-hover': #33d8ec,
   'accent-info-light': rgba(0, 207, 232, 0.15),
+  'accent-secondary': #8f96a3,
+  'accent-secondary-hover': #a3a9b5,
+  'accent-secondary-light': rgba(143, 150, 163, 0.15),
 
   // Shadows (more prominent for dark backgrounds)
   'shadow': 0 2px 6px 0 rgba(0, 0, 0, 0.25),

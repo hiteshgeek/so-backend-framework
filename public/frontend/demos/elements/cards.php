@@ -464,6 +464,187 @@ require_once '../includes/navbar.php';
             </div>
         </div>
 
+        <!-- Header/Footer Border Control -->
+        <div class="so-card so-mb-4">
+            <div class="so-card-header">
+                <h3 class="so-card-title">Header/Footer Border Control</h3>
+            </div>
+            <div class="so-card-body">
+                <p class="so-text-muted so-mb-4">Control the visibility of header and footer borders with modifier classes.</p>
+                <div class="so-grid so-grid-cols-3 so-grid-cols-md-2 so-grid-cols-sm-1 so-gap-4">
+                    <div class="so-card">
+                        <div class="so-card-header">
+                            <h3 class="so-card-title">Default</h3>
+                        </div>
+                        <div class="so-card-body">
+                            <p>Standard card with header border visible.</p>
+                        </div>
+                        <div class="so-card-footer">
+                            <span class="so-text-muted so-fs-sm">Footer with border</span>
+                        </div>
+                    </div>
+
+                    <div class="so-card so-card-header-borderless">
+                        <div class="so-card-header">
+                            <h3 class="so-card-title">Header Borderless</h3>
+                        </div>
+                        <div class="so-card-body">
+                            <p>Card with header border removed using <code>so-card-header-borderless</code>.</p>
+                        </div>
+                        <div class="so-card-footer">
+                            <span class="so-text-muted so-fs-sm">Footer with border</span>
+                        </div>
+                    </div>
+
+                    <div class="so-card so-card-footer-borderless">
+                        <div class="so-card-header">
+                            <h3 class="so-card-title">Footer Borderless</h3>
+                        </div>
+                        <div class="so-card-body">
+                            <p>Card with footer border removed using <code>so-card-footer-borderless</code>.</p>
+                        </div>
+                        <div class="so-card-footer">
+                            <span class="so-text-muted so-fs-sm">Footer without border</span>
+                        </div>
+                    </div>
+
+                    <div class="so-card so-card-borderless-sections">
+                        <div class="so-card-header">
+                            <h3 class="so-card-title">Both Borderless</h3>
+                        </div>
+                        <div class="so-card-body">
+                            <p>Card with both header and footer borders removed using <code>so-card-borderless-sections</code>.</p>
+                        </div>
+                        <div class="so-card-footer">
+                            <span class="so-text-muted so-fs-sm">Clean look</span>
+                        </div>
+                    </div>
+                </div>
+                <?= so_code_block('<!-- Remove header border -->
+<div class="so-card so-card-header-borderless">
+    <div class="so-card-header">Header without border</div>
+    <div class="so-card-body">Content</div>
+</div>
+
+<!-- Remove footer border -->
+<div class="so-card so-card-footer-borderless">
+    <div class="so-card-body">Content</div>
+    <div class="so-card-footer">Footer without border</div>
+</div>
+
+<!-- Remove both header and footer borders -->
+<div class="so-card so-card-borderless-sections">
+    <div class="so-card-header">Header</div>
+    <div class="so-card-body">Content</div>
+    <div class="so-card-footer">Footer</div>
+</div>', 'html') ?>
+            </div>
+        </div>
+
+        <!-- Full Card Color Variants -->
+        <div class="so-card so-mb-4">
+            <div class="so-card-header">
+                <h3 class="so-card-title">Full Card Color Variants</h3>
+            </div>
+            <div class="so-card-body">
+                <p class="so-text-muted so-mb-4">Apply solid background colors to the entire card. Perfect for alerts, highlights, or visual categorization.</p>
+
+                <h5 class="so-mb-3">Solid Colors</h5>
+                <div class="so-grid so-grid-cols-3 so-grid-cols-md-2 so-grid-cols-sm-1 so-gap-4 so-mb-4">
+                    <div class="so-card so-card-primary">
+                        <div class="so-card-header">
+                            <h3 class="so-card-title">Primary card title</h3>
+                        </div>
+                        <div class="so-card-body">
+                            <p>Some quick example text to build on the card title and make up.</p>
+                        </div>
+                    </div>
+
+                    <div class="so-card so-card-secondary">
+                        <div class="so-card-header">
+                            <h3 class="so-card-title">Secondary card title</h3>
+                        </div>
+                        <div class="so-card-body">
+                            <p>Some quick example text to build on the card title and make up.</p>
+                        </div>
+                    </div>
+
+                    <div class="so-card so-card-success">
+                        <div class="so-card-header">
+                            <h3 class="so-card-title">Success card title</h3>
+                        </div>
+                        <div class="so-card-body">
+                            <p>Some quick example text to build on the card title and make up.</p>
+                        </div>
+                    </div>
+
+                    <div class="so-card so-card-danger">
+                        <div class="so-card-header">
+                            <h3 class="so-card-title">Danger card title</h3>
+                        </div>
+                        <div class="so-card-body">
+                            <p>Some quick example text to build on the card title and make up.</p>
+                        </div>
+                    </div>
+
+                    <div class="so-card so-card-warning">
+                        <div class="so-card-header">
+                            <h3 class="so-card-title">Warning card title</h3>
+                        </div>
+                        <div class="so-card-body">
+                            <p>Some quick example text to build on the card title and make up.</p>
+                        </div>
+                    </div>
+
+                    <div class="so-card so-card-info">
+                        <div class="so-card-header">
+                            <h3 class="so-card-title">Info card title</h3>
+                        </div>
+                        <div class="so-card-body">
+                            <p>Some quick example text to build on the card title and make up.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <h5 class="so-mb-3">Light & Dark</h5>
+                <div class="so-grid so-grid-cols-2 so-grid-cols-sm-1 so-gap-4 so-mb-4">
+                    <div class="so-card so-card-light">
+                        <div class="so-card-header">
+                            <h3 class="so-card-title">Light card title</h3>
+                        </div>
+                        <div class="so-card-body">
+                            <p>Some quick example text to build on the card title and make up.</p>
+                        </div>
+                    </div>
+
+                    <div class="so-card so-card-dark">
+                        <div class="so-card-header">
+                            <h3 class="so-card-title">Dark card title</h3>
+                        </div>
+                        <div class="so-card-body">
+                            <p>Some quick example text to build on the card title and make up.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <?= so_code_block('<!-- Full card color variants -->
+<div class="so-card so-card-primary">
+    <div class="so-card-header">
+        <h3 class="so-card-title">Primary card</h3>
+    </div>
+    <div class="so-card-body">
+        <p>Card content here.</p>
+    </div>
+</div>
+
+<!-- Available classes:
+     so-card-primary, so-card-secondary,
+     so-card-success, so-card-danger,
+     so-card-warning, so-card-info,
+     so-card-light, so-card-dark -->', 'html') ?>
+            </div>
+        </div>
+
         <!-- Spacing Modes -->
         <div class="so-card so-mb-4">
             <div class="so-card-header">

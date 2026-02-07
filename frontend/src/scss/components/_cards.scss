@@ -157,6 +157,107 @@
   color: $so-grey-900;
 }
 
+.#{$so-prefix}card-info {
+  background: css-var("accent-info");
+  color: $so-white;
+
+  .#{$so-prefix}card-title,
+  .#{$so-prefix}card-subtitle {
+    color: $so-white;
+  }
+}
+
+.#{$so-prefix}card-secondary {
+  background: css-var("accent-secondary");
+  color: $so-white;
+
+  .#{$so-prefix}card-title,
+  .#{$so-prefix}card-subtitle {
+    color: $so-white;
+  }
+}
+
+.#{$so-prefix}card-light {
+  background: $so-grey-100;
+  color: $so-grey-800;
+
+  .#{$so-prefix}card-title {
+    color: $so-grey-900;
+  }
+
+  .#{$so-prefix}card-subtitle {
+    color: $so-grey-600;
+  }
+}
+
+.#{$so-prefix}card-dark {
+  background: $so-grey-900;
+  color: $so-white;
+
+  .#{$so-prefix}card-title,
+  .#{$so-prefix}card-subtitle {
+    color: $so-white;
+  }
+}
+
+// Full card colors - handle header/footer borders
+.#{$so-prefix}card-primary,
+.#{$so-prefix}card-success,
+.#{$so-prefix}card-danger,
+.#{$so-prefix}card-warning,
+.#{$so-prefix}card-info,
+.#{$so-prefix}card-secondary,
+.#{$so-prefix}card-light,
+.#{$so-prefix}card-dark {
+  .#{$so-prefix}card-header {
+    border-bottom-color: rgba(255, 255, 255, 0.2);
+  }
+
+  .#{$so-prefix}card-footer {
+    border-top-color: rgba(255, 255, 255, 0.2);
+  }
+}
+
+// Light card uses dark borders
+.#{$so-prefix}card-light {
+  .#{$so-prefix}card-header {
+    border-bottom-color: rgba(0, 0, 0, 0.1);
+  }
+
+  .#{$so-prefix}card-footer {
+    border-top-color: rgba(0, 0, 0, 0.1);
+  }
+}
+
+// ============================================
+// HEADER/FOOTER BORDER CONTROL
+// ============================================
+
+// Remove header border
+.#{$so-prefix}card-header-borderless {
+  > .#{$so-prefix}card-header {
+    border-bottom: none;
+  }
+}
+
+// Remove footer border
+.#{$so-prefix}card-footer-borderless {
+  > .#{$so-prefix}card-footer {
+    border-top: none;
+  }
+}
+
+// Remove both header and footer borders
+.#{$so-prefix}card-borderless-sections {
+  > .#{$so-prefix}card-header {
+    border-bottom: none;
+  }
+
+  > .#{$so-prefix}card-footer {
+    border-top: none;
+  }
+}
+
 // ============================================
 // CARD WITH IMAGE
 // ============================================
