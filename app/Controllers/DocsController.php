@@ -259,6 +259,7 @@ class DocsController
             'api/media-api' => 'api/media-api.md',
             'uiengine/html' => 'UIENGINE-HTML.md',
             'uiengine/image' => 'UIENGINE-IMAGE.md',
+            'uiengine/card' => 'UIENGINE-CARD.md',
         ];
 
         $path = $folder . '/' . $file;

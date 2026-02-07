@@ -313,10 +313,13 @@ function renderSection($icon, $title, $cards, $gridClass = 'docs-grid')
                 renderCard('#', 'tune-vertical', 'Slider', 'Range slider input', 'future'),
             ]) ?>
 
-            <?= renderSection('eye', 'Display Elements (Coming Soon)', [
+            <?= renderSection('eye', 'Display Elements', [
+                renderCard('/docs/uiengine/card', 'card', 'Card', 'Card containers with header/body/footer, actions, and drag-drop support.', ['new', 'display', 'dual']),
+            ]) ?>
+
+            <?= renderSection('eye-off', 'Display Elements (Coming Soon)', [
                 renderCard('#', 'alert', 'Alert', 'Alert messages with variants', 'future'),
                 renderCard('#', 'label', 'Badge', 'Badge labels with colors', 'future'),
-                renderCard('#', 'card', 'Card', 'Card containers with header/body/footer', 'future'),
                 renderCard('#', 'window-maximize', 'Modal', 'Modal dialogs', 'future'),
                 renderCard('#', 'tab', 'Tabs', 'Tab navigation panels', 'future'),
                 renderCard('#', 'accordion', 'Accordion', 'Collapsible accordion panels', 'future'),

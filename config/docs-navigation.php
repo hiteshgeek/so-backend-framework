@@ -144,4 +144,7 @@ return [
     // Base Elements
     ['key' => 'uiengine-html', 'title' => 'Html Element', 'url' => '/docs/uiengine/html'],
     ['key' => 'uiengine-image', 'title' => 'Image Element', 'url' => '/docs/uiengine/image'],
+
+    // Display Elements
+    ['key' => 'uiengine-card', 'title' => 'Card Element', 'url' => '/docs/uiengine/card'],
 ];
