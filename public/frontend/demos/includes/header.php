@@ -35,6 +35,18 @@ $includeSearch = $includeSearch ?? true;
             } catch (e) {
                 document.documentElement.classList.add('sidebar-ready', 'sidebar-collapsed');
             }
+            // Disable transitions on initial load, re-enable after paint
+            document.addEventListener('DOMContentLoaded', function() {
+                var sidebar = document.querySelector('.so-sidebar');
+                if (sidebar) {
+                    sidebar.classList.add('no-transition');
+                    requestAnimationFrame(function() {
+                        requestAnimationFrame(function() {
+                            sidebar.classList.remove('no-transition');
+                        });
+                    });
+                }
+            });
         })();
     </script>
 

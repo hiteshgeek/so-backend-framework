@@ -133,41 +133,16 @@ html.sidebar-pinned .#{$so-prefix}main-content {
   white-space: nowrap;
 }
 
-// Toggle button - Circular checkbox style
+// Toggle button - Uses framework radio component
 .#{$so-prefix}sidebar-toggle {
-  width: 20px;
-  height: 20px;
-  min-width: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: radius("full");
-  cursor: pointer;
-  background: transparent;
-  border: 2px solid $so-grey-400;
-  transition: all $so-transition-base;
+  // Override radio defaults for sidebar header alignment
+  min-height: auto;
+  gap: 0;
   flex-shrink: 0;
-  padding: 0;
+  margin-top: 0;
 
-  &:hover {
-    border-color: $so-primary;
-  }
-
-  .toggle-circle {
-    width: 10px;
-    height: 10px;
-    border-radius: radius("full");
-    background: transparent;
-    transition: all $so-transition-base;
-  }
-}
-
-// Checked state - when sidebar is pinned
-.#{$so-prefix}sidebar.pinned .#{$so-prefix}sidebar-toggle {
-  border-color: $so-primary;
-
-  .toggle-circle {
-    background: $so-primary;
+  .#{$so-prefix}radio-circle {
+    margin-top: 0;
   }
 }
 
@@ -1340,12 +1315,6 @@ body.sidebar-collapsed .#{$so-prefix}main-content {
   width: css-var("sidebar-width");
 }
 
-.#{$so-prefix}sidebar.pinned
-  .#{$so-prefix}sidebar-toggle
-  .material-icons::before {
-  content: "push_pin";
-}
-
 // ============================================
 // SIDEBAR DARK MODE (Independent of global theme)
 // ============================================
@@ -1401,20 +1370,23 @@ body.sidebar-collapsed .#{$so-prefix}main-content {
   }
 }
 
-// Toggle button styles
+// Toggle button styles - uses framework radio with dark overrides
 .#{$so-prefix}sidebar.sidebar-dark .#{$so-prefix}sidebar-toggle {
-  border-color: #474d64;
+  .#{$so-prefix}radio-circle {
+    border-color: #474d64;
+    background: transparent;
 
-  &:hover {
+    &::after {
+      background: #8ab4f8;
+    }
+  }
+
+  &:hover .#{$so-prefix}radio-circle {
     border-color: #8ab4f8;
   }
-}
 
-.#{$so-prefix}sidebar.sidebar-dark.pinned .#{$so-prefix}sidebar-toggle {
-  border-color: #8ab4f8;
-
-  .toggle-circle {
-    background: #8ab4f8;
+  input:checked + .#{$so-prefix}radio-circle {
+    border-color: #8ab4f8;
   }
 }
 

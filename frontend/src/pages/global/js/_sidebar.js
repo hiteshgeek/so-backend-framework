@@ -265,11 +265,19 @@ class SidebarController {
       this._updateBodyClass();
     }, 150));
 
-    // Toggle button (pin/unpin)
-    if (this._toggle) {
-      this._toggle.addEventListener('click', (e) => {
-        e.preventDefault();
+    // Toggle radio (pin/unpin) - uses radio component with deselect support
+    this._toggleInput = this.element.querySelector('.so-sidebar-toggle-input');
+    if (this._toggleInput) {
+      // Track previous state for deselect behavior
+      this._toggleInput.addEventListener('click', (e) => {
         e.stopPropagation();
+        // If already checked (pinned), deselect it
+        if (this._toggleInput.dataset.wasChecked === 'true') {
+          this._toggleInput.checked = false;
+          this._toggleInput.dataset.wasChecked = 'false';
+        } else {
+          this._toggleInput.dataset.wasChecked = 'true';
+        }
         this.togglePinned();
       });
     }
@@ -347,6 +355,12 @@ class SidebarController {
         this.element.classList.remove('so-collapsed');
         this.element.classList.add('pinned');
         document.body.classList.remove('sidebar-collapsed');
+      }
+
+      // Sync radio state
+      if (this._toggleInput) {
+        this._toggleInput.checked = !this._isCollapsed;
+        this._toggleInput.dataset.wasChecked = (!this._isCollapsed).toString();
       }
     });
 
@@ -700,20 +714,35 @@ class SidebarController {
   _restoreState() {
     if (this._isMobile) return;
 
+    // Get toggle input reference early for state sync
+    this._toggleInput = this.element.querySelector('.so-sidebar-toggle-input');
+
     try {
       const state = localStorage.getItem(this.options.storageKey);
       if (state === 'pinned') {
         this._isCollapsed = false;
         this.element.classList.remove('so-collapsed');
         this.element.classList.add('pinned');
+        if (this._toggleInput) {
+          this._toggleInput.checked = true;
+          this._toggleInput.dataset.wasChecked = 'true';
+        }
       } else {
         this._isCollapsed = true;
         this.element.classList.add('so-collapsed');
+        if (this._toggleInput) {
+          this._toggleInput.checked = false;
+          this._toggleInput.dataset.wasChecked = 'false';
+        }
       }
     } catch (e) {
       // Storage not available
       this._isCollapsed = true;
       this.element.classList.add('so-collapsed');
+      if (this._toggleInput) {
+        this._toggleInput.checked = false;
+        this._toggleInput.dataset.wasChecked = 'false';
+      }
     }
   }
 }

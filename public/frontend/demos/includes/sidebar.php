@@ -53,9 +53,10 @@ function render_menu_items($items, $currentPagePath, $depth = 0) {
             $isActive = check_children_active($item['children'], $currentPagePath) || $isActive;
         }
 
-        $itemClass = 'so-sidebar-item';
+        $prefix = SO_PREFIX;
+        $itemClass = "{$prefix}-sidebar-item";
         if ($hasChildren) $itemClass .= ' has-children';
-        if ($isActive && $hasChildren) $itemClass .= ' open';
+        if ($isActive && $hasChildren) $itemClass .= " {$prefix}-open";
         if ($isCurrent) $itemClass .= ' current';
 
         $html .= '<li class="' . $itemClass . '">';
@@ -102,9 +103,10 @@ function render_menu_items($items, $currentPagePath, $depth = 0) {
         <div class="so-sidebar-brand-info">
             <div class="so-sidebar-brand-name"><?= DEMO_COMPANY_NAME ?></div>
         </div>
-        <button class="so-sidebar-toggle" title="Pin sidebar">
-            <span class="toggle-circle"></span>
-        </button>
+        <label class="so-radio so-radio-primary so-sidebar-toggle" title="Pin sidebar">
+            <input type="radio" name="sidebar-pin" class="so-sidebar-toggle-input">
+            <span class="so-radio-circle"></span>
+        </label>
     </div>
 
     <div class="so-sidebar-scroll">
