@@ -50,6 +50,10 @@
   padding: spacing("4");
   min-width: 0; // Allow content to shrink and not overflow
   max-width: 100%;
+  max-height: 5000px; // Allow animation to work
+  opacity: 1;
+  overflow: visible;
+  transition: max-height 0.3s ease, padding 0.3s ease, opacity 0.2s ease;
 }
 
 .#{$so-prefix}card-footer {
@@ -62,6 +66,10 @@
   background: transparent;
   border-radius: 0 0 radius("lg") radius("lg");
   margin-top: auto; // Ensure footer sticks to bottom
+  max-height: 5000px; // Allow animation to work
+  opacity: 1;
+  overflow: visible;
+  transition: max-height 0.3s ease, padding 0.3s ease, opacity 0.2s ease;
 
   &:first-child {
     border-top: none;
@@ -865,5 +873,209 @@
   }
   to {
     transform: rotate(360deg);
+  }
+}
+
+// ============================================
+// CARD ACTION BUTTONS (HEADER)
+// ============================================
+
+.#{$so-prefix}card-header-actions {
+  display: flex;
+  align-items: center;
+  gap: spacing("1");
+  margin-left: auto; // Push to right side of header
+}
+
+.#{$so-prefix}card-action-btn {
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background $so-transition-fast, transform $so-transition-fast;
+
+  .material-icons {
+    font-size: 18px;
+  }
+
+  &:hover {
+    background: alpha($so-grey-900, 0.05);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+
+  // Dark mode
+  [data-theme="dark"] &,
+  [data-theme="system"] & {
+    &:hover {
+      background: alpha($so-white, 0.1);
+    }
+  }
+}
+
+// ============================================
+// COLLAPSED STATE
+// ============================================
+
+.#{$so-prefix}card-collapsed {
+  .#{$so-prefix}card-body {
+    max-height: 0 !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height 0.3s ease, padding 0.3s ease, opacity 0.2s ease;
+  }
+
+  .#{$so-prefix}card-footer {
+    max-height: 0 !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height 0.3s ease, padding 0.3s ease, opacity 0.2s ease;
+  }
+}
+
+// ============================================
+// FULLSCREEN STATE
+// ============================================
+
+.#{$so-prefix}card-fullscreen {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
+  margin: 0 !important;
+  z-index: 9999;
+  border-radius: 0;
+  display: flex;
+  flex-direction: column;
+
+  .#{$so-prefix}card-body {
+    flex: 1;
+    overflow: auto;
+  }
+}
+
+// ============================================
+// DRAGGABLE & DRAG STATES
+// ============================================
+
+// Drag handle
+.#{$so-prefix}drag-handle {
+  cursor: move;
+  user-select: none;
+}
+
+// Draggable cards
+.#{$so-prefix}card[draggable="true"] {
+  .#{$so-prefix}card-header {
+    cursor: move;
+    user-select: none;
+  }
+}
+
+// Currently being dragged (original card in place - no rotation, no shadow)
+.#{$so-prefix}card.#{$so-prefix}dragging,
+.#{$so-prefix}card.#{$so-prefix}so-dragging {
+  opacity: 0.4; // More transparent since it's staying in place
+  box-shadow: none !important; // Remove shadow from original card
+  transition: opacity 0.2s ease;
+  cursor: grabbing !important;
+}
+
+// Ghost/placeholder element
+.#{$so-prefix}ghost,
+.#{$so-prefix}so-ghost {
+  opacity: 0.3;
+  background: css-var("grey-100");
+  border: 2px dashed css-var("border-color");
+
+  * {
+    visibility: hidden;
+  }
+
+  // Dark mode
+  [data-theme="dark"] &,
+  [data-theme="system"] & {
+    background: alpha($so-white, 0.05);
+  }
+}
+
+// Chosen element (when picked up) - no shadow since it stays in place
+.#{$so-prefix}chosen,
+.#{$so-prefix}so-chosen {
+  cursor: grabbing;
+}
+
+// Drag over state (when hovering over drop target)
+.#{$so-prefix}drag-over,
+.#{$so-prefix}so-drag-over {
+  position: relative;
+  border: 2px dashed css-var("accent-primary") !important;
+  box-shadow: 0 0 12px alpha(css-var("accent-primary"), 0.3) !important;
+  background: alpha(css-var("accent-primary"), 0.05);
+  transition: all 0.2s ease;
+}
+
+// Not allowed drop zone
+.#{$so-prefix}drag-not-allowed {
+  cursor: not-allowed !important;
+  opacity: 0.5;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 10px,
+      alpha($so-danger-500, 0.1) 10px,
+      alpha($so-danger-500, 0.1) 20px
+    );
+    pointer-events: none;
+    z-index: 10;
+  }
+}
+
+// ============================================
+// ACCESSIBILITY
+// ============================================
+
+.#{$so-prefix}card-action-btn {
+  &:focus-visible {
+    outline: 2px solid css-var("accent-primary");
+    outline-offset: 2px;
+    border-radius: radius("sm");
+  }
+}
+
+// Reduce motion for users who prefer it
+@media (prefers-reduced-motion: reduce) {
+  .#{$so-prefix}card-collapsed .#{$so-prefix}card-body {
+    transition: none;
+  }
+
+  .#{$so-prefix}card-fullscreen {
+    transition: none;
+  }
+
+  .#{$so-prefix}dragging {
+    transition: none;
   }
 }

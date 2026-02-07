@@ -2,6 +2,9 @@
 /**
  * SixOrbit UI Demo - Cards
  */
+
+use Core\UiEngine\UiEngine;
+
 $pageTitle = 'Cards';
 $pageDescription = 'Card components for content containers';
 
@@ -1263,6 +1266,294 @@ require_once '../includes/navbar.php';
 </div>', 'html') ?>
             </div>
         </div>
+
+        <!-- Card Actions Demo -->
+        <div class="so-card so-mb-4">
+            <div class="so-card-header">
+                <h3 class="so-card-title">Card Actions</h3>
+            </div>
+            <div class="so-card-body">
+                <p class="so-text-muted so-mb-4">
+                    Interactive card actions: <strong>Collapse</strong>, <strong>Refresh</strong>, <strong>Fullscreen</strong>, and <strong>Close</strong>.
+                </p>
+
+                <div class="so-grid so-grid-cols-2 so-gap-4">
+                    <!-- Collapsible Card -->
+                    <?php
+                    echo UiEngine::card()
+                        ->id('demo-collapse-card')
+                        ->header('Collapsible Card')
+                        ->body('Click the collapse button in the header to toggle this content. The card smoothly animates between collapsed and expanded states.')
+                        ->footer('Card Footer')
+                        ->collapsible()
+                        ->render();
+                    ?>
+
+                    <!-- Refreshable Card -->
+                    <?php
+                    echo UiEngine::card()
+                        ->id('demo-refresh-card')
+                        ->header('Refreshable Card')
+                        ->body('<p>Click refresh to reload this content. The card shows a loading spinner during the refresh operation.</p><p id="refresh-timestamp">Last refreshed: Never</p>')
+                        ->refreshable()
+                        ->render();
+                    ?>
+
+                    <!-- Fullscreen Card -->
+                    <?php
+                    echo UiEngine::card()
+                        ->id('demo-fullscreen-card')
+                        ->header('Fullscreen Card')
+                        ->body('Click the fullscreen button to expand this card to fill the entire viewport. Press ESC or click the exit button to return to normal size.')
+                        ->maximizable()
+                        ->render();
+                    ?>
+
+                    <!-- Closeable Card -->
+                    <?php
+                    echo UiEngine::card()
+                        ->id('demo-close-card')
+                        ->header('Closeable Card')
+                        ->body('Click the close button to remove this card. It will show a confirmation dialog before removal.')
+                        ->closeable(true, 'Are you sure you want to close this card?')
+                        ->render();
+                    ?>
+                </div>
+
+                <?= so_code_block('// Create cards with actions
+$card = UiEngine::card()
+    ->header(\'Card Title\')
+    ->body(\'Card content\')
+    ->collapsible()   // Add collapse button
+    ->refreshable()   // Add refresh button
+    ->maximizable()   // Add fullscreen button
+    ->closeable(true, \'Confirm close?\'); // Add close with confirmation
+
+echo $card->render();', 'php') ?>
+            </div>
+        </div>
+
+        <!-- Draggable Cards Demo -->
+        <div class="so-card so-mb-4">
+            <div class="so-card-header">
+                <h3 class="so-card-title">Draggable Cards</h3>
+            </div>
+            <div class="so-card-body">
+                <p class="so-text-muted so-mb-4">
+                    Drag cards by their headers to reorder. The order is automatically saved to localStorage and restored on page reload.
+                </p>
+
+                <div id="draggable-cards-demo" class="so-grid so-grid-cols-3 so-gap-4">
+                    <?php
+                    for ($i = 1; $i <= 6; $i++) {
+                        echo UiEngine::card()
+                            ->id("drag-card-$i")
+                            ->header("Card $i")
+                            ->body("Drag me by the header to reorder. The order will be saved to localStorage.")
+                            ->draggable([
+                                'handle' => '.so-card-header',
+                                'storage' => 'localStorage',
+                                'storageKey' => 'demo-cards-order'
+                            ])
+                            ->render();
+                    }
+                    ?>
+                </div>
+
+                <?= so_code_block('// Enable dragging on cards
+$card = UiEngine::card()
+    ->id(\'my-card\')
+    ->header(\'Draggable Card\')
+    ->body(\'Content\')
+    ->draggable([
+        \'handle\' => \'.so-card-header\',  // Only drag by header
+        \'storage\' => \'localStorage\',     // Save order
+        \'storageKey\' => \'my-cards-order\'
+    ]);
+
+echo $card->render();', 'php') ?>
+            </div>
+        </div>
+
+        <!-- Combined Demo: Actions + Draggable -->
+        <div class="so-card so-mb-4">
+            <div class="so-card-header">
+                <h3 class="so-card-title">Combined: Actions + Draggable</h3>
+            </div>
+            <div class="so-card-body">
+                <p class="so-text-muted so-mb-4">
+                    Cards with both actions and drag-drop functionality. Drag to reorder, use actions to interact.
+                </p>
+
+                <div id="combined-demo" class="so-grid so-grid-cols-2 so-gap-4">
+                    <?php
+                    for ($i = 1; $i <= 4; $i++) {
+                        echo UiEngine::card()
+                            ->id("combined-card-$i")
+                            ->header("Dashboard Widget $i")
+                            ->body("This card has all features: collapsible, refreshable, fullscreen, and draggable. Try the action buttons and drag to reorder!")
+                            ->collapsible()
+                            ->refreshable()
+                            ->maximizable()
+                            ->draggable([
+                                'handle' => '.so-card-header',
+                                'storage' => 'localStorage',
+                                'storageKey' => 'combined-cards-order'
+                            ])
+                            ->render();
+                    }
+                    ?>
+                </div>
+
+                <?= so_code_block('// Create cards with both actions and draggable
+$card = UiEngine::card()
+    ->id(\'widget-1\')
+    ->header(\'Dashboard Widget\')
+    ->body(\'Widget content\')
+    ->collapsible()
+    ->refreshable()
+    ->maximizable()
+    ->draggable([
+        \'handle\' => \'.so-card-header\',
+        \'storage\' => \'localStorage\',
+        \'storageKey\' => \'dashboard-widgets-order\'
+    ]);
+
+echo $card->render();', 'php') ?>
+            </div>
+        </div>
+
+        <script>
+        // Initialize card actions and draggable demos
+        document.addEventListener('DOMContentLoaded', function() {
+            // Global event delegation for card action buttons
+            document.addEventListener('click', function(e) {
+                const actionBtn = e.target.closest('[data-action]');
+                if (!actionBtn) return;
+
+                const card = actionBtn.closest('.so-card');
+                if (!card) return;
+
+                const action = actionBtn.getAttribute('data-action');
+
+                switch (action) {
+                    case 'collapse':
+                        const isCollapsed = card.classList.toggle('so-card-collapsed');
+                        // Change icon based on state
+                        const collapseIcon = actionBtn.querySelector('.material-icons');
+                        if (collapseIcon) {
+                            collapseIcon.textContent = isCollapsed ? 'expand_more' : 'expand_less';
+                        }
+                        break;
+
+                    case 'refresh':
+                        card.classList.add('so-card-loading');
+                        // Simulate API call
+                        setTimeout(async () => {
+                            // For demo refresh card, update timestamp
+                            if (card.id === 'demo-refresh-card') {
+                                const timestamp = new Date().toLocaleTimeString();
+                                const timestampEl = card.querySelector('#refresh-timestamp');
+                                if (timestampEl) {
+                                    timestampEl.textContent = 'Last refreshed: ' + timestamp;
+                                }
+                            }
+                            card.classList.remove('so-card-loading');
+                        }, 1500);
+                        break;
+
+                    case 'fullscreen':
+                        const fullscreenIcon = actionBtn.querySelector('.material-icons');
+                        if (card.classList.contains('so-card-fullscreen')) {
+                            // Exit fullscreen
+                            card.classList.remove('so-card-fullscreen');
+                            document.body.style.overflow = '';
+                            if (fullscreenIcon) {
+                                fullscreenIcon.textContent = 'fullscreen';
+                            }
+                        } else {
+                            // Enter fullscreen
+                            card.classList.add('so-card-fullscreen');
+                            document.body.style.overflow = 'hidden';
+                            if (fullscreenIcon) {
+                                fullscreenIcon.textContent = 'fullscreen_exit';
+                            }
+
+                            // Add ESC key handler
+                            const escHandler = function(e) {
+                                if (e.key === 'Escape' && card.classList.contains('so-card-fullscreen')) {
+                                    card.classList.remove('so-card-fullscreen');
+                                    document.body.style.overflow = '';
+                                    if (fullscreenIcon) {
+                                        fullscreenIcon.textContent = 'fullscreen';
+                                    }
+                                    document.removeEventListener('keydown', escHandler);
+                                }
+                            };
+                            document.addEventListener('keydown', escHandler);
+                        }
+                        break;
+
+                    case 'close':
+                        const confirmMsg = actionBtn.getAttribute('data-confirm');
+                        if (!confirmMsg || window.confirm(confirmMsg)) {
+                            card.style.transition = 'opacity 300ms ease';
+                            card.style.opacity = '0';
+                            setTimeout(() => card.remove(), 300);
+                        }
+                        break;
+                }
+            });
+
+            // Initialize draggable containers with error handling
+            setTimeout(function() {
+                if (!window.SODragDrop) {
+                    console.error('SODragDrop not loaded. Make sure sixorbit-full.js is included.');
+                    return;
+                }
+
+                const draggableDemo = document.getElementById('draggable-cards-demo');
+                if (draggableDemo) {
+                    try {
+                        const dragInstance = SODragDrop.getInstance(draggableDemo, {
+                            items: '.so-card',
+                            handle: '.so-card-header',
+                            storage: 'localStorage',
+                            storageKey: 'demo-cards-order'
+                        });
+                        console.log('✅ Draggable demo initialized');
+
+                        // Debug info
+                        const cards = draggableDemo.querySelectorAll('.so-card');
+                        console.log(`   Found ${cards.length} cards`);
+                        cards.forEach((card, i) => {
+                            const isDraggable = card.getAttribute('draggable');
+                            const hasHandle = card.querySelector('.so-card-header') !== null;
+                            console.log(`   Card ${i + 1}: draggable="${isDraggable}", has header=${hasHandle}`);
+                        });
+                    } catch (error) {
+                        console.error('❌ Failed to initialize draggable demo:', error);
+                    }
+                }
+
+                const combinedDemo = document.getElementById('combined-demo');
+                if (combinedDemo) {
+                    try {
+                        const dragInstance = SODragDrop.getInstance(combinedDemo, {
+                            items: '.so-card',
+                            handle: '.so-card-header',
+                            storage: 'localStorage',
+                            storageKey: 'combined-cards-order'
+                        });
+                        console.log('✅ Combined demo initialized');
+                        console.log(`   Found ${combinedDemo.querySelectorAll('.so-card').length} cards`);
+                    } catch (error) {
+                        console.error('❌ Failed to initialize combined demo:', error);
+                    }
+                }
+            }, 100); // Small delay to ensure SODragDrop is loaded
+        });
+        </script>
 
         <!-- UiEngine Usage Examples -->
         <div class="so-card so-mb-4">

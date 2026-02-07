@@ -46,6 +46,17 @@ class Card extends ContainerElement
     protected ?string $variant = null;
 
     /**
+     * Card action states
+     */
+    protected bool $_collapsible = false;
+    protected bool $_refreshable = false;
+    protected bool $_maximizable = false;
+    protected bool $_closeable = false;
+    protected ?string $_closeConfirm = null;
+    protected bool $_draggable = false;
+    protected array $_dragConfig = [];
+
+    /**
      * Set card header content
      */
     public function header(Element|string|array $content): static
@@ -107,6 +118,64 @@ class Card extends ContainerElement
     public function info(): static
     {
         return $this->variant('info');
+    }
+
+    /**
+     * Action Configuration Methods
+     */
+
+    /**
+     * Enable collapse action
+     */
+    public function collapsible(): static
+    {
+        $this->_collapsible = true;
+        return $this;
+    }
+
+    /**
+     * Enable refresh action
+     */
+    public function refreshable(): static
+    {
+        $this->_refreshable = true;
+        return $this;
+    }
+
+    /**
+     * Enable fullscreen/maximize action
+     */
+    public function maximizable(): static
+    {
+        $this->_maximizable = true;
+        return $this;
+    }
+
+    /**
+     * Enable close action
+     *
+     * @param bool $confirm - Whether to show confirmation dialog
+     * @param string|null $message - Custom confirmation message
+     */
+    public function closeable(bool $confirm = false, ?string $message = null): static
+    {
+        $this->_closeable = true;
+        if ($confirm) {
+            $this->_closeConfirm = $message ?? 'Are you sure you want to close this card?';
+        }
+        return $this;
+    }
+
+    /**
+     * Enable draggable functionality
+     *
+     * @param array $config - SODragDrop configuration options
+     */
+    public function draggable(array $config = []): static
+    {
+        $this->_draggable = true;
+        $this->_dragConfig = $config;
+        return $this;
     }
 
     /**
@@ -177,6 +246,71 @@ class Card extends ContainerElement
     }
 
     /**
+     * Check if card has any actions enabled
+     */
+    protected function hasActions(): bool
+    {
+        return $this->_collapsible || $this->_refreshable ||
+               $this->_maximizable || $this->_closeable;
+    }
+
+    /**
+     * Render action buttons
+     */
+    protected function renderActions(): string
+    {
+        if (!$this->hasActions()) {
+            return '';
+        }
+
+        $html = '<div class="' . CssPrefix::cls('card-header-actions') . '">';
+
+        // Collapse button
+        if ($this->_collapsible) {
+            $html .= '<button type="button" class="' . CssPrefix::cls('btn') . ' ';
+            $html .= CssPrefix::cls('btn-icon') . ' ' . CssPrefix::cls('btn-ghost') . ' ';
+            $html .= CssPrefix::cls('btn-sm') . ' ' . CssPrefix::cls('card-action-btn') . '" ';
+            $html .= 'data-action="collapse" title="Collapse">';
+            $html .= '<span class="material-icons">expand_less</span>';
+            $html .= '</button>';
+        }
+
+        // Refresh button
+        if ($this->_refreshable) {
+            $html .= '<button type="button" class="' . CssPrefix::cls('btn') . ' ';
+            $html .= CssPrefix::cls('btn-icon') . ' ' . CssPrefix::cls('btn-ghost') . ' ';
+            $html .= CssPrefix::cls('btn-sm') . ' ' . CssPrefix::cls('card-action-btn') . '" ';
+            $html .= 'data-action="refresh" title="Refresh">';
+            $html .= '<span class="material-icons">refresh</span>';
+            $html .= '</button>';
+        }
+
+        // Fullscreen button
+        if ($this->_maximizable) {
+            $html .= '<button type="button" class="' . CssPrefix::cls('btn') . ' ';
+            $html .= CssPrefix::cls('btn-icon') . ' ' . CssPrefix::cls('btn-ghost') . ' ';
+            $html .= CssPrefix::cls('btn-sm') . ' ' . CssPrefix::cls('card-action-btn') . '" ';
+            $html .= 'data-action="fullscreen" title="Fullscreen">';
+            $html .= '<span class="material-icons">fullscreen</span>';
+            $html .= '</button>';
+        }
+
+        // Close button
+        if ($this->_closeable) {
+            $closeAttr = $this->_closeConfirm ? ' data-confirm="' . htmlspecialchars($this->_closeConfirm) . '"' : '';
+            $html .= '<button type="button" class="' . CssPrefix::cls('btn') . ' ';
+            $html .= CssPrefix::cls('btn-icon') . ' ' . CssPrefix::cls('btn-ghost') . ' ';
+            $html .= CssPrefix::cls('btn-sm') . ' ' . CssPrefix::cls('card-action-btn') . '" ';
+            $html .= 'data-action="close"' . $closeAttr . ' title="Close">';
+            $html .= '<span class="material-icons">close</span>';
+            $html .= '</button>';
+        }
+
+        $html .= '</div>';
+        return $html;
+    }
+
+    /**
      * Build CSS classes
      */
     public function buildClassString(): string
@@ -198,10 +332,13 @@ class Card extends ContainerElement
     {
         $html = '';
 
-        // Header
-        if ($this->header !== null) {
+        // Header (include actions if present)
+        if ($this->header !== null || $this->hasActions()) {
             $html .= '<div class="' . CssPrefix::cls('card-header') . '">';
-            $html .= $this->renderMixed($this->header);
+            if ($this->header !== null) {
+                $html .= $this->renderMixed($this->header);
+            }
+            $html .= $this->renderActions();
             $html .= '</div>';
         }
 

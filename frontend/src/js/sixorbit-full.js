@@ -29,6 +29,7 @@ import SOTable from "./components/so-table.js";
 import SOPagination from "./components/so-pagination.js";
 import SOCopy from "./components/so-copy.js";
 import SOGoToTop from "./components/so-go-to-top.js";
+import SODragDrop from "./components/so-dragdrop.js";
 import {
   SOInputMask,
   SOPasswordStrength,
@@ -68,6 +69,7 @@ window.SONavbar = SONavbar;
 window.SOContextMenu = SOContextMenu;
 window.SOCopy = SOCopy;
 window.SOGoToTop = SOGoToTop;
+window.SODragDrop = SODragDrop;
 window.SOInputMask = SOInputMask;
 window.SOPasswordStrength = SOPasswordStrength;
 window.SOCharCounter = SOCharCounter;
@@ -171,6 +173,7 @@ export {
   SOPagination,
   SOCopy,
   SOGoToTop,
+  SODragDrop,
   SOForms,
   SOInputMask,
   SOPasswordStrength,
