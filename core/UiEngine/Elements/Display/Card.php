@@ -6,15 +6,37 @@ use Core\UiEngine\Elements\ContainerElement;
 use Core\UiEngine\Elements\Element;
 use Core\UiEngine\Support\CssPrefix;
 use Core\UiEngine\Support\ElementFactory;
+use Core\UiEngine\Traits\HasDragDrop;
 
 /**
  * Card - Simple card container with header, body, and footer
  *
  * A flexible container that accepts nested elements for complex layouts.
- * Use renderMixed() to handle any nested Element objects.
+ * Supports full card colors, borderless sections, actions, and drag-drop.
+ *
+ * Config Example:
+ *   Card::make([
+ *       'header' => 'Card Title',
+ *       'body' => 'Card content',
+ *       'color' => 'primary',
+ *       'headerBorderless' => true,
+ *       'draggable' => true,
+ *       'dragHandle' => '.so-card-header',
+ *   ]);
+ *
+ * Fluent API Example:
+ *   Card::make()
+ *       ->header('Card Title')
+ *       ->body('Card content')
+ *       ->colorPrimary()
+ *       ->headerBorderless()
+ *       ->draggable()
+ *       ->dragHandle('.so-card-header');
  */
 class Card extends ContainerElement
 {
+    use HasDragDrop;
+
     /**
      * Element type identifier
      */
@@ -46,15 +68,33 @@ class Card extends ContainerElement
     protected ?string $variant = null;
 
     /**
+     * Full card color (primary, success, danger, warning, info, secondary, light, dark)
+     */
+    protected ?string $color = null;
+
+    /**
+     * Remove header bottom border
+     */
+    protected bool $_headerBorderless = false;
+
+    /**
+     * Remove footer top border
+     */
+    protected bool $_footerBorderless = false;
+
+    /**
      * Card action states
      */
     protected bool $_collapsible = false;
     protected bool $_refreshable = false;
+    protected ?string $_refreshHandler = null;
     protected bool $_maximizable = false;
     protected bool $_closeable = false;
     protected ?string $_closeConfirm = null;
-    protected bool $_draggable = false;
-    protected array $_dragConfig = [];
+
+    // ==================
+    // Content Methods
+    // ==================
 
     /**
      * Set card header content
@@ -83,6 +123,10 @@ class Card extends ContainerElement
         return $this;
     }
 
+    // ==================
+    // Border Variant Methods
+    // ==================
+
     /**
      * Set card border variant
      */
@@ -93,36 +137,129 @@ class Card extends ContainerElement
     }
 
     /**
-     * Variant shortcuts
+     * Border variant shortcuts
      */
     public function primary(): static
     {
         return $this->variant('primary');
     }
+
     public function secondary(): static
     {
         return $this->variant('secondary');
     }
+
     public function success(): static
     {
         return $this->variant('success');
     }
+
     public function danger(): static
     {
         return $this->variant('danger');
     }
+
     public function warning(): static
     {
         return $this->variant('warning');
     }
+
     public function info(): static
     {
         return $this->variant('info');
     }
 
+    // ==================
+    // Full Card Color Methods
+    // ==================
+
     /**
-     * Action Configuration Methods
+     * Set full card background color
      */
+    public function color(string $color): static
+    {
+        $this->color = $color;
+        return $this;
+    }
+
+    /**
+     * Full card color shortcuts
+     */
+    public function colorPrimary(): static
+    {
+        return $this->color('primary');
+    }
+
+    public function colorSecondary(): static
+    {
+        return $this->color('secondary');
+    }
+
+    public function colorSuccess(): static
+    {
+        return $this->color('success');
+    }
+
+    public function colorDanger(): static
+    {
+        return $this->color('danger');
+    }
+
+    public function colorWarning(): static
+    {
+        return $this->color('warning');
+    }
+
+    public function colorInfo(): static
+    {
+        return $this->color('info');
+    }
+
+    public function colorLight(): static
+    {
+        return $this->color('light');
+    }
+
+    public function colorDark(): static
+    {
+        return $this->color('dark');
+    }
+
+    // ==================
+    // Borderless Section Methods
+    // ==================
+
+    /**
+     * Remove header bottom border
+     */
+    public function headerBorderless(): static
+    {
+        $this->_headerBorderless = true;
+        return $this;
+    }
+
+    /**
+     * Remove footer top border
+     */
+    public function footerBorderless(): static
+    {
+        $this->_footerBorderless = true;
+        return $this;
+    }
+
+    /**
+     * Remove both header and footer borders
+     */
+    public function borderlessSections(): static
+    {
+        $this->_headerBorderless = true;
+        $this->_footerBorderless = true;
+        return $this;
+    }
+
+    // ==================
+    // Action Configuration Methods
+    // ==================
 
     /**
      * Enable collapse action
@@ -135,10 +272,13 @@ class Card extends ContainerElement
 
     /**
      * Enable refresh action
+     *
+     * @param string|null $handler - JavaScript function name to call on refresh
      */
-    public function refreshable(): static
+    public function refreshable(?string $handler = null): static
     {
         $this->_refreshable = true;
+        $this->_refreshHandler = $handler;
         return $this;
     }
 
@@ -166,17 +306,9 @@ class Card extends ContainerElement
         return $this;
     }
 
-    /**
-     * Enable draggable functionality
-     *
-     * @param array $config - SODragDrop configuration options
-     */
-    public function draggable(array $config = []): static
-    {
-        $this->_draggable = true;
-        $this->_dragConfig = $config;
-        return $this;
-    }
+    // ==================
+    // Config Initialization
+    // ==================
 
     /**
      * Initialize element properties from configuration
@@ -203,10 +335,50 @@ class Card extends ContainerElement
             $this->footer = $this->processConfigContent($config['footer']);
         }
 
-        // Variant
+        // Border variant
         if (isset($config['variant'])) {
             $this->variant = $config['variant'];
         }
+
+        // Full card color
+        if (isset($config['color'])) {
+            $this->color = $config['color'];
+        }
+
+        // Borderless sections
+        if (isset($config['headerBorderless'])) {
+            $this->_headerBorderless = (bool) $config['headerBorderless'];
+        }
+        if (isset($config['footerBorderless'])) {
+            $this->_footerBorderless = (bool) $config['footerBorderless'];
+        }
+        if (isset($config['borderlessSections']) && $config['borderlessSections']) {
+            $this->_headerBorderless = true;
+            $this->_footerBorderless = true;
+        }
+
+        // Actions
+        if (isset($config['collapsible']) && $config['collapsible']) {
+            $this->_collapsible = true;
+        }
+        if (isset($config['refreshable'])) {
+            $this->_refreshable = true;
+            if (is_string($config['refreshable'])) {
+                $this->_refreshHandler = $config['refreshable'];
+            }
+        }
+        if (isset($config['maximizable']) && $config['maximizable']) {
+            $this->_maximizable = true;
+        }
+        if (isset($config['closeable'])) {
+            $this->_closeable = true;
+            if (is_string($config['closeable'])) {
+                $this->_closeConfirm = $config['closeable'];
+            }
+        }
+
+        // Initialize drag-drop from config (from HasDragDrop trait)
+        $this->initDragDropFromConfig($config);
     }
 
     /**
@@ -245,6 +417,10 @@ class Card extends ContainerElement
         return $content;
     }
 
+    // ==================
+    // Rendering
+    // ==================
+
     /**
      * Check if card has any actions enabled
      */
@@ -277,10 +453,11 @@ class Card extends ContainerElement
 
         // Refresh button
         if ($this->_refreshable) {
+            $refreshAttr = $this->_refreshHandler ? ' data-refresh-handler="' . htmlspecialchars($this->_refreshHandler) . '"' : '';
             $html .= '<button type="button" class="' . CssPrefix::cls('btn') . ' ';
             $html .= CssPrefix::cls('btn-icon') . ' ' . CssPrefix::cls('btn-ghost') . ' ';
             $html .= CssPrefix::cls('btn-sm') . ' ' . CssPrefix::cls('card-action-btn') . '" ';
-            $html .= 'data-action="refresh" title="Refresh">';
+            $html .= 'data-action="refresh"' . $refreshAttr . ' title="Refresh">';
             $html .= '<span class="material-icons">refresh</span>';
             $html .= '</button>';
         }
@@ -317,12 +494,52 @@ class Card extends ContainerElement
     {
         $this->addClass(CssPrefix::cls('card'));
 
-        // Variant class
+        // Border variant class
         if ($this->variant !== null) {
             $this->addClass(CssPrefix::cls('card-border-' . $this->variant));
         }
 
+        // Full card color class
+        if ($this->color !== null) {
+            $this->addClass(CssPrefix::cls('card-' . $this->color));
+        }
+
+        // Borderless section classes
+        if ($this->_headerBorderless) {
+            $this->addClass(CssPrefix::cls('card-header-borderless'));
+        }
+        if ($this->_footerBorderless) {
+            $this->addClass(CssPrefix::cls('card-footer-borderless'));
+        }
+
         return parent::buildClassString();
+    }
+
+    /**
+     * Gather all HTML attributes including drag attributes
+     */
+    protected function gatherAllAttributes(): array
+    {
+        $attrs = parent::gatherAllAttributes();
+
+        // Add drag-drop attributes (from HasDragDrop trait)
+        $attrs = array_merge($attrs, $this->getDragAttributes());
+
+        // Add action data attributes for JS initialization
+        if ($this->_collapsible) {
+            $attrs['data-so-collapsible'] = 'true';
+        }
+        if ($this->_refreshable) {
+            $attrs['data-so-refreshable'] = 'true';
+        }
+        if ($this->_maximizable) {
+            $attrs['data-so-maximizable'] = 'true';
+        }
+        if ($this->_closeable) {
+            $attrs['data-so-closeable'] = 'true';
+        }
+
+        return $attrs;
     }
 
     /**
@@ -383,6 +600,31 @@ class Card extends ContainerElement
 
         if ($this->variant !== null) {
             $config['variant'] = $this->variant;
+        }
+
+        if ($this->color !== null) {
+            $config['color'] = $this->color;
+        }
+
+        if ($this->_headerBorderless) {
+            $config['headerBorderless'] = true;
+        }
+
+        if ($this->_footerBorderless) {
+            $config['footerBorderless'] = true;
+        }
+
+        if ($this->_draggable) {
+            $config['draggable'] = true;
+            if ($this->_dragHandle) {
+                $config['dragHandle'] = $this->_dragHandle;
+            }
+            if ($this->_dragGroup) {
+                $config['dragGroup'] = $this->_dragGroup;
+            }
+            if ($this->_liveReorder) {
+                $config['liveReorder'] = true;
+            }
         }
 
         return $config;

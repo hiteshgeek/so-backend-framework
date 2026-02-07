@@ -6,14 +6,36 @@
 import { Element } from '../../core/Element.js';
 import { ContainerElement } from '../../core/ContainerElement.js';
 import SixOrbit from '../../../core/so-config.js';
+import HasDragDrop from '../../mixins/HasDragDrop.js';
 
 /**
  * Card - Simple card container
  *
  * A flexible container that accepts nested elements for complex layouts.
- * Use _renderMixed() to handle any nested Element objects.
+ * Supports full card colors, borderless sections, actions, and drag-drop.
+ *
+ * Config Example:
+ *   new Card({
+ *       header: 'Card Title',
+ *       body: 'Card content',
+ *       color: 'primary',
+ *       headerBorderless: true,
+ *       collapsible: true,
+ *       draggable: true,
+ *       dragHandle: '.so-card-header',
+ *   });
+ *
+ * Fluent API Example:
+ *   new Card({})
+ *       .header('Card Title')
+ *       .body('Card content')
+ *       .colorPrimary()
+ *       .headerBorderless()
+ *       .collapsible()
+ *       .draggable()
+ *       .dragHandle('.so-card-header');
  */
-class Card extends ContainerElement {
+class Card extends HasDragDrop(ContainerElement) {
     static NAME = 'ui-card';
 
     static DEFAULTS = {
@@ -28,20 +50,58 @@ class Card extends ContainerElement {
     _initFromConfig(config) {
         super._initFromConfig(config);
 
+        // Content
         this._header = config.header || null;
         this._body = config.body || null;
         this._footer = config.footer || null;
+
+        // Border variant
         this._variant = config.variant || null;
 
+        // Full card color
+        this._color = config.color || null;
+
+        // Borderless sections
+        this._headerBorderless = config.headerBorderless || false;
+        this._footerBorderless = config.footerBorderless || false;
+        if (config.borderlessSections) {
+            this._headerBorderless = true;
+            this._footerBorderless = true;
+        }
+
         // Action states
+        this._actions = new Map();
+        this._closeConfirm = null;
+
+        // Process action config
+        if (config.collapsible) {
+            this._actions.set('collapsible', true);
+        }
+        if (config.refreshable) {
+            this._actions.set('refreshable', true);
+            if (typeof config.refreshable === 'function') {
+                this._actions.set('refresh', config.refreshable);
+            }
+        }
+        if (config.maximizable) {
+            this._actions.set('maximizable', true);
+        }
+        if (config.closeable) {
+            this._actions.set('closeable', true);
+            if (typeof config.closeable === 'string') {
+                this._closeConfirm = config.closeable;
+            }
+        }
+
+        // Runtime state
         this._collapsed = false;
         this._fullscreen = false;
         this._loading = false;
-        this._actions = new Map();
-        this._dragdrop = null;
-        this._closeConfirm = null;
         this._previousStyles = null;
         this._escHandler = null;
+
+        // Initialize drag-drop from config (from HasDragDrop mixin)
+        this._initDragDrop(config);
     }
 
     // ==================
@@ -78,6 +138,10 @@ class Card extends ContainerElement {
         return this;
     }
 
+    // ==================
+    // Border Variant Methods
+    // ==================
+
     /**
      * Set card border variant
      * @param {string} variant - primary, secondary, success, danger, warning, info
@@ -95,6 +159,62 @@ class Card extends ContainerElement {
     danger() { return this.variant('danger'); }
     warning() { return this.variant('warning'); }
     info() { return this.variant('info'); }
+
+    // ==================
+    // Full Card Color Methods
+    // ==================
+
+    /**
+     * Set full card background color
+     * @param {string} color - primary, secondary, success, danger, warning, info, light, dark
+     * @returns {this}
+     */
+    color(color) {
+        this._color = color;
+        return this;
+    }
+
+    // Color shortcuts
+    colorPrimary() { return this.color('primary'); }
+    colorSecondary() { return this.color('secondary'); }
+    colorSuccess() { return this.color('success'); }
+    colorDanger() { return this.color('danger'); }
+    colorWarning() { return this.color('warning'); }
+    colorInfo() { return this.color('info'); }
+    colorLight() { return this.color('light'); }
+    colorDark() { return this.color('dark'); }
+
+    // ==================
+    // Borderless Section Methods
+    // ==================
+
+    /**
+     * Remove header bottom border
+     * @returns {this}
+     */
+    headerBorderless() {
+        this._headerBorderless = true;
+        return this;
+    }
+
+    /**
+     * Remove footer top border
+     * @returns {this}
+     */
+    footerBorderless() {
+        this._footerBorderless = true;
+        return this;
+    }
+
+    /**
+     * Remove both header and footer borders
+     * @returns {this}
+     */
+    borderlessSections() {
+        this._headerBorderless = true;
+        this._footerBorderless = true;
+        return this;
+    }
 
     // ==================
     // Action Configuration
@@ -340,80 +460,6 @@ class Card extends ContainerElement {
     }
 
     // ==================
-    // Draggable Support
-    // ==================
-
-    /**
-     * Enable/disable draggable functionality
-     * @param {boolean} enabled - Enable or disable dragging
-     * @param {Object} config - SODragDrop configuration options
-     * @returns {this}
-     */
-    draggable(enabled = true, config = {}) {
-        if (!enabled && this._dragdrop) {
-            this._dragdrop.destroy();
-            this._dragdrop = null;
-            return this;
-        }
-
-        if (enabled) {
-            const container = this.element ? this.element.parentElement : null;
-            if (!container) {
-                console.warn('Card must be rendered and in DOM to enable dragging');
-                return this;
-            }
-
-            // Check if SODragDrop is available
-            if (!window.SODragDrop) {
-                console.error('SODragDrop component not loaded');
-                return this;
-            }
-
-            // Initialize SODragDrop on container if not already initialized
-            this._dragdrop = window.SODragDrop.getInstance(container, {
-                items: `.${SixOrbit.cls('card')}`,
-                handle: config.handle || `.${SixOrbit.cls('card-header')}`,
-                storage: config.storage || null,
-                storageKey: config.storageKey || null,
-                ...config
-            });
-
-            // Forward reorder events
-            this._dragdrop.on('dragdrop:reorder', (e) => {
-                this.emit('so:card:reorder', e.detail);
-            });
-        }
-
-        return this;
-    }
-
-    /**
-     * Get current order of cards
-     * @returns {Array|null}
-     */
-    getOrder() {
-        return this._dragdrop ? this._dragdrop.getOrder() : null;
-    }
-
-    /**
-     * Set card order/position
-     * @param {number|string} position - Index or ID
-     * @returns {this}
-     */
-    setOrder(position) {
-        if (this._dragdrop) {
-            const order = this._dragdrop.getOrder();
-            // Move this card to position
-            const currentIndex = order.findIndex(item => item.element === this.element);
-            if (currentIndex !== -1 && currentIndex !== position) {
-                order.splice(position, 0, order.splice(currentIndex, 1)[0]);
-                this._dragdrop.setOrder(order.map(item => item.id));
-            }
-        }
-        return this;
-    }
-
-    // ==================
     // Close Action
     // ==================
 
@@ -459,18 +505,94 @@ class Card extends ContainerElement {
     // ==================
 
     /**
+     * Check if card has any actions enabled
+     * @returns {boolean}
+     */
+    _hasActions() {
+        return this._actions.has('collapsible') ||
+               this._actions.has('refreshable') ||
+               this._actions.has('maximizable') ||
+               this._actions.has('closeable');
+    }
+
+    /**
+     * Render action buttons HTML
+     * @returns {string}
+     */
+    _renderActions() {
+        if (!this._hasActions()) return '';
+
+        let html = `<div class="${SixOrbit.cls('card-header-actions')}">`;
+
+        if (this._actions.get('collapsible')) {
+            html += `<button type="button" class="${SixOrbit.cls('btn')} ${SixOrbit.cls('btn-icon')} ${SixOrbit.cls('btn-ghost')} ${SixOrbit.cls('btn-sm')} ${SixOrbit.cls('card-action-btn')}" data-action="collapse" title="Collapse">
+                <span class="material-icons">expand_less</span>
+            </button>`;
+        }
+
+        if (this._actions.get('refreshable')) {
+            html += `<button type="button" class="${SixOrbit.cls('btn')} ${SixOrbit.cls('btn-icon')} ${SixOrbit.cls('btn-ghost')} ${SixOrbit.cls('btn-sm')} ${SixOrbit.cls('card-action-btn')}" data-action="refresh" title="Refresh">
+                <span class="material-icons">refresh</span>
+            </button>`;
+        }
+
+        if (this._actions.get('maximizable')) {
+            html += `<button type="button" class="${SixOrbit.cls('btn')} ${SixOrbit.cls('btn-icon')} ${SixOrbit.cls('btn-ghost')} ${SixOrbit.cls('btn-sm')} ${SixOrbit.cls('card-action-btn')}" data-action="fullscreen" title="Fullscreen">
+                <span class="material-icons">fullscreen</span>
+            </button>`;
+        }
+
+        if (this._actions.get('closeable')) {
+            const confirmAttr = this._closeConfirm ? ` data-confirm="${this._escapeHtml(this._closeConfirm)}"` : '';
+            html += `<button type="button" class="${SixOrbit.cls('btn')} ${SixOrbit.cls('btn-icon')} ${SixOrbit.cls('btn-ghost')} ${SixOrbit.cls('btn-sm')} ${SixOrbit.cls('card-action-btn')}" data-action="close"${confirmAttr} title="Close">
+                <span class="material-icons">close</span>
+            </button>`;
+        }
+
+        html += '</div>';
+        return html;
+    }
+
+    /**
      * Build CSS classes
      * @returns {string}
      */
     buildClassString() {
         this.addClass(SixOrbit.cls('card'));
 
-        // Variant class
+        // Border variant class
         if (this._variant) {
             this.addClass(SixOrbit.cls('card-border-' + this._variant));
         }
 
+        // Full card color class
+        if (this._color) {
+            this.addClass(SixOrbit.cls('card-' + this._color));
+        }
+
+        // Borderless section classes
+        if (this._headerBorderless) {
+            this.addClass(SixOrbit.cls('card-header-borderless'));
+        }
+        if (this._footerBorderless) {
+            this.addClass(SixOrbit.cls('card-footer-borderless'));
+        }
+
         return super.buildClassString();
+    }
+
+    /**
+     * Build attributes including drag attributes
+     * @returns {Object}
+     */
+    buildAttributes() {
+        const attrs = super.buildAttributes();
+
+        // Merge in drag attributes (from HasDragDrop mixin)
+        const dragAttrs = this._buildDragAttributes();
+        Object.assign(attrs, dragAttrs);
+
+        return attrs;
     }
 
     /**
@@ -526,10 +648,13 @@ class Card extends ContainerElement {
     renderContent() {
         let html = '';
 
-        // Header
-        if (this._header !== null) {
+        // Header (include actions if present)
+        if (this._header !== null || this._hasActions()) {
             html += `<div class="${SixOrbit.cls('card-header')}">`;
-            html += this._renderMixed(this._header);
+            if (this._header !== null) {
+                html += this._renderMixed(this._header);
+            }
+            html += this._renderActions();
             html += '</div>';
         }
 
@@ -570,11 +695,22 @@ class Card extends ContainerElement {
             }
         });
 
-        // Render header
-        if (this._header !== null) {
+        // Render header (with actions)
+        if (this._header !== null || this._hasActions()) {
             const headerDiv = document.createElement('div');
             headerDiv.className = SixOrbit.cls('card-header');
-            this._appendMixed(headerDiv, this._header);
+            if (this._header !== null) {
+                this._appendMixed(headerDiv, this._header);
+            }
+            // Append action buttons
+            if (this._hasActions()) {
+                const actionsHtml = this._renderActions();
+                const wrapper = document.createElement('div');
+                wrapper.innerHTML = actionsHtml;
+                while (wrapper.firstChild) {
+                    headerDiv.appendChild(wrapper.firstChild);
+                }
+            }
             el.appendChild(headerDiv);
         }
 
@@ -587,7 +723,10 @@ class Card extends ContainerElement {
         }
 
         // Render children (if using add() method)
-        el.appendChild(this.renderChildren());
+        const childrenFragment = this.renderChildrenDOM();
+        if (childrenFragment) {
+            el.appendChild(childrenFragment);
+        }
 
         // Render footer
         if (this._footer !== null) {
@@ -599,7 +738,34 @@ class Card extends ContainerElement {
 
         this.element = el;
         this._setupActions();
+
+        // Auto-enable drag-drop if configured
+        if (this._draggable) {
+            // Use setTimeout to ensure element is in DOM first
+            setTimeout(() => this.enableDragDrop(), 0);
+        }
+
         return el;
+    }
+
+    /**
+     * Render children as DOM fragment
+     * @returns {DocumentFragment|null}
+     */
+    renderChildrenDOM() {
+        if (!this._children || this._children.length === 0) {
+            return null;
+        }
+
+        const fragment = document.createDocumentFragment();
+        this._children.forEach(child => {
+            if (child instanceof Element) {
+                fragment.appendChild(child.render());
+            } else if (child instanceof HTMLElement) {
+                fragment.appendChild(child);
+            }
+        });
+        return fragment;
     }
 
     /**
@@ -679,6 +845,15 @@ class Card extends ContainerElement {
         if (this._body) config.body = this._body;
         if (this._footer) config.footer = this._footer;
         if (this._variant) config.variant = this._variant;
+        if (this._color) config.color = this._color;
+        if (this._headerBorderless) config.headerBorderless = true;
+        if (this._footerBorderless) config.footerBorderless = true;
+        if (this._draggable) {
+            config.draggable = true;
+            if (this._dragHandle) config.dragHandle = this._dragHandle;
+            if (this._dragGroup) config.dragGroup = this._dragGroup;
+            if (this._liveReorder) config.liveReorder = true;
+        }
 
         return config;
     }
