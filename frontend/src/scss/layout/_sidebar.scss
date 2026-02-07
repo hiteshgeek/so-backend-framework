@@ -746,12 +746,12 @@ html.sidebar-pinned .#{$so-prefix}main-content {
   padding: 0;
   margin: 0;
   overflow: hidden;
-  // Delay hiding until sidebar width transition completes
+  // Hide immediately when collapsing (no delay)
   transition:
-    opacity 0.1s ease 0.15s,
-    visibility 0.1s ease 0.15s,
-    width 0s ease 0.25s,
-    flex 0s ease 0.25s;
+    opacity 0.1s ease,
+    visibility 0.1s ease,
+    width 0s ease,
+    flex 0s ease;
 }
 
 .#{$so-prefix}sidebar.#{$so-prefix}collapsed:hover
@@ -826,12 +826,12 @@ html.sidebar-pinned .#{$so-prefix}main-content {
   padding: 0;
   margin: 0;
   overflow: hidden;
-  // Delay hiding until sidebar width transition completes
+  // Hide immediately when collapsing (no delay)
   transition:
-    opacity 0.1s ease 0.15s,
-    visibility 0.1s ease 0.15s,
-    width 0s ease 0.25s,
-    flex 0s ease 0.25s;
+    opacity 0.1s ease,
+    visibility 0.1s ease,
+    width 0s ease,
+    flex 0s ease;
 }
 
 // Section becomes a separator line in collapsed view
