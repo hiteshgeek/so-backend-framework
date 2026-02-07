@@ -823,8 +823,8 @@
                     const title = this.querySelector('.status-option-title').textContent;
 
                     // Update active state
-                    statusItems.forEach(i => i.classList.remove('active'));
-                    this.classList.add('active');
+                    statusItems.forEach(i => i.classList.remove('so-active'));
+                    this.classList.add('so-active');
 
                     // Update trigger indicator and text
                     if (statusIndicator) {
@@ -900,7 +900,7 @@
                 applyTheme(savedTheme);
                 // Update active state in dropdown
                 themeSwitcher.querySelectorAll('[data-group="theme"] .so-dropdown-item').forEach(i => {
-                    i.classList.toggle('active', i.getAttribute('data-theme') === savedTheme);
+                    i.classList.toggle('so-active', i.getAttribute('data-theme') === savedTheme);
                 });
                 // Update icon
                 if (themeIcon && themeIcons[savedTheme]) {
@@ -912,7 +912,7 @@
                 applyFontSize(savedFontSize);
                 // Update active state in dropdown
                 themeSwitcher.querySelectorAll('[data-group="fontsize"] .so-dropdown-item').forEach(i => {
-                    i.classList.toggle('active', i.getAttribute('data-fontsize') === savedFontSize);
+                    i.classList.toggle('so-active', i.getAttribute('data-fontsize') === savedFontSize);
                 });
             }
 
@@ -924,9 +924,9 @@
 
                     // Update active state only within theme group
                     themeSwitcher.querySelectorAll('[data-group="theme"] .so-dropdown-item').forEach(i => {
-                        i.classList.remove('active');
+                        i.classList.remove('so-active');
                     });
-                    this.classList.add('active');
+                    this.classList.add('so-active');
 
                     // Update theme icon
                     if (themeIcon && themeIcons[theme]) {
@@ -946,9 +946,9 @@
 
                     // Update active state only within fontsize group
                     themeSwitcher.querySelectorAll('[data-group="fontsize"] .so-dropdown-item').forEach(i => {
-                        i.classList.remove('active');
+                        i.classList.remove('so-active');
                     });
-                    this.classList.add('active');
+                    this.classList.add('so-active');
 
                     // Apply font size
                     applyFontSize(fontSize);

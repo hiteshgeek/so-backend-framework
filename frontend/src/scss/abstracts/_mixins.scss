@@ -289,8 +289,8 @@
     text-decoration: none;
   }
 
-  &.active,
-  &.selected {
+  &.#{$so-prefix}active,
+  &.#{$so-prefix}selected {
     background: css-var('dropdown-item-active');
     color: css-var('dropdown-item-active-text');
   }

@@ -1263,7 +1263,6 @@ require_once '../includes/navbar.php';
 </div>', 'html') ?>
             </div>
         </div>
-    </div>
 
         <!-- UiEngine Usage Examples -->
         <div class="so-card so-mb-4">
@@ -1679,6 +1678,7 @@ card.bordered().compact();</code></pre>
             </div>
         </div>
     </div>
+    <!-- End Page Body -->
 </main>
 
 <?php

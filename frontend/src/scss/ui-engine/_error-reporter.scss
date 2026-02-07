@@ -832,6 +832,19 @@ $error-reporter-z-index: 1050;
       color: $error-reporter-border;
       border: 2px solid #2d2d2d;
     }
+
+    // Collapsed state - ensure transparent bg/border in dark mode
+    &.#{$so-prefix}collapsed {
+      .#{$so-prefix}error-reporter-content {
+        background: transparent;
+        border-color: transparent;
+      }
+
+      .#{$so-prefix}error-reporter-header {
+        background: transparent;
+        border-color: transparent;
+      }
+    }
   }
 
   // Bottom positions: adjust top border color for dark theme
@@ -915,6 +928,19 @@ $error-reporter-z-index: 1050;
         background: #fff;
         color: $error-reporter-border;
         border: 2px solid #2d2d2d;
+      }
+
+      // Collapsed state - ensure transparent bg/border in dark mode
+      &.#{$so-prefix}collapsed {
+        .#{$so-prefix}error-reporter-content {
+          background: transparent;
+          border-color: transparent;
+        }
+
+        .#{$so-prefix}error-reporter-header {
+          background: transparent;
+          border-color: transparent;
+        }
       }
     }
 
