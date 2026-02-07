@@ -1,0 +1,155 @@
+// ============================================
+// SIXORBIT UI - STANDALONE DRAGDROP STYLES
+// Generic drag-drop styles for any element type
+// ============================================
+
+@use 'abstracts' as *;
+
+// ============================================
+// DRAG HANDLE
+// ============================================
+
+.#{$so-prefix}drag-handle {
+  cursor: move;
+  cursor: grab;
+  user-select: none;
+
+  &:active {
+    cursor: grabbing;
+  }
+}
+
+// ============================================
+// DRAGGABLE ELEMENTS
+// ============================================
+
+[draggable="true"] {
+  cursor: move;
+  cursor: grab;
+  user-select: none;
+
+  &:active {
+    cursor: grabbing;
+  }
+}
+
+// ============================================
+// DRAG STATES
+// ============================================
+
+// Currently being dragged (original element in place)
+.#{$so-prefix}dragging,
+.#{$so-prefix}so-dragging {
+  opacity: 0.4;
+  box-shadow: none !important;
+  transition: opacity 0.2s ease;
+  cursor: grabbing !important;
+}
+
+// Ghost/placeholder element
+.#{$so-prefix}ghost,
+.#{$so-prefix}so-ghost {
+  opacity: 0.3;
+  background: css-var("grey-100");
+  border: 2px dashed css-var("border-color");
+  border-radius: radius("md");
+
+  * {
+    visibility: hidden;
+  }
+
+  // Dark mode
+  [data-theme="dark"] &,
+  [data-theme="system"] & {
+    background: alpha($so-white, 0.05);
+  }
+}
+
+// Chosen element (when picked up)
+.#{$so-prefix}chosen,
+.#{$so-prefix}so-chosen {
+  cursor: grabbing;
+}
+
+// ============================================
+// DROP ZONES
+// ============================================
+
+// Drag over state (when hovering over valid drop target)
+.#{$so-prefix}drag-over,
+.#{$so-prefix}so-drag-over {
+  position: relative;
+  border: 2px dashed css-var("accent-primary") !important;
+  box-shadow: 0 0 12px alpha(css-var("accent-primary"), 0.3) !important;
+  background: alpha(css-var("accent-primary"), 0.05);
+  transition: all 0.2s ease;
+}
+
+// Not allowed drop zone
+.#{$so-prefix}drag-not-allowed {
+  cursor: not-allowed !important;
+  opacity: 0.5;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 10px,
+      alpha($so-danger-500, 0.1) 10px,
+      alpha($so-danger-500, 0.1) 20px
+    );
+    pointer-events: none;
+    z-index: 10;
+    border-radius: inherit;
+  }
+}
+
+// ============================================
+// DRAG CONTAINER STYLES
+// ============================================
+
+// Container with draggable items
+[data-so-dragdrop] {
+  // Ensure items are positioned for drag operations
+  > * {
+    position: relative;
+  }
+}
+
+// ============================================
+// ACCESSIBILITY
+// ============================================
+
+// Reduce motion for users who prefer it
+@media (prefers-reduced-motion: reduce) {
+  .#{$so-prefix}dragging,
+  .#{$so-prefix}so-dragging {
+    transition: none;
+  }
+
+  .#{$so-prefix}drag-over,
+  .#{$so-prefix}so-drag-over {
+    transition: none;
+  }
+}
+
+// ============================================
+// UTILITY CLASSES
+// ============================================
+
+// Disable text selection during drag
+.#{$so-prefix}no-select {
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+// Smooth reorder animation
+.#{$so-prefix}drag-animate {
+  transition: transform 0.15s ease;
+}

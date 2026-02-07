@@ -28,6 +28,7 @@ const cssModules = [
   { name: "sixorbit-base", entry: "sixorbit-base.scss", type: "base" },
   { name: "sixorbit-full", entry: "sixorbit-full.scss", type: "bundle" },
   { name: "ui-engine", entry: "ui-engine/ui-engine.scss", type: "standalone" },
+  { name: "so-dragdrop", entry: "so-dragdrop.scss", type: "standalone" },
 ];
 
 // JS Modules Configuration
@@ -35,6 +36,7 @@ const jsModules = [
   { name: "sixorbit-core", entry: "sixorbit-core.js", globalName: "SixOrbitCore" },
   { name: "sixorbit-full", entry: "sixorbit-full.js", globalName: "SixOrbit" },
   { name: "ui-engine", entry: "ui-engine/ui-engine.js", globalName: "UiEngine" },
+  { name: "so-dragdrop", entry: "so-dragdrop.js", globalName: "SODragDrop" },
 ];
 
 // Page-specific Modules Configuration

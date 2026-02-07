@@ -185,21 +185,28 @@
               "badge": "New"
             },
             {
+              "id": "drag-drop",
+              "title": "17. Drag & Drop",
+              "icon": "drag_indicator",
+              "url": "elements/drag-drop.php",
+              "badge": "New"
+            },
+            {
               "id": "dropdowns",
-              "title": "17. Dropdowns",
+              "title": "18. Dropdowns",
               "icon": "arrow_drop_down_circle",
               "url": "elements/dropdowns.php"
             },
             {
               "id": "empty-states",
-              "title": "18. Empty States",
+              "title": "19. Empty States",
               "icon": "inbox",
               "url": "elements/empty-states.php",
               "badge": "New"
             },
             {
               "id": "forms",
-              "title": "19. Forms",
+              "title": "20. Forms",
               "icon": "edit_note",
               "children": [
                 {
@@ -249,167 +256,167 @@
             },
             {
               "id": "input-groups",
-              "title": "20. Input Groups",
+              "title": "21. Input Groups",
               "icon": "group_work",
               "url": "elements/input-groups.php"
             },
             {
               "id": "inputs",
-              "title": "21. Inputs",
+              "title": "22. Inputs",
               "icon": "text_fields",
               "url": "elements/inputs.php"
             },
             {
               "id": "list-group",
-              "title": "22. List Group",
+              "title": "23. List Group",
               "icon": "list",
               "url": "elements/list-group.php"
             },
             {
               "id": "media-object",
-              "title": "23. Media Object",
+              "title": "24. Media Object",
               "icon": "perm_media",
               "url": "elements/media-object.php",
               "badge": "New"
             },
             {
               "id": "modals",
-              "title": "24. Modals",
+              "title": "25. Modals",
               "icon": "open_in_new",
               "url": "elements/modals.php"
             },
             {
               "id": "navbar",
-              "title": "25. Navbar",
+              "title": "26. Navbar",
               "icon": "web",
               "url": "elements/navbar.php"
             },
             {
               "id": "offcanvas",
-              "title": "26. Offcanvas",
+              "title": "27. Offcanvas",
               "icon": "menu_open",
               "url": "elements/offcanvas.php"
             },
             {
               "id": "otp-input",
-              "title": "27. OTP Input",
+              "title": "28. OTP Input",
               "icon": "pin",
               "url": "elements/otp-input.php"
             },
             {
               "id": "pagination",
-              "title": "28. Pagination",
+              "title": "29. Pagination",
               "icon": "last_page",
               "url": "elements/pagination.php"
             },
             {
               "id": "popover",
-              "title": "29. Popover",
+              "title": "30. Popover",
               "icon": "chat_bubble",
               "url": "elements/popover.php",
               "badge": "New"
             },
             {
               "id": "print",
-              "title": "30. Print Styles",
+              "title": "31. Print Styles",
               "icon": "print",
               "url": "elements/print.php",
               "badge": "New"
             },
             {
               "id": "progress",
-              "title": "31. Progress",
+              "title": "32. Progress",
               "icon": "donut_large",
               "url": "elements/progress.php"
             },
             {
               "id": "rating",
-              "title": "32. Rating",
+              "title": "33. Rating",
               "icon": "star",
               "url": "elements/rating.php",
               "badge": "New"
             },
             {
               "id": "rtl",
-              "title": "33. RTL Support",
+              "title": "34. RTL Support",
               "icon": "format_textdirection_r_to_l",
               "url": "elements/rtl.php",
               "badge": "New"
             },
             {
               "id": "scrollspy",
-              "title": "34. Scrollspy",
+              "title": "35. Scrollspy",
               "icon": "visibility",
               "url": "elements/scrollspy.php"
             },
             {
               "id": "scroll-navigation",
-              "title": "35. Scroll Navigation",
+              "title": "36. Scroll Navigation",
               "icon": "swap_vert",
               "url": "elements/go-to-top.php",
               "badge": "New"
             },
             {
               "id": "skeleton",
-              "title": "36. Skeleton",
+              "title": "37. Skeleton",
               "icon": "hourglass_empty",
               "url": "elements/skeleton.php",
               "badge": "New"
             },
             {
               "id": "sliders",
-              "title": "37. Sliders",
+              "title": "38. Sliders",
               "icon": "tune",
               "url": "elements/sliders.php"
             },
             {
               "id": "spinners",
-              "title": "38. Spinners",
+              "title": "39. Spinners",
               "icon": "refresh",
               "url": "elements/spinners.php",
               "badge": "New"
             },
             {
               "id": "stepper",
-              "title": "39. Stepper",
+              "title": "40. Stepper",
               "icon": "format_list_numbered",
               "url": "elements/stepper.php",
               "badge": "New"
             },
             {
               "id": "tables",
-              "title": "40. Tables",
+              "title": "41. Tables",
               "icon": "table_chart",
               "url": "elements/tables.php"
             },
             {
               "id": "tabs",
-              "title": "41. Tabs",
+              "title": "42. Tabs",
               "icon": "tab",
               "url": "elements/tabs.php"
             },
             {
               "id": "tags-avatars",
-              "title": "42. Tags & Avatars",
+              "title": "43. Tags & Avatars",
               "icon": "local_offer",
               "url": "elements/tags-avatars.php"
             },
             {
               "id": "timeline",
-              "title": "43. Timeline",
+              "title": "44. Timeline",
               "icon": "timeline",
               "url": "elements/timeline.php",
               "badge": "New"
             },
             {
               "id": "tooltips",
-              "title": "44. Tooltips",
+              "title": "45. Tooltips",
               "icon": "chat_bubble_outline",
               "url": "elements/tooltips.php"
             },
             {
               "id": "utilities",
-              "title": "45. Utilities",
+              "title": "46. Utilities",
               "icon": "handyman",
               "url": "elements/utilities.php"
             }
